@@ -10,7 +10,7 @@
     "cooling_centre": 12,
     "library": 102
   },
-  "matchedToZone": 232,
+  "matchedToZone": 231,
   "facilities": [
     {
       "id": "fc0000",
@@ -4962,7 +4962,7 @@
         43.622246
       ],
       "address": "9 QUEENS QUAY",
-      "zoneId": "z000",
+      "zoneId": null,
       "source": "Toronto Heat Relief Network"
     },
     {

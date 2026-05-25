@@ -1,15 +1,15 @@
 {
   "note": "Per-zone flood risk from Toronto chronic basement-flooding study areas (centroid overlap with our zones). floodRiskScore 0..1. Enables flood scenario + siting penalty.",
   "source": "Toronto Basement Flooding Study Areas (Open Data)",
-  "flaggedZones": 14,
+  "flaggedZones": 13,
   "zones": [
     {
       "zoneId": "z000",
       "name": "Waterfront Communities\u2013The Island",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 1.0,
-      "floodRiskScore": 1.0,
-      "floodRisk": "high"
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
     },
     {
       "zoneId": "z001",
@@ -207,7 +207,7 @@
       "zoneId": "z025",
       "name": "Leaside-Bennington",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.959,
+      "studyAreaFraction": 0.973,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
     },
@@ -295,8 +295,8 @@
       "zoneId": "z036",
       "name": "Islington-City Centre West",
       "floodStudyAreas": 2,
-      "studyAreaFraction": 0.612,
-      "floodRiskScore": 0.796,
+      "studyAreaFraction": 0.629,
+      "floodRiskScore": 0.818,
       "floodRisk": "high"
     },
     {

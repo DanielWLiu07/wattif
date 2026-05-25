@@ -1,23 +1,16 @@
 {
   "note": "Per-zone siting constraints. protectedAreaFraction from Environmentally Significant Areas; floodRisk from chronic basement-flooding study areas. sitingPenalty 0..1 (= ESA penalty + 0.6\u00b7floodRisk; optimizer should down-weight); noBuild=True when >=50% of the zone is ESA-protected.",
   "source": "Toronto Environmentally Significant Areas + Basement Flooding Study Areas",
-  "flaggedZones": 22,
+  "flaggedZones": 20,
   "zones": [
     {
       "zoneId": "z000",
       "name": "Waterfront Communities\u2013The Island",
-      "esaCount": 6,
-      "esaNames": [
-        "West Algonquin Island",
-        "Centre Island Meadow/Wildlife Sanctuary",
-        "Hanlans Beach",
-        "Muggs Island",
-        "Snake Island Area",
-        "Wards Island"
-      ],
-      "protectedAreaFraction": 0.062,
-      "floodRisk": 1.0,
-      "sitingPenalty": 0.693,
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
+      "sitingPenalty": 0.0,
       "noBuild": false
     },
     {
@@ -276,9 +269,9 @@
       "esaNames": [
         "Todmorden Mills"
       ],
-      "protectedAreaFraction": 0.042,
+      "protectedAreaFraction": 0.043,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.063,
+      "sitingPenalty": 0.065,
       "noBuild": false
     },
     {
@@ -289,9 +282,9 @@
         "Don Valley Brickworks",
         "Crothers Woods"
       ],
-      "protectedAreaFraction": 0.034,
+      "protectedAreaFraction": 0.035,
       "floodRisk": 1.0,
-      "sitingPenalty": 0.651,
+      "sitingPenalty": 0.652,
       "noBuild": false
     },
     {
@@ -405,20 +398,18 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.796,
-      "sitingPenalty": 0.478,
+      "floodRisk": 0.818,
+      "sitingPenalty": 0.491,
       "noBuild": false
     },
     {
       "zoneId": "z037",
       "name": "Mimico (Lakeshore)",
-      "esaCount": 1,
-      "esaNames": [
-        "Humber Bay Park East"
-      ],
-      "protectedAreaFraction": 0.011,
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.017,
+      "sitingPenalty": 0.0,
       "noBuild": false
     },
     {
@@ -487,9 +478,9 @@
       "esaNames": [
         "Toronto Hunt Club Forest"
       ],
-      "protectedAreaFraction": 0.015,
+      "protectedAreaFraction": 0.016,
       "floodRisk": 1.0,
-      "sitingPenalty": 0.622,
+      "sitingPenalty": 0.624,
       "noBuild": false
     }
   ]

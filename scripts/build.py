@@ -128,6 +128,8 @@ PVGIS_FILE = "pvgis_solar.json"
 ATTITUDES_FILE = "attitudes_extract.json"
 # Wellbeing Toronto environment indicators (produced by scripts/extract_wellbeing.py). Optional.
 WELLBEING_FILE = "wellbeing_environment.json"
+# Land/water mask (produced by scripts/fetch_water_mask.py). Optional — clips zones to land.
+WATER_MASK_FILE = "water_mask.geojson"
 TYPICAL_FOOTPRINT_M2 = 160.0   # ~typical Toronto building ground footprint
 METRES_PER_LEVEL = 3.1         # storey height for 3D extrusion / height estimates
 
@@ -360,6 +362,44 @@ def load_pvgis_solar() -> dict[str, dict]:
     except Exception as exc:  # noqa: BLE001
         print(f"  PVGIS cache unreadable ({exc}); using assumed PV yield", file=sys.stderr)
         return {}
+
+
+def load_water_mask():
+    """Load the Toronto water mask as a shapely geometry (or None if absent/shapely missing)."""
+    path = RAW_DIR / WATER_MASK_FILE
+    if not path.exists():
+        print("  (no water mask — run scripts/fetch_water_mask.py; zones NOT clipped to land)",
+              file=sys.stderr)
+        return None
+    try:
+        from shapely.geometry import shape
+        g = shape(json.loads(path.read_text())["geometry"])
+        if not g.is_valid:
+            g = g.buffer(0)
+        print("  ✓ water mask loaded (clipping zone polygons to land)", file=sys.stderr)
+        return g
+    except Exception as exc:  # noqa: BLE001 — shapely missing or bad geom -> skip clipping
+        print(f"  water mask unavailable ({exc}); zones NOT clipped", file=sys.stderr)
+        return None
+
+
+def clip_ring_to_land(ring: list[list[float]], water):
+    """Subtract water from a zone ring; return (largest-land-ring decimated, changed?)."""
+    from shapely.geometry import Polygon
+    poly = Polygon(ring)
+    if not poly.is_valid:
+        poly = poly.buffer(0)
+    if not poly.intersects(water):
+        return ring, False  # fully inland — unchanged
+    land = poly.difference(water)
+    if land.is_empty:
+        return ring, False
+    if land.geom_type == "MultiPolygon":
+        land = max(land.geoms, key=lambda g: g.area)
+    coords = [[round(x, 6), round(y, 6)] for x, y in land.exterior.coords]
+    if len(coords) < 4:
+        return ring, False
+    return _decimate(coords), True
 
 
 # Former-municipality overrides where a simple centroid rule is wrong (north zones east of the
@@ -1080,6 +1120,9 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     boundaries = load_real_boundaries()
     profiles = load_real_profiles()
 
+    water = load_water_mask()  # optional shapely geometry; clips zone polygons to land
+    clipped_count = 0
+
     # Provenance counters (real vs synthetic-fallback per field).
     prov = {k: {"real": 0, "synthetic": 0} for k in
             ("polygon", "population", "medianIncome", "renterPct", "roofAvailability", "irradiance")}
@@ -1104,6 +1147,15 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
             centroid = [lng, lat]
             polygon_coords = hex_polygon(lng, lat, radius_km=rng.uniform(0.9, 1.8), rng=rng)
             prov["polygon"]["synthetic"] += 1
+
+        # Clip the polygon to land (subtract Lake Ontario / harbour); recompute centroid from land.
+        if water is not None:
+            clipped, changed = clip_ring_to_land(polygon_coords[0], water)
+            if changed:
+                polygon_coords = [clipped]
+                cx, cy = _ring_centroid(clipped)
+                centroid = [round(cx, 6), round(cy, 6)]
+                clipped_count += 1
 
         pop = prof.get("population", syn_pop)
         prov["population"]["real" if "population" in prof else "synthetic"] += 1
@@ -1192,6 +1244,8 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
                 "windPotential": round(wind_potential, 3),
             }
         )
+    if water is not None:
+        print(f"  ✓ clipped {clipped_count}/{len(zones)} zone polygons to land", file=sys.stderr)
     return zones, prov
 
 
