@@ -5,6 +5,7 @@ import type {
   Agent,
   AgentVoice,
   ConstraintZone,
+  SitingPriorityZone,
   ExistingInfra,
   Facility,
   Flow,
@@ -27,6 +28,7 @@ import {
   mockPlannerEvents,
   mockScenario,
   mockSentiment,
+  mockSitingPriority,
   mockVoices,
   seedInfra,
 } from "@/data/mock";
@@ -301,6 +303,21 @@ export async function getEnvironment(): Promise<Record<string, ZoneEnviro>> {
     return out;
   }
   return (r.environment ?? r) as Record<string, ZoneEnviro>;
+}
+
+// GET /api/siting-priority?equityWeight=&n= → ranked "where to build next".
+export async function getSitingPriority(
+  infra: Infra[],
+  equityWeight = 0.4,
+  n?: number
+): Promise<{ equityWeight: number; zones: SitingPriorityZone[] }> {
+  const q = new URLSearchParams();
+  q.set("equityWeight", String(equityWeight));
+  if (n != null) q.set("n", String(n));
+  const r = await tryFetch<any>(`/api/siting-priority?${q.toString()}`);
+  if (r?.zones?.length)
+    return { equityWeight: r.equityWeight ?? equityWeight, zones: r.zones };
+  return mockSitingPriority(equityWeight, infra);
 }
 
 export async function getActivity(): Promise<ActivityItem[]> {

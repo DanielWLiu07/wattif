@@ -19,6 +19,7 @@ import type {
   ScenarioType,
   Sentiment,
   SimMetrics,
+  SitingPriorityZone,
   Zone,
 } from "@/types";
 import { INFRA_PRESETS, MODEL_URL } from "@/types";
@@ -40,7 +41,8 @@ export type LayerKey =
   | "constraints"
   | "flood"
   | "district"
-  | "rooftops";
+  | "rooftops"
+  | "priority";
 
 export type ToolMode = "select" | "place";
 
@@ -87,6 +89,8 @@ type State = {
   heatVuln: Record<string, number>; // per-zone 0..1 (data-2)
   districtEnergy: Record<string, api.DistrictEnergyZone>; // existing district energy
   sbei: api.Sbei | null; // city-wide emissions context
+  sitingPriority: SitingPriorityZone[]; // ranked "where to build next"
+  equityWeight: number; // 0..1 weight for the build-priority ranking
   gatheringZones: string[]; // zones showing crowds (target + neighbours)
   lastTargetZoneId: string | null; // zone the last scenario hit
 
@@ -161,7 +165,9 @@ type State = {
   refetchLive: () => Promise<void>;
   toggleLayer: (k: LayerKey) => void;
   setLayers: (partial: Partial<Record<LayerKey, boolean>>) => void;
-  setPrimaryOverlay: (k: "equity" | "sentiment" | "demand" | "flood" | "none") => void;
+  setPrimaryOverlay: (
+    k: "equity" | "sentiment" | "demand" | "flood" | "priority" | "none"
+  ) => void;
   setMode: (m: ToolMode) => void;
   setPlacementMode: (m: PlacementMode) => void;
   setPlaceKind: (k: InfraKind) => void;
@@ -201,6 +207,10 @@ type State = {
 
   // programs (rebates/incentives) — drive distributed rooftop adoption
   launchProgram: (type: string, zoneIds?: string[]) => void;
+
+  // build-priority overlay
+  setEquityWeight: (w: number) => void;
+  refreshSitingPriority: () => Promise<void>;
 
   // v3 actions
   sendChat: (text: string) => void;
@@ -368,6 +378,7 @@ function attachSession(
       void get().reset();
       void get().refreshFlows();
       void get().refreshSentiment();
+      void get().refreshSitingPriority();
     }
     // Agent launched an incentive program (rooftop rebate / EV / retrofit).
     if (e.type === "tool_result" && e.name === "launch_program") {
@@ -449,6 +460,8 @@ export const useStore = create<State>((set, get) => ({
   heatVuln: {},
   districtEnergy: {},
   sbei: null,
+  sitingPriority: [],
+  equityWeight: 0.4,
   gatheringZones: [],
   lastTargetZoneId: null,
 
@@ -492,6 +505,7 @@ export const useStore = create<State>((set, get) => ({
     flood: true, // flood-risk overlay (lights up when data-2 ships it)
     district: true, // existing district-energy service area
     rooftops: true, // distributed rooftop-solar glints (per-home adoption)
+    priority: false, // build-priority choropleth (opt-in via overlay switcher)
   },
   mode: "select",
   placementMode: "manual",
@@ -566,6 +580,11 @@ export const useStore = create<State>((set, get) => ({
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
     });
+
+    // build-priority ranking (where to build next)
+    void api
+      .getSitingPriority(infra, get().equityWeight)
+      .then((r) => set({ sitingPriority: r.zones, equityWeight: r.equityWeight }));
 
     // v3 real-data layers — degrade gracefully (empty until data-2 lands)
     void Promise.all([
@@ -713,6 +732,7 @@ export const useStore = create<State>((set, get) => ({
         sentiment: k === "sentiment",
         demand: k === "demand",
         flood: k === "flood",
+        priority: k === "priority",
       },
     })),
   setMode: (m) => set({ mode: m }),
@@ -853,6 +873,7 @@ export const useStore = create<State>((set, get) => ({
     await get().reset();
     await get().refreshSentiment();
     await get().refreshFlows();
+    void get().refreshSitingPriority(); // priority drops where we just built
     await get().refreshVoices(4, optimistic.kind);
   },
 
@@ -1236,6 +1257,18 @@ export const useStore = create<State>((set, get) => ({
   rejectStep: () => {
     set({ chatAwaiting: false });
     session?.reject();
+  },
+
+  // ---------------- build-priority overlay ----------------
+
+  setEquityWeight: (w) => {
+    set({ equityWeight: w });
+    void get().refreshSitingPriority();
+  },
+  refreshSitingPriority: async () => {
+    const { infra, equityWeight } = get();
+    const r = await api.getSitingPriority(infra, equityWeight);
+    set({ sitingPriority: r.zones });
   },
 
   // ---------------- juice: toasts ----------------

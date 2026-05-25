@@ -90,6 +90,7 @@ export type LayerInputs = {
   constraints: ConstraintZone[];
   floodRisk: Record<string, number>;
   districtEnergy: Record<string, { servedFraction: number; systemName: string }>;
+  sitingPriority: { zoneId: string; score: number }[];
   scenarioTargeting: boolean;
   gatheringZones: string[];
   targetZoneId: string | null;
@@ -127,6 +128,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     constraints,
     floodRisk,
     districtEnergy,
+    sitingPriority,
     gatheringZones,
     targetZoneId,
     flashZones,
@@ -238,6 +240,38 @@ export function buildLayers(input: LayerInputs): Layer[] {
         })
       );
     }
+  }
+
+  // ---- Build-priority choropleth (where to build next — fuchsia, by score) ----
+  if (layers.priority && sitingPriority.length && zones.length) {
+    const scoreById = new Map(sitingPriority.map((s) => [s.zoneId, s.score]));
+    const fc: FeatureCollection = {
+      type: "FeatureCollection",
+      features: zones
+        .filter((z) => scoreById.has(z.id))
+        .map((z) => ({
+          type: "Feature",
+          geometry: z.polygon,
+          properties: { score: scoreById.get(z.id) ?? 0 },
+        })),
+    };
+    out.push(
+      new GeoJsonLayer({
+        id: "priority",
+        data: fc,
+        filled: true,
+        stroked: true,
+        extruded: false,
+        getPolygonOffset: groundOffset,
+        // higher score = build here first → brighter fuchsia
+        getFillColor: (f: any) =>
+          [217, 70, 239, Math.round(25 + f.properties.score * 180)] as any,
+        getLineColor: [240, 171, 252, 60],
+        lineWidthMinPixels: 0.5,
+        pickable: true,
+        updateTriggers: { getFillColor: [sitingPriority] },
+      })
+    );
   }
 
   // ---- Existing district energy (Enwave) — distinct teal service-area tint ----

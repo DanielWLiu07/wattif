@@ -653,3 +653,39 @@ export function* mockPlannerEvents(
       : `Placed ${placed} assets for ~${(spent / 1e6).toFixed(1)}M CAD, prioritizing high-burden zones with strong renewable potential.`,
   };
 }
+
+// ---- Mock build-priority ranking (offline fallback for /api/siting-priority) ----
+export function mockSitingPriority(
+  equityWeight: number,
+  infra: Infra[]
+): { equityWeight: number; zones: import("@/types").SitingPriorityZone[] } {
+  const zones = ZONES.map((z) => {
+    const near = infra.filter(
+      (i) =>
+        (i.position[0] - z.centroid[0]) ** 2 +
+          (i.position[1] - z.centroid[1]) ** 2 <
+        0.0006
+    ).length;
+    const servedFrac = Math.min(1, near * 0.35);
+    const unmetRatio = +(1 - servedFrac).toFixed(3);
+    const eb = z.demographics.energyBurdenIndex;
+    const demandSignal = Math.min(1, z.demandKwhMonthly / 6e6);
+    const score = +(
+      eb * equityWeight + (unmetRatio * 0.6 + demandSignal * 0.4) * (1 - equityWeight)
+    ).toFixed(3);
+    return {
+      zoneId: z.id,
+      name: z.name,
+      score,
+      unmetRatio,
+      energyBurden: eb,
+      unmetDemandKwh: Math.round(z.demandKwhMonthly * unmetRatio),
+      rationale: `${(unmetRatio * 100).toFixed(0)}% of demand unserved in a ${
+        eb > 0.6 ? "high" : "moderate"
+      }-burden zone (${eb.toFixed(2)}) → ${
+        eb > 0.6 ? "strong" : "fair"
+      } demand+equity siting candidate`,
+    };
+  }).sort((a, b) => b.score - a.score);
+  return { equityWeight, zones };
+}

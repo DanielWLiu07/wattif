@@ -125,6 +125,7 @@ export function MapView() {
   const floodRisk = useStore((s) => s.floodRisk);
   const heatVuln = useStore((s) => s.heatVuln);
   const districtEnergy = useStore((s) => s.districtEnergy);
+  const sitingPriority = useStore((s) => s.sitingPriority);
   const flyTo = useStore((s) => s.flyTo);
   const addInfraAt = useStore((s) => s.addInfraAt);
   const selectInfra = useStore((s) => s.selectInfra);
@@ -200,6 +201,7 @@ export function MapView() {
       constraints,
       floodRisk,
       districtEnergy,
+      sitingPriority,
       scenarioTargeting,
       gatheringZones,
       targetZoneId,
@@ -247,6 +249,7 @@ export function MapView() {
     constraints,
     floodRisk,
     districtEnergy,
+    sitingPriority,
     scenarioTargeting,
     gatheringZones,
     targetZoneId,
@@ -359,11 +362,16 @@ export function MapView() {
         districtEnergy[o.properties.id]?.servedFraction > 0.05
           ? `<br/><span style="color:#2dd4bf">District energy: ${(districtEnergy[o.properties.id].servedFraction * 100).toFixed(0)}% · ${districtEnergy[o.properties.id].systemName}</span>`
           : ""
-      }`;
+      }${(() => {
+        const sp = sitingPriority.find((s) => s.zoneId === o.properties.id);
+        return sp
+          ? `<br/><span style="color:#e879f9">Build priority: ${(sp.score * 100).toFixed(0)}/100</span>`
+          : "";
+      })()}`;
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, scenarioTargeting, setTargetZone]);
+  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;
