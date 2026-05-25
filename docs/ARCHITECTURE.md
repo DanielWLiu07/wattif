@@ -1,10 +1,12 @@
 # WattIf — Architecture & System Design
 
-This document describes the end-to-end technical architecture of WattIf: how the frontend, backend, data pipeline, optional ML models, and LLM integrations fit together.
+> **Documentation trust order:** Running code → [project_details.md](./project_details.md) → [status_contract.md](./status_contract.md) → audit docs (if present) → this document.
+
+This document describes the technical architecture of WattIf **as implemented today**. For the **target vision** (Supabase, uploads, cohort agents), see [project_plan.md](./project_plan.md).
 
 For a non-technical product overview, see [OVERVIEW.md](./OVERVIEW.md).
 
-For an **honest audit** of implementation status, mock/fallback paths, and vision gaps, see [audit/complete_system_architecture.md](./audit/complete_system_architecture.md).
+For **implementation status labels**, see [status_contract.md](./status_contract.md). For an architecture audit (if present), see [audit/complete_system_architecture.md](./audit/complete_system_architecture.md).
 
 ---
 

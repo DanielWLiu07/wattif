@@ -1,10 +1,14 @@
 # WattIf — Project Overview
 
+> **Documentation trust order:** Running code → [project_details.md](./project_details.md) → [status_contract.md](./status_contract.md) → audit docs (if present) → this overview. Do not treat older vision language as proof a feature is shipped.
+
 WattIf is a **Toronto energy-equity simulator**: an interactive 3D map where you plan renewable infrastructure and watch how coverage, cost, public approval, and **energy equity** play out over time — by hand or with an AI planning agent.
+
+**Current scope:** Toronto-only fixtures, in-memory sessions, solar/wind/battery/microgrid placement. **Target vision:** uploadable city datasets, Supabase persistence, cohort AI agents — see [project_plan.md](./project_plan.md).
 
 For technical details on how the system is built, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
-For an **honest audit** of what is implemented vs. mocked vs. planned, see the [audit documentation](./audit/current_project_details.md).
+For **current implementation truth**, see [project_details.md](./project_details.md). For an audit deep-dive (if present), see [audit/current_project_details.md](./audit/current_project_details.md).
 
 ---
 
@@ -127,7 +131,9 @@ cd frontend
 npm run dev
 ```
 
-Optional: copy `backend/.env.example` to `backend/.env` and set `ANTHROPIC_API_KEY` or `FEATHER_API_KEY` + `FEATHER_BASE_URL` for live LLM-powered planner chat and voice enrichment. Without keys, the demo planner runs locally with no network calls.
+Optional: copy `backend/.env.example` to `backend/.env` and set `ANTHROPIC_API_KEY` or `FEATHER_API_KEY` + `FEATHER_BASE_URL` for **real LLM** planner chat and voice enrichment. Without keys, the **demo planner** runs locally with no network calls.
+
+Status labels: [status_contract.md](./status_contract.md).
 
 ### Optional ML models
 

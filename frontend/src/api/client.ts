@@ -61,6 +61,22 @@ export async function checkHealth(): Promise<boolean> {
   return !!r?.ok;
 }
 
+/** Backend capability flags from GET /api/health (for runtime honesty labels). */
+export type HealthMeta = {
+  ok: boolean;
+  dataSource?: string;
+  llmEnabled?: boolean;
+  llmProvider?: string | null;
+  realLlm?: string | null;
+  mlAvailable?: boolean;
+  persistenceProvider?: "memory" | "supabase";
+  supabaseConfigured?: boolean;
+};
+
+export async function getHealthMeta(): Promise<HealthMeta | null> {
+  return tryFetch<HealthMeta>("/api/health");
+}
+
 export async function getZones(): Promise<{ data: Zone[]; live: boolean }> {
   const r = await tryFetch<Zone[]>("/api/zones");
   return r && r.length ? { data: r, live: true } : { data: ZONES, live: false };
