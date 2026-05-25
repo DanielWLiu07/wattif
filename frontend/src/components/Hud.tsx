@@ -6,14 +6,14 @@ import {
   YAxis,
 } from "recharts";
 import {
-  Zap,
+  Lightning,
   Leaf,
   Gauge,
-  Scale,
-  CircleDollarSign,
-  TrendingUp,
+  Scales,
+  CurrencyDollar,
+  TrendUp,
   Users,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { fmtCad, fmtCompact } from "@/lib/utils";
 import { useCountUp } from "@/lib/useCountUp";
@@ -41,7 +41,7 @@ const METRICS: Metric[] = [
     icon: Leaf,
     raw: (m) => m.coveragePct * 100,
     format: (n) => `${n.toFixed(1)}%`,
-    tint: "text-primary",
+    tint: "text-data-good",
     help: "Renewable coverage: share of the city's monthly electricity demand met by clean generation.",
   },
   {
@@ -50,25 +50,25 @@ const METRICS: Metric[] = [
     icon: Users,
     raw: (m) => (m.approvalPct ?? 0) * 100,
     format: (n) => `${n.toFixed(0)}%`,
-    tint: "text-sky-300",
+    tint: "text-data-info",
     help: "Public approval: how residents feel about the energy plan, aggregated across all zones.",
   },
   {
     key: "equityScore",
     label: "Equity",
-    icon: Scale,
+    icon: Scales,
     raw: (m) => m.equityScore * 100,
     format: (n) => `${n.toFixed(0)}%`,
-    tint: "text-emerald-400",
+    tint: "text-data-good",
     help: "Equity score: how well clean infrastructure serves high energy-burden (lower-income) zones, not just wealthy ones.",
   },
   {
     key: "renewableSupplyKwh",
     label: "Clean kWh/mo",
-    icon: Zap,
+    icon: Lightning,
     raw: (m) => m.renewableSupplyKwh,
     format: (n) => fmtCompact(n),
-    tint: "text-accent",
+    tint: "text-brand",
     help: "Clean energy generated per month by all active renewable infrastructure.",
   },
   {
@@ -77,25 +77,25 @@ const METRICS: Metric[] = [
     icon: Gauge,
     raw: (m) => m.gridLoadPct * 100,
     format: (n) => `${n.toFixed(0)}%`,
-    tint: "text-yellow-400",
+    tint: "text-data-warn",
     help: "Peak grid load vs capacity — lower is healthier; renewables + storage reduce strain.",
   },
   {
     key: "emissionsTonnes",
     label: "Emissions/mo",
-    icon: TrendingUp,
+    icon: TrendUp,
     raw: (m) => m.emissionsTonnes,
     format: (n) => `${fmtCompact(n)}t`,
-    tint: "text-orange-400",
+    tint: "text-data-alert",
     help: "Tonnes of CO₂ per month from the non-renewable portion of demand.",
   },
   {
     key: "costCumulativeCad",
     label: "Capital",
-    icon: CircleDollarSign,
+    icon: CurrencyDollar,
     raw: (m) => m.costCumulativeCad,
     format: (n) => fmtCad(n),
-    tint: "text-sky-400",
+    tint: "text-muted-foreground",
     help: "Cumulative capital cost (CAD) of all placed infrastructure.",
   },
 ];
@@ -130,10 +130,8 @@ export function Hud() {
     <div className="h-full overflow-y-auto">
       <div className="p-3">
         <div className="mb-2 flex items-baseline justify-between">
-          <span className="text-xs uppercase tracking-wide text-muted-foreground">
-            Simulation
-          </span>
-          <span className="text-xs text-muted-foreground">
+          <span className="label">Simulation</span>
+          <span className="num text-xs text-muted-foreground">
             Tick {metrics.tick} · {metrics.year}
           </span>
         </div>
@@ -144,14 +142,14 @@ export function Hud() {
             return (
               <Tooltip key={m.key as string}>
                 <TooltipTrigger asChild>
-                  <div className="cursor-help rounded-lg border border-border/60 bg-secondary/30 p-1.5">
+                  <div className="cursor-help rounded-[var(--radius)] border border-border bg-muted p-1.5">
                     <div className="flex items-center gap-1">
-                      <Icon className={`h-3 w-3 ${m.tint}`} />
+                      <Icon weight="bold" className={`h-3 w-3 ${m.tint}`} />
                       <span className="truncate text-[9px] text-muted-foreground">
                         {m.label}
                       </span>
                     </div>
-                    <div className="mt-0.5 text-sm font-semibold tabular-nums leading-tight">
+                    <div className="num mt-0.5 text-sm font-semibold leading-tight">
                       <MetricValue raw={m.raw(metrics)} format={m.format} />
                     </div>
                   </div>
@@ -175,28 +173,29 @@ export function Hud() {
           >
             <defs>
               <linearGradient id="gCov" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#22c55e" stopOpacity={0.5} />
-                <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
+                <stop offset="0%" stopColor="hsl(152 58% 42%)" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="hsl(152 58% 42%)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <YAxis
-              tick={{ fontSize: 9, fill: "#64748b" }}
+              tick={{ fontSize: 9, fill: "hsl(0 0% 55%)" }}
               width={30}
               domain={[0, 100]}
             />
             <RTooltip
               contentStyle={{
-                background: "#0b1220",
-                border: "1px solid #1e293b",
-                borderRadius: 8,
+                background: "hsl(0 0% 100%)",
+                border: "1px solid hsl(0 0% 90%)",
+                borderRadius: 6,
                 fontSize: 11,
+                fontFamily: "JetBrains Mono, ui-monospace, monospace",
               }}
-              labelStyle={{ color: "#94a3b8" }}
+              labelStyle={{ color: "hsl(0 0% 42%)" }}
             />
             <Area
               type="monotone"
               dataKey="coverage"
-              stroke="#22c55e"
+              stroke="hsl(152 58% 42%)"
               strokeWidth={2}
               fill="url(#gCov)"
               name="Coverage"
@@ -205,7 +204,7 @@ export function Hud() {
             <Area
               type="monotone"
               dataKey="equity"
-              stroke="#38bdf8"
+              stroke="hsl(212 90% 55%)"
               strokeWidth={1.75}
               fillOpacity={0}
               name="Equity"
@@ -214,7 +213,7 @@ export function Hud() {
             <Area
               type="monotone"
               dataKey="approval"
-              stroke="#a78bfa"
+              stroke="hsl(262 83% 68%)"
               strokeWidth={1.75}
               fillOpacity={0}
               name="Approval"
@@ -224,11 +223,11 @@ export function Hud() {
         </ResponsiveContainer>
 
         {generationMix?.marginalGco2PerKwh != null && (
-          <div className="mt-2.5 flex items-center justify-between rounded-lg border border-border/60 bg-secondary/30 px-2.5 py-1.5">
+          <div className="mt-2.5 flex items-center justify-between rounded-[var(--radius)] border border-border bg-muted px-2.5 py-1.5">
             <span className="text-[11px] text-muted-foreground">
               Grid carbon intensity
             </span>
-            <span className="text-xs font-semibold tabular-nums text-orange-300">
+            <span className="num text-xs font-semibold text-data-alert">
               {generationMix.marginalGco2PerKwh} gCO₂/kWh
             </span>
           </div>
@@ -237,16 +236,16 @@ export function Hud() {
         {sbei?.communityWideMtCO2e != null && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="mt-2 cursor-help rounded-lg border border-border/60 bg-secondary/20 px-2.5 py-2">
-                <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                  Toronto context
-                </div>
+              <div className="mt-2 cursor-help rounded-[var(--radius)] border border-border bg-muted px-2.5 py-2">
+                <div className="label">Toronto context</div>
                 <div className="mt-0.5 text-xs leading-snug">
-                  <b className="text-orange-300">{sbei.communityWideMtCO2e} Mt CO₂e/yr</b>
+                  <b className="num text-data-alert">
+                    {sbei.communityWideMtCO2e} Mt CO₂e/yr
+                  </b>
                   {sbei.sectorSharePct?.buildings != null && (
                     <>
                       {" · "}buildings{" "}
-                      <b>{sbei.sectorSharePct.buildings}%</b>
+                      <b className="num">{sbei.sectorSharePct.buildings}%</b>
                     </>
                   )}
                   {" · net-zero by 2040"}

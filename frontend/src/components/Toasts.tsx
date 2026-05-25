@@ -1,4 +1,10 @@
-import { CheckCircle2, AlertTriangle, Info, Zap, X } from "lucide-react";
+import {
+  CheckCircle as CheckCircle2,
+  Warning as AlertTriangle,
+  Info,
+  Lightning as Zap,
+  X,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 
 const ICON = {
@@ -25,7 +31,7 @@ export function Toasts() {
         return (
           <div
             key={t.id}
-            className={`glass animate-in fade-in slide-in-from-top-2 pointer-events-auto flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium shadow-xl duration-300 ${TINT[t.kind]}`}
+            className={`glass animate-in fade-in slide-in-from-top-2 pointer-events-auto flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium duration-300 ${TINT[t.kind]}`}
           >
             <Icon className="h-3.5 w-3.5 shrink-0" />
             <span className="max-w-[320px] text-foreground/90">{t.text}</span>

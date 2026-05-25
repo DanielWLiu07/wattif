@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import {
   Brain,
   Wrench,
-  CheckCircle2,
+  CheckCircle as CheckCircle2,
   MapPin,
-  Sparkles,
-  Send,
+  Sparkle as Sparkles,
+  PaperPlaneTilt as Send,
   Check,
   X,
-  Zap,
-  Wifi,
-  WifiOff,
-} from "lucide-react";
+  Lightning as Zap,
+  WifiHigh as Wifi,
+  WifiSlash as WifiOff,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import type { ChatItem, PlannerEvent } from "@/types";
 import { Button } from "@/components/ui/button";

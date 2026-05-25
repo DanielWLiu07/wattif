@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Shuffle, RotateCcw, Crosshair, Zap, Globe } from "lucide-react";
+import {
+  Shuffle,
+  ArrowCounterClockwise as RotateCcw,
+  Crosshair,
+  Lightning as Zap,
+  Globe,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { SCENARIO_PRESETS } from "@/types";
 import type { ScenarioType } from "@/types";

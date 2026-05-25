@@ -1,4 +1,4 @@
-import { AlertTriangle, X } from "lucide-react";
+import { Warning as AlertTriangle, X } from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { SCENARIO_PRESETS } from "@/types";
 
@@ -14,7 +14,7 @@ export function ScenarioBanner() {
   const targetName = zones.find((z) => z.id === lastTargetZoneId)?.name;
 
   return (
-    <div className="pointer-events-auto mx-auto mt-1 flex w-fit max-w-[680px] items-center gap-3 rounded-full border border-yellow-400/40 bg-yellow-400/10 px-4 py-1.5 shadow-lg backdrop-blur">
+    <div className="pointer-events-auto mx-auto mt-1 flex w-fit max-w-[680px] items-center gap-3 rounded-full border border-yellow-400/40 bg-yellow-400/10 px-4 py-1.5">
       <span className="text-lg leading-none">{icon}</span>
       <div className="flex items-center gap-2 text-xs">
         <AlertTriangle className="h-3.5 w-3.5 text-yellow-400" />

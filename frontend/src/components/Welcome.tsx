@@ -1,4 +1,10 @@
-import { Zap, Play, MousePointerClick, Sparkles, Scale } from "lucide-react";
+import {
+  Lightning as Zap,
+  Play,
+  CursorClick as MousePointerClick,
+  Sparkle as Sparkles,
+  Scales as Scale,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { Button } from "@/components/ui/button";
 
@@ -9,8 +15,8 @@ export function Welcome() {
   if (!showWelcome) return null;
 
   return (
-    <div className="absolute inset-0 z-[60] flex items-center justify-center bg-background/70 backdrop-blur-sm">
-      <div className="glass animate-in fade-in zoom-in-95 mx-4 w-full max-w-md rounded-2xl p-6 shadow-2xl duration-300">
+    <div className="absolute inset-0 z-[60] flex items-center justify-center bg-foreground/30">
+      <div className="glass animate-in fade-in zoom-in-95 mx-4 w-full max-w-md rounded-2xl p-6 duration-300">
         <div className="mb-3 flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <Zap className="h-5 w-5" />

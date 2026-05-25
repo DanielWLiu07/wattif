@@ -1,4 +1,9 @@
-import { Wrench, Zap, Map as MapIcon, Crosshair } from "lucide-react";
+import {
+  Wrench,
+  Lightning as Zap,
+  MapTrifold as MapIcon,
+  Crosshair,
+} from "@phosphor-icons/react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BuildTab } from "@/components/BuildTab";

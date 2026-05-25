@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MessageSquare, Brain, Boxes, BarChart3, Newspaper } from "lucide-react";
+import {
+  ChatCircle as MessageSquare,
+  Brain,
+  Stack as Boxes,
+  ChartBar as BarChart3,
+  Newspaper,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { Hud } from "@/components/Hud";
 import { VoicesFeed } from "@/components/VoicesFeed";
@@ -64,7 +70,7 @@ function MiniStats() {
           <div className="text-[9px] uppercase tracking-wide text-muted-foreground">
             {c.label}
           </div>
-          <div className={`text-sm font-semibold tabular-nums ${c.tint}`}>
+          <div className={`text-sm font-semibold num ${c.tint}`}>
             {c.value}
             <Delta d={c.delta} />
           </div>

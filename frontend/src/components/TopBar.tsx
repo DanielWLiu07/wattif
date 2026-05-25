@@ -1,4 +1,10 @@
-import { Zap, Wifi, FlaskConical, Play, HelpCircle } from "lucide-react";
+import {
+  Lightning as Zap,
+  WifiHigh as Wifi,
+  Flask as FlaskConical,
+  Play,
+  Question as HelpCircle,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,7 +30,7 @@ export function TopBar() {
 
   return (
     <div className="pointer-events-auto flex items-center justify-between px-4 py-3">
-      <div className="glass flex items-center gap-2.5 rounded-xl px-3.5 py-2 shadow-lg">
+      <div className="glass flex items-center gap-2.5 rounded-xl px-3.5 py-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
           <Zap className="h-4 w-4" />
         </div>
@@ -41,15 +47,15 @@ export function TopBar() {
       {voicesCount > 0 && (
         <button
           onClick={() => focusVoices("")}
-          className="glass pointer-events-auto hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs shadow-lg transition-colors hover:text-foreground md:flex"
+          className="glass pointer-events-auto hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs transition-colors hover:text-foreground md:flex"
           title="Open the Voices log"
         >
           <span className="animate-pulse">💬</span>
-          <b className="tabular-nums">{Math.min(voicesCount, 40)}</b> people talking
+          <b className="num">{Math.min(voicesCount, 40)}</b> people talking
         </button>
       )}
 
-      <div className="glass flex items-center gap-2 rounded-xl px-2.5 py-1.5 shadow-lg">
+      <div className="glass flex items-center gap-2 rounded-xl px-2.5 py-1.5">
         <Button
           size="sm"
           variant={demo.running ? "secondary" : "default"}

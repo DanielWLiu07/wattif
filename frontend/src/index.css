@@ -122,11 +122,11 @@
   background: transparent;
 }
 
+/* Flat panel surface (replaces the old frosted glass). Solid card + 1px hairline
+   border — no blur, no translucency. White panels float over the dark 3D map. */
 .glass {
-  background: hsl(var(--card) / 0.82);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid hsl(var(--border) / 0.7);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
 }
 
 /* Scenario "drama" flash: a radial pulse that fades, tinted per event. */

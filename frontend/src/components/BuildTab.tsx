@@ -3,13 +3,13 @@ import {
   Wind,
   BatteryCharging,
   Network,
-  MousePointer2,
-  Sparkles,
+  CursorClick as MousePointer2,
+  Sparkle as Sparkles,
   Check,
   Hand,
-  Bot,
+  Robot as Bot,
   Footprints,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import type { InfraKind, PlacementMode } from "@/types";
 import { INFRA_PRESETS, INFRA_COLOR } from "@/types";

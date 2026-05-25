@@ -60,7 +60,7 @@ export function OverlayLegend() {
 
   return (
     <div className="pointer-events-auto absolute bottom-4 left-4 z-30 w-[230px]">
-      <div className="glass rounded-xl px-3 py-2.5 shadow-xl">
+      <div className="glass rounded-xl px-3 py-2.5">
         <div className="mb-1.5 flex items-center justify-between">
           <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
             Map overlay
