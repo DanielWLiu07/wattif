@@ -27,6 +27,7 @@ from .models import (
     Zone,
 )
 from . import ml_bridge
+from .routes.persistence import router as persistence_router
 from .sim.llm import generate_rationales
 from .state import get_world
 
@@ -57,6 +58,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(persistence_router)
 
 
 # ---------------------------------------------------------------------------
