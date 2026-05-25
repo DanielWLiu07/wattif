@@ -303,12 +303,14 @@ class SimEngine:
             )
         for kind, delta in sent.items():
             self.sentiment.shift_target(kind, delta * intensity, list(zone_idxs))
+        zone_ids = [self.zones[i].id for i in zone_idxs]
         self.active_programs.append(
-            {"program": program, "zones": len(zone_idxs), "intensity": intensity}
+            {"program": program, "zones": zone_ids, "intensity": intensity}
         )
         return {
             "program": program,
-            "zones": len(zone_idxs),
+            "zones": zone_ids,  # RESOLVED zone ids the program targets (FE lights these up)
+            "zoneCount": len(zone_ids),
             "intensity": round(intensity, 2),
             "solarBoost": round(solar_boost * intensity, 3),
             "evBoost": round(ev_boost * intensity, 3),

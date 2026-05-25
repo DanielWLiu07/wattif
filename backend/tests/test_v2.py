@@ -592,6 +592,11 @@ def test_launch_program_raises_adoption_in_high_burden_zones():
     assert res["program"] == "rooftop_solar_rebate"
     assert res["scope"] == "high_burden"
     assert res["solarBoost"] > 0
+    # result.zones must be the RESOLVED zone ids (FE lights up exactly these rooftops)
+    assert isinstance(res["zones"], list)
+    hb_ids = {w.zones[i].id for i in hb}
+    assert set(res["zones"]) == hb_ids
+    assert res["zoneCount"] == len(hb_ids)
     w.engine.step_many(18)
     after_deltas = w.engine.current_tick().zone_deltas
     grew = sum(1 for i in hb if after_deltas[i].adoption_count > before[i])
@@ -675,10 +680,17 @@ def test_sentiment_endpoint_with_subject():
 
     state.reset_world()
     c = TestClient(app)
+    # no subject -> global shape unchanged
+    g = c.get("/api/sentiment").json()
+    assert "cityApprovalPct" in g and "perZone" in g
+    # subject -> flat {subject, approval, support, oppose, neutral, n} with int counts
     r = c.get("/api/sentiment?subject=kind:wind").json()
-    assert "subject" in r
-    assert r["subject"]["subject"] == "kind:wind"
-    assert r["subject"]["n"] > 0
+    assert r["subject"] == "kind:wind"
+    assert 0.0 <= r["approval"] <= 1.0
+    assert isinstance(r["support"], int) and isinstance(r["oppose"], int)
+    assert isinstance(r["neutral"], int)
+    assert r["n"] == r["support"] + r["oppose"] + r["neutral"]
+    assert r["n"] > 0
 
 
 def test_reaction_voices_name_the_program_subject():

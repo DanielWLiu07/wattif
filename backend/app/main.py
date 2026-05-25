@@ -248,13 +248,23 @@ def get_scenarios() -> list[Scenario]:
 # ---------------------------------------------------------------------------
 @app.get("/api/sentiment")
 def get_sentiment(subject: str | None = Query(default=None)) -> dict:
-    """City + per-zone approval (0..1). With ?subject=infra:<id>|kind:<k>|program:<name>, also
-    returns support/oppose toward THAT specific subject among the relevant (nearby) agents."""
+    """Without ?subject: city + per-zone approval (0..1) — the global shape.
+
+    With ?subject=infra:<id>|kind:<k>|program:<name>: support/oppose toward THAT specific
+    subject among the relevant (nearby) agents — returns {subject, approval, support, oppose,
+    neutral, n} (counts as ints)."""
     world = get_world()
-    summary = world.sentiment_summary().model_dump(by_alias=True)
     if subject:
-        summary["subject"] = world.subject_approval(subject)
-    return summary
+        s = world.subject_approval(subject)
+        return {
+            "subject": s["subject"],
+            "approval": s["approval"],  # 0..1 (None if no relevant agents)
+            "support": int(s.get("supportCount", 0)),
+            "oppose": int(s.get("opposeCount", 0)),
+            "neutral": int(s.get("neutralCount", 0)),
+            "n": int(s.get("n", 0)),
+        }
+    return world.sentiment_summary().model_dump(by_alias=True)
 
 
 @app.get("/api/agents/voices", response_model=list[AgentVoice])
