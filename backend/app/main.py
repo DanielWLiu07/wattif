@@ -21,7 +21,6 @@ from .models import (
     Recommendation,
     Scenario,
     ScenarioRequest,
-    SentimentSummary,
     SimMetrics,
     StepRequest,
     Zone,
