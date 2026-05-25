@@ -130,6 +130,8 @@ ATTITUDES_FILE = "attitudes_extract.json"
 WELLBEING_FILE = "wellbeing_environment.json"
 # Land/water mask (produced by scripts/fetch_water_mask.py). Optional — clips zones to land.
 WATER_MASK_FILE = "water_mask.geojson"
+# Real Toronto Islands land (produced by scripts/fetch_islands.py). Optional — replaces island blob.
+ISLANDS_FILE = "islands.geojson"
 TYPICAL_FOOTPRINT_M2 = 160.0   # ~typical Toronto building ground footprint
 METRES_PER_LEVEL = 3.1         # storey height for 3D extrusion / height estimates
 
@@ -434,6 +436,39 @@ def clean_geom(geom: dict) -> tuple[dict, list[float]]:
     if len(polys) == 1:
         return {"type": "Polygon", "coordinates": rings(polys[0])}, centroid
     return {"type": "MultiPolygon", "coordinates": [rings(p) for p in polys]}, centroid
+
+
+def load_islands_mask():
+    """Load real Toronto Islands land as a shapely geometry (or None if absent/shapely missing)."""
+    path = RAW_DIR / ISLANDS_FILE
+    if not path.exists():
+        return None
+    try:
+        from shapely.geometry import shape
+        g = shape(json.loads(path.read_text())["geometry"])
+        if not g.is_valid:
+            g = g.buffer(0)
+        return g
+    except Exception:  # noqa: BLE001
+        return None
+
+
+# The Toronto Islands all belong to this one neighbourhood (its name literally includes "The
+# Island"), so we attach the full real island landmass to it rather than per-zone clipping (the
+# decimated zone boundary would otherwise cut the islands).
+ISLAND_OWNER_ZONE = "Waterfront Communities–The Island"
+
+
+def decompose_islands(islands) -> list[list[list[list[float]]]]:
+    """Real island land -> list of polygons ([exterior,*holes]) at fine detail (largest first)."""
+    geoms = list(islands.geoms) if islands.geom_type == "MultiPolygon" else \
+        ([islands] if islands.geom_type == "Polygon" else [])
+    out = []
+    for g in sorted((g for g in geoms if g.area > 0), key=lambda g: g.area, reverse=True):
+        rings = _poly_rings(g, 0.00003)  # fine — islands are small & visually prominent
+        if rings:
+            out.append(rings)
+    return out
 
 
 def clip_ring_to_land(ring: list[list[float]], water, min_area_frac: float = 0.02):
@@ -1335,7 +1370,10 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     profiles = load_real_profiles()
 
     water = load_water_mask()  # optional shapely geometry; clips zone polygons to land
+    islands = load_islands_mask()  # real Toronto Islands land (replaces water-subtraction blob)
+    island_polys = decompose_islands(islands) if islands is not None else []
     clipped_count = 0
+    islands_applied = 0
 
     # Provenance counters (real vs synthetic-fallback per field).
     prov = {k: {"real": 0, "synthetic": 0} for k in
@@ -1368,10 +1406,21 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
         if water is not None:
             polys, changed = clip_ring_to_land(polygon_coords[0], water)
             if changed:
-                if len(polys) == 1:
-                    geom = {"type": "Polygon", "coordinates": polys[0]}
+                # The island-owning zone: its water-subtraction "island" parts are a filled blob —
+                # keep the mainland (largest clip part) and attach the REAL OSM island land. If real
+                # islands aren't available, fall back to MAINLAND-ONLY (largest part) over the blob.
+                if name == ISLAND_OWNER_ZONE:
+                    if island_polys:
+                        parts = [polys[0]] + island_polys
+                        islands_applied += 1
+                    else:
+                        parts = [polys[0]]  # mainland-only fallback (no blob)
                 else:
-                    geom = {"type": "MultiPolygon", "coordinates": polys}
+                    parts = polys
+                if len(parts) == 1:
+                    geom = {"type": "Polygon", "coordinates": parts[0]}
+                else:
+                    geom = {"type": "MultiPolygon", "coordinates": parts}
                 geom, centroid = clean_geom(geom)  # OGC-valid + centroid on largest part
                 clipped_count += 1
 
@@ -1463,7 +1512,10 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
             }
         )
     if water is not None:
-        print(f"  ✓ clipped {clipped_count}/{len(zones)} zone polygons to land", file=sys.stderr)
+        print(f"  ✓ clipped {clipped_count}/{len(zones)} zone polygons to land"
+              + (f"; real islands applied to {islands_applied}" if islands_applied else
+                 ("; islands mask absent → mainland-only for island zones" if islands is None else "")),
+              file=sys.stderr)
     return zones, prov
 
 

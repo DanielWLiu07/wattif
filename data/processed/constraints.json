@@ -14,9 +14,9 @@
         "Muggs Island",
         "Wards Island"
       ],
-      "protectedAreaFraction": 0.101,
+      "protectedAreaFraction": 0.098,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.152,
+      "sitingPenalty": 0.147,
       "noBuild": false
     },
     {
