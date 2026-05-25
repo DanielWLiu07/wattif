@@ -111,6 +111,7 @@ export function MapView() {
   const flashZones = useStore((s) => s.flashZones);
   const approvalDeltas = useStore((s) => s.approvalDeltas);
   const approvalHistory = useStore((s) => s.approvalHistory);
+  const spawnTimes = useStore((s) => s.spawnTimes);
   const extrude = useStore((s) => s.extrude);
   const environment = useStore((s) => s.environment);
   const floodRisk = useStore((s) => s.floodRisk);
@@ -187,6 +188,7 @@ export function MapView() {
       targetZoneId,
       flashZones,
       approvalDeltas,
+      spawnTimes,
       extrude,
       time,
       onInfraClick,
@@ -225,6 +227,7 @@ export function MapView() {
     targetZoneId,
     flashZones,
     approvalDeltas,
+    spawnTimes,
     extrude,
     time,
     onInfraClick,

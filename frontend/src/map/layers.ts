@@ -93,6 +93,7 @@ export type LayerInputs = {
   targetZoneId: string | null;
   flashZones: string[]; // briefly highlighted zones (what changed this step)
   approvalDeltas: { zoneId: string; delta: number }[]; // transient "+x%" labels
+  spawnTimes: Record<string, number>; // infraId -> ms placed (scale-in + ripple)
   extrude: boolean; // 3D height on demand hexbins + equity choropleth
   time: number; // animation clock (ms)
   onInfraClick: (i: Infra) => void;
@@ -120,12 +121,27 @@ export function buildLayers(input: LayerInputs): Layer[] {
     targetZoneId,
     flashZones,
     approvalDeltas,
+    spawnTimes,
     extrude,
     time,
     onInfraClick,
   } = input;
   const out: Layer[] = [];
   const zoneById = new Map(zones.map((z) => [z.id, z]));
+  // placement scale-in (easeOutBack overshoot) + ripple timing
+  const SPAWN_MS = 650;
+  const RIPPLE_MS = 1200;
+  const easeOutBack = (x: number) => {
+    const c1 = 1.70158,
+      c3 = c1 + 1;
+    return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2;
+  };
+  const placeScale = (id: string) => {
+    const sp = spawnTimes[id];
+    if (!sp) return 1;
+    const a = (Date.now() - sp) / SPAWN_MS;
+    return a >= 1 ? 1 : Math.max(0.01, easeOutBack(a));
+  };
   const outageSet = new Set(outageZones);
   const gatheringSet = new Set(gatheringZones);
 
@@ -564,12 +580,44 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getFillColor: (r: Recommendation) => [...INFRA_COLOR[r.kind], 40] as any,
         stroked: true,
         filled: true,
-        getRadius: 260,
+        // gentle pulse so recommendation markers read as "suggestions"
+        getRadius: 230 + (0.5 + 0.5 * Math.sin(time / 350)) * 90,
         lineWidthMinPixels: 2,
         radiusMinPixels: 8,
         pickable: true,
+        updateTriggers: { getRadius: [time] },
       })
     );
+  }
+
+  // ---- Placement ripple (expanding ring at freshly-placed infra) ----
+  if (layers.infra && infra.length) {
+    const ripples = infra.filter(
+      (i) => spawnTimes[i.id] && Date.now() - spawnTimes[i.id] < RIPPLE_MS
+    );
+    if (ripples.length) {
+      out.push(
+        new ScatterplotLayer({
+          id: "place-ripple",
+          data: ripples,
+          getPosition: (i: Infra) => i.position,
+          getRadius: (i: Infra) => {
+            const a = (Date.now() - spawnTimes[i.id]) / RIPPLE_MS;
+            return 50 + a * 360;
+          },
+          radiusUnits: "meters",
+          stroked: true,
+          filled: false,
+          getLineColor: (i: Infra) => {
+            const a = (Date.now() - spawnTimes[i.id]) / RIPPLE_MS;
+            return [...INFRA_COLOR[i.kind], Math.round(220 * (1 - a))] as any;
+          },
+          lineWidthMinPixels: 2.5,
+          updateTriggers: { getRadius: [time], getLineColor: [time] },
+          pickable: false,
+        })
+      );
+    }
   }
 
   // ---- Infra base halos (pulsing batteries/microgrids) ----
@@ -599,6 +647,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         diskResolution: 24,
         extruded: true,
         pickable: true,
+        autoHighlight: true,
+        highlightColor: [255, 255, 255, 60],
         updateTriggers: {
           getElevation: [time],
           getLineColor: [selectedInfraId],
@@ -623,10 +673,20 @@ export function buildLayers(input: LayerInputs): Layer[] {
             spin
               ? [0, (time / 12 + hashSeed(i.id) % 360) % 360, 90]
               : [0, 0, 90],
+          // animate IN: scale from ~0 with an overshoot when freshly placed
+          getScale: (i: Infra) => {
+            const s = placeScale(i.id);
+            return [s, s, s];
+          },
           sizeScale: SIZE_SCALE[kind],
           _lighting: "pbr",
           pickable: true,
-          updateTriggers: { getOrientation: spin ? [time] : [] },
+          autoHighlight: true,
+          highlightColor: [255, 255, 255, 90],
+          updateTriggers: {
+            getOrientation: spin ? [time] : [],
+            getScale: [time],
+          },
           onClick: (info: any) => info.object && onInfraClick(info.object),
         })
       );

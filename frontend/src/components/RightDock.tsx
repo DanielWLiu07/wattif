@@ -8,7 +8,33 @@ import { ActivityLog } from "@/components/ActivityLog";
 import { InfrastructureInspector } from "@/components/InfrastructureInspector";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { pct } from "@/lib/utils";
+
+// Tween a number toward its target (count-up) instead of snapping.
+function useCountUp(target: number, duration = 550) {
+  const [val, setVal] = useState(target);
+  const ref = useRef(target);
+  useEffect(() => {
+    const from = ref.current;
+    const to = target;
+    if (from === to) return;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const v = from + (to - from) * (1 - (1 - t) ** 3);
+      ref.current = v;
+      setVal(v);
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else {
+        ref.current = to;
+        setVal(to);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return val;
+}
 
 // Tiny delta chip that briefly highlights the change after a step.
 function Delta({ d, unit = "%" }: { d: number; unit?: string }) {
@@ -29,6 +55,8 @@ function Delta({ d, unit = "%" }: { d: number; unit?: string }) {
 function MiniStats() {
   const metrics = useStore((s) => s.metrics);
   const history = useStore((s) => s.history);
+  const cov = useCountUp((metrics?.coveragePct ?? 0) * 100);
+  const app = useCountUp((metrics?.approvalPct ?? 0) * 100);
   if (!metrics) return null;
   const prevM = history.length >= 2 ? history[history.length - 2] : undefined;
   const covD = prevM ? (metrics.coveragePct - prevM.coveragePct) * 100 : 0;
@@ -38,13 +66,13 @@ function MiniStats() {
   const cells = [
     {
       label: "Coverage",
-      value: pct(metrics.coveragePct, 0),
+      value: `${cov.toFixed(0)}%`,
       tint: "text-primary",
       delta: covD,
     },
     {
       label: "Approval",
-      value: pct(metrics.approvalPct ?? 0, 0),
+      value: `${app.toFixed(0)}%`,
       tint: "text-sky-300",
       delta: appD,
     },

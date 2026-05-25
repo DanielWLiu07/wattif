@@ -10,6 +10,7 @@ import { ScenarioBanner } from "@/components/ScenarioBanner";
 import { Welcome } from "@/components/Welcome";
 import { DemoCaption } from "@/components/DemoCaption";
 import { OverlayLegend } from "@/components/OverlayLegend";
+import { Toasts } from "@/components/Toasts";
 import { ScenarioFlash } from "@/components/ScenarioFlash";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -131,6 +132,7 @@ function App() {
 
         <ScenarioFlash />
         <OverlayLegend />
+        <Toasts />
         <DemoCaption />
         <Welcome />
 

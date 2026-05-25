@@ -94,6 +94,10 @@ type State = {
   approvalHistory: Record<string, number[]>; // per-zone approval trend (0..1)
   approvalDeltas: { zoneId: string; delta: number }[]; // transient "+3%" labels
 
+  // juice: placement animations + toasts
+  spawnTimes: Record<string, number>; // infraId -> ms when placed (scale-in anim)
+  toasts: { id: string; text: string; kind: "info" | "good" | "warn" | "bad" }[];
+
   // v3 chat (real-time agentic conversation)
   chat: ChatItem[];
   chatConnected: boolean;
@@ -162,6 +166,10 @@ type State = {
   stopPlanner: () => void;
   approveStep: () => void;
   rejectStep: () => void;
+
+  // juice
+  pushToast: (text: string, kind?: "info" | "good" | "warn" | "bad") => void;
+  dismissToast: (id: string) => void;
 
   // v3 actions
   sendChat: (text: string) => void;
@@ -260,7 +268,10 @@ function attachSession(
       set({ chatAwaiting: true });
     }
     if (e.type === "placement") {
-      set((s) => ({ infra: [...s.infra, e.infra] }));
+      set((s) => ({
+        infra: [...s.infra, e.infra],
+        spawnTimes: { ...s.spawnTimes, [e.infra.id]: Date.now() },
+      }));
       const m0 = get().metrics;
       const zName = get().zones.find((z) => z.id === e.infra.zoneId)?.name;
       logActivity(
@@ -284,6 +295,7 @@ function attachSession(
     }
     if (e.type === "done") {
       set({ chatBusy: false, chatAwaiting: false });
+      get().pushToast(e.summary || "AI planning complete", "good");
       void get().refreshVoices(5, "ai-plan");
     }
   };
@@ -361,6 +373,8 @@ export const useStore = create<State>((set, get) => ({
   flashZones: [],
   approvalHistory: {},
   approvalDeltas: [],
+  spawnTimes: {},
+  toasts: [],
 
   chat: [],
   chatConnected: false,
@@ -593,7 +607,12 @@ export const useStore = create<State>((set, get) => ({
     const saved = await api.placeInfra(optimistic);
     set((s) => ({
       infra: s.infra.map((i) => (i.id === optimistic.id ? saved : i)),
+      spawnTimes: { ...s.spawnTimes, [saved.id]: Date.now(), [optimistic.id]: Date.now() },
     }));
+    get().pushToast(
+      `Placed ${optimistic.kind} in ${z?.name ?? "the city"}`,
+      "good"
+    );
     const m0 = get().metrics;
     logActivity(
       set,
@@ -747,6 +766,7 @@ export const useStore = create<State>((set, get) => ({
       optimizing: false,
       layers: { ...get().layers, recommendations: true },
     });
+    get().pushToast(`${data.length} candidate sites recommended`, "info");
   },
 
   clearRecommendations: () => set({ recommendations: [] }),
@@ -794,6 +814,12 @@ export const useStore = create<State>((set, get) => ({
       gatheringZones: gathering,
       lastTargetZoneId: zoneId ?? null,
     });
+    get().pushToast(
+      `${scenario.label} ${zones.find((z) => z.id === zoneId)?.name
+        ? `→ ${zones.find((z) => z.id === zoneId)!.name}`
+        : "(city-wide)"}`,
+      ["blackout", "earthquake", "ice_storm"].includes(scenario.type) ? "bad" : "warn"
+    );
     // Camera "follow the action": fly to a targeted zone, or pull back for city-wide.
     {
       const tz = zoneId ? zones.find((z) => z.id === zoneId) : undefined;
@@ -887,7 +913,9 @@ export const useStore = create<State>((set, get) => ({
       flashZones: [],
       approvalHistory: {},
       approvalDeltas: [],
+      spawnTimes: {},
     });
+    get().pushToast("Session reset", "info");
   },
 
   refreshSentiment: async () => {
@@ -948,6 +976,19 @@ export const useStore = create<State>((set, get) => ({
     set({ chatAwaiting: false });
     session?.reject();
   },
+
+  // ---------------- juice: toasts ----------------
+
+  pushToast: (text, kind = "info") => {
+    const id = aid();
+    set((s) => ({ toasts: [...s.toasts, { id, text, kind }].slice(-4) }));
+    setTimeout(
+      () => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+      3600
+    );
+  },
+  dismissToast: (id) =>
+    set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 
   // ---------------- v3 chat / targeting ----------------
 
