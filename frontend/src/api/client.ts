@@ -103,14 +103,16 @@ export async function getSubjectApproval(
   const r = await tryFetch<any>(
     `/api/sentiment?subject=${encodeURIComponent(subject)}`
   );
-  if (!r) return null;
-  // accept both bare (support/oppose/neutral) and *Count field names; require a
-  // subject-specific payload (not the global {cityApprovalPct, perZone}).
-  const support = r.support ?? r.supportCount;
-  const oppose = r.oppose ?? r.opposeCount;
-  const neutral = r.neutral ?? r.neutralCount;
-  if (r.approval == null && support == null) return null;
-  return { approval: r.approval, support, oppose, neutral };
+  // Flat top-level subject payload: { subject, approval (0..1, may be null),
+  // support, oppose, neutral, n }. Fall back to mock when there's no approval
+  // (no relevant agents) or it's the global {cityApprovalPct, perZone} shape.
+  if (!r || r.approval == null) return null;
+  return {
+    approval: r.approval,
+    support: r.support ?? r.supportCount,
+    oppose: r.oppose ?? r.opposeCount,
+    neutral: r.neutral ?? r.neutralCount,
+  };
 }
 
 export async function deleteInfra(id: string): Promise<boolean> {
