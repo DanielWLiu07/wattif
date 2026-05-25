@@ -1,4 +1,4 @@
-import type { Polygon } from "geojson";
+import type { Polygon, MultiPolygon } from "geojson";
 import type { LngLat, Zone } from "@/types";
 
 // Ray-casting point-in-polygon over a single linear ring ([ [lng,lat], ... ]).
@@ -17,37 +17,48 @@ function inRing(lng: number, lat: number, ring: number[][]): boolean {
   return inside;
 }
 
-function inPolygon(lng: number, lat: number, poly: Polygon): boolean {
-  const rings = poly.coordinates;
-  if (!rings.length) return false;
-  if (!inRing(lng, lat, rings[0])) return false;
+// One polygon = [outerRing, ...holes].
+function inSinglePolygon(lng: number, lat: number, rings: number[][][]): boolean {
+  if (!rings.length || !inRing(lng, lat, rings[0])) return false;
   for (let h = 1; h < rings.length; h++)
-    if (inRing(lng, lat, rings[h])) return false;
+    if (inRing(lng, lat, rings[h])) return false; // holes
   return true;
+}
+
+// Normalize Polygon | MultiPolygon → list of polygons (each = ring[]).
+function polygonsOf(geom: Polygon | MultiPolygon): number[][][][] {
+  return geom.type === "MultiPolygon"
+    ? (geom.coordinates as number[][][][])
+    : [geom.coordinates as number[][][]];
+}
+
+function inGeometry(lng: number, lat: number, geom: Polygon | MultiPolygon): boolean {
+  for (const rings of polygonsOf(geom))
+    if (inSinglePolygon(lng, lat, rings)) return true;
+  return false;
 }
 
 /**
  * Build a "is this point on land?" test that hides markers floating on Lake
  * Ontario WITHOUT over-clipping valid land between neighbourhood polygons.
+ * Handles both Polygon and MultiPolygon (island) zone geometries.
  *
  * A point is land if it's inside any zone OR north of the local shoreline
- * (the southernmost zone latitude near that longitude). Only points that are
- * both outside every zone AND south of the shoreline (i.e. in the lake) are
- * dropped — so gaps between tracked zones still keep their markers.
+ * (southernmost zone latitude near that longitude).
  */
 export function makeLandTest(zones: Zone[]): (p: LngLat) => boolean {
   const boxes = zones.map((z) => {
-    const ring = z.polygon.coordinates[0] ?? [];
     let minX = Infinity,
       minY = Infinity,
       maxX = -Infinity,
       maxY = -Infinity;
-    for (const [x, y] of ring) {
-      if (x < minX) minX = x;
-      if (y < minY) minY = y;
-      if (x > maxX) maxX = x;
-      if (y > maxY) maxY = y;
-    }
+    for (const rings of polygonsOf(z.polygon))
+      for (const [x, y] of rings[0] ?? []) {
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+      }
     return { z, minX, minY, maxX, maxY };
   });
   const globalMinLat = Math.min(...boxes.map((b) => b.minY));
@@ -55,21 +66,17 @@ export function makeLandTest(zones: Zone[]): (p: LngLat) => boolean {
 
   const shorelineAt = (lng: number): number => {
     let minLat = Infinity;
-    for (const b of boxes) {
-      if (lng >= b.minX - 0.01 && lng <= b.maxX + 0.01) {
-        if (b.minY < minLat) minLat = b.minY;
-      }
-    }
+    for (const b of boxes)
+      if (lng >= b.minX - 0.01 && lng <= b.maxX + 0.01 && b.minY < minLat)
+        minLat = b.minY;
     return minLat === Infinity ? globalMinLat : minLat;
   };
 
   return ([lng, lat]: LngLat) => {
-    // inside any zone bbox → cheap PIP confirm
     for (const b of boxes) {
       if (lng < b.minX || lng > b.maxX || lat < b.minY || lat > b.maxY) continue;
-      if (inPolygon(lng, lat, b.z.polygon)) return true;
+      if (inGeometry(lng, lat, b.z.polygon)) return true;
     }
-    // otherwise: keep if north of the local shoreline (land/gap), drop if south (lake)
     return lat >= shorelineAt(lng) - SHORE_BUFFER;
   };
 }

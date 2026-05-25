@@ -1,13 +1,13 @@
 // WattIf shared data contract — mirrors docs/PLAN.md (Pydantic on the backend).
 // All coordinates are [lng, lat].
-import type { Polygon } from "geojson";
+import type { Polygon, MultiPolygon } from "geojson";
 
 export type LngLat = [number, number];
 
 export type Zone = {
   id: string;
   name: string;
-  polygon: Polygon;
+  polygon: Polygon | MultiPolygon; // islands → MultiPolygon
   centroid: LngLat;
   demographics: {
     population: number;
