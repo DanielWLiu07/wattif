@@ -5,28 +5,67 @@
 @tailwind utilities;
 
 @layer base {
+  /* Light — black & white, minimal. Landing + light-dashboard option. */
   :root {
-    /* Dark "control room" theme — energy/grid product look */
-    --background: 222 47% 6%;
-    --foreground: 210 40% 96%;
-    --card: 222 40% 9%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 44% 8%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 152 76% 45%;
-    --primary-foreground: 222 47% 6%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 14%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 199 89% 48%;
-    --accent-foreground: 222 47% 6%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 0 0% 7%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 7%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 42%;
+    --accent: 0 0% 95%;
+    --accent-foreground: 0 0% 7%;
     --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 152 76% 45%;
-    --radius: 0.65rem;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 7%;
+    --radius: 0.4rem;
+
+    /* Brand "volt" — WattIf's signature electric accent. Identity, not decoration:
+       logo mark, live/active states, energy-flow, key highlights. On black it reads electric. */
+    --brand: 72 95% 50%;
+    --brand-ink: 80 60% 12%; /* readable text/icon when sitting ON volt */
+
+    /* Semantic data highlights — used sparingly (same in both themes). */
+    --data-good: 152 58% 42%;
+    --data-warn: 38 92% 50%;
+    --data-alert: 0 72% 51%;
+    --data-info: 212 90% 55%;
+  }
+
+  /* Dark — refined monochrome. Default dashboard (best map legibility). */
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 6%;
+    --secondary: 0 0% 13%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 80%;
+
+    --data-good: 152 55% 48%;
+    --data-warn: 38 92% 55%;
+    --data-alert: 0 75% 60%;
+    --data-info: 212 90% 62%;
   }
 }
 
@@ -42,11 +81,32 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif;
+    font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
     overflow: hidden;
   }
+}
+
+/* Flat surface — replaces .glass. Solid bg + hairline border, no blur/shadow. */
+.surface {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+}
+/* Uppercase micro-label used on panel section heads / metric labels. */
+.label {
+  font-family: "Manrope", ui-sans-serif, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+/* Tabular monospace numerics for metrics/data. */
+.num {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
 /* thin custom scrollbars */
