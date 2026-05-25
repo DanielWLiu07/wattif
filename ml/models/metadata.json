@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "trained_at": "2026-05-24T23:56:35",
+  "trained_at": "2026-05-25T10:05:49",
   "seed": 42,
   "sklearn_only": true,
   "data_source": "real+synthetic",
@@ -8,9 +8,9 @@
   "n_real_agents": 4001,
   "models": {
     "demand_zone": {
-      "mae": 179121.65312770347,
-      "r2": 0.9916928973645155,
-      "mae_pct_of_mean": 0.03556663216963052,
+      "mae": 180094.10928105775,
+      "r2": 0.9915946204934772,
+      "mae_pct_of_mean": 0.03575972434862457,
       "n_rows": 6528,
       "n_real_rows": 528,
       "source": "real+synthetic"
