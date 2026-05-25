@@ -1,0 +1,44 @@
+# --- docs / markdown: excluded for now (code only, no README yet) ---
+*.md
+
+# --- internal / not tracked ---
+_ref/
+
+# --- node / frontend ---
+node_modules/
+dist/
+.vite/
+*.local
+
+# --- python / backend ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# --- secrets / env (keep .env.example template) ---
+.env
+.env.*
+!.env.example
+
+# --- data: raw source cache is large; processed fixtures ARE committed ---
+data/raw/
+data/cache/
+*.gpkg
+*.tif
+*.tiff
+
+# --- ml model binaries (regenerable via `python -m ml.train`) ---
+*.joblib
+
+# --- large assets / screenshots (not code) ---
+frontend/screenshots/
+
+# --- os / editor ---
+.DS_Store
+.idea/
+.vscode/
+*.log
