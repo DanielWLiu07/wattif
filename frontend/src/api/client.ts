@@ -74,12 +74,37 @@ export async function getAgents(
   return { data, live: false };
 }
 
-export async function placeInfra(infra: Infra): Promise<Infra> {
-  const r = await tryFetch<Infra>("/api/infra", {
+// POST returns the Infra plus a proposal-specific approval + vote counts.
+export type PlacedInfra = Infra & {
+  proposalApproval?: number; // 0..1
+  supportCount?: number;
+  opposeCount?: number;
+  neutralCount?: number;
+};
+export async function placeInfra(infra: Infra): Promise<PlacedInfra> {
+  const r = await tryFetch<PlacedInfra>("/api/infra", {
     method: "POST",
     body: JSON.stringify(infra),
   });
   return r ?? infra;
+}
+
+// GET /api/sentiment?subject=infra:<id> | kind:<k> | program:<name>
+// → { subject, approval (0..1), support, oppose, neutral }. null if unavailable.
+export type SubjectSentimentRes = {
+  approval?: number;
+  support?: number;
+  oppose?: number;
+  neutral?: number;
+};
+export async function getSubjectApproval(
+  subject: string
+): Promise<SubjectSentimentRes | null> {
+  const r = await tryFetch<SubjectSentimentRes>(
+    `/api/sentiment?subject=${encodeURIComponent(subject)}`
+  );
+  if (!r || (r.approval == null && r.support == null)) return null;
+  return r;
 }
 
 export async function deleteInfra(id: string): Promise<boolean> {
