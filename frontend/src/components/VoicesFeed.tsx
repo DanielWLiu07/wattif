@@ -16,6 +16,15 @@ const STANCE_STYLE: Record<
 
 const FILTERS = ["all", "support", "oppose", "neutral"] as const;
 
+// voice.trigger is now "placement:<kind>" | "program:<name>" | scenario-type | null
+function triggerLabel(t?: string | null): string | null {
+  if (!t) return null;
+  if (t.startsWith("placement:")) return `a new ${t.slice(10)}`;
+  if (t.startsWith("program:")) return t.slice(8).replace(/_/g, " ");
+  if (t === "ai-plan") return "the AI plan";
+  return t.replace(/_/g, " ");
+}
+
 export function VoicesFeed() {
   const voices = useStore((s) => s.voices);
   const zones = useStore((s) => s.zones);
@@ -141,6 +150,11 @@ export function VoicesFeed() {
                 <span className="text-[10px] text-muted-foreground">
                   {zoneName.get(v.zoneId) ?? v.zoneId} · {v.topic}
                 </span>
+                {triggerLabel(v.trigger) && (
+                  <div className="mt-0.5 text-[9px] text-accent/90">
+                    ↳ reacting to {triggerLabel(v.trigger)}
+                  </div>
+                )}
               </div>
             </div>
           );
