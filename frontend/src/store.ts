@@ -38,7 +38,8 @@ export type LayerKey =
   | "facilities"
   | "existing"
   | "constraints"
-  | "flood";
+  | "flood"
+  | "district";
 
 export type ToolMode = "select" | "place";
 
@@ -83,6 +84,8 @@ type State = {
   generationMix: api.GenerationMix | null;
   floodRisk: Record<string, number>; // per-zone 0..1 (data-2)
   heatVuln: Record<string, number>; // per-zone 0..1 (data-2)
+  districtEnergy: Record<string, api.DistrictEnergyZone>; // existing district energy
+  sbei: api.Sbei | null; // city-wide emissions context
   gatheringZones: string[]; // zones showing crowds (target + neighbours)
   lastTargetZoneId: string | null; // zone the last scenario hit
 
@@ -389,6 +392,8 @@ export const useStore = create<State>((set, get) => ({
   generationMix: null,
   floodRisk: {},
   heatVuln: {},
+  districtEnergy: {},
+  sbei: null,
   gatheringZones: [],
   lastTargetZoneId: null,
 
@@ -427,6 +432,7 @@ export const useStore = create<State>((set, get) => ({
     existing: true,
     constraints: true,
     flood: true, // flood-risk overlay (lights up when data-2 ships it)
+    district: true, // existing district-energy service area
   },
   mode: "select",
   placementMode: "manual",
@@ -499,6 +505,8 @@ export const useStore = create<State>((set, get) => ({
       api.getActivity(),
       api.getFloodRisk(),
       api.getHeatVulnerability(),
+      api.getDistrictEnergy(),
+      api.getSbei(),
     ]).then(
       ([
         facilities,
@@ -509,6 +517,8 @@ export const useStore = create<State>((set, get) => ({
         activity,
         floodRisk,
         heatVuln,
+        districtEnergy,
+        sbei,
       ]) =>
         set({
           facilities: facilities.filter((f) => onLand(f.position)),
@@ -518,6 +528,8 @@ export const useStore = create<State>((set, get) => ({
           generationMix,
           floodRisk,
           heatVuln,
+          districtEnergy,
+          sbei,
           activity: activity.length ? activity.slice(0, 80) : get().activity,
         })
     );

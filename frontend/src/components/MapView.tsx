@@ -332,10 +332,47 @@ export function MapView() {
     else setHover(null);
   }, [environment, approvalHistory, heatVuln, floodRisk, scenarioTargeting, setTargetZone]);
 
-  const addBuildingExtrusions = useCallback(() => {
-    if (USE_MAPBOX) return; // Mapbox Standard already has 3D buildings
+  const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;
     if (!map) return;
+
+    // LAND-ONLY: recede water into the dark background so only the land + city
+    // read, and Lake Ontario becomes a dark void at the edges (crisp shoreline).
+    const WATER_VOID = "#060911";
+    try {
+      const layers = map.getStyle().layers ?? [];
+      for (const l of layers) {
+        const id = String(l.id).toLowerCase();
+        const sl = String(l["source-layer"] ?? "").toLowerCase();
+        const isWater =
+          sl === "water" ||
+          sl === "waterway" ||
+          /water|ocean|sea|river|lake|bathym|marine/.test(id);
+        if (!isWater) continue;
+        try {
+          if (l.type === "fill") {
+            map.setPaintProperty(l.id, "fill-color", WATER_VOID);
+            map.setPaintProperty(l.id, "fill-opacity", 1);
+          } else if (l.type === "line") {
+            map.setPaintProperty(l.id, "line-color", WATER_VOID);
+          } else if (l.type === "fill-extrusion") {
+            map.setPaintProperty(l.id, "fill-extrusion-color", WATER_VOID);
+          } else {
+            map.setLayoutProperty(l.id, "visibility", "none");
+          }
+        } catch {
+          /* layer not stylable — skip */
+        }
+      }
+      // also push the map background itself to the void colour
+      const bg = layers.find((l: any) => l.type === "background");
+      if (bg) map.setPaintProperty(bg.id, "background-color", WATER_VOID);
+    } catch {
+      /* style introspection failed — baseline still works */
+    }
+
+    // 3D building extrusions (MapLibre/CARTO only; Mapbox Standard has its own).
+    if (USE_MAPBOX) return;
     try {
       if (map.getLayer("3d-buildings")) return;
       const layersArr = map.getStyle().layers ?? [];
@@ -372,7 +409,7 @@ export function MapView() {
   const cursor = mode === "place" || scenarioTargeting ? "crosshair" : undefined;
   const commonMapProps = {
     initialViewState: INITIAL_VIEW_STATE,
-    onLoad: addBuildingExtrusions,
+    onLoad: onMapLoad,
     attributionControl: false as const,
     maxPitch: 75,
     cursor,

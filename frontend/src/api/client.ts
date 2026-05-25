@@ -297,6 +297,36 @@ export async function getHeatVulnerability(): Promise<Record<string, number>> {
   return perZoneNumber(r, "hvi");
 }
 
+export type DistrictEnergyZone = { servedFraction: number; systemName: string };
+export async function getDistrictEnergy(): Promise<
+  Record<string, DistrictEnergyZone>
+> {
+  const r = await firstOk<any>(["/api/district-energy"]);
+  if (!r || r.available === false) return {};
+  const list: any[] = Array.isArray(r) ? r : r.zones ?? [];
+  const out: Record<string, DistrictEnergyZone> = {};
+  for (const z of list)
+    if (z.zoneId)
+      out[z.zoneId] = {
+        servedFraction: z.servedFraction ?? 0,
+        systemName: z.systemName ?? "District energy",
+      };
+  return out;
+}
+
+export type Sbei = {
+  communityWideMtCO2e?: number;
+  sectorSharePct?: Record<string, number>;
+  baselineYear?: number;
+  note?: string;
+  source?: string;
+};
+export async function getSbei(): Promise<Sbei | null> {
+  const r = await firstOk<any>(["/api/sbei"]);
+  if (!r || r.available === false) return null;
+  return r as Sbei;
+}
+
 export type GenerationMix = {
   mix: Record<string, number>;
   marginalGco2PerKwh: number | null;

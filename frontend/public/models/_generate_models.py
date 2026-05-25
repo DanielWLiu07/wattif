@@ -186,43 +186,46 @@ def _blade_mesh(length, root_chord, tip_chord, root_thick, tip_thick,
 
 
 def make_wind_turbine():
-    parts = []
+    """Returns a dict: static parts under world, plus a spinning `rotor` node
+    (hub + spinner + 3 blades) whose geometry is built relative to the hub
+    centre so a glTF rotation animation can spin it about its local Z axis."""
+    static = []
+    rotor = []
     steel = pbr("#e9edf2", metallic=0.25, rough=0.55, name="tower_steel")
     housing = pbr("#cdd2d9", metallic=0.30, rough=0.5, name="nacelle")
     dark = pbr("#5b6068", metallic=0.4, rough=0.5, name="hub_metal")
     blade_mat = pbr("#f5f7fa", metallic=0.0, rough=0.4, name="blade")
     concrete = pbr("#b8bcc2", metallic=0.0, rough=0.95, name="foundation")
 
-    # foundation pad
-    parts.append((cyl(2.2, 0.6, concrete, translate=(0, 0.3, 0), sections=28),
-                  "foundation"))
-    # tapered tower
+    # ---- static structure (world frame) ----
+    static.append((cyl(2.2, 0.6, concrete, translate=(0, 0.3, 0), sections=28),
+                   "foundation"))
     tower_h = 24.0
-    parts.append((frustum(1.5, 0.82, tower_h, steel, translate=(0, 0.6, 0),
-                          sections=28), "tower"))
+    static.append((frustum(1.5, 0.82, tower_h, steel, translate=(0, 0.6, 0),
+                           sections=28), "tower"))
     top_y = 0.6 + tower_h
 
-    # nacelle: main housing box, length along Z, plus a tapered tail and nose
     nac_y = top_y + 1.05
-    parts.append((box([2.6, 2.0, 5.2], housing, translate=(0, nac_y, -0.4)),
-                  "nacelle"))
-    # rounded tail (rear, -Z)
-    parts.append((frustum(1.0, 0.35, 1.4, housing,
-                          transform=concatenate_matrices(
-                              translation_matrix([0, nac_y, -3.0]),
-                              rotation_matrix(np.pi / 2, [1, 0, 0]),
-                          )), "nacelle_tail"))
+    static.append((box([2.6, 2.0, 5.2], housing, translate=(0, nac_y, -0.4)),
+                   "nacelle"))
+    static.append((frustum(1.0, 0.35, 1.4, housing,
+                           transform=concatenate_matrices(
+                               translation_matrix([0, nac_y, -3.0]),
+                               rotation_matrix(np.pi / 2, [1, 0, 0]),
+                           )), "nacelle_tail"))
+
+    # ---- rotor parts, built RELATIVE to the hub centre (rotor_origin) ----
     hub_z = 2.6
+    rotor_origin = (0.0, nac_y, hub_z)   # rotor node sits here, spins about local Z
     # spinner nose cone (front, +Z)
-    parts.append((frustum(0.95, 0.05, 1.3, dark,
+    rotor.append((frustum(0.95, 0.05, 1.3, dark,
                           transform=concatenate_matrices(
-                              translation_matrix([0, nac_y, hub_z + 0.6]),
+                              translation_matrix([0, 0, 0.6]),
                               rotation_matrix(-np.pi / 2, [1, 0, 0]),
                           ), sections=18), "spinner"))
     # hub
-    parts.append((cyl(0.85, 1.0, dark, translate=(0, nac_y, hub_z),
-                     axis="z", sections=18), "hub"))
-
+    rotor.append((cyl(0.85, 1.0, dark, translate=(0, 0, 0), axis="z",
+                     sections=18), "hub"))
     # three twisted airfoil blades radiating in the rotor (X-Y) plane
     blade_len = 13.0
     base_blade = _blade_mesh(blade_len, root_chord=1.7, tip_chord=0.35,
@@ -230,13 +233,15 @@ def make_wind_turbine():
     for k in range(3):
         m = base_blade.copy()
         T = concatenate_matrices(
-            translation_matrix([0, nac_y, hub_z + 0.5]),
+            translation_matrix([0, 0, 0.5]),
             rotation_matrix(k * 2 * np.pi / 3, [0, 0, 1]),
             translation_matrix([0, 0.8, 0]),  # start just outside the hub
         )
         m.apply_transform(T)
-        parts.append((finish(m, blade_mat), f"blade_{k}"))
-    return parts
+        rotor.append((finish(m, blade_mat), f"blade_{k}"))
+
+    return {"static": static, "rotor": rotor, "rotor_origin": rotor_origin,
+            "spin_axis": [0.0, 0.0, 1.0]}
 
 
 # ---------------------------------------------------------------------------
@@ -418,25 +423,123 @@ BUILDERS = {
 SIZE_LIMIT = 1_500_000
 
 
+def _add_named(scene, parts, used, parent=None):
+    for mesh, node in parts:
+        used[node] = used.get(node, 0) + 1
+        gname = node if used[node] == 1 else f"{node}_{used[node]}"
+        kw = {"geom_name": gname, "node_name": gname}
+        if parent is not None:
+            kw["parent_node_name"] = parent
+            kw["transform"] = np.eye(4)
+        scene.add_geometry(mesh, **kw)
+
+
 def export_scene(parts, name):
     """parts: list of (mesh, node_name). Each part is its own named node."""
     scene = trimesh.Scene()
-    used = {}
-    for mesh, node in parts:
-        # keep node names unique but meaningful
-        used[node] = used.get(node, 0) + 1
-        gname = node if used[node] == 1 else f"{node}_{used[node]}"
-        scene.add_geometry(mesh, geom_name=gname, node_name=gname)
+    _add_named(scene, parts, {})
     path = os.path.join(HERE, f"{name}.glb")
     scene.export(path)
     return path
 
 
+def export_with_rotor(spec, name):
+    """Export static parts under world + a `rotor` parent node (children built
+    relative to the hub centre), then bake a looping spin animation onto it."""
+    scene = trimesh.Scene()
+    used = {}
+    _add_named(scene, spec["static"], used)
+    # create the rotor frame at the hub, then attach rotor parts as children
+    scene.graph.update(frame_to="rotor", frame_from="world",
+                       matrix=translation_matrix(list(spec["rotor_origin"])))
+    _add_named(scene, spec["rotor"], used, parent="rotor")
+    path = os.path.join(HERE, f"{name}.glb")
+    scene.export(path)
+    _bake_spin_animation(path, spec["rotor_origin"], spec["spin_axis"])
+    return path
+
+
+def _bake_spin_animation(path, rotor_origin, axis, period=3.5):
+    """Append a glTF rotation animation that spins the `rotor` node a full 360°
+    over `period` seconds, LINEAR interpolation, looping. Uses pygltflib."""
+    from pygltflib import (
+        GLTF2, Animation, AnimationChannel, AnimationChannelTarget,
+        AnimationSampler, Accessor, BufferView, FLOAT, SCALAR, VEC4,
+    )
+
+    gltf = GLTF2().load(path)
+    rotor_idx = next(i for i, n in enumerate(gltf.nodes) if n.name == "rotor")
+
+    # glTF forbids animating a node that uses `matrix` — convert to TRS.
+    node = gltf.nodes[rotor_idx]
+    node.matrix = None
+    node.translation = [float(c) for c in rotor_origin]
+    node.rotation = [0.0, 0.0, 0.0, 1.0]
+    node.scale = None
+
+    # keyframes every 90° so each LINEAR (slerp) segment takes the short way;
+    # 360° quaternion == identity orientation, so the loop wraps seamlessly.
+    ax = np.asarray(axis, dtype=np.float64)
+    ax = ax / np.linalg.norm(ax)
+    angles = np.radians([0, 90, 180, 270, 360])
+    times = np.linspace(0.0, period, len(angles)).astype(np.float32)
+    quats = np.zeros((len(angles), 4), dtype=np.float32)
+    quats[:, 0:3] = ax * np.sin(angles / 2)[:, None]
+    quats[:, 3] = np.cos(angles / 2)
+
+    blob = bytearray(gltf.binary_blob())
+
+    def _pad(b):
+        while len(b) % 4:
+            b += b"\x00"
+        return b
+
+    blob = _pad(blob)
+    in_off = len(blob)
+    blob += times.tobytes()
+    blob = _pad(blob)
+    out_off = len(blob)
+    blob += quats.tobytes()
+    blob = _pad(blob)
+
+    gltf.buffers[0].byteLength = len(blob)
+    bv_in = len(gltf.bufferViews)
+    gltf.bufferViews.append(BufferView(buffer=0, byteOffset=in_off,
+                                       byteLength=times.nbytes))
+    bv_out = bv_in + 1
+    gltf.bufferViews.append(BufferView(buffer=0, byteOffset=out_off,
+                                       byteLength=quats.nbytes))
+    acc_in = len(gltf.accessors)
+    gltf.accessors.append(Accessor(bufferView=bv_in, componentType=FLOAT,
+                                   count=len(times), type=SCALAR,
+                                   min=[float(times.min())],
+                                   max=[float(times.max())]))
+    acc_out = acc_in + 1
+    gltf.accessors.append(Accessor(bufferView=bv_out, componentType=FLOAT,
+                                   count=len(quats), type=VEC4))
+
+    anim = Animation(
+        name="rotor_spin",
+        samplers=[AnimationSampler(input=acc_in, output=acc_out,
+                                   interpolation="LINEAR")],
+        channels=[AnimationChannel(
+            sampler=0,
+            target=AnimationChannelTarget(node=rotor_idx, path="rotation"))],
+    )
+    gltf.animations.append(anim)
+    gltf.set_binary_blob(bytes(blob))
+    gltf.save(path)
+
+
 def main():
+    from pygltflib import GLTF2
     all_ok = True
     for name, builder in BUILDERS.items():
-        parts = builder()
-        path = export_scene(parts, name)
+        result = builder()
+        if isinstance(result, dict):
+            path = export_with_rotor(result, name)
+        else:
+            path = export_scene(result, name)
         size = os.path.getsize(path)
         loaded = trimesh.load(path)
         if isinstance(loaded, trimesh.Scene):
@@ -445,11 +548,13 @@ def main():
         else:
             nfaces = int(len(loaded.faces))
             nnodes = 1
+        nclips = len(GLTF2().load(path).animations or [])
         ok = nfaces > 0 and size < SIZE_LIMIT
         all_ok = all_ok and ok
         status = "OK" if ok else "CHECK"
+        anim = f"  anim={nclips}" if nclips else ""
         print(f"[{status}] {name:14s} {size/1024:7.1f} KB  faces={nfaces:5d}  "
-              f"meshes={nnodes}")
+              f"meshes={nnodes}{anim}")
     print("\nAll within limits." if all_ok else "\n!! Some models need attention.")
 
 

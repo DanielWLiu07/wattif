@@ -88,6 +88,7 @@ export type LayerInputs = {
   existingInfra: ExistingInfra[];
   constraints: ConstraintZone[];
   floodRisk: Record<string, number>;
+  districtEnergy: Record<string, { servedFraction: number; systemName: string }>;
   scenarioTargeting: boolean;
   gatheringZones: string[];
   targetZoneId: string | null;
@@ -123,6 +124,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     existingInfra,
     constraints,
     floodRisk,
+    districtEnergy,
     gatheringZones,
     targetZoneId,
     flashZones,
@@ -221,6 +223,32 @@ export function buildLayers(input: LayerInputs): Layer[] {
             [56, 132, 255, Math.round(30 + f.properties.risk * 120)] as any,
           getLineColor: [96, 165, 250, 160],
           lineWidthMinPixels: 0.5,
+          pickable: false,
+        })
+      );
+    }
+  }
+
+  // ---- Existing district energy (Enwave) — distinct teal service-area tint ----
+  if (layers.district && Object.keys(districtEnergy).length && zones.length) {
+    const feats = zones
+      .filter((z) => districtEnergy[z.id])
+      .map((z) => ({
+        type: "Feature" as const,
+        geometry: z.polygon,
+        properties: { f: districtEnergy[z.id].servedFraction },
+      }));
+    if (feats.length) {
+      out.push(
+        new GeoJsonLayer({
+          id: "district-energy",
+          data: { type: "FeatureCollection", features: feats } as FeatureCollection,
+          filled: true,
+          stroked: true,
+          getFillColor: (f: any) =>
+            [45, 212, 191, Math.round(25 + f.properties.f * 70)] as any,
+          getLineColor: [45, 212, 191, 200],
+          lineWidthMinPixels: 1.5,
           pickable: false,
         })
       );
