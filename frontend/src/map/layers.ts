@@ -303,6 +303,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
           stroked: true,
           getLineColor: [250, 204, 21, 220],
           lineWidthMinPixels: 2,
+          parameters: { depthTest: false } as any,
           updateTriggers: { getRadius: [time] },
           pickable: false,
         })
@@ -624,6 +625,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
         jointRounded: true,
         opacity: 0.9,
         fadeTrail: true,
+        parameters: { depthTest: false } as any,
       })
     );
   }
@@ -657,6 +659,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getRadius: 230 + (0.5 + 0.5 * Math.sin(time / 350)) * 90,
         lineWidthMinPixels: 2,
         radiusMinPixels: 8,
+        billboard: true,
+        parameters: { depthTest: false } as any,
         pickable: true,
         updateTriggers: { getRadius: [time] },
       })
@@ -792,6 +796,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         radiusMaxPixels: 9,
         lineWidthMinPixels: 1.5,
         opacity: 0.9,
+        billboard: true,
+        parameters: { depthTest: false } as any,
         pickable: true,
       })
     );

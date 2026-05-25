@@ -528,9 +528,10 @@ export const useStore = create<State>((set, get) => ({
     // Clip markers that fall on water — keep only points inside a land zone.
     const onLand = makeLandTest(zones);
     const agents = rawAgents.filter((a) => onLand(a.position));
-    // Sample ~320 agents to animate as "living" people (don't move all 4000).
-    const step = Math.max(1, Math.floor(agents.length / 320));
-    const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 360);
+    // Sample ~800 agents to animate as "living" people (don't move all 4000) —
+    // denser so the 140 zones each read as populated; still 60fps-cheap.
+    const step = Math.max(1, Math.floor(agents.length / 800));
+    const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 900);
     // candidate rooftop-solar sites per zone (capped) — glints reveal as adoption climbs
     const rooftopPoints: Record<string, LngLat[]> = {};
     zones.forEach((z, i) => {
