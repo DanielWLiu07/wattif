@@ -6,7 +6,7 @@ All coordinates are [lng, lat].
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
@@ -54,11 +54,21 @@ class CamelModel(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# GeoJSON polygon (minimal — coordinates only, [lng,lat] rings)
+# GeoJSON geometry (minimal — coordinates only, [lng,lat]). Zone boundaries are a
+# Polygon OR MultiPolygon (e.g. Waterfront Communities incl. the Toronto Islands).
 # ---------------------------------------------------------------------------
 class Polygon(BaseModel):
     type: Literal["Polygon"] = "Polygon"
-    coordinates: list[list[Coord]]
+    coordinates: list[list[Coord]]  # [exterior_ring, *holes]
+
+
+class MultiPolygon(BaseModel):
+    type: Literal["MultiPolygon"] = "MultiPolygon"
+    coordinates: list[list[list[Coord]]]  # [[exterior_ring, *holes], ...]
+
+
+# Discriminated on the GeoJSON "type" tag; both pass through GET /api/zones unchanged.
+Geometry = Annotated[Union[Polygon, MultiPolygon], Field(discriminator="type")]
 
 
 # ---------------------------------------------------------------------------
@@ -74,7 +84,7 @@ class Demographics(CamelModel):
 class Zone(CamelModel):
     id: str
     name: str
-    polygon: Polygon
+    polygon: Geometry  # Polygon or MultiPolygon
     centroid: Coord
     demographics: Demographics
     demand_kwh_monthly: float

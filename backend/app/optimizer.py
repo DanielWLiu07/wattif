@@ -63,13 +63,22 @@ def candidate_cost(kind: str, capacity_kw: float) -> float:
     return COST_PER_KW[kind] * capacity_kw
 
 
-def _poly_area_deg2(zone: Zone) -> float:
-    """Shoelace area of the zone boundary in deg² (relative measure for density ranking)."""
-    ring = zone.polygon.coordinates[0]
+def _ring_area(ring) -> float:
     a = 0.0
     for (x1, y1), (x2, y2) in zip(ring, ring[1:]):
         a += x1 * y2 - x2 * y1
     return abs(a) / 2.0
+
+
+def _poly_area_deg2(zone: Zone) -> float:
+    """Shoelace area of the zone boundary in deg² (relative measure for density ranking).
+
+    Handles Polygon (exterior = coordinates[0]) and MultiPolygon (sum of each part's exterior).
+    """
+    geom = zone.polygon
+    if getattr(geom, "type", "Polygon") == "MultiPolygon":
+        return sum(_ring_area(poly[0]) for poly in geom.coordinates if poly)
+    return _ring_area(geom.coordinates[0])
 
 
 def _suitable_kinds(zone: Zone, is_dense: bool) -> list[InfraKind]:

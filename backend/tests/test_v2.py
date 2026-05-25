@@ -13,6 +13,51 @@ def fresh_world() -> World:
 
 
 # --- session / scenarios ---------------------------------------------------
+def test_zone_accepts_multipolygon_and_roundtrips():
+    """Zone.polygon must accept GeoJSON MultiPolygon (e.g. Waterfront + Toronto Islands)."""
+    from app.models import Zone
+    from app.optimizer import _poly_area_deg2
+
+    base = {
+        "id": "zmp",
+        "name": "Islands",
+        "centroid": [-79.37, 43.62],
+        "demographics": {
+            "population": 1000,
+            "medianIncome": 80000,
+            "renterPct": 0.5,
+            "energyBurdenIndex": 0.4,
+        },
+        "demandKwhMonthly": 1_000_000,
+        "solarPotential": 0.5,
+        "windPotential": 0.5,
+        "polygon": {
+            "type": "MultiPolygon",
+            "coordinates": [
+                [[[-79.4, 43.6], [-79.3, 43.6], [-79.3, 43.7], [-79.4, 43.6]]],
+                [[[-79.38, 43.62], [-79.36, 43.62], [-79.36, 43.64], [-79.38, 43.62]]],
+            ],
+        },
+    }
+    z = Zone.model_validate(base)
+    assert z.polygon.type == "MultiPolygon"
+    dumped = z.model_dump(by_alias=True)
+    assert (
+        dumped["polygon"]["type"] == "MultiPolygon"
+        and len(dumped["polygon"]["coordinates"]) == 2
+    )
+    assert _poly_area_deg2(z) > 0  # area sums both parts, no crash
+
+    # Polygon still works too.
+    base2 = dict(base)
+    base2["polygon"] = {
+        "type": "Polygon",
+        "coordinates": [[[-79.4, 43.6], [-79.3, 43.6], [-79.3, 43.7], [-79.4, 43.6]]],
+    }
+    zp = Zone.model_validate(base2)
+    assert zp.polygon.type == "Polygon" and _poly_area_deg2(zp) > 0
+
+
 def test_session_reset_clears_infra_and_scenarios():
     w = fresh_world()
     w.place_infra(InfraCreate(kind="solar", position=w.zones[0].centroid))
