@@ -22,6 +22,7 @@ Usage:  python3 scripts/build.py
 """
 from __future__ import annotations
 
+import bisect
 import csv
 import json
 import math
@@ -778,13 +779,22 @@ def build_environment(zones: list[dict], wb: dict) -> dict | None:
         rec = _match(normkey(ALIASES.get(z["name"], z["name"])), index)
         matched.append((z, rec))
 
-    greens = [r["greenSpaces"] for _, r in matched if r and r.get("greenSpaces") is not None]
+    greens = sorted(r["greenSpaces"] for _, r in matched
+                    if r and r.get("greenSpaces") is not None)
     polls = [r["pollutantsToAir"] for _, r in matched if r and r.get("pollutantsToAir") is not None]
-    g_lo, g_hi = (min(greens), max(greens)) if greens else (0, 0)
-    # Pollution is highly skewed -> rank via log scale.
+    # Pollution is highly skewed -> rank via log scale + min-max.
     import math as _m
     pl = [_m.log1p(p) for p in polls] if polls else []
     p_lo, p_hi = (min(pl), max(pl)) if pl else (0, 0)
+
+    def pct_rank(v: float, sorted_vals: list[float]) -> float:
+        """Percentile rank in 0..1 (handles the heavy skew of green-space area)."""
+        n = len(sorted_vals)
+        if n == 0:
+            return 0.0
+        less = bisect.bisect_left(sorted_vals, v)
+        equal = bisect.bisect_right(sorted_vals, v) - less
+        return round((less + 0.5 * equal) / n, 3)
 
     out = []
     real = 0
@@ -795,8 +805,8 @@ def build_environment(zones: list[dict], wb: dict) -> dict | None:
         real += 1
         green = rec.get("greenSpaces")
         poll = rec.get("pollutantsToAir")
-        green_score = (round((green - g_lo) / (g_hi - g_lo), 3)
-                       if green is not None and g_hi > g_lo else None)
+        # greenScore: percentile rank across the 44 zones (even 0..1 spread; ravine/park-rich high).
+        green_score = pct_rank(green, greens) if green is not None else None
         poll_burden = (round((_m.log1p(poll) - p_lo) / (p_hi - p_lo), 3)
                        if poll is not None and p_hi > p_lo else None)
         out.append({

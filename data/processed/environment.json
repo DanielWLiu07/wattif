@@ -10,7 +10,7 @@
       "greenSpaces": 2.57,
       "treeCover": 1379860.88,
       "pollutantsToAir": 92338.0,
-      "greenScore": 0.18,
+      "greenScore": 0.966,
       "pollutionBurden": 0.834
     },
     {
@@ -20,7 +20,7 @@
       "greenSpaces": 0.14,
       "treeCover": 139974.86,
       "pollutantsToAir": 135026.0,
-      "greenScore": 0.01,
+      "greenScore": 0.307,
       "pollutionBurden": 0.862
     },
     {
@@ -30,7 +30,7 @@
       "greenSpaces": 0.06,
       "treeCover": 118541.42,
       "pollutantsToAir": 1092.0,
-      "greenScore": 0.004,
+      "greenScore": 0.193,
       "pollutionBurden": 0.511
     },
     {
@@ -40,7 +40,7 @@
       "greenSpaces": 0.07,
       "treeCover": 186615.16,
       "pollutantsToAir": 1156.0,
-      "greenScore": 0.005,
+      "greenScore": 0.239,
       "pollutionBurden": 0.515
     },
     {
@@ -50,7 +50,7 @@
       "greenSpaces": 0.01,
       "treeCover": 237726.3,
       "pollutantsToAir": 27906.0,
-      "greenScore": 0.001,
+      "greenScore": 0.045,
       "pollutionBurden": 0.747
     },
     {
@@ -60,7 +60,7 @@
       "greenSpaces": 0.1,
       "treeCover": 212564.14,
       "pollutantsToAir": 3692.0,
-      "greenScore": 0.007,
+      "greenScore": 0.261,
       "pollutionBurden": 0.599
     },
     {
@@ -70,7 +70,7 @@
       "greenSpaces": 0.01,
       "treeCover": 122445.11,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.001,
+      "greenScore": 0.045,
       "pollutionBurden": 0.0
     },
     {
@@ -80,7 +80,7 @@
       "greenSpaces": 0.25,
       "treeCover": 627970.24,
       "pollutantsToAir": 241.0,
-      "greenScore": 0.018,
+      "greenScore": 0.534,
       "pollutionBurden": 0.4
     },
     {
@@ -90,7 +90,7 @@
       "greenSpaces": 0.03,
       "treeCover": 61616.24,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.002,
+      "greenScore": 0.125,
       "pollutionBurden": 0.0
     },
     {
@@ -100,7 +100,7 @@
       "greenSpaces": 0.11,
       "treeCover": 789795.15,
       "pollutantsToAir": 188.0,
-      "greenScore": 0.008,
+      "greenScore": 0.284,
       "pollutionBurden": 0.382
     },
     {
@@ -110,7 +110,7 @@
       "greenSpaces": 0.02,
       "treeCover": 428626.44,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.001,
+      "greenScore": 0.091,
       "pollutionBurden": 0.0
     },
     {
@@ -120,7 +120,7 @@
       "greenSpaces": 0.79,
       "treeCover": 2557866.41,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.055,
+      "greenScore": 0.784,
       "pollutionBurden": 0.0
     },
     {
@@ -130,7 +130,7 @@
       "greenSpaces": 0.17,
       "treeCover": 893260.92,
       "pollutantsToAir": 575.0,
-      "greenScore": 0.012,
+      "greenScore": 0.398,
       "pollutionBurden": 0.464
     },
     {
@@ -140,7 +140,7 @@
       "greenSpaces": 0.06,
       "treeCover": 455742.72,
       "pollutantsToAir": 4502.0,
-      "greenScore": 0.004,
+      "greenScore": 0.193,
       "pollutionBurden": 0.614
     },
     {
@@ -150,7 +150,7 @@
       "greenSpaces": 0.24,
       "treeCover": 409561.3,
       "pollutantsToAir": 10190.0,
-      "greenScore": 0.017,
+      "greenScore": 0.477,
       "pollutionBurden": 0.673
     },
     {
@@ -160,7 +160,7 @@
       "greenSpaces": 0.02,
       "treeCover": 115638.82,
       "pollutantsToAir": 4259.0,
-      "greenScore": 0.001,
+      "greenScore": 0.091,
       "pollutionBurden": 0.61
     },
     {
@@ -170,7 +170,7 @@
       "greenSpaces": 0.18,
       "treeCover": 239145.53,
       "pollutantsToAir": 558.0,
-      "greenScore": 0.013,
+      "greenScore": 0.42,
       "pollutionBurden": 0.462
     },
     {
@@ -180,7 +180,7 @@
       "greenSpaces": 0.36,
       "treeCover": 282844.0,
       "pollutantsToAir": 4819.0,
-      "greenScore": 0.025,
+      "greenScore": 0.58,
       "pollutionBurden": 0.619
     },
     {
@@ -190,7 +190,7 @@
       "greenSpaces": 0.46,
       "treeCover": 364045.76,
       "pollutantsToAir": 43033.0,
-      "greenScore": 0.032,
+      "greenScore": 0.648,
       "pollutionBurden": 0.779
     },
     {
@@ -200,7 +200,7 @@
       "greenSpaces": 1.83,
       "treeCover": 2750624.56,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.128,
+      "greenScore": 0.943,
       "pollutionBurden": 0.0
     },
     {
@@ -210,7 +210,7 @@
       "greenSpaces": 0.04,
       "treeCover": 317461.89,
       "pollutantsToAir": 156.0,
-      "greenScore": 0.003,
+      "greenScore": 0.148,
       "pollutionBurden": 0.369
     },
     {
@@ -220,7 +220,7 @@
       "greenSpaces": 0.61,
       "treeCover": 1416720.31,
       "pollutantsToAir": 58703.0,
-      "greenScore": 0.043,
+      "greenScore": 0.693,
       "pollutionBurden": 0.801
     },
     {
@@ -230,7 +230,7 @@
       "greenSpaces": 0.0,
       "treeCover": 282212.74,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.0,
+      "greenScore": 0.011,
       "pollutionBurden": 0.0
     },
     {
@@ -240,7 +240,7 @@
       "greenSpaces": 0.06,
       "treeCover": 313433.73,
       "pollutantsToAir": 508.0,
-      "greenScore": 0.004,
+      "greenScore": 0.193,
       "pollutionBurden": 0.455
     },
     {
@@ -250,7 +250,7 @@
       "greenSpaces": 0.4,
       "treeCover": 664464.24,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.028,
+      "greenScore": 0.602,
       "pollutionBurden": 0.0
     },
     {
@@ -260,7 +260,7 @@
       "greenSpaces": 0.8,
       "treeCover": 2166689.57,
       "pollutantsToAir": 282.0,
-      "greenScore": 0.056,
+      "greenScore": 0.807,
       "pollutionBurden": 0.412
     },
     {
@@ -270,7 +270,7 @@
       "greenSpaces": 0.24,
       "treeCover": 1379175.08,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.017,
+      "greenScore": 0.477,
       "pollutionBurden": 0.0
     },
     {
@@ -280,7 +280,7 @@
       "greenSpaces": 0.16,
       "treeCover": 1884788.95,
       "pollutantsToAir": 542.0,
-      "greenScore": 0.011,
+      "greenScore": 0.375,
       "pollutionBurden": 0.459
     },
     {
@@ -290,7 +290,7 @@
       "greenSpaces": 0.15,
       "treeCover": 1169622.48,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.011,
+      "greenScore": 0.341,
       "pollutionBurden": 0.0
     },
     {
@@ -300,7 +300,7 @@
       "greenSpaces": 1.12,
       "treeCover": 2397850.77,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.078,
+      "greenScore": 0.898,
       "pollutionBurden": 0.0
     },
     {
@@ -310,7 +310,7 @@
       "greenSpaces": 0.89,
       "treeCover": 2067412.31,
       "pollutantsToAir": 203624.0,
-      "greenScore": 0.062,
+      "greenScore": 0.852,
       "pollutionBurden": 0.892
     },
     {
@@ -320,7 +320,7 @@
       "greenSpaces": 0.41,
       "treeCover": 742477.31,
       "pollutantsToAir": 6055.0,
-      "greenScore": 0.029,
+      "greenScore": 0.625,
       "pollutionBurden": 0.635
     },
     {
@@ -330,7 +330,7 @@
       "greenSpaces": 0.81,
       "treeCover": 1209851.2,
       "pollutantsToAir": 860.0,
-      "greenScore": 0.057,
+      "greenScore": 0.83,
       "pollutionBurden": 0.493
     },
     {
@@ -340,7 +340,7 @@
       "greenSpaces": 1.05,
       "treeCover": 1303945.16,
       "pollutantsToAir": 31.0,
-      "greenScore": 0.074,
+      "greenScore": 0.875,
       "pollutionBurden": 0.253
     },
     {
@@ -350,7 +350,7 @@
       "greenSpaces": 0.24,
       "treeCover": 756382.28,
       "pollutantsToAir": 35920.0,
-      "greenScore": 0.017,
+      "greenScore": 0.477,
       "pollutionBurden": 0.765
     },
     {
@@ -360,7 +360,7 @@
       "greenSpaces": 0.15,
       "treeCover": 444920.61,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.011,
+      "greenScore": 0.341,
       "pollutionBurden": 0.0
     },
     {
@@ -370,7 +370,7 @@
       "greenSpaces": 0.51,
       "treeCover": 2980850.37,
       "pollutantsToAir": 895785.0,
-      "greenScore": 0.036,
+      "greenScore": 0.67,
       "pollutionBurden": 1.0
     },
     {
@@ -380,7 +380,7 @@
       "greenSpaces": 0.72,
       "treeCover": 1058931.43,
       "pollutantsToAir": 96927.0,
-      "greenScore": 0.05,
+      "greenScore": 0.761,
       "pollutionBurden": 0.838
     },
     {
@@ -390,7 +390,7 @@
       "greenSpaces": 0.29,
       "treeCover": 1127497.01,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.02,
+      "greenScore": 0.557,
       "pollutionBurden": 0.0
     },
     {
@@ -400,7 +400,7 @@
       "greenSpaces": 0.24,
       "treeCover": 1400164.91,
       "pollutantsToAir": 236731.0,
-      "greenScore": 0.017,
+      "greenScore": 0.477,
       "pollutionBurden": 0.903
     },
     {
@@ -410,7 +410,7 @@
       "greenSpaces": 0.69,
       "treeCover": 1249250.53,
       "pollutantsToAir": 66889.0,
-      "greenScore": 0.048,
+      "greenScore": 0.739,
       "pollutionBurden": 0.811
     },
     {
@@ -420,7 +420,7 @@
       "greenSpaces": 1.35,
       "treeCover": 2746208.23,
       "pollutantsToAir": 2357.0,
-      "greenScore": 0.095,
+      "greenScore": 0.92,
       "pollutionBurden": 0.567
     },
     {
@@ -430,7 +430,7 @@
       "greenSpaces": 14.27,
       "treeCover": 12888043.88,
       "pollutantsToAir": 56778.0,
-      "greenScore": 1.0,
+      "greenScore": 0.989,
       "pollutionBurden": 0.799
     },
     {
@@ -440,7 +440,7 @@
       "greenSpaces": 0.62,
       "treeCover": 2019988.26,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.043,
+      "greenScore": 0.716,
       "pollutionBurden": 0.0
     }
   ]
