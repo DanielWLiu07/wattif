@@ -293,12 +293,12 @@
     {
       "zoneId": "z026",
       "name": "Downsview-Roding-CFB",
-      "region": "Etobicoke",
-      "proRenewablePrior": 0.605,
-      "concernPrior": 0.79,
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
       "solarPropensity": 0.23,
-      "evPropensity": 0.41,
-      "retrofitPropensity": 0.4
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
     },
     {
       "zoneId": "z027",

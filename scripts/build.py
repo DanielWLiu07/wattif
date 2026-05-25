@@ -128,10 +128,6 @@ PVGIS_FILE = "pvgis_solar.json"
 ATTITUDES_FILE = "attitudes_extract.json"
 # Wellbeing Toronto environment indicators (produced by scripts/extract_wellbeing.py). Optional.
 WELLBEING_FILE = "wellbeing_environment.json"
-# Land/water mask (produced by scripts/fetch_water_mask.py). Optional — clips zones to land.
-WATER_MASK_FILE = "water_mask.geojson"
-# Real Toronto Islands land (produced by scripts/fetch_islands.py). Optional — replaces island blob.
-ISLANDS_FILE = "islands.geojson"
 TYPICAL_FOOTPRINT_M2 = 160.0   # ~typical Toronto building ground footprint
 METRES_PER_LEVEL = 3.1         # storey height for 3D extrusion / height estimates
 
@@ -220,26 +216,48 @@ def _ring_centroid(ring: list[list[float]]) -> tuple[float, float]:
     return cx / (6 * a), cy / (6 * a)
 
 
-def _decimate(ring: list[list[float]], target: int = 140) -> list[list[float]]:
-    """Down-sample a dense ring to ~target vertices (stride), preserving closure."""
-    if len(ring) <= target:
-        return ring
-    stride = max(1, len(ring) // target)
-    out = ring[::stride]
-    if out[0] != ring[0]:
-        out.insert(0, ring[0])
-    if out[-1] != ring[0]:
-        out.append(ring[0])  # close
-    return out
-
-
 def _clean_name(s: str) -> str:
     """Drop the trailing ' (NN)' area-code from an official AREA_NAME."""
     return re.sub(r"\s*\(\d+\)\s*$", "", str(s)).strip()
 
 
+def _round_coords(obj):
+    """Recursively round GeoJSON coordinate numbers to 6 dp and return lists (not tuples)."""
+    if isinstance(obj, (list, tuple)):
+        if obj and isinstance(obj[0], (int, float)):
+            return [round(float(obj[0]), 6), round(float(obj[1]), 6)]
+        return [_round_coords(x) for x in obj]
+    return obj
+
+
+def _raw_boundary(geom: dict) -> tuple[dict, list[float]]:
+    """Ship the official boundary geometry AS-IS (Polygon|MultiPolygon — whatever the City draws).
+
+    Light topology-preserving simplify (~2 m) for file size ONLY when it keeps the exact same
+    geometry type and stays valid; else raw coords untouched. NO clipping / water / island stitching.
+    Returns (geom dict, centroid [lng,lat]).
+    """
+    orig_type = geom.get("type")
+    raw = {"type": orig_type, "coordinates": _round_coords(geom.get("coordinates"))}
+    try:
+        from shapely.geometry import mapping, shape
+        g = shape(geom)
+        gv = g if g.is_valid else g.buffer(0)
+        rp = gv.representative_point()
+        centroid = [round(rp.x, 6), round(rp.y, 6)]
+        s = g.simplify(0.00002, preserve_topology=True)
+        if (not s.is_empty) and s.is_valid and s.geom_type == orig_type:
+            return _round_coords(mapping(s)), centroid
+        return raw, centroid
+    except Exception:  # noqa: BLE001 — no shapely: ship raw geometry untouched
+        ring = (max((poly[0] for poly in geom["coordinates"]), key=len)
+                if orig_type == "MultiPolygon" else geom["coordinates"][0])
+        cx, cy = _ring_centroid([[float(p[0]), float(p[1])] for p in ring])
+        return raw, [round(cx, 6), round(cy, 6)]
+
+
 def load_real_boundaries() -> dict[str, dict]:
-    """normkey -> {polygon:[ring], centroid, name, code} for ALL 140 official neighbourhoods."""
+    """normkey -> {geom, centroid, name, code} — RAW official 140-model boundary, unmodified."""
     gj = load_json_source(BOUNDARIES_FILE, BOUNDARIES_URL)
     out: dict[str, dict] = {}
     if not isinstance(gj, dict) or "features" not in gj:
@@ -249,29 +267,17 @@ def load_real_boundaries() -> dict[str, dict]:
         geom = feat.get("geometry") or {}
         props = feat.get("properties") or {}
         name = props.get("AREA_NAME")
-        coords = geom.get("coordinates")
-        if not name or not coords:
+        if not name or geom.get("type") not in ("Polygon", "MultiPolygon") or not geom.get("coordinates"):
             continue
-        # Largest outer ring of a (Multi)Polygon (input to the land clip in build_zones).
-        if geom.get("type") == "MultiPolygon":
-            ring = max((poly[0] for poly in coords), key=len)
-        elif geom.get("type") == "Polygon":
-            ring = coords[0]
-        else:
-            continue
-        ring = [[round(float(p[0]), 6), round(float(p[1]), 6)] for p in ring]
-        cx, cy = _ring_centroid(ring)
+        geom_out, centroid = _raw_boundary(geom)
         try:
             code = int(props.get("AREA_SHORT_CODE"))
         except (TypeError, ValueError):
             code = len(out) + 1
-        out[normkey(name)] = {
-            "polygon": [_decimate(ring)],
-            "centroid": [round(cx, 6), round(cy, 6)],
-            "name": _clean_name(name),
-            "code": code,
-        }
-    print(f"  ✓ {len(out)} real neighbourhood boundaries (140-model)", file=sys.stderr)
+        out[normkey(name)] = {"geom": geom_out, "centroid": centroid,
+                              "name": _clean_name(name), "code": code}
+    print(f"  ✓ {len(out)} RAW official neighbourhood boundaries (140-model, unmodified)",
+          file=sys.stderr)
     return out
 
 
@@ -376,147 +382,6 @@ def load_pvgis_solar() -> dict[str, dict]:
     except Exception as exc:  # noqa: BLE001
         print(f"  PVGIS cache unreadable ({exc}); using assumed PV yield", file=sys.stderr)
         return {}
-
-
-def load_water_mask():
-    """Load the Toronto water mask as a shapely geometry (or None if absent/shapely missing)."""
-    path = RAW_DIR / WATER_MASK_FILE
-    if not path.exists():
-        print("  (no water mask — run scripts/fetch_water_mask.py; zones NOT clipped to land)",
-              file=sys.stderr)
-        return None
-    try:
-        from shapely.geometry import shape
-        g = shape(json.loads(path.read_text())["geometry"])
-        if not g.is_valid:
-            g = g.buffer(0)
-        print("  ✓ water mask loaded (clipping zone polygons to land)", file=sys.stderr)
-        return g
-    except Exception as exc:  # noqa: BLE001 — shapely missing or bad geom -> skip clipping
-        print(f"  water mask unavailable ({exc}); zones NOT clipped", file=sys.stderr)
-        return None
-
-
-def _poly_rings(poly, tol: float) -> list[list[list[float]]] | None:
-    """Simplify a shapely Polygon (keeping holes) -> [exterior, *interiors] of [lng,lat] coords.
-
-    Returns None for degenerate/unrepairable parts (e.g. thin creek slivers) so they're skipped.
-    """
-    s = poly.simplify(tol, preserve_topology=True)
-    if s.is_empty or not s.is_valid:
-        s = s.buffer(0)          # repair self-intersections
-    if s.is_empty or s.area <= 0:
-        return None
-    if s.geom_type == "MultiPolygon":
-        s = max(s.geoms, key=lambda p: p.area)
-    if s.geom_type != "Polygon" or not s.is_valid:
-        return None
-    out = [[[round(x, 6), round(y, 6)] for x, y in s.exterior.coords]]
-    for interior in s.interiors:
-        hole = [[round(x, 6), round(y, 6)] for x, y in interior.coords]
-        if len(hole) >= 4:
-            out.append(hole)
-    return out if len(out[0]) >= 4 else None
-
-
-def clean_geom(geom: dict) -> tuple[dict, list[float]]:
-    """Repair a (Multi)Polygon geom dict to be OGC-valid (make_valid), keeping holes/parts.
-
-    Returns (clean geom dict, centroid-of-largest-part [lng,lat])."""
-    from shapely.geometry import shape
-    from shapely.validation import make_valid
-    g = shape(geom)
-    if not g.is_valid:
-        g = make_valid(g)
-    polys = []
-    for p in (g.geoms if g.geom_type in ("MultiPolygon", "GeometryCollection") else [g]):
-        if getattr(p, "geom_type", "") == "Polygon" and p.area > 0:
-            polys.append(p)
-    if not polys:
-        ring = geom["coordinates"][0] if geom["type"] == "Polygon" else geom["coordinates"][0][0]
-        cx, cy = _ring_centroid(ring)
-        return geom, [round(cx, 6), round(cy, 6)]
-    polys.sort(key=lambda p: p.area, reverse=True)
-
-    def rings(p):
-        out = [[[round(x, 6), round(y, 6)] for x, y in p.exterior.coords]]
-        out += [[[round(x, 6), round(y, 6)] for x, y in i.coords] for i in p.interiors]
-        return out
-
-    cx, cy = polys[0].representative_point().x, polys[0].representative_point().y
-    centroid = [round(cx, 6), round(cy, 6)]
-    if len(polys) == 1:
-        return {"type": "Polygon", "coordinates": rings(polys[0])}, centroid
-    return {"type": "MultiPolygon", "coordinates": [rings(p) for p in polys]}, centroid
-
-
-def load_islands_mask():
-    """Load real Toronto Islands land as a shapely geometry (or None if absent/shapely missing)."""
-    path = RAW_DIR / ISLANDS_FILE
-    if not path.exists():
-        return None
-    try:
-        from shapely.geometry import shape
-        g = shape(json.loads(path.read_text())["geometry"])
-        if not g.is_valid:
-            g = g.buffer(0)
-        return g
-    except Exception:  # noqa: BLE001
-        return None
-
-
-# The Toronto Islands all belong to this one neighbourhood (its name literally includes "The
-# Island"), so we attach the full real island landmass to it rather than per-zone clipping (the
-# decimated zone boundary would otherwise cut the islands).
-ISLAND_OWNER_ZONE = "Waterfront Communities–The Island"
-
-
-def decompose_islands(islands) -> list[list[list[list[float]]]]:
-    """Real island land -> list of polygons ([exterior,*holes]) at fine detail (largest first)."""
-    geoms = list(islands.geoms) if islands.geom_type == "MultiPolygon" else \
-        ([islands] if islands.geom_type == "Polygon" else [])
-    out = []
-    for g in sorted((g for g in geoms if g.area > 0), key=lambda g: g.area, reverse=True):
-        rings = _poly_rings(g, 0.00003)  # fine — islands are small & visually prominent
-        if rings:
-            out.append(rings)
-    return out
-
-
-def clip_ring_to_land(ring: list[list[float]], water, min_area_frac: float = 0.02):
-    """Subtract water from a zone ring. Returns (list-of-polygons, changed?).
-
-    Each polygon is [exterior_ring, *hole_rings] so inter-island LAGOONS/channels survive as holes.
-    Keeps every land part >= min_area_frac of the largest (drops slivers), so "Waterfront
-    Communities–The Island" keeps both the mainland AND the Toronto Islands archipelago. Small
-    parts (islands) get finer simplification so they read as the real island chain, not a blob.
-    changed=False => fully inland (unchanged).
-    """
-    from shapely.geometry import Polygon
-    poly = Polygon(ring)
-    if not poly.is_valid:
-        poly = poly.buffer(0)
-    if not poly.intersects(water):
-        return [[ring]], False  # fully inland — unchanged
-    land = poly.difference(water)
-    if land.is_empty:
-        return [[ring]], False
-    geoms = list(land.geoms) if land.geom_type == "MultiPolygon" else [land]
-    geoms = sorted((g for g in geoms if g.area > 0), key=lambda g: g.area, reverse=True)
-    if not geoms:
-        return [[ring]], False
-    largest = geoms[0].area
-    cutoff = largest * min_area_frac
-    polys = []
-    for g in geoms:
-        if g.area < cutoff:
-            break
-        # Finer simplification for small (island) parts — they're visually prominent.
-        tol = 0.0002 if g.area >= 0.25 * largest else 0.00004
-        rings = _poly_rings(g, tol)
-        if rings:
-            polys.append(rings)
-    return (polys or [[ring]]), bool(polys)
 
 
 # Former-municipality overrides where a simple centroid rule is wrong (north zones east of the
@@ -1381,12 +1246,6 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     boundaries = load_real_boundaries()
     profiles = load_real_profiles()
 
-    water = load_water_mask()  # optional shapely geometry; clips zone polygons to land
-    islands = load_islands_mask()  # real Toronto Islands land (replaces water-subtraction blob)
-    island_polys = decompose_islands(islands) if islands is not None else []
-    clipped_count = 0
-    islands_applied = 0
-
     # Provenance counters (real vs synthetic-fallback per field).
     prov = {k: {"real": 0, "synthetic": 0} for k in
             ("polygon", "population", "medianIncome", "renterPct", "roofAvailability", "irradiance")}
@@ -1396,37 +1255,17 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     irr_vals = [v["irradiationKwhM2Yr"] for v in pvgis.values() if v.get("irradiationKwhM2Yr")]
     irr_lo, irr_hi = (min(irr_vals), max(irr_vals)) if irr_vals else (0.0, 0.0)
 
-    # Income normalization range comes from the *final* incomes (computed in a first pass).
-    island_owner_key = normkey(ISLAND_OWNER_ZONE)
     # City-wide fallbacks (used only if a neighbourhood lacks profile data — none do for the 140 set).
     DEF_POP, DEF_INCOME, DEF_RENTER = 8000, 65000, 0.45
 
     resolved: list[dict] = []
     # Drive over ALL official neighbourhoods (full city coverage), in stable short-code order.
+    # Polygon = RAW official boundary, treated identically for every zone (no clip/island handling).
     for nk, bnd in sorted(boundaries.items(), key=lambda kv: kv[1]["code"]):
         name = bnd["name"]
         prof = profiles.get(nk) or _match(nk, profiles) or {}
-        polygon_coords, centroid = bnd["polygon"], bnd["centroid"]
+        geom, centroid = bnd["geom"], bnd["centroid"]
         prov["polygon"]["real"] += 1
-
-        # Clip the polygon to land (subtract Lake Ontario / harbour); recompute centroid from land.
-        # Multi-part land (mainland + Toronto Islands) is emitted as a GeoJSON MultiPolygon.
-        geom = {"type": "Polygon", "coordinates": polygon_coords}
-        if water is not None:
-            polys, changed = clip_ring_to_land(polygon_coords[0], water)
-            if changed:
-                # Island-owning zone: replace the water-subtraction island blob with REAL OSM island
-                # land (mainland kept). Fall back to mainland-only if islands unavailable.
-                if nk == island_owner_key:
-                    parts = ([polys[0]] + island_polys) if island_polys else [polys[0]]
-                    if island_polys:
-                        islands_applied += 1
-                else:
-                    parts = polys
-                geom = ({"type": "Polygon", "coordinates": parts[0]} if len(parts) == 1
-                        else {"type": "MultiPolygon", "coordinates": parts})
-                geom, centroid = clean_geom(geom)  # OGC-valid + centroid on largest part
-                clipped_count += 1
 
         pop = int(prof.get("population", DEF_POP)) or DEF_POP
         prov["population"]["real" if "population" in prof else "synthetic"] += 1
@@ -1516,11 +1355,6 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
                 "windPotential": round(wind_potential, 3),
             }
         )
-    if water is not None:
-        print(f"  ✓ clipped {clipped_count}/{len(zones)} zone polygons to land"
-              + (f"; real islands applied to {islands_applied}" if islands_applied else
-                 ("; islands mask absent → mainland-only for island zones" if islands is None else "")),
-              file=sys.stderr)
     return zones, prov
 
 

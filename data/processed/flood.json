@@ -1,13 +1,13 @@
 {
   "note": "Per-zone flood risk from Toronto chronic basement-flooding study areas (centroid overlap with our zones). floodRiskScore 0..1. Enables flood scenario + siting penalty.",
   "source": "Toronto Basement Flooding Study Areas (Open Data)",
-  "flaggedZones": 52,
+  "flaggedZones": 53,
   "zones": [
     {
       "zoneId": "z001",
       "name": "West Humber-Clairville",
       "floodStudyAreas": 2,
-      "studyAreaFraction": 0.775,
+      "studyAreaFraction": 0.776,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
     },
@@ -79,14 +79,14 @@
       "zoneId": "z010",
       "name": "Princess-Rosethorn",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.312,
-      "floodRiskScore": 0.406,
+      "studyAreaFraction": 0.309,
+      "floodRiskScore": 0.402,
       "floodRisk": "high"
     },
     {
       "zoneId": "z011",
       "name": "Eringate-Centennial-West Deane",
-      "floodStudyAreas": 3,
+      "floodStudyAreas": 4,
       "studyAreaFraction": 1.0,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
@@ -199,16 +199,16 @@
       "zoneId": "z025",
       "name": "Glenfield-Jane Heights",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.63,
-      "floodRiskScore": 0.819,
+      "studyAreaFraction": 0.636,
+      "floodRiskScore": 0.827,
       "floodRisk": "high"
     },
     {
       "zoneId": "z026",
       "name": "Downsview-Roding-CFB",
       "floodStudyAreas": 2,
-      "studyAreaFraction": 0.425,
-      "floodRiskScore": 0.552,
+      "studyAreaFraction": 0.42,
+      "floodRiskScore": 0.546,
       "floodRisk": "high"
     },
     {
@@ -327,8 +327,8 @@
       "zoneId": "z041",
       "name": "Bridle Path-Sunnybrook-York Mills",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.18,
-      "floodRiskScore": 0.234,
+      "studyAreaFraction": 0.181,
+      "floodRiskScore": 0.235,
       "floodRisk": "moderate"
     },
     {
@@ -359,8 +359,8 @@
       "zoneId": "z045",
       "name": "Parkwoods-Donalda",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.338,
-      "floodRiskScore": 0.439,
+      "studyAreaFraction": 0.337,
+      "floodRiskScore": 0.438,
       "floodRisk": "high"
     },
     {
@@ -431,8 +431,8 @@
       "zoneId": "z054",
       "name": "O'Connor-Parkview",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.272,
-      "floodRiskScore": 0.354,
+      "studyAreaFraction": 0.271,
+      "floodRiskScore": 0.352,
       "floodRisk": "moderate"
     },
     {
@@ -447,7 +447,7 @@
       "zoneId": "z056",
       "name": "Leaside-Bennington",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.963,
+      "studyAreaFraction": 0.961,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
     },
@@ -614,10 +614,10 @@
     {
       "zoneId": "z077",
       "name": "Waterfront Communities-The Island",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
     },
     {
       "zoneId": "z078",
@@ -887,8 +887,8 @@
       "zoneId": "z111",
       "name": "Rockcliffe-Smythe",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.667,
-      "floodRiskScore": 0.867,
+      "studyAreaFraction": 0.663,
+      "floodRiskScore": 0.862,
       "floodRisk": "high"
     },
     {
@@ -911,8 +911,8 @@
       "zoneId": "z114",
       "name": "Lambton Baby Point",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.137,
-      "floodRiskScore": 0.178,
+      "studyAreaFraction": 0.135,
+      "floodRiskScore": 0.176,
       "floodRisk": "moderate"
     },
     {

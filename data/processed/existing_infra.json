@@ -8,7 +8,7 @@
     "renewable_install": 100,
     "ev_charger": 82
   },
-  "matchedToZone": 181,
+  "matchedToZone": 182,
   "infra": [
     {
       "id": "ei0000",
@@ -1619,7 +1619,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 0,
-      "zoneId": "z075",
+      "zoneId": "z076",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1997,7 +1997,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {

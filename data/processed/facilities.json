@@ -10,7 +10,7 @@
     "cooling_centre": 12,
     "library": 102
   },
-  "matchedToZone": 581,
+  "matchedToZone": 583,
   "facilities": [
     {
       "id": "fc0000",
@@ -1569,7 +1569,7 @@
         43.653973
       ],
       "address": "155 BAYVIEW AVE",
-      "zoneId": "z070",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4286,7 +4286,7 @@
         43.66855
       ],
       "address": "150 GREENWOOD AVE",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5105,7 +5105,7 @@
         43.66855
       ],
       "address": "150 GREENWOOD AVE",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {

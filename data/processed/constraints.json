@@ -110,8 +110,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.406,
-      "sitingPenalty": 0.244,
+      "floodRisk": 0.402,
+      "sitingPenalty": 0.241,
       "noBuild": false
     },
     {
@@ -275,8 +275,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.819,
-      "sitingPenalty": 0.491,
+      "floodRisk": 0.827,
+      "sitingPenalty": 0.496,
       "noBuild": false
     },
     {
@@ -285,8 +285,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.552,
-      "sitingPenalty": 0.331,
+      "floodRisk": 0.546,
+      "sitingPenalty": 0.328,
       "noBuild": false
     },
     {
@@ -442,7 +442,7 @@
         "Wilket Creek Forest"
       ],
       "protectedAreaFraction": 0.161,
-      "floodRisk": 0.234,
+      "floodRisk": 0.235,
       "sitingPenalty": 0.382,
       "noBuild": false
     },
@@ -490,8 +490,8 @@
         "Brookbanks Ravine"
       ],
       "protectedAreaFraction": 0.059,
-      "floodRisk": 0.439,
-      "sitingPenalty": 0.352,
+      "floodRisk": 0.438,
+      "sitingPenalty": 0.351,
       "noBuild": false
     },
     {
@@ -587,8 +587,8 @@
         "Taylor-(Massey) Creek Extension"
       ],
       "protectedAreaFraction": 0.133,
-      "floodRisk": 0.354,
-      "sitingPenalty": 0.412,
+      "floodRisk": 0.352,
+      "sitingPenalty": 0.411,
       "noBuild": false
     },
     {
@@ -621,9 +621,9 @@
       "esaNames": [
         "Todmorden Mills"
       ],
-      "protectedAreaFraction": 0.043,
+      "protectedAreaFraction": 0.042,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.065,
+      "sitingPenalty": 0.063,
       "noBuild": false
     },
     {
@@ -735,13 +735,11 @@
     {
       "zoneId": "z068",
       "name": "North Riverdale",
-      "esaCount": 1,
-      "esaNames": [
-        "Don Valley (Central Section)"
-      ],
-      "protectedAreaFraction": 0.087,
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.131,
+      "sitingPenalty": 0.0,
       "noBuild": false
     },
     {
@@ -757,25 +755,28 @@
     {
       "zoneId": "z070",
       "name": "South Riverdale",
-      "esaCount": 3,
+      "esaCount": 4,
       "esaNames": [
+        "Leslie Street Spit",
         "Base of Spit",
         "Cherry Beach Extension",
         "Cherry Beach"
       ],
-      "protectedAreaFraction": 0.061,
+      "protectedAreaFraction": 0.114,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.091,
+      "sitingPenalty": 0.171,
       "noBuild": false
     },
     {
       "zoneId": "z071",
       "name": "Cabbagetown-South St.James Town",
-      "esaCount": 0,
-      "esaNames": [],
-      "protectedAreaFraction": 0.0,
+      "esaCount": 1,
+      "esaNames": [
+        "Don Valley (Central Section)"
+      ],
+      "protectedAreaFraction": 0.111,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.0,
+      "sitingPenalty": 0.167,
       "noBuild": false
     },
     {
@@ -831,17 +832,18 @@
     {
       "zoneId": "z077",
       "name": "Waterfront Communities-The Island",
-      "esaCount": 5,
+      "esaCount": 6,
       "esaNames": [
         "West Algonquin Island",
         "Centre Island Meadow/Wildlife Sanctuary",
         "Hanlans Beach",
         "Muggs Island",
+        "Snake Island Area",
         "Wards Island"
       ],
-      "protectedAreaFraction": 0.098,
-      "floodRisk": 0.0,
-      "sitingPenalty": 0.147,
+      "protectedAreaFraction": 0.061,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.692,
       "noBuild": false
     },
     {
@@ -1197,8 +1199,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.867,
-      "sitingPenalty": 0.52,
+      "floodRisk": 0.862,
+      "sitingPenalty": 0.517,
       "noBuild": false
     },
     {
@@ -1229,8 +1231,8 @@
         "Lambton Park Prairie"
       ],
       "protectedAreaFraction": 0.054,
-      "floodRisk": 0.178,
-      "sitingPenalty": 0.188,
+      "floodRisk": 0.176,
+      "sitingPenalty": 0.187,
       "noBuild": false
     },
     {
@@ -1302,9 +1304,9 @@
       "esaNames": [
         "Warden Woods"
       ],
-      "protectedAreaFraction": 0.18,
+      "protectedAreaFraction": 0.179,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.27,
+      "sitingPenalty": 0.268,
       "noBuild": false
     },
     {
@@ -1326,9 +1328,9 @@
       "esaNames": [
         "Scarborough Bluffs Sequence"
       ],
-      "protectedAreaFraction": 0.106,
+      "protectedAreaFraction": 0.102,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.159,
+      "sitingPenalty": 0.153,
       "noBuild": false
     },
     {
@@ -1462,9 +1464,9 @@
         "Ellesmere Woods",
         "Highland Forest/Morningside Park Forest and Highland Creek West"
       ],
-      "protectedAreaFraction": 0.111,
+      "protectedAreaFraction": 0.11,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.167,
+      "sitingPenalty": 0.165,
       "noBuild": false
     },
     {
@@ -1506,9 +1508,9 @@
       "esaNames": [
         "Bellamy Ravine/Sylvan Park"
       ],
-      "protectedAreaFraction": 0.09,
+      "protectedAreaFraction": 0.089,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.135,
+      "sitingPenalty": 0.134,
       "noBuild": false
     },
     {
