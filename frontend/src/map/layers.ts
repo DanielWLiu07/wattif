@@ -24,6 +24,7 @@ import type {
   Zone,
 } from "@/types";
 import { INFRA_COLOR, STANCE_COLOR, FACILITY_META } from "@/types";
+import { getZoneRegion } from "@/store";
 import type { LayerKey } from "@/store";
 
 type RGB = [number, number, number];
@@ -106,6 +107,8 @@ export type LayerInputs = {
   time: number; // animation clock (ms)
   onInfraClick: (i: Infra) => void;
   onVoiceClick: (id: string) => void;
+  regionCursorMode?: boolean;
+  hoveredRegion?: string | null;
 };
 
 export function buildLayers(input: LayerInputs): Layer[] {
@@ -143,6 +146,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
     time,
     onInfraClick,
     onVoiceClick,
+    regionCursorMode,
+    hoveredRegion,
   } = input;
   const out: Layer[] = [];
   const zoneById = new Map(zones.map((z) => [z.id, z]));
@@ -343,6 +348,34 @@ export function buildLayers(input: LayerInputs): Layer[] {
         })
       );
     }
+  }
+
+  // ---- Interactive region cursor selection highlight ----
+  if (regionCursorMode && hoveredRegion && zones.length) {
+    const fc = {
+      type: "FeatureCollection",
+      features: zones
+        .filter((z) => getZoneRegion(z.name, z.centroid) === hoveredRegion)
+        .map((z) => ({
+          type: "Feature",
+          geometry: z.polygon,
+          properties: {},
+        })),
+    };
+    out.push(
+      new GeoJsonLayer({
+        id: "region-cursor-highlight",
+        data: fc as any,
+        filled: true,
+        stroked: true,
+        getFillColor: [16, 185, 129, 65],
+        getLineColor: [52, 211, 153, 230],
+        lineWidthMinPixels: 2.5,
+        extruded: false,
+        getPolygonOffset: groundOffset,
+        pickable: false,
+      })
+    );
   }
 
   // ---- Step-change flash (what changed this tick/action) ----
@@ -578,18 +611,18 @@ export function buildLayers(input: LayerInputs): Layer[] {
     const ease = mobAge < 0.5 ? 2 * mobAge * mobAge : 1 - (-2 * mobAge + 2) ** 2 / 2;
     const livePos = (a: Agent): [number, number] => {
       const home = a.position;
-      const ph = hashSeed(a.id);
-      // gentle idle drift so people are never perfectly still
-      const dx = Math.sin(time * 0.0006 + ph) * 0.00035;
-      const dy = Math.cos(time * 0.0005 + ph * 1.3) * 0.00035;
       const tgt = agentTargets[a.id];
       if (tgt) {
+        const ph = hashSeed(a.id);
+        // gentle idle drift so people are never perfectly still while moving
+        const dx = Math.sin(time * 0.0006 + ph) * 0.00035;
+        const dy = Math.cos(time * 0.0005 + ph * 1.3) * 0.00035;
         return [
           home[0] + (tgt[0] - home[0]) * ease + dx * 0.4,
           home[1] + (tgt[1] - home[1]) * ease + dy * 0.4,
         ];
       }
-      return [home[0] + dx, home[1] + dy];
+      return home;
     };
     out.push(
       new ScatterplotLayer({
