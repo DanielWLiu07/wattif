@@ -37,7 +37,7 @@ See [project_details.md](./project_details.md). Summary:
 - Placeable: solar, wind, battery, microgrid — **not EV chargers**
 - Scripted demo planner by default; real LLM optional
 - Template voices + rule-based sentiment — **not cohort LLM agents**
-- In-memory session only
+- In-memory sim session; **optional Supabase** for projects/proposals metadata (Phase 2 foundation)
 
 Status labels: [status_contract.md](./status_contract.md).
 
@@ -57,15 +57,25 @@ Status labels: [status_contract.md](./status_contract.md).
 
 **Out of scope:** Supabase client, migrations, new agents, sim changes.
 
-### Phase 2 — Supabase persistence (planned)
+### Phase 2 — Supabase persistence foundation ✅ (complete)
 
-- Supabase project + schema for proposals, sessions, assets metadata
-- Backend service role integration
-- Frontend anon client for save/load proposal
-- Replace “In-memory” badge when persistence is real
-- **Do not start in Phase 1**
+| Task | Deliverable | Status |
+|------|-------------|--------|
+| 2.1 | Config + `/api/health` persistence fields | Done |
+| 2.2 | `supabase/migrations/` initial schema | Done |
+| 2.3 | `backend/app/db/supabase_client.py` | Done |
+| 2.4 | Repository layer skeleton | Done |
+| 2.5 | Minimal REST: projects, proposals, asset definitions | Done |
+| 2.6 | Top-bar **Supabase** vs **In-memory** badge | Done |
+| 2.7 | `docs/supabase_setup.md`, status contract updates | Done |
 
-### Phase 3 — Dataset ingest (planned)
+**In scope (done):** Backend service-role client, SQL schema, CRUD skeleton, 503 when unconfigured.
+
+**Still out of scope (Phase 3+):** Frontend Supabase client, sim state persistence, dataset/asset file upload, RLS/auth.
+
+See [supabase_setup.md](./supabase_setup.md).
+
+### Phase 3 — Dataset ingest + proposal UI (planned)
 
 - Upload API for GeoJSON/CSV zones, infra points, survey priors
 - Validation pipeline; city/session abstraction beyond Toronto-only
@@ -120,4 +130,4 @@ Regenerate or refresh audits when major phases land.
 
 1. **Phase 1 is documentation and honesty** — no Supabase, no new agents, no sim rewrite.
 2. **Target vision is a multi-phase effort**; see [status_contract.md](./status_contract.md) before claiming features in pitches.
-3. **Phase 2 starts Supabase**; env placeholders exist in Phase 1 but are not required to run the app.
+3. **Phase 2 persistence foundation is shipped**; env vars optional; sim state remains in-memory until Phase 3+.

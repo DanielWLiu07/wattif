@@ -38,10 +38,11 @@ See also: [project_details.md](./project_details.md) (current truth), [project_p
 | Voice LLM enrichment | **Fallback-only** | Only when `realLlm` provider configured |
 | Resident “agents” as autonomous AI | **Missing** | Simulation records + templates, not LLM agents |
 | EV charger **placement** / simulation | **Missing** | Display-only on map |
-| Dataset upload (city GIS, surveys, etc.) | **Missing** | Planned Phase 2+ |
-| Custom asset upload (GLB definitions) | **Missing** | Planned Phase 2+ |
-| Supabase persistence | **Planned** | Env placeholders only; Phase 2 |
-| Proposal save / load | **Missing** | In-memory session only today |
+| Dataset upload (city GIS, surveys, etc.) | **Missing** | Planned Phase 3+ |
+| Custom asset upload (GLB definitions) | **Missing** | Planned Phase 3+ |
+| Supabase persistence foundation | **Implemented** | Schema + backend client + REST when env configured; see [supabase_setup.md](./supabase_setup.md) |
+| Proposal save / load (end-to-end UI) | **Planned** | Phase 3 — API exists; no frontend project UI yet |
+| Live sim state persistence | **Missing** | Still in-memory `World` singleton |
 | Report export (PDF / summary) | **Missing** | Planned |
 | Cohort resident AI agents (20–30 personas) | **Missing** | Planned |
 | Operator agent reads resident concerns | **Missing** | Planner does not consume voice feed |
@@ -49,7 +50,7 @@ See also: [project_details.md](./project_details.md) (current truth), [project_p
 
 ---
 
-## Runtime UI labels (Phase 1)
+## Runtime UI labels (Phase 1–2)
 
 The top bar uses these user-facing strings (see `TopBar.tsx`):
 
@@ -61,7 +62,8 @@ The top bar uses these user-facing strings (see `TopBar.tsx`):
 | **Real LLM planner** | `/api/health` reports `realLlm` (Anthropic or Feather) |
 | **Template voices** | No `realLlm` (tick path always templated; label is conservative) |
 | **LLM voices** | `realLlm` set — REST enrichment available |
-| **In-memory** | Always, until Supabase persistence ships (Phase 2) |
+| **In-memory** | Live backend, `persistenceProvider` is `"memory"` |
+| **Supabase** | Live backend, `persistenceProvider` is `"supabase"` |
 
 ---
 

@@ -83,7 +83,7 @@ See [status_contract.md](./status_contract.md) and [project_plan.md](./project_p
 | [project_plan.md](./project_plan.md) | Phased roadmap |
 | [audit/complete_system_architecture.md](./audit/complete_system_architecture.md) | Deep architecture audit *(if present)* |
 | [audit/current_project_details.md](./audit/current_project_details.md) | Product audit *(if present)* |
-| [audit/vision_gap_analysis.md](./audit/vision_gap_analysis.md) | Vision gap analysis *(if present)* |
+| [supabase_setup.md](./supabase_setup.md) | Supabase env vars and migration apply steps |
 
 ---
 
