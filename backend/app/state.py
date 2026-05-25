@@ -1,0 +1,148 @@
+"""Process-wide world state: zones, agents, and the sim engine. Single in-memory world."""
+
+from __future__ import annotations
+
+import uuid
+
+import numpy as np
+
+from . import config
+from .data.loader import load_world
+from .models import (
+    Flow,
+    Infra,
+    InfraCreate,
+    MODEL_URLS,
+    Scenario,
+    SentimentSummary,
+)
+from .optimizer import DEFAULT_CAPACITY_KW, candidate_cost
+from .sim.engine import SimEngine
+
+
+class World:
+    def __init__(self) -> None:
+        self.zones, self.agents, self.source = load_world()
+        self.zones_by_id = {z.id: z for z in self.zones}
+        self.agents_by_zone: dict[str, list] = {}
+        for a in self.agents:
+            self.agents_by_zone.setdefault(a.zone_id, []).append(a)
+        self.engine = SimEngine(self.zones, self.agents)
+
+        # v2 session state.
+        self.active_scenarios: list[Scenario] = []
+        self.last_scenario_type: str | None = None
+        self._scenario_rng = np.random.default_rng(config.RANDOM_SEED + 1000)
+
+    # -- agents --------------------------------------------------------
+    def agents_for(self, zone_id: str | None) -> list:
+        if zone_id is None:
+            return self.agents
+        return self.agents_by_zone.get(zone_id, [])
+
+    # -- v2: session / scenarios --------------------------------------
+    def session_reset(self) -> None:
+        """Restore base state: clear placed infra + scenarios, reset sim/sentiment to tick 0."""
+        self.engine.infra.clear()
+        self.active_scenarios.clear()
+        self.last_scenario_type = None
+        self._scenario_rng = np.random.default_rng(config.RANDOM_SEED + 1000)
+        self.engine.reset()
+
+    def apply_scenario(
+        self,
+        scenario_type: str = "random",
+        intensity: float = 1.0,
+        zone_id: str | None = None,
+        center: tuple[float, float] | None = None,
+        radius_km: float | None = None,
+    ) -> Scenario:
+        from .scenarios import _zones_in_radius, apply_scenario
+
+        target_idxs = None
+        if zone_id is not None and zone_id in self.zones_by_id:
+            target_idxs = [next(i for i, z in enumerate(self.zones) if z.id == zone_id)]
+        elif center is not None and radius_km:
+            idxs = _zones_in_radius(self.engine, center, radius_km)
+            target_idxs = idxs or None  # fall back to city-wide if nothing in range
+
+        scn = apply_scenario(
+            self.engine, scenario_type, intensity, self._scenario_rng, target_idxs
+        )
+        self.active_scenarios.append(scn)
+        self.last_scenario_type = scn.type
+        return scn
+
+    # -- v2: sentiment / voices / flows -------------------------------
+    def sentiment_summary(self) -> SentimentSummary:
+        # perZone and cityApprovalPct are the SAME 0..1 "approval" units (city ≈ mean(perZone)).
+        appr = self.engine.sentiment.mean_opinion_by_zone()
+        per_zone = {
+            self.zones[i].id: round(float(appr[i]), 3)
+            for i in range(self.engine.num_zones)
+        }
+        return SentimentSummary(
+            city_approval_pct=round(self.engine.sentiment.city_approval_pct(), 4),
+            per_zone=per_zone,
+        )
+
+    def voices(self, n: int = 8, context: str | None = None, rng=None):
+        from .sim.voices import generate_voices
+
+        ctx = context if context is not None else self.last_scenario_type
+        return generate_voices(
+            self.engine.sentiment, self.zones_by_id, n=n, context=ctx, rng=rng
+        )
+
+    def flows(self) -> list[Flow]:
+        return self.engine.flows()
+
+    # -- infra ---------------------------------------------------------
+    def place_infra(self, payload: InfraCreate) -> Infra:
+        kind = payload.kind
+        capacity_kw = (
+            payload.capacity_kw
+            if payload.capacity_kw is not None
+            else _default_capacity(kind)
+        )
+        cost_cad = (
+            payload.cost_cad
+            if payload.cost_cad is not None
+            else candidate_cost(kind, capacity_kw)
+        )
+        infra = Infra(
+            id=payload.id or f"infra-{uuid.uuid4().hex[:8]}",
+            kind=kind,
+            position=payload.position,
+            capacity_kw=capacity_kw,
+            cost_cad=round(cost_cad, 2),
+            model_url=payload.model_url or MODEL_URLS.get(kind, ""),
+            status=payload.status,
+        )
+        self.engine.add_infra(infra)
+        return infra
+
+    def remove_infra(self, infra_id: str) -> bool:
+        return self.engine.remove_infra(infra_id)
+
+
+def _default_capacity(kind: str) -> float:
+    return DEFAULT_CAPACITY_KW.get(kind, 4000.0)
+
+
+# Lazily-initialized singleton so importing the module is cheap (and test-friendly).
+_world: World | None = None
+
+
+def get_world() -> World:
+    global _world
+    if _world is None:
+        _world = World()
+    return _world
+
+
+def reset_world() -> World:
+    """Rebuild the world from scratch (used by tests)."""
+    global _world
+    _world = World()
+    return _world
