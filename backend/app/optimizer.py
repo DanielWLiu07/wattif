@@ -44,6 +44,7 @@ W_EQUITY = 1.2  # equity is the project differentiator — weight it slightly hi
 W_COST = 0.5
 W_CONSTRAINT = 0.8  # down-weight environmentally-constrained zones (constraints.json)
 W_EXISTING = 0.3  # mild penalty to avoid double-placing where renewables already exist
+W_DISTRICT = 0.5  # down-weight NEW microgrid in district-energy-served zones (don't double-serve)
 # Portfolio diversity: each additional pick of the same kind is penalized, so a plan doesn't
 # over-concentrate on one technology (resilience). Surfaces the next-best *different* kind.
 W_DIVERSITY = 0.18
@@ -100,7 +101,12 @@ def _suitable_kinds(zone: Zone, is_dense: bool) -> list[InfraKind]:
 
 
 def _rationale(
-    zone: Zone, kind: str, global_cov_gain: float, local_frac: float, eq_gain: float
+    zone: Zone,
+    kind: str,
+    global_cov_gain: float,
+    local_frac: float,
+    eq_gain: float,
+    district_system: str | None = None,
 ) -> str:
     """Human rationale. The compelling neighbourhood-scale % lives here (clearly labeled);
     the machine-readable expectedCoverageGain stays city-wide for HUD consistency."""
@@ -125,9 +131,12 @@ def _rationale(
         "microgrid": " A microgrid suits this zone — local reliability plus equity benefit.",
         "battery": " Battery shaves peak load and firms supply where energy burden is high.",
     }.get(kind, "")
+    de_note = ""
+    if district_system and kind == "microgrid":
+        de_note = f" Note: {zone.name} is already served by {district_system} district energy."
     return (
         f"Site {kind_phrase} in {zone.name}: could supply ~{local_frac * 100:.0f}% of "
-        f"{zone.name}'s demand (+{global_cov_gain * 100:.2f}% city-wide coverage).{eq_note}{why}"
+        f"{zone.name}'s demand (+{global_cov_gain * 100:.2f}% city-wide coverage).{eq_note}{why}{de_note}"
     ).strip()
 
 
@@ -265,6 +274,11 @@ def optimize_greedy(
                 - W_EXISTING
                 * min(float(engine.zone_existing_renewables[cand["zone_idx"]]), 3)
                 / 3  # avoid double-placing
+                - (
+                    W_DISTRICT * float(engine.zone_district_energy[cand["zone_idx"]])
+                    if cand["kind"] == "microgrid"
+                    else 0.0
+                )  # don't double-serve district-energy zones with a new microgrid
             )
             if best is None or score > best[0]:
                 best = (score, cand, gcov, local, eq, gain)
@@ -288,7 +302,14 @@ def optimize_greedy(
                     float(gcov), 6
                 ),  # city-wide delta (HUD-consistent)
                 equity_gain=round(float(eq), 5),
-                rationale=_rationale(zone, cand["kind"], gcov, local, eq),
+                rationale=_rationale(
+                    zone,
+                    cand["kind"],
+                    gcov,
+                    local,
+                    eq,
+                    district_system=engine.zone_de_system.get(zone.id),
+                ),
             )
         )
     return recs
@@ -334,6 +355,11 @@ def optimize_ortools(
             - W_EXISTING
             * min(float(engine.zone_existing_renewables[cand["zone_idx"]]), 3)
             / 3
+            - (
+                W_DISTRICT * float(engine.zone_district_energy[cand["zone_idx"]])
+                if cand["kind"] == "microgrid"
+                else 0.0
+            )
         )
         evals.append((score, gcov, local, eq))
         values.append(int(max(score, 0.0) * 1_000_000))
@@ -388,7 +414,14 @@ def optimize_ortools(
                     float(gcov), 6
                 ),  # city-wide delta (HUD-consistent)
                 equity_gain=round(float(eq), 5),
-                rationale=_rationale(zone, cand["kind"], gcov, local, eq),
+                rationale=_rationale(
+                    zone,
+                    cand["kind"],
+                    gcov,
+                    local,
+                    eq,
+                    district_system=engine.zone_de_system.get(zone.id),
+                ),
             )
         )
     return recs

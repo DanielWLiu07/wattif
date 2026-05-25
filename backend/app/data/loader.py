@@ -133,6 +133,33 @@ def load_heat_vulnerability() -> dict[str, dict] | None:
     return out or None
 
 
+def _load_full_doc(name: str) -> dict | None:
+    """Load a dict-shaped processed doc as-is (defensive), or None."""
+    path = config.DATA_PROCESSED_DIR / name
+    if not path.exists():
+        return None
+    try:
+        with path.open() as f:
+            doc = json.load(f)
+        return doc if isinstance(doc, dict) else None
+    except (json.JSONDecodeError, OSError) as exc:
+        log.warning("failed to read %s: %s", name, exc)
+        return None
+
+
+def load_district_energy() -> dict | None:
+    """District-energy service doc: {zones:[{zoneId, servedFraction, system}], servicePolygon}."""
+    doc = _load_full_doc("district_energy.json")
+    if doc and doc.get("zones"):
+        log.info("loaded district_energy.json: %d served zones", len(doc["zones"]))
+    return doc
+
+
+def load_sbei() -> dict | None:
+    """City-wide sector-based GHG inventory headline figures (display/context only)."""
+    return _load_full_doc("sbei.json")
+
+
 def load_generation_mix() -> dict | None:
     """IESO generation mix doc (avg grid intensity + fuel mix) for context/display, or None."""
     path = config.DATA_PROCESSED_DIR / "generation_mix.json"

@@ -234,6 +234,41 @@ def test_hvi_folded_into_equity_weight():
         assert eng.zone_equity_weight[i] >= eng.zone_burden[i] - 0.15
 
 
+def test_district_energy_endpoint_and_microgrid_note():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+    from app.optimizer import optimize
+
+    state.reset_world()
+    c = TestClient(app)
+    de = c.get("/api/district-energy").json()
+    assert isinstance(de["zones"], list)
+    if not de["available"]:
+        return
+    assert de["servicePolygon"] is not None
+    assert {"zoneId", "servedFraction", "systemName"} <= set(de["zones"][0])
+    # served zones load into the engine and microgrid recs there surface the district-energy note
+    w = state.get_world()
+    assert (w.engine.zone_district_energy > 0).any()
+    recs = optimize(w.engine, kind="microgrid", n=12)
+    assert any("district energy" in r.rationale for r in recs)
+
+
+def test_sbei_endpoint():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+
+    state.reset_world()
+    s = TestClient(app).get("/api/sbei").json()
+    assert "available" in s
+    if s["available"]:
+        assert s.get("communityWideMtCO2e", 0) > 0
+
+
 def test_flood_and_heat_endpoints():
     from fastapi.testclient import TestClient
 

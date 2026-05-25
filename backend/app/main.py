@@ -331,6 +331,37 @@ def get_environment() -> dict:
     return {"available": env is not None, "zones": zones}
 
 
+@app.get("/api/district-energy")
+def get_district_energy() -> dict:
+    """District-energy service area: which downtown zones already have low-carbon thermal."""
+    from .data.loader import load_district_energy
+
+    de = load_district_energy()
+    zones = [
+        {
+            "zoneId": z["zoneId"],
+            "servedFraction": round(float(z.get("servedFraction", 0.0)), 3),
+            "systemName": z.get("system") or z.get("systemName"),
+        }
+        for z in (de or {}).get("zones", [])
+        if "zoneId" in z
+    ]
+    return {
+        "available": de is not None,
+        "zones": zones,
+        "servicePolygon": (de or {}).get("servicePolygon"),
+    }
+
+
+@app.get("/api/sbei")
+def get_sbei() -> dict:
+    """City-wide sector-based GHG inventory (display/context: 16 Mt, buildings 57%, net-zero 2040)."""
+    from .data.loader import load_sbei
+
+    doc = load_sbei()
+    return {"available": doc is not None, **(doc or {})}
+
+
 @app.get("/api/flood")
 def get_flood() -> dict:
     """Per-zone flood risk as a LIST (for tinting), same shape as constraints/environment."""

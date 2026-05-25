@@ -173,6 +173,30 @@ class SimEngine:
         except Exception:  # noqa: BLE001 — existing-infra layer is optional
             pass
 
+        # District-energy service (district_energy.json, defensive) — served zones already have
+        # low-carbon thermal, so the optimizer/planner slightly down-weight NEW microgrid there.
+        self.zone_district_energy = np.zeros(self.num_zones)  # servedFraction 0..1
+        self.zone_de_system: dict[
+            str, str
+        ] = {}  # zoneId -> district-energy system name
+        try:
+            from ..data.loader import load_district_energy
+
+            de = load_district_energy()
+            if de:
+                zone_index = {z.id: i for i, z in enumerate(zones)}
+                for z in de.get("zones", []):
+                    zid = z.get("zoneId")
+                    if zid in zone_index:
+                        self.zone_district_energy[zone_index[zid]] = float(
+                            z.get("servedFraction", 0.0)
+                        )
+                        sysname = z.get("system") or z.get("systemName")
+                        if sysname:
+                            self.zone_de_system[zid] = sysname
+        except Exception:  # noqa: BLE001 — district-energy layer is optional
+            pass
+
         # v2: public-opinion model (drift toward scenario/placement targets).
         from .sentiment import SentimentModel
 
