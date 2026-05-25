@@ -1,0 +1,2662 @@
+{
+  "note": "Existing real installations: city renewable-energy systems + city-operated EV chargers. zoneId via point-in-polygon. Show 'what's already there'.",
+  "sources": [
+    "Toronto Renewable Energy Installations",
+    "City-Operated EV Charging Stations"
+  ],
+  "countByKind": {
+    "renewable_install": 100,
+    "ev_charger": 82
+  },
+  "matchedToZone": 88,
+  "infra": [
+    {
+      "id": "ei0000",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Traffic Services and Garage",
+      "position": [
+        -79.417221,
+        43.637623
+      ],
+      "sizeInstall": 50.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 31, 2010",
+      "zoneId": "z017",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0001",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "East York Civic Centre PV System",
+      "position": [
+        -79.327899,
+        43.690979
+      ],
+      "sizeInstall": 30.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 8, 2012",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0002",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT",
+      "name": "Firehall 424",
+      "position": [
+        -79.479629,
+        43.658355
+      ],
+      "sizeInstall": 1.2,
+      "energyOutput": null,
+      "yearInstall": "Dec 23, 2010",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0003",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT",
+      "name": "Firehall 334",
+      "position": [
+        -79.388613,
+        43.63769
+      ],
+      "sizeInstall": 3.2,
+      "energyOutput": null,
+      "yearInstall": "Jul 12, 2010",
+      "zoneId": "z000",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0004",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Mimico Arena",
+      "position": [
+        -79.498829,
+        43.612393
+      ],
+      "sizeInstall": 62.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 27, 2013",
+      "zoneId": "z037",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0005",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Police College - Shooting Range Phase I",
+      "position": [
+        -79.503479,
+        43.605076
+      ],
+      "sizeInstall": 216.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 26, 2013",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0006",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Ancaster Child Care Centre",
+      "position": [
+        -79.466011,
+        43.733026
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 1, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0007",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Grandravine CC & Arena",
+      "position": [
+        -79.489716,
+        43.751753
+      ],
+      "sizeInstall": 90.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 27, 2013",
+      "zoneId": "z030",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0008",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "North York Animal Centre",
+      "position": [
+        -79.482815,
+        43.753204
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "June 19, 2017",
+      "zoneId": "z030",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0009",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Roding CC & Arena",
+      "position": [
+        -79.492501,
+        43.729092
+      ],
+      "sizeInstall": 75.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 22, 2013",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0010",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Goulding Park Cc & Arena",
+      "position": [
+        -79.42214,
+        43.790903
+      ],
+      "sizeInstall": 75.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 3, 2013",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0011",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "York Mills Arena",
+      "position": [
+        -79.383509,
+        43.747598
+      ],
+      "sizeInstall": 75.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 27, 2013",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0012",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Victoria Village Arena",
+      "position": [
+        -79.31579,
+        43.72309
+      ],
+      "sizeInstall": 90.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 1, 2013",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0013",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "McGregor Arena",
+      "position": [
+        -79.280149,
+        43.747629
+      ],
+      "sizeInstall": 94.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 27, 2013",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0014",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Agincourt Park Arena",
+      "position": [
+        -79.27629,
+        43.788406
+      ],
+      "sizeInstall": 48.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 20, 2013",
+      "zoneId": "z039",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0015",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "Malvern CC",
+      "position": [
+        -79.216386,
+        43.808568
+      ],
+      "sizeInstall": 210.0,
+      "energyOutput": null,
+      "yearInstall": "Jun 14, 2011",
+      "zoneId": "z040",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0016",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Disco Transfer Station",
+      "position": [
+        -79.602493,
+        43.700639
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 3, 2016",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0017",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Disco Yard",
+      "position": [
+        -79.607014,
+        43.701227
+      ],
+      "sizeInstall": 300.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 11, 2016",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0018",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Kipling Acres Phase I",
+      "position": [
+        -79.571998,
+        43.725135
+      ],
+      "sizeInstall": 150.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 19, 2016",
+      "zoneId": "z034",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0019",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Kipling Acres Phase II",
+      "position": [
+        -79.571998,
+        43.725135
+      ],
+      "sizeInstall": 75.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 2017",
+      "zoneId": "z034",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0020",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Etobicoke Olympium",
+      "position": [
+        -79.582987,
+        43.650107
+      ],
+      "sizeInstall": 150.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 3, 2016",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0021",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Stores Warehouse",
+      "position": [
+        -79.509862,
+        43.617488
+      ],
+      "sizeInstall": 150.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 19, 2016",
+      "zoneId": "z037",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0022",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Amesbury Park",
+      "position": [
+        -79.487157,
+        43.705942
+      ],
+      "sizeInstall": 130.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 4, 2016",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0023",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "King Yard",
+      "position": [
+        -79.424671,
+        43.639797
+      ],
+      "sizeInstall": 175.0,
+      "energyOutput": null,
+      "yearInstall": "Dec 15, 2015",
+      "zoneId": "z018",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0024",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "McCormick RC",
+      "position": [
+        -79.433444,
+        43.647344
+      ],
+      "sizeInstall": 175.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 11, 2016",
+      "zoneId": "z015",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0025",
+      "kind": "renewable_install",
+      "subtype": "FIT 3",
+      "name": "Cummer CC",
+      "position": [
+        -79.371259,
+        43.800095
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 19, 2016",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0026",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Albion Arena",
+      "position": [
+        -79.582815,
+        43.739651
+      ],
+      "sizeInstall": 140.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 31, 2018",
+      "zoneId": "z033",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0027",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Albion Community Centre & Pool & Fit Centre",
+      "position": [
+        -79.58119,
+        43.739285
+      ],
+      "sizeInstall": 49.9,
+      "energyOutput": null,
+      "yearInstall": "Nov 27, 2017",
+      "zoneId": "z033",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0028",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Albion Library",
+      "position": [
+        -79.584168,
+        43.739853
+      ],
+      "sizeInstall": 40.0,
+      "energyOutput": null,
+      "yearInstall": "June 6, 2018",
+      "zoneId": "z033",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0029",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "71 Rexdale Blvd",
+      "position": [
+        -79.56096,
+        43.711211
+      ],
+      "sizeInstall": 500.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 9, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0030",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Toronto Police Services Training Facility & D22 Substation Phase II",
+      "position": [
+        -79.503479,
+        43.605076
+      ],
+      "sizeInstall": 200.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0031",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Gord& Irene Risk Community Centre",
+      "position": [
+        -79.566545,
+        43.747437
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 9, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0032",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Habitant Arena",
+      "position": [
+        -79.540243,
+        43.747019
+      ],
+      "sizeInstall": 120.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 21, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0033",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Finch Yard",
+      "position": [
+        -79.470642,
+        43.769452
+      ],
+      "sizeInstall": 500.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 31, 2018",
+      "zoneId": "z030",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0034",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Fire Hall 145",
+      "position": [
+        -79.460032,
+        43.734756
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "April 21, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0035",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Birchmount Park Yard - Maintenance Shop",
+      "position": [
+        -79.292907,
+        43.770278
+      ],
+      "sizeInstall": 49.9,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0036",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "York Woods Public Library",
+      "position": [
+        -79.507359,
+        43.758965
+      ],
+      "sizeInstall": 46.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 15, 2017",
+      "zoneId": "z032",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0037",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Herbert Carnegie North York Centennial Centre",
+      "position": [
+        -79.450052,
+        43.773357
+      ],
+      "sizeInstall": 240.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 15, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0038",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Ingram Yard - Office & Storage Bldg",
+      "position": [
+        -79.46934,
+        43.701303
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0039",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Baycrest Arena",
+      "position": [
+        -79.443129,
+        43.728911
+      ],
+      "sizeInstall": 140.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 21, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0040",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Bentworth Park Yard Administration Building",
+      "position": [
+        -79.465514,
+        43.720877
+      ],
+      "sizeInstall": 80.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 26, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0041",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Wallace Emerson Community Centre & Indoor Pool",
+      "position": [
+        -79.439271,
+        43.667315
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 12, 2018",
+      "zoneId": "z014",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0042",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Mitchell Field Community Centre & Arena",
+      "position": [
+        -79.408537,
+        43.774644
+      ],
+      "sizeInstall": 120.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 31, 2018",
+      "zoneId": "z027",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0043",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Bayview Arena",
+      "position": [
+        -79.393726,
+        43.787938
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 1, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0044",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Angela James Arena",
+      "position": [
+        -79.327599,
+        43.713206
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 1, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0045",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Police Cranfield Garage",
+      "position": [
+        -79.313986,
+        43.710462
+      ],
+      "sizeInstall": 150.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 1, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0046",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Stan Wadlow Park - East York Memorial Arena",
+      "position": [
+        -79.31529,
+        43.697423
+      ],
+      "sizeInstall": 130.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 29, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0047",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Elections Building",
+      "position": [
+        -79.307005,
+        43.715714
+      ],
+      "sizeInstall": 140.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 26, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0048",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Ted Reeve Community Arena",
+      "position": [
+        -79.299273,
+        43.684602
+      ],
+      "sizeInstall": 130.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 31, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0049",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Oriole Park Community Centre & Arena",
+      "position": [
+        -79.351278,
+        43.781801
+      ],
+      "sizeInstall": 220.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 29, 2018",
+      "zoneId": "z026",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0050",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Parkway Forest Community Centre",
+      "position": [
+        -79.343894,
+        43.772537
+      ],
+      "sizeInstall": 80.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 19, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0051",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Corporate Office Building",
+      "position": [
+        -79.352625,
+        43.751707
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0052",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Bermondsey Yard - Office & Garage Bldg",
+      "position": [
+        -79.31804,
+        43.72327
+      ],
+      "sizeInstall": 50.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0053",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Clairlea Park - Scarborough Indoor Soccer Centre",
+      "position": [
+        -79.287152,
+        43.715113
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0054",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Don Montgomery  Arena & Gym",
+      "position": [
+        -79.261665,
+        43.732663
+      ],
+      "sizeInstall": 240.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 1, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0055",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Warden Hilltop Community Centre",
+      "position": [
+        -79.280489,
+        43.714903
+      ],
+      "sizeInstall": 40.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 28, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0056",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Scarborough Village Recreation Centre & Arena",
+      "position": [
+        -79.216758,
+        43.739991
+      ],
+      "sizeInstall": 130.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 27, 2017",
+      "zoneId": "z038",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0057",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "McGregor Park Arena",
+      "position": [
+        -79.280149,
+        43.747629
+      ],
+      "sizeInstall": 120.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0058",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Centennial Galaxy Arena",
+      "position": [
+        -79.235108,
+        43.775532
+      ],
+      "sizeInstall": 130.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 28, 2017",
+      "zoneId": "z041",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0059",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Scarborough Civic Centre",
+      "position": [
+        -79.257241,
+        43.772811
+      ],
+      "sizeInstall": 100.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 20, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0060",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Commander Park Arena & Community Centre",
+      "position": [
+        -79.267814,
+        43.795039
+      ],
+      "sizeInstall": 240.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 2, 2018",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0061",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "Scarborough Transfer Station",
+      "position": [
+        -79.242614,
+        43.79651
+      ],
+      "sizeInstall": 300.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 23, 2018",
+      "zoneId": "z039",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0062",
+      "kind": "renewable_install",
+      "subtype": "FIT 4",
+      "name": "715 Milner Ave",
+      "position": [
+        -79.207988,
+        43.795991
+      ],
+      "sizeInstall": 500.0,
+      "energyOutput": null,
+      "yearInstall": "Mar 13, 2018",
+      "zoneId": "z040",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0063",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT A",
+      "name": "Neilson Creative Centre",
+      "position": [
+        -79.566408,
+        43.630212
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 19, 2014",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0064",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT A",
+      "name": "York Civic Centre",
+      "position": [
+        -79.478412,
+        43.689884
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 20, 2014",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0065",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT A",
+      "name": "Ems 33",
+      "position": [
+        -79.429925,
+        43.661705
+      ],
+      "sizeInstall": 4.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 10, 2014",
+      "zoneId": "z014",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0066",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT A",
+      "name": "Edithvale CC",
+      "position": [
+        -79.426539,
+        43.776994
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 12, 2014",
+      "zoneId": "z028",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0067",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT A",
+      "name": "Warden Hiltop CC",
+      "position": [
+        -79.280489,
+        43.714903
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Feb 12, 2014",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0068",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Police Division 14",
+      "position": [
+        -79.425978,
+        43.651297
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 27, 2015",
+      "zoneId": "z015",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0069",
+      "kind": "renewable_install",
+      "subtype": "MircoFIT A",
+      "name": "Teaching Kitchen",
+      "position": [
+        -79.461987,
+        43.641997
+      ],
+      "sizeInstall": 4.0,
+      "energyOutput": null,
+      "yearInstall": "Dec 21, 2014",
+      "zoneId": "z019",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0070",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Fire Hall 415",
+      "position": [
+        -79.570377,
+        43.717877
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Dec 4, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0071",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "West Fire Training Division",
+      "position": [
+        -79.57192,
+        43.69496
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 25, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0072",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Ems Station 38",
+      "position": [
+        -79.521427,
+        43.606757
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 27, 2015",
+      "zoneId": "z037",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0073",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Humber Bay Park",
+      "position": [
+        -79.482629,
+        43.620529
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Dec 1, 2015",
+      "zoneId": "z037",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0074",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Annette Recreation Centre",
+      "position": [
+        -79.474139,
+        43.661204
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Dec 17, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0075",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Fairbank Memorial Park CC",
+      "position": [
+        -79.447997,
+        43.691282
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 17, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0076",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Police Division 11",
+      "position": [
+        -79.460825,
+        43.671071
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 26, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0077",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Ems Station 18",
+      "position": [
+        -79.416654,
+        43.702661
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 9, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0078",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Gwendolen Tennis Clubhouse",
+      "position": [
+        -79.420424,
+        43.751086
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Jan 13, 2016",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0079",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Beaches Recreation Centre",
+      "position": [
+        -79.298807,
+        43.673931
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 23, 2015",
+      "zoneId": "z021",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0080",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Ems Station 44",
+      "position": [
+        -79.298529,
+        43.729554
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 16, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0081",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Ellesmere Yard",
+      "position": [
+        -79.272202,
+        43.770204
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 16, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0082",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT B",
+      "name": "Ellesmere Yard Library",
+      "position": [
+        -79.272932,
+        43.768009
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 16, 2015",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0083",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Fire Hall 413",
+      "position": [
+        -79.586906,
+        43.740219
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "June 2, 2017",
+      "zoneId": "z033",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0084",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Brentwood Public Library",
+      "position": [
+        -79.514308,
+        43.647425
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 9, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0085",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Fairfield Senior Centre",
+      "position": [
+        -79.519312,
+        43.639678
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "May 15, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0086",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Jane/Sheppard Public Library",
+      "position": [
+        -79.510032,
+        43.739952
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Oct 23, 2017",
+      "zoneId": "z032",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0087",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Mount Dennis Public Library",
+      "position": [
+        -79.488221,
+        43.686631
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 29, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0088",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "York Community Centre",
+      "position": [
+        -79.482014,
+        43.687837
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 8, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0089",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Fire Hall 426",
+      "position": [
+        -79.438867,
+        43.645086
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "June 13, 2017",
+      "zoneId": "z020",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0090",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Palmerston Public Library",
+      "position": [
+        -79.414185,
+        43.665094
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Oct 26, 2017",
+      "zoneId": "z009",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0091",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Ramsden Yard",
+      "position": [
+        -79.390319,
+        43.675808
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "May 17, 2017",
+      "zoneId": "z009",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0092",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Parliament Public Library",
+      "position": [
+        -79.367955,
+        43.66183
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Aug 2, 2017",
+      "zoneId": "z005",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0093",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "S. Walter Stewart Public Library",
+      "position": [
+        -79.329713,
+        43.692138
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Nov 16, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0094",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Danforth/Coxwell Library",
+      "position": [
+        -79.321353,
+        43.683636
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Sept 6, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0095",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT C",
+      "name": "Bendale Public Library",
+      "position": [
+        -79.244024,
+        43.751074
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "Sept 29, 2017",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0096",
+      "kind": "renewable_install",
+      "subtype": "MicroFIT A",
+      "name": "Toronto Parking Authority",
+      "position": [
+        -79.373084,
+        43.646453
+      ],
+      "sizeInstall": 21.0,
+      "energyOutput": null,
+      "yearInstall": "Jun 18, 2012",
+      "zoneId": "z000",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0097",
+      "kind": "renewable_install",
+      "subtype": "FIT 1",
+      "name": "F.J. Horgan PV System",
+      "position": [
+        -79.166716,
+        43.759589
+      ],
+      "sizeInstall": 86.4,
+      "energyOutput": null,
+      "yearInstall": "Jul 11, 2012",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0098",
+      "kind": "renewable_install",
+      "subtype": "Storage + NM",
+      "name": "EMS 46",
+      "position": [
+        -79.310712,
+        43.687089
+      ],
+      "sizeInstall": 10.0,
+      "energyOutput": null,
+      "yearInstall": "2019",
+      "zoneId": null,
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0099",
+      "kind": "renewable_install",
+      "subtype": "Storage + NM",
+      "name": "Waterfront Neighbourhood Centre",
+      "position": [
+        -79.397766,
+        43.635406
+      ],
+      "sizeInstall": 94.0,
+      "energyOutput": null,
+      "yearInstall": "2018",
+      "zoneId": "z000",
+      "source": "Toronto Renewable Energy Installations"
+    },
+    {
+      "id": "ei0100",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "Toronto City Hall, 100 Queen St W.",
+      "position": [
+        -79.383625,
+        43.652822
+      ],
+      "level2Ports": 8,
+      "level3Ports": 3,
+      "zoneId": "z001",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0101",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "51 Dockside Dr.",
+      "position": [
+        -79.36547,
+        43.643939
+      ],
+      "level2Ports": 5,
+      "level3Ports": 0,
+      "zoneId": "z000",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0102",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "10 Soho St.",
+      "position": [
+        -79.393849,
+        43.649877
+      ],
+      "level2Ports": 4,
+      "level3Ports": 0,
+      "zoneId": "z003",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0103",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "2 Church St.",
+      "position": [
+        -79.373087,
+        43.646461
+      ],
+      "level2Ports": 24,
+      "level3Ports": 4,
+      "zoneId": "z000",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0104",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "365 Lippincott St.",
+      "position": [
+        -79.409682,
+        43.665351
+      ],
+      "level2Ports": 10,
+      "level3Ports": 0,
+      "zoneId": "z004",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0105",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "20 Delisle Ave.",
+      "position": [
+        -79.3954,
+        43.689207
+      ],
+      "level2Ports": 4,
+      "level3Ports": 0,
+      "zoneId": "z010",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0106",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "75 Holly St.",
+      "position": [
+        -79.396306,
+        43.706447
+      ],
+      "level2Ports": 28,
+      "level3Ports": 1,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0107",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "Yonge Street at Dundas St.",
+      "position": [
+        -79.380926,
+        43.656329
+      ],
+      "level2Ports": 8,
+      "level3Ports": 0,
+      "zoneId": "z001",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0108",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "9\u00c2\u00a0Wellesley\u00c2\u00a0St\u00c2\u00a0W.",
+      "position": [
+        -79.385231,
+        43.664647
+      ],
+      "level2Ports": 8,
+      "level3Ports": 0,
+      "zoneId": "z001",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0109",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "14 Arundel Ave.",
+      "position": [
+        -79.351353,
+        43.678475
+      ],
+      "level2Ports": 8,
+      "level3Ports": 0,
+      "zoneId": "z023",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0110",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "1612 Danforth Ave.",
+      "position": [
+        -79.322823,
+        43.68378
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z022",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0111",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "Bessarion CC",
+      "position": [
+        -79.375722,
+        43.768528
+      ],
+      "level2Ports": 10,
+      "level3Ports": 0,
+      "zoneId": "z029",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0112",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "51 Dockside Dr",
+      "position": [
+        -79.36547,
+        43.643939
+      ],
+      "level2Ports": 6,
+      "level3Ports": 0,
+      "zoneId": "z000",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0113",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "91 Via Italia",
+      "position": [
+        -79.445049,
+        43.676997
+      ],
+      "level2Ports": 12,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0114",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "10 Delisle St",
+      "position": [
+        -79.3954,
+        43.689207
+      ],
+      "level2Ports": 4,
+      "level3Ports": 0,
+      "zoneId": "z010",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0115",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "20 Charles St E.",
+      "position": [
+        -79.385094,
+        43.668889
+      ],
+      "level2Ports": 22,
+      "level3Ports": 1,
+      "zoneId": "z002",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0116",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "Toronto City Hall, 100 Queen St W.",
+      "position": [
+        -79.383625,
+        43.652822
+      ],
+      "level2Ports": 40,
+      "level3Ports": 0,
+      "zoneId": "z001",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0117",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "10 Portland St",
+      "position": [
+        -79.399053,
+        43.647133
+      ],
+      "level2Ports": 4,
+      "level3Ports": 0,
+      "zoneId": "z000",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0118",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "74 Clinton Street",
+      "position": [
+        -79.414172,
+        43.655792
+      ],
+      "level2Ports": 4,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0119",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "168 Chiltern Hill Rd",
+      "position": [
+        -79.427699,
+        43.700155
+      ],
+      "level2Ports": 4,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0120",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "45 Abell St",
+      "position": [
+        -79.423687,
+        43.641587
+      ],
+      "level2Ports": 12,
+      "level3Ports": 4,
+      "zoneId": "z015",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0121",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "35 Erindale Ave",
+      "position": [
+        -79.357649,
+        43.677371
+      ],
+      "level2Ports": 4,
+      "level3Ports": 6,
+      "zoneId": "z023",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0122",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "265 Armadale Ave",
+      "position": [
+        -79.482065,
+        43.65045
+      ],
+      "level2Ports": 8,
+      "level3Ports": 1,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0123",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "117 Hammersmith Ave",
+      "position": [
+        -79.294563,
+        43.671643
+      ],
+      "level2Ports": 6,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0124",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "166 Woodbine Ave",
+      "position": [
+        -79.30587,
+        43.668326
+      ],
+      "level2Ports": 6,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0125",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "14 Barkwin Dr",
+      "position": [
+        -79.564842,
+        43.738476
+      ],
+      "level2Ports": 4,
+      "level3Ports": 1,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0126",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "2300 Lakeshore Blvd W.",
+      "position": [
+        -79.486808,
+        43.618577
+      ],
+      "level2Ports": 6,
+      "level3Ports": 1,
+      "zoneId": "z037",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0127",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "19 Spadina Rd",
+      "position": [
+        -79.404083,
+        43.667838
+      ],
+      "level2Ports": 6,
+      "level3Ports": 0,
+      "zoneId": "z009",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0128",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "74 Yorkville Ave",
+      "position": [
+        -79.391282,
+        43.671199
+      ],
+      "level2Ports": 8,
+      "level3Ports": 1,
+      "zoneId": "z009",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0129",
+      "kind": "ev_charger",
+      "subtype": "Green P",
+      "name": "40 York St",
+      "position": [
+        -79.383184,
+        43.645359
+      ],
+      "level2Ports": 12,
+      "level3Ports": 0,
+      "zoneId": "z001",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0130",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "91 Elizabeth St",
+      "position": [
+        -79.386311,
+        43.658052
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z001",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0131",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "10 Palmerston Ave",
+      "position": [
+        -79.406799,
+        43.647295
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z016",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0132",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "124 Mount Joy Ave",
+      "position": [
+        -79.327098,
+        43.680889
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0133",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "248 Shaw St",
+      "position": [
+        -79.418102,
+        43.649354
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z016",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0134",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "43 Alton Ave",
+      "position": [
+        -79.328392,
+        43.665089
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0135",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "29 Bowmore Rd",
+      "position": [
+        -79.313381,
+        43.674542
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0136",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "500 Commissioners St",
+      "position": [
+        -79.331983,
+        43.654127
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0137",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "216 Oakcrest Ave",
+      "position": [
+        -79.304245,
+        43.68558
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0138",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "535 Runnymeade Rd",
+      "position": [
+        -79.480282,
+        43.660964
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0139",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "64 Annette St",
+      "position": [
+        -79.461665,
+        43.663723
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0140",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "115 High Park Avenue",
+      "position": [
+        -79.466936,
+        43.657561
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0141",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "685 Dovercourt Rd",
+      "position": [
+        -79.428757,
+        43.659611
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0142",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "705 Shaw St",
+      "position": [
+        -79.422731,
+        43.661218
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0143",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "41 Inglewood Dr",
+      "position": [
+        -79.387948,
+        43.691082
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z011",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0144",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "580 Christie St",
+      "position": [
+        -79.424787,
+        43.6793
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z013",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0145",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "186 Carlton St",
+      "position": [
+        -79.372259,
+        43.663386
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": "z007",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0146",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "188 Carlton St",
+      "position": [
+        -79.372158,
+        43.663426
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": "z007",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0147",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "453 Jones Ave",
+      "position": [
+        -79.338348,
+        43.675758
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0148",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "503 Jones Ave",
+      "position": [
+        -79.338964,
+        43.677149
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0149",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "132 Chatham Ave",
+      "position": [
+        -79.3355,
+        43.679774
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0150",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "31 Roseheath Ave",
+      "position": [
+        -79.317023,
+        43.681726
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0151",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "543 Strathmore Blvd",
+      "position": [
+        -79.314065,
+        43.686266
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z022",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0152",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1856 Queen St E. ",
+      "position": [
+        -79.307317,
+        43.668442
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0153",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1760 Queen St E. ",
+      "position": [
+        -79.311077,
+        43.667606
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0154",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "8 Kings Lynn Rd",
+      "position": [
+        -79.504456,
+        43.649087
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0155",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "2390 Lake Shore Blvd W",
+      "position": [
+        -79.488555,
+        43.615362
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": "z037",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0156",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1812 Weston Rd",
+      "position": [
+        -79.51337,
+        43.699074
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0157",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": " 2000 Weston Rd",
+      "position": [
+        -79.519833,
+        43.701112
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0158",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1981 Queen Street East",
+      "position": [
+        -79.300377,
+        43.669917
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0159",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "2231 Gerrard Street East",
+      "position": [
+        -79.298178,
+        43.684352
+      ],
+      "level2Ports": 1,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0160",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "625 The Queensway ",
+      "position": [
+        -79.496306,
+        43.627672
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0161",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "2285 Dundas St W",
+      "position": [
+        -79.452233,
+        43.655215
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z019",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0162",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "2251 Dundas St W",
+      "position": [
+        -79.452064,
+        43.654554
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z019",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0163",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "430 Roncesvalles Ave",
+      "position": [
+        -79.451326,
+        43.652043
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z019",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0164",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1224 KING ST W ",
+      "position": [
+        -79.428329,
+        43.638832
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z018",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0165",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1051 Queen Street W",
+      "position": [
+        -79.420492,
+        43.643817
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z017",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0166",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "273 Christie St",
+      "position": [
+        -79.42109,
+        43.67076
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z009",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0167",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "283 Ossington Ave",
+      "position": [
+        -79.421071,
+        43.650491
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z016",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0168",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "963 Gerrard St E",
+      "position": [
+        -79.339529,
+        43.668289
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0169",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1313 Gerrard ST E",
+      "position": [
+        -79.326496,
+        43.671208
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0170",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1582 Queen Street East",
+      "position": [
+        -79.3181,
+        43.666068
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0171",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "220 Carlaw Ave. ",
+      "position": [
+        -79.340494,
+        43.661923
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0172",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1715 DUNDAS ST E",
+      "position": [
+        -79.32492,
+        43.667615
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0173",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "41 FULTON AVE",
+      "position": [
+        -79.355468,
+        43.682267
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z023",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0174",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "19 Glendora Ave",
+      "position": [
+        -79.409825,
+        43.759221
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z027",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0175",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "19 Glendora Ave",
+      "position": [
+        -79.409503,
+        43.759293
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z027",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0176",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "33 Elmhurst Ave",
+      "position": [
+        -79.412807,
+        43.762813
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0177",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "1834 Queen St E",
+      "position": [
+        -79.308398,
+        43.66825
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0178",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "912 Kingston Road",
+      "position": [
+        -79.289163,
+        43.68045
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0179",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "2150 Queen Street East",
+      "position": [
+        -79.291991,
+        43.67169
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z021",
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0180",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "2219 Gerrard Street East",
+      "position": [
+        -79.299243,
+        43.684121
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": null,
+      "source": "City of Toronto EV Charging (Green P)"
+    },
+    {
+      "id": "ei0181",
+      "kind": "ev_charger",
+      "subtype": "On-Street",
+      "name": "320 DRIFTWOOD AVE ",
+      "position": [
+        -79.511447,
+        43.765618
+      ],
+      "level2Ports": 2,
+      "level3Ports": 0,
+      "zoneId": "z031",
+      "source": "City of Toronto EV Charging (Green P)"
+    }
+  ]
+}

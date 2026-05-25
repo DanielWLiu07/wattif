@@ -1,0 +1,452 @@
+{
+  "note": "Per-zone siting constraints from Environmentally Significant Areas (ESA centroids joined to zones). sitingPenalty 0..1 (optimizer should down-weight); noBuild=True when >=50% of the zone is protected. Flood layer not yet ingested (TODO).",
+  "source": "Toronto Environmentally Significant Areas",
+  "flaggedZones": 14,
+  "zones": [
+    {
+      "zoneId": "z000",
+      "name": "Waterfront Communities\u2013The Island",
+      "esaCount": 6,
+      "esaNames": [
+        "West Algonquin Island",
+        "Centre Island Meadow/Wildlife Sanctuary",
+        "Hanlans Beach",
+        "Muggs Island",
+        "Snake Island Area",
+        "Wards Island"
+      ],
+      "protectedAreaFraction": 0.062,
+      "sitingPenalty": 0.093,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z001",
+      "name": "Bay Street Corridor",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z002",
+      "name": "Church-Yonge Corridor",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z003",
+      "name": "Kensington-Chinatown",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z004",
+      "name": "University",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z005",
+      "name": "Moss Park",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z006",
+      "name": "Regent Park",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z007",
+      "name": "Cabbagetown-South St.James Town",
+      "esaCount": 1,
+      "esaNames": [
+        "Don Valley (Central Section)"
+      ],
+      "protectedAreaFraction": 0.111,
+      "sitingPenalty": 0.167,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z008",
+      "name": "North St.James Town",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z009",
+      "name": "Annex",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z010",
+      "name": "Yonge-St.Clair",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z011",
+      "name": "Rosedale-Moore Park",
+      "esaCount": 5,
+      "esaNames": [
+        "Vale of Avoca",
+        "Iroquois Shoreline",
+        "Moore Park Ravine",
+        "Park Drive Ravine/Don Valley (West Side)",
+        "Rosedale Valley"
+      ],
+      "protectedAreaFraction": 0.15,
+      "sitingPenalty": 0.225,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z012",
+      "name": "Casa Loma",
+      "esaCount": 1,
+      "esaNames": [
+        "Nordheimer Ravine"
+      ],
+      "protectedAreaFraction": 0.051,
+      "sitingPenalty": 0.076,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z013",
+      "name": "Wychwood",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z014",
+      "name": "Dovercourt-Wallace Emerson-Junction",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z015",
+      "name": "Little Portugal",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z016",
+      "name": "Trinity-Bellwoods",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z017",
+      "name": "Niagara",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z018",
+      "name": "South Parkdale",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z019",
+      "name": "High Park-Swansea",
+      "esaCount": 6,
+      "esaNames": [
+        "Ellis Avenue",
+        "High Park",
+        "South Kingsway (East Flank)",
+        "South Kingsway (West Flank)",
+        "Rennie Park",
+        "Humber Valley"
+      ],
+      "protectedAreaFraction": 0.146,
+      "sitingPenalty": 0.219,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z020",
+      "name": "Roncesvalles",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z021",
+      "name": "The Beaches",
+      "esaCount": 1,
+      "esaNames": [
+        "Glen Stewart Ravine"
+      ],
+      "protectedAreaFraction": 0.02,
+      "sitingPenalty": 0.03,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z022",
+      "name": "Danforth",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z023",
+      "name": "Greektown (Playter Estates-Danforth)",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z024",
+      "name": "East York (Broadview North)",
+      "esaCount": 1,
+      "esaNames": [
+        "Todmorden Mills"
+      ],
+      "protectedAreaFraction": 0.042,
+      "sitingPenalty": 0.063,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z025",
+      "name": "Leaside-Bennington",
+      "esaCount": 2,
+      "esaNames": [
+        "Don Valley Brickworks",
+        "Crothers Woods"
+      ],
+      "protectedAreaFraction": 0.034,
+      "sitingPenalty": 0.051,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z026",
+      "name": "Don Valley Village",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z027",
+      "name": "Willowdale East",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z028",
+      "name": "Willowdale West",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z029",
+      "name": "Bayview Village",
+      "esaCount": 1,
+      "esaNames": [
+        "East Don Valley Swamp"
+      ],
+      "protectedAreaFraction": 0.162,
+      "sitingPenalty": 0.243,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z030",
+      "name": "York University Heights",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z031",
+      "name": "Black Creek",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z032",
+      "name": "Glenfield-Jane Heights",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z033",
+      "name": "Mount Olive-Silverstone-Jamestown",
+      "esaCount": 2,
+      "esaNames": [
+        "Garland Park",
+        "Rowntree Mill Swamp"
+      ],
+      "protectedAreaFraction": 0.088,
+      "sitingPenalty": 0.132,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z034",
+      "name": "Rexdale-Kipling",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z035",
+      "name": "Etobicoke West Mall",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z036",
+      "name": "Islington-City Centre West",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z037",
+      "name": "Mimico (Lakeshore)",
+      "esaCount": 1,
+      "esaNames": [
+        "Humber Bay Park East"
+      ],
+      "protectedAreaFraction": 0.011,
+      "sitingPenalty": 0.017,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z038",
+      "name": "Scarborough Village",
+      "esaCount": 1,
+      "esaNames": [
+        "Bellamy Ravine/Sylvan Park"
+      ],
+      "protectedAreaFraction": 0.09,
+      "sitingPenalty": 0.135,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z039",
+      "name": "Agincourt South-Malvern West",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z040",
+      "name": "Malvern",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z041",
+      "name": "Woburn",
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
+      "sitingPenalty": 0.0,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z042",
+      "name": "Rouge",
+      "esaCount": 17,
+      "esaNames": [
+        "Barkey Woods",
+        "Beare Road Woodlot",
+        "Cedarbrae Woods",
+        "Centennial Forest and Swamp",
+        "Core Woods",
+        "Finch Ave. Meander/Sewells Forest/Reesor Woods"
+      ],
+      "protectedAreaFraction": 0.196,
+      "sitingPenalty": 0.294,
+      "noBuild": false
+    },
+    {
+      "zoneId": "z043",
+      "name": "Birchcliffe-Cliffside",
+      "esaCount": 1,
+      "esaNames": [
+        "Toronto Hunt Club Forest"
+      ],
+      "protectedAreaFraction": 0.015,
+      "sitingPenalty": 0.022,
+      "noBuild": false
+    }
+  ]
+}

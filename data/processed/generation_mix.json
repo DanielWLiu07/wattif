@@ -1,0 +1,17 @@
+{
+  "source": "IESO (Independent Electricity System Operator) \u2014 Ontario, 2023 Year in Review (public summary). Transmission-connected generation by fuel.",
+  "year": 2023,
+  "note": "Ontario provincial generation mix (% of TWh) + grid emission intensity. Use as the clean-grid baseline for emissions: displacing grid power saves ~the gridIntensity below; on-site renewables in dense fossil-reliant pockets save more at peak.",
+  "mixPct": {
+    "nuclear": 51.0,
+    "hydro": 24.5,
+    "naturalGas": 10.5,
+    "wind": 9.0,
+    "biofuel": 0.3,
+    "solar": 0.6,
+    "other": 4.1
+  },
+  "gridEmissionIntensityGco2PerKwh": 38,
+  "renewableSharePct": 34.4,
+  "nonEmittingSharePct": 89.4
+}

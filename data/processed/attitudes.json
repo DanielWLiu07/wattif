@@ -1,0 +1,484 @@
+{
+  "source": "City of Toronto Climate Perceptions Study 2021 (v1 crosstab tables)",
+  "method": "Top2Box % by former-municipality Region joined to zones by centroid; proRenewablePrior = mean(concern, importanceFightingClimate, agreeEveryoneReduce, likelyAddSolar). Values are 0..1 (share of residents). Seed agent.opinion from the zone's region prior; nudge by archetype on the backend.",
+  "overallTop2Box": {
+    "climateConcern": 0.77,
+    "importanceFightingClimate": 0.45,
+    "agreeEveryoneReduce": 0.91,
+    "likelyAddSolar": 0.25,
+    "likelyBuyEV": 0.39,
+    "likelyRetrofit": 0.4
+  },
+  "byRegion": {
+    "Metro Toronto": {
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    "North York": {
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    "Etobicoke": {
+      "proRenewablePrior": 0.605,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.41,
+      "retrofitPropensity": 0.4
+    },
+    "Scarborough": {
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    }
+  },
+  "zonePriors": [
+    {
+      "zoneId": "z000",
+      "name": "Waterfront Communities\u2013The Island",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z001",
+      "name": "Bay Street Corridor",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z002",
+      "name": "Church-Yonge Corridor",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z003",
+      "name": "Kensington-Chinatown",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z004",
+      "name": "University",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z005",
+      "name": "Moss Park",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z006",
+      "name": "Regent Park",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z007",
+      "name": "Cabbagetown-South St.James Town",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z008",
+      "name": "North St.James Town",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z009",
+      "name": "Annex",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z010",
+      "name": "Yonge-St.Clair",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z011",
+      "name": "Rosedale-Moore Park",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z012",
+      "name": "Casa Loma",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z013",
+      "name": "Wychwood",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z014",
+      "name": "Dovercourt-Wallace Emerson-Junction",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z015",
+      "name": "Little Portugal",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z016",
+      "name": "Trinity-Bellwoods",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z017",
+      "name": "Niagara",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z018",
+      "name": "South Parkdale",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z019",
+      "name": "High Park-Swansea",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z020",
+      "name": "Roncesvalles",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z021",
+      "name": "The Beaches",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z022",
+      "name": "Danforth",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z023",
+      "name": "Greektown (Playter Estates-Danforth)",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z024",
+      "name": "East York (Broadview North)",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z025",
+      "name": "Leaside-Bennington",
+      "region": "Metro Toronto",
+      "proRenewablePrior": 0.615,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.28,
+      "evPropensity": 0.37,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z026",
+      "name": "Don Valley Village",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z027",
+      "name": "Willowdale East",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z028",
+      "name": "Willowdale West",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z029",
+      "name": "Bayview Village",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z030",
+      "name": "York University Heights",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z031",
+      "name": "Black Creek",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z032",
+      "name": "Glenfield-Jane Heights",
+      "region": "North York",
+      "proRenewablePrior": 0.59,
+      "concernPrior": 0.78,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.42,
+      "retrofitPropensity": 0.38
+    },
+    {
+      "zoneId": "z033",
+      "name": "Mount Olive-Silverstone-Jamestown",
+      "region": "Etobicoke",
+      "proRenewablePrior": 0.605,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.41,
+      "retrofitPropensity": 0.4
+    },
+    {
+      "zoneId": "z034",
+      "name": "Rexdale-Kipling",
+      "region": "Etobicoke",
+      "proRenewablePrior": 0.605,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.41,
+      "retrofitPropensity": 0.4
+    },
+    {
+      "zoneId": "z035",
+      "name": "Etobicoke West Mall",
+      "region": "Etobicoke",
+      "proRenewablePrior": 0.605,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.41,
+      "retrofitPropensity": 0.4
+    },
+    {
+      "zoneId": "z036",
+      "name": "Islington-City Centre West",
+      "region": "Etobicoke",
+      "proRenewablePrior": 0.605,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.41,
+      "retrofitPropensity": 0.4
+    },
+    {
+      "zoneId": "z037",
+      "name": "Mimico (Lakeshore)",
+      "region": "Etobicoke",
+      "proRenewablePrior": 0.605,
+      "concernPrior": 0.79,
+      "solarPropensity": 0.23,
+      "evPropensity": 0.41,
+      "retrofitPropensity": 0.4
+    },
+    {
+      "zoneId": "z038",
+      "name": "Scarborough Village",
+      "region": "Scarborough",
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    },
+    {
+      "zoneId": "z039",
+      "name": "Agincourt South-Malvern West",
+      "region": "Scarborough",
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    },
+    {
+      "zoneId": "z040",
+      "name": "Malvern",
+      "region": "Scarborough",
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    },
+    {
+      "zoneId": "z041",
+      "name": "Woburn",
+      "region": "Scarborough",
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    },
+    {
+      "zoneId": "z042",
+      "name": "Rouge",
+      "region": "Scarborough",
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    },
+    {
+      "zoneId": "z043",
+      "name": "Birchcliffe-Cliffside",
+      "region": "Scarborough",
+      "proRenewablePrior": 0.56,
+      "concernPrior": 0.72,
+      "solarPropensity": 0.26,
+      "evPropensity": 0.34,
+      "retrofitPropensity": 0.43
+    }
+  ]
+}

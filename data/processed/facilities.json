@@ -1,0 +1,7595 @@
+{
+  "note": "Real gathering/relief facilities. zoneId via point-in-polygon over the 44 zones (null if outside them). Use for event gathering points: heatwave->cooling_*, blackout/cold->library.",
+  "sources": [
+    "Toronto Heat Relief Network (Open Data)",
+    "Toronto Public Library branches"
+  ],
+  "countByCategory": {
+    "pool": 17,
+    "cooling_location": 452,
+    "cooling_centre": 12,
+    "library": 102
+  },
+  "matchedToZone": 232,
+  "facilities": [
+    {
+      "id": "fc0000",
+      "name": "Gordon A. Brown Middle School",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.305835,
+        43.706938
+      ],
+      "address": "2800 St. Clair Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0001",
+      "name": "Fairmount Park Community Centre",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.314785,
+        43.676593
+      ],
+      "address": "1757 Gerrard  St ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0002",
+      "name": "Lester B. Pearson Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.226017,
+        43.803059
+      ],
+      "address": "150 Tapscott  Rd ",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0003",
+      "name": "West Hill Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.190376,
+        43.775738
+      ],
+      "address": "350 Morningside  Ave ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0004",
+      "name": "Agincourt Community Recreation Centre",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.276013,
+        43.788648
+      ],
+      "address": "31 Glen Watford  Dr ",
+      "zoneId": "z039",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0005",
+      "name": "Runnymede Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.489852,
+        43.663156
+      ],
+      "address": "569 Jane  St ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0006",
+      "name": "Norseman Community School and Pool",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.516305,
+        43.634316
+      ],
+      "address": "105 Norseman  St ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0007",
+      "name": "DA Morrison Middle School",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.312094,
+        43.694565
+      ],
+      "address": "271 Gledhill Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0008",
+      "name": "Georges Vanier Secondary School",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.351126,
+        43.783248
+      ],
+      "address": "3000 Don Mills  Rd ",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0009",
+      "name": "Wellesley Community Centre",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.374791,
+        43.668005
+      ],
+      "address": "495 Sherbourne St",
+      "zoneId": "z008",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0010",
+      "name": "Toronto Pan Am Sports Centre",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.193188,
+        43.789444
+      ],
+      "address": "875 Morningside  Ave ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0011",
+      "name": "York Mills Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.37365,
+        43.751097
+      ],
+      "address": "490 York Mills  Rd ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0012",
+      "name": "Vaughan Road Academy",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.436815,
+        43.690589
+      ],
+      "address": "529 Vaughan Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0013",
+      "name": "L'Amoreaux Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.31864,
+        43.801504
+      ],
+      "address": "2501 Bridletowne  Cir ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0014",
+      "name": "Victoria Park Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.321585,
+        43.75568
+      ],
+      "address": "15 Wallingford  Rd.",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0015",
+      "name": "Wexford Collegiate Institute",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.306767,
+        43.746001
+      ],
+      "address": "1176 Pharmacy  Ave ",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0016",
+      "name": "Barbara Hall Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.380714,
+        43.666622
+      ],
+      "address": "519 CHURCH ST",
+      "zoneId": "z002",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0017",
+      "name": "Swansea Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.476885,
+        43.644123
+      ],
+      "address": "15 Waller Avenue",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0018",
+      "name": "Maple Claire Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.473083,
+        43.672591
+      ],
+      "address": "20 VIELLA ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0019",
+      "name": "Secord Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.301468,
+        43.691572
+      ],
+      "address": "91 Barrington Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0020",
+      "name": "Cassels Avenue Playground",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.307096,
+        43.680014
+      ],
+      "address": "69 CASSELS AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0021",
+      "name": "Scadding Court Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404897,
+        43.651794
+      ],
+      "address": "707 Dundas Street West",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0022",
+      "name": "Parkdale Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.4374,
+        43.64364
+      ],
+      "address": "75 Lansdowne Avenue",
+      "zoneId": "z020",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0023",
+      "name": "Sugar Beach Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.367701,
+        43.643209
+      ],
+      "address": "11 DOCKSIDE DR",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0024",
+      "name": "Maria A. Shchuka Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.44725,
+        43.696039
+      ],
+      "address": "1745 Eglinton Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0025",
+      "name": "West Rouge Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.125105,
+        43.792091
+      ],
+      "address": "270 Rouge Hills Dr",
+      "zoneId": "z042",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0026",
+      "name": "Malvern Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.216389,
+        43.808576
+      ],
+      "address": "30 Sewells Rd",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0027",
+      "name": "Wellesley Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.374479,
+        43.667797
+      ],
+      "address": "495 Sherbourne St",
+      "zoneId": "z008",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0028",
+      "name": "Main Street Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.29947,
+        43.683372
+      ],
+      "address": "137 Main St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0029",
+      "name": "Warden Hilltop Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.280489,
+        43.714903
+      ],
+      "address": "25 Mendelssohn St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0030",
+      "name": "Long Branch Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.531325,
+        43.595314
+      ],
+      "address": "3500 Lake Shore Blvd W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0031",
+      "name": "Metro Hall",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.389133,
+        43.646029
+      ],
+      "address": "55 John Street",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0032",
+      "name": "Mimico Centennial Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.493745,
+        43.614802
+      ],
+      "address": "47 Station Rd",
+      "zoneId": "z037",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0033",
+      "name": "McGregor Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.281091,
+        43.747911
+      ],
+      "address": "2219 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0034",
+      "name": "Etobicoke Civic Centre ",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.566094,
+        43.643502
+      ],
+      "address": "399 The West Mall",
+      "zoneId": "z035",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0035",
+      "name": "East York Civic Centre",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.328354,
+        43.691227
+      ],
+      "address": "850 Coxwell Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0036",
+      "name": "Parkdale Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.437478,
+        43.643443
+      ],
+      "address": "75 Lansdowne Ave",
+      "zoneId": "z020",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0037",
+      "name": "Maryvale Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.312411,
+        43.757096
+      ],
+      "address": "Parkway Mall, 85 Ellesmere Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0038",
+      "name": "York Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.482014,
+        43.687837
+      ],
+      "address": "115 Black Creek Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0039",
+      "name": "New Toronto Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.509733,
+        43.599245
+      ],
+      "address": "110 Eleventh St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0040",
+      "name": "Mount Pleasant Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.388045,
+        43.703967
+      ],
+      "address": "599 Mt. Pleasant Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0041",
+      "name": "Scarborough Civic Centre ",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.2577,
+        43.7729
+      ],
+      "address": "150 Borough Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0042",
+      "name": "Mount Dennis Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.488225,
+        43.68664
+      ],
+      "address": "1123 Won Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0043",
+      "name": "North York Civic Centre",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.414759,
+        43.767328
+      ],
+      "address": "5100 Yonge Street",
+      "zoneId": "z028",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0044",
+      "name": "Morningside Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.178447,
+        43.769862
+      ],
+      "address": "4279 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0045",
+      "name": "Oakwood Village Library and Arts Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.438155,
+        43.686584
+      ],
+      "address": "341 Oakwood Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0046",
+      "name": "Northern Elms Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.565244,
+        43.711384
+      ],
+      "address": "123B Rexdale Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0047",
+      "name": "Monarch Park Outdoor Pool ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.326098,
+        43.67881
+      ],
+      "address": "115 Felstead Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0048",
+      "name": "Northern District Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.400067,
+        43.708278
+      ],
+      "address": "40 Orchard View Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0049",
+      "name": "McGregor Park Community Centre Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.280149,
+        43.747629
+      ],
+      "address": "2231 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0050",
+      "name": "North York Central Library Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.4141,
+        43.768204
+      ],
+      "address": "5120 Yonge St",
+      "zoneId": "z028",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0051",
+      "name": "Giovanni Caboto Park Pool ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.451657,
+        43.675653
+      ],
+      "address": "1369 St Clair Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0052",
+      "name": "Parkdale Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.432651,
+        43.641151
+      ],
+      "address": "1303 Queen St W",
+      "zoneId": "z018",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0053",
+      "name": "Eaton Centre ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3807,
+        43.6544
+      ],
+      "address": "220 Yonge Street",
+      "zoneId": "z001",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0054",
+      "name": "Sunnyside Gus Ryder Outdoor Pool  ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.457433,
+        43.637709
+      ],
+      "address": "1755 Lakeshore Blvd W",
+      "zoneId": "z018",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0055",
+      "name": "Trinity Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.414973,
+        43.646444
+      ],
+      "address": "155 CRAWFORD ST",
+      "zoneId": "z016",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0056",
+      "name": "Pape/Danforth Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.344443,
+        43.678641
+      ],
+      "address": "701 Pape Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0057",
+      "name": "Swansea Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.477022,
+        43.643866
+      ],
+      "address": "15 Waller Ave",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0058",
+      "name": "Palmerston Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.414188,
+        43.665102
+      ],
+      "address": "560 Palmerston Ave",
+      "zoneId": "z009",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0059",
+      "name": "Smithfield Park Outdoor Pool ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.595446,
+        43.747769
+      ],
+      "address": "175 Mount Olive Drive",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0060",
+      "name": "Parkway Forest Outdoor Pool ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.341341,
+        43.771704
+      ],
+      "address": "59 Forest Manor Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0061",
+      "name": "Port Union Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.140291,
+        43.779665
+      ],
+      "address": "5450 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0062",
+      "name": "Wallace Emerson Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.439097,
+        43.667441
+      ],
+      "address": "1260 DUFFERIN ST",
+      "zoneId": "z014",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0063",
+      "name": "Parliament Street Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.367958,
+        43.661838
+      ],
+      "address": "269 Gerrard St E",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0064",
+      "name": "Fairview Mall",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3442,
+        43.778
+      ],
+      "address": "1800 Sheppard Ave. East",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0065",
+      "name": "North York YMCA Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.389,
+        43.7656
+      ],
+      "address": "567 Sheppard Avenue East",
+      "zoneId": "z027",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0066",
+      "name": "Riverdale Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.35318,
+        43.665815
+      ],
+      "address": "370 Broadview Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0067",
+      "name": "Central YMCA ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3872,
+        43.6633
+      ],
+      "address": "20 Grosvenor Street",
+      "zoneId": "z001",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0068",
+      "name": "Richview Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.541125,
+        43.683433
+      ],
+      "address": "1806 Islington Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0069",
+      "name": "Rexdale Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.5732,
+        43.726161
+      ],
+      "address": "2243 Kipling Ave",
+      "zoneId": "z034",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0070",
+      "name": "Queen/Saulter Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.34758,
+        43.659196
+      ],
+      "address": "765 Queen St E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0071",
+      "name": "Yonge Eglinton Centre ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3995,
+        43.7072
+      ],
+      "address": "2300 Yonge Street",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0072",
+      "name": "Scarborough YMCA ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.2565,
+        43.7746
+      ],
+      "address": "230 Town Centre Court",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0073",
+      "name": "St. Clair/Silverthorn Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.460672,
+        43.674347
+      ],
+      "address": "1748 St. Clair Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0074",
+      "name": "Spadina Road Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404669,
+        43.667678
+      ],
+      "address": "10 Spadina Rd",
+      "zoneId": "z009",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0075",
+      "name": "Scarborough Civic Centre Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.256916,
+        43.772485
+      ],
+      "address": "156 Borough Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0076",
+      "name": "West End YMCA ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.4281,
+        43.6534
+      ],
+      "address": "931 College Street",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0077",
+      "name": "Sanderson Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.405562,
+        43.651904
+      ],
+      "address": "327 Bathurst St",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0078",
+      "name": "S. Walter Stewart Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.329713,
+        43.692138
+      ],
+      "address": "170 Memorial Park Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0079",
+      "name": "Runnymede Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.473912,
+        43.65191
+      ],
+      "address": "2178 Bloor St W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0080",
+      "name": "St. James Town Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.374479,
+        43.667797
+      ],
+      "address": "495 Sherbourne St",
+      "zoneId": "z008",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0081",
+      "name": "Taylor Memorial Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.271306,
+        43.687839
+      ],
+      "address": "1440 Kingston Rd",
+      "zoneId": "z043",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0082",
+      "name": "Swansea Memorial Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.477882,
+        43.647658
+      ],
+      "address": "95 Lavinia Ave",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0083",
+      "name": "Steeles Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.322286,
+        43.815762
+      ],
+      "address": "Bamburgh Gardens Shopping Plaza, 375 Bamburgh Circle",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0084",
+      "name": "St. Lawrence Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.36847,
+        43.649975
+      ],
+      "address": "171 Front St E",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0085",
+      "name": "East Mall Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.557183,
+        43.641971
+      ],
+      "address": "355 The East Mall",
+      "zoneId": "z036",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0086",
+      "name": "Wallace Emerson Community Centre",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.438833,
+        43.667556
+      ],
+      "address": "1260 Dufferin Street",
+      "zoneId": "z014",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0087",
+      "name": "Jenner Jean-Marie Community Centre",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.34258,
+        43.702902
+      ],
+      "address": "48 Thorncliffe Park Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0088",
+      "name": "Maryvale Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.30673,
+        43.753026
+      ],
+      "address": "5 TRESTLESIDE GRV",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0089",
+      "name": "Grandravine Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.489716,
+        43.751753
+      ],
+      "address": "23 Grandravine Dr",
+      "zoneId": "z030",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0090",
+      "name": "Chalkfarm Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.515825,
+        43.723711
+      ],
+      "address": "2230 JANE ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0091",
+      "name": "The Elms Pool and Community School",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.551852,
+        43.722739
+      ],
+      "address": "45 Golfdown Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0092",
+      "name": "Mary McCormick Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.432802,
+        43.647477
+      ],
+      "address": "66 Sheridan Ave",
+      "zoneId": "z015",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0093",
+      "name": "Terraview Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.311785,
+        43.766218
+      ],
+      "address": "1625 PHARMACY AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0094",
+      "name": "Heron Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.176938,
+        43.768856
+      ],
+      "address": "292 Manse Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0095",
+      "name": "Humberwood Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.619182,
+        43.728886
+      ],
+      "address": "850 Humberwood Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0096",
+      "name": "Gracedale Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.56237,
+        43.751888
+      ],
+      "address": "176 GRACEDALE BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0097",
+      "name": "City Hall Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.383625,
+        43.652822
+      ],
+      "address": "Nathan Phillips Square, 100 Queen St W",
+      "zoneId": "z001",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0098",
+      "name": "Glendora Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.400122,
+        43.761473
+      ],
+      "address": "201 GLENDORA AVE",
+      "zoneId": "z027",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0099",
+      "name": "Cliffcrest Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.23078,
+        43.725273
+      ],
+      "address": "3017 Kingston Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0100",
+      "name": "Joseph J. Piccininni Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.451397,
+        43.675331
+      ],
+      "address": "1369 St Clair Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0101",
+      "name": "Harryetta Gardens",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.451678,
+        43.781586
+      ],
+      "address": "170 TORRESDALE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0102",
+      "name": "College/Shaw Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.42016,
+        43.65521
+      ],
+      "address": "766 College St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0103",
+      "name": "Irving W. Chapley Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.45575,
+        43.761351
+      ],
+      "address": "205 Wilmington Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0104",
+      "name": "Graydon Hall Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.34269,
+        43.762812
+      ],
+      "address": "215 GRAYDON HALL DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0105",
+      "name": "Heathrow Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.508118,
+        43.724424
+      ],
+      "address": "69 HEATHROW DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0106",
+      "name": "Ravina Gardens Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.472322,
+        43.659196
+      ],
+      "address": "290 CLENDENAN AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0107",
+      "name": "Park Lawn Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.494819,
+        43.637009
+      ],
+      "address": "330 PARK LAWN RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0108",
+      "name": "Regent Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.362185,
+        43.661011
+      ],
+      "address": "600 DUNDAS ST",
+      "zoneId": "z006",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0109",
+      "name": "Coleman Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.300015,
+        43.689344
+      ],
+      "address": "19 COLEMAN AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0110",
+      "name": "Lawrence Heights Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.442363,
+        43.717997
+      ],
+      "address": "5 Replin Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0111",
+      "name": "Hendon Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.420948,
+        43.781421
+      ],
+      "address": "50 HENDON AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0112",
+      "name": "Moss Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.371275,
+        43.655012
+      ],
+      "address": "150 SHERBOURNE ST",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0113",
+      "name": "Davenport Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.428421,
+        43.674579
+      ],
+      "address": "1246 Shaw St",
+      "zoneId": "z013",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0114",
+      "name": "Joseph Bannon Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.534973,
+        43.732359
+      ],
+      "address": "65 MARY CHAPMAN BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0115",
+      "name": "L'Amoreaux Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.304895,
+        43.812656
+      ],
+      "address": "2000 McNicoll Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0116",
+      "name": "Tall Pines Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.151494,
+        43.798496
+      ],
+      "address": "64 RYLANDER BLVD",
+      "zoneId": "z042",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0117",
+      "name": "Malvern Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.216389,
+        43.808576
+      ],
+      "address": "30 Sewell's Rd",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0118",
+      "name": "Lionel Conacher Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.394607,
+        43.680429
+      ],
+      "address": "80 COTTINGHAM ST",
+      "zoneId": "z010",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0119",
+      "name": "Corktown Common",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.35261,
+        43.653973
+      ],
+      "address": "155 BAYVIEW AVE",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0120",
+      "name": "Mary McCormick Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.433044,
+        43.647504
+      ],
+      "address": "66 Sheridan Ave\u00c2\u00a0",
+      "zoneId": "z015",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0121",
+      "name": "Oriole Park - Toronto",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.400436,
+        43.697191
+      ],
+      "address": "201 ORIOLE PKWY",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0122",
+      "name": "Diamond Jubilee Promenade",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.355392,
+        43.653351
+      ],
+      "address": "475 FRONT ST",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0123",
+      "name": "YMCA of Greater Toronto",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.398229,
+        43.648883
+      ],
+      "address": "7 Vanauley St Toronto  ON M5T 2V9",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0124",
+      "name": "Downsview Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.482063,
+        43.728942
+      ],
+      "address": "2793 Keele St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0125",
+      "name": "Wellesley Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.362401,
+        43.669547
+      ],
+      "address": "500 WELLESLEY ST",
+      "zoneId": "z007",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0126",
+      "name": "Joel Weeks Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.352983,
+        43.659482
+      ],
+      "address": "10 THOMPSON ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0127",
+      "name": "Pottery Playground",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.378695,
+        43.699453
+      ],
+      "address": "601 MERTON ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0128",
+      "name": "Westmount Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.51898,
+        43.687242
+      ],
+      "address": "22 ARCADE DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0129",
+      "name": "Glamorgan Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.288877,
+        43.77259
+      ],
+      "address": "50 ANTRIM CRES",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0130",
+      "name": "Fairhaven Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.54513,
+        43.701771
+      ],
+      "address": "100 GOLFWOOD HTS",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0131",
+      "name": "Perth Square Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.452676,
+        43.663914
+      ],
+      "address": "350 PERTH AVE",
+      "zoneId": "z014",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0132",
+      "name": "Irving W. Chapley Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.455417,
+        43.761722
+      ],
+      "address": "205 WILMINGTON AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0133",
+      "name": "McGregor Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.280149,
+        43.747629
+      ],
+      "address": "2231 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0134",
+      "name": "Horseley Hill Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.229737,
+        43.810726
+      ],
+      "address": "145 HORSELEY HILL DR",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0135",
+      "name": "Parkway Forest Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.341884,
+        43.771215
+      ],
+      "address": "80 PARKWAY FOREST DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0136",
+      "name": "Eatonville Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.559338,
+        43.64614
+      ],
+      "address": "430 Burnhamthorpe Rd",
+      "zoneId": "z036",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0137",
+      "name": "Milliken Park Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.274582,
+        43.829648
+      ],
+      "address": "4325 McCowan Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0138",
+      "name": "Dieppe Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.335642,
+        43.691962
+      ],
+      "address": "455 COSBURN AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0139",
+      "name": "Mcnicoll Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.353485,
+        43.798555
+      ],
+      "address": "215 MCNICOLL AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0140",
+      "name": "Richmond Gardens Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.545353,
+        43.681851
+      ],
+      "address": "44 STRATHDEE DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0141",
+      "name": "Mitchell Field Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.408537,
+        43.774644
+      ],
+      "address": "89 Church Ave",
+      "zoneId": "z027",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0142",
+      "name": "Gihon Spring Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.594823,
+        43.754474
+      ],
+      "address": "75 GIHON SPRING DR",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0143",
+      "name": "Joseph J. Piccininni Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.451574,
+        43.675288
+      ],
+      "address": "1369 ST CLAIR AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0144",
+      "name": "Weston Lions Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.517735,
+        43.69789
+      ],
+      "address": "2125 LAWRENCE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0145",
+      "name": "Macgregor Playground",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.442307,
+        43.653109
+      ],
+      "address": "346 LANSDOWNE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0146",
+      "name": "Parma Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.302347,
+        43.717811
+      ],
+      "address": "99 PARMA CRT",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0147",
+      "name": "North Kipling Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.584893,
+        43.751762
+      ],
+      "address": "2 Rowntree Rd",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0148",
+      "name": "Eglinton Square Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.300826,
+        43.723013
+      ],
+      "address": "Eglinton Square Shopping Centre 1 Eglinton Square",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0149",
+      "name": "Spenvalley Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.506492,
+        43.744339
+      ],
+      "address": "130 SPENVALLEY DR",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0150",
+      "name": "Albion Pool and Health Club",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.581284,
+        43.739325
+      ],
+      "address": "1485 ALBION RD",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0151",
+      "name": "North Toronto Memorial Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404623,
+        43.706106
+      ],
+      "address": "200 Eglinton Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0152",
+      "name": "Howard Talbot Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.37375,
+        43.710216
+      ],
+      "address": "635 EGLINTON AVE",
+      "zoneId": "z025",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0153",
+      "name": "Stan Wadlow Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.314255,
+        43.698312
+      ],
+      "address": "888 COSBURN AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0154",
+      "name": "R.V. Burgess Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.343944,
+        43.703742
+      ],
+      "address": "46 THORNCLIFFE PARK DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0155",
+      "name": "Annette Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.474259,
+        43.661273
+      ],
+      "address": "333 Annette St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0156",
+      "name": "Broadlands Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.322827,
+        43.745989
+      ],
+      "address": "19 CASTLEGROVE BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0157",
+      "name": "Centennial Recreation Centre - Scarborough",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.236814,
+        43.774614
+      ],
+      "address": "1967 ELLESMERE RD",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0158",
+      "name": "Woodbine Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.313103,
+        43.663879
+      ],
+      "address": "1695 QUEEN ST",
+      "zoneId": "z021",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0159",
+      "name": "Massey Harris Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.413533,
+        43.641385
+      ],
+      "address": "945 KING ST",
+      "zoneId": "z017",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0160",
+      "name": "Driftwood Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.518764,
+        43.765384
+      ],
+      "address": "4401 JANE ST",
+      "zoneId": "z031",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0161",
+      "name": "Joyce Trimmer Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.189758,
+        43.805555
+      ],
+      "address": "8450 SHEPPARD AVE",
+      "zoneId": "z042",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0162",
+      "name": "Douglas Snow Aquatic Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.41477,
+        43.767245
+      ],
+      "address": "5100 Yonge Street",
+      "zoneId": "z028",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0163",
+      "name": "Bedford Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.399908,
+        43.728173
+      ],
+      "address": "81 RANLEIGH AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0164",
+      "name": "Wychwood Barns Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.42391,
+        43.679485
+      ],
+      "address": "76 WYCHWOOD AVE",
+      "zoneId": "z013",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0165",
+      "name": "Blantyre Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.280892,
+        43.683009
+      ],
+      "address": "180 FALLINGBROOK RD",
+      "zoneId": "z043",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0166",
+      "name": "Leaside Memorial Gardens Swimming Pool - Indoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.360991,
+        43.701891
+      ],
+      "address": "1073 MILLWOOD RD",
+      "zoneId": "z025",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0167",
+      "name": "Gamble Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.347219,
+        43.691053
+      ],
+      "address": "150 GAMBLE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0168",
+      "name": "Frankland Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.349662,
+        43.677428
+      ],
+      "address": "816 Logan Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0169",
+      "name": "Glen Long Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.456113,
+        43.708761
+      ],
+      "address": "35 GLEN LONG AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0170",
+      "name": "Heron Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.17578,
+        43.768835
+      ],
+      "address": "292 MANSE RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0171",
+      "name": "Ancaster Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.465701,
+        43.733371
+      ],
+      "address": "43 ANCASTER RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0172",
+      "name": "Amos Waites Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.488513,
+        43.613291
+      ],
+      "address": "2441 LAKE SHORE BLVD",
+      "zoneId": "z037",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0173",
+      "name": "Oriole Park - North York",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.351206,
+        43.781436
+      ],
+      "address": "2955 DON MILLS RD",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0174",
+      "name": "Indian Line Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.622654,
+        43.724915
+      ],
+      "address": "655 HUMBERWOOD BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0175",
+      "name": "Rotary Peace Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.505916,
+        43.59389
+      ],
+      "address": "25 ELEVENTH ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0176",
+      "name": "Willowdale Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.407869,
+        43.766024
+      ],
+      "address": "75 HOLLYWOOD AVE",
+      "zoneId": "z027",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0177",
+      "name": "Rexdale Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.565527,
+        43.723676
+      ],
+      "address": "6 DRUMHELLER RD",
+      "zoneId": "z034",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0178",
+      "name": "Masseygrove Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.588308,
+        43.734459
+      ],
+      "address": "80 KENDLETON DR",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0179",
+      "name": "Martingrove Gardens Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.563531,
+        43.689111
+      ],
+      "address": "31 LAVINGTON DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0180",
+      "name": "Woodside Square Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.269315,
+        43.809229
+      ],
+      "address": "Woodside Square Mall, 1571 Sandhurst Circle",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0181",
+      "name": "Victoria Village Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.312893,
+        43.735971
+      ],
+      "address": "184 Sloane Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0182",
+      "name": "North Humber Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.587853,
+        43.757362
+      ],
+      "address": "2851 KIPLING AVE",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0183",
+      "name": "Toronto Reference Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.386673,
+        43.671888
+      ],
+      "address": "789 Yonge St",
+      "zoneId": "z011",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0184",
+      "name": "Belmar Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.509811,
+        43.731979
+      ],
+      "address": "70 MONCLOVA RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0185",
+      "name": "Lakeshore Village Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.510229,
+        43.600844
+      ],
+      "address": "45 GARNETT JANES RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0186",
+      "name": "Todmorden Room Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.34927,
+        43.691784
+      ],
+      "address": "1081 \u00c2\u00bd Pape Ave (at Torrens)",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0187",
+      "name": "Greystone Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.252375,
+        43.726069
+      ],
+      "address": "845 DANFORTH RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0188",
+      "name": "Kingsview Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.554537,
+        43.699113
+      ],
+      "address": "46 KINGSVIEW BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0189",
+      "name": "Thorncliffe Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.342737,
+        43.702947
+      ],
+      "address": "48 Thorncliffe Park Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0190",
+      "name": "Weston Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.520585,
+        43.70182
+      ],
+      "address": "2 King St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0191",
+      "name": "Armour Heights Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.421918,
+        43.739446
+      ],
+      "address": "2140 Avenue Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0192",
+      "name": "Ancaster Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.465697,
+        43.732526
+      ],
+      "address": "41 Ancaster Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0193",
+      "name": "Amesbury Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.482619,
+        43.707166
+      ],
+      "address": "1507 Lawrence Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0194",
+      "name": "Yorkville Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.388673,
+        43.671953
+      ],
+      "address": "22 Yorkville Ave",
+      "zoneId": "z009",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0195",
+      "name": "York Woods Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.507359,
+        43.758965
+      ],
+      "address": "1785 Finch Ave W",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0196",
+      "name": "Wychwood Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.41758,
+        43.68209
+      ],
+      "address": "1431 Bathurst St",
+      "zoneId": "z012",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0197",
+      "name": "Woodview Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.538311,
+        43.739487
+      ],
+      "address": "16 Bradstock Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0198",
+      "name": "Annette Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.474139,
+        43.661204
+      ],
+      "address": "333 Annette St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0199",
+      "name": "Centennial Recreation Centre West",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.477504,
+        43.690058
+      ],
+      "address": "2694 Eglinton Ave W\u00c2\u00a0",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0200",
+      "name": "Cedarbrook Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.22742,
+        43.755654
+      ],
+      "address": "91 Eastpark Blvd",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0201",
+      "name": "Burrows Hall Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.23437,
+        43.794056
+      ],
+      "address": "1081 Progress Ave",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0202",
+      "name": "Birkdale Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.263889,
+        43.768232
+      ],
+      "address": "1299 Ellesmere Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0203",
+      "name": "Beaches Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.298807,
+        43.673931
+      ],
+      "address": "6 Williamson Rd",
+      "zoneId": "z021",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0204",
+      "name": "Barbara Frum Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.432208,
+        43.720794
+      ],
+      "address": "20 Covington Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0205",
+      "name": "Banbury Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.369538,
+        43.742827
+      ],
+      "address": "120 Banbury Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0206",
+      "name": "Beaches Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.298497,
+        43.670091
+      ],
+      "address": "2161 Queen St E",
+      "zoneId": "z021",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0207",
+      "name": "Armour Heights Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.421918,
+        43.739446
+      ],
+      "address": "2140 Avenue Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0208",
+      "name": "Annette Street Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.466444,
+        43.663313
+      ],
+      "address": "145 Annette St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0209",
+      "name": "Amesbury Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.485752,
+        43.706446
+      ],
+      "address": "1565 Lawrence Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0210",
+      "name": "Alderwood Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.547356,
+        43.601905
+      ],
+      "address": "2 Orianna Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0211",
+      "name": "Albion Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.584172,
+        43.739861
+      ],
+      "address": "1515 Albion Rd",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0212",
+      "name": "Centennial Recreation Centre - Scarborough",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.23715,
+        43.774837
+      ],
+      "address": "1967 Ellesmere Rd",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0213",
+      "name": "Sandown Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.253555,
+        43.709947
+      ],
+      "address": "50 NATAL AVE",
+      "zoneId": "z043",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0214",
+      "name": "Van Horne Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.339415,
+        43.786502
+      ],
+      "address": "561 VAN HORNE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0215",
+      "name": "O'Connor Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.301856,
+        43.717668
+      ],
+      "address": "1386 Victoria Park Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0216",
+      "name": "Shoreham Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.519131,
+        43.770792
+      ],
+      "address": "2 SHOREHAM CRT",
+      "zoneId": "z031",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0217",
+      "name": "Burrows Hall Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.23437,
+        43.794056
+      ],
+      "address": "1081 Progress Ave",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0218",
+      "name": "Bridlewood Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.318367,
+        43.798555
+      ],
+      "address": "Bridlewood Mall, lower level, 2900 Warden Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0219",
+      "name": "Northwood Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.499993,
+        43.745526
+      ],
+      "address": "15 Clubhouse Crt",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0220",
+      "name": "Brentwood Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.514311,
+        43.647433
+      ],
+      "address": "36 Brentwood Rd N",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0221",
+      "name": "Evelyn Gregory Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.472367,
+        43.686332
+      ],
+      "address": "120 Trowell Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0222",
+      "name": "Black Creek Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.512531,
+        43.720971
+      ],
+      "address": "North York Sheridan Mall 1700 Wilson Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0223",
+      "name": "Bendale Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.244027,
+        43.751082
+      ],
+      "address": "1515 Danforth Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0224",
+      "name": "Bob Hunter Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.161896,
+        43.800399
+      ],
+      "address": "205 GENERATION BLVD",
+      "zoneId": "z042",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0225",
+      "name": "Pam McConnell Aquatic Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.360937,
+        43.660828
+      ],
+      "address": "640 DUNDAS ST",
+      "zoneId": "z006",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0226",
+      "name": "Gerrard/Ashdale Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.322121,
+        43.67249
+      ],
+      "address": "1432 Gerrard St E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0227",
+      "name": "Trinity Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.414973,
+        43.646444
+      ],
+      "address": "155 CRAWFORD ST",
+      "zoneId": "z016",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0228",
+      "name": "Oriole Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.351281,
+        43.78181
+      ],
+      "address": "2975 Don Mills Rd W",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0229",
+      "name": "Wellesley Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.374479,
+        43.667797
+      ],
+      "address": "495 Sherbourne St",
+      "zoneId": "z008",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0230",
+      "name": "Fort York Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.400326,
+        43.639312
+      ],
+      "address": "190 Fort York Blvd",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0231",
+      "name": "Alderwood Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.547356,
+        43.601905
+      ],
+      "address": "2 Orianna Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0232",
+      "name": "Main Square Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.29985,
+        43.687164
+      ],
+      "address": "245 MAIN ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0233",
+      "name": "Oakridge Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.28394,
+        43.694441
+      ],
+      "address": "63 Pharmacy Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0234",
+      "name": "Forest Hill Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.420802,
+        43.70223
+      ],
+      "address": "700 Eglinton Ave W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0235",
+      "name": "Highfield Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.589393,
+        43.74431
+      ],
+      "address": "68 STEVENSON RD",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0236",
+      "name": "Oakdale Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.51274,
+        43.748051
+      ],
+      "address": "350 Grandravine Dr",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0237",
+      "name": "Walter Saunders Memorial Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.447975,
+        43.699685
+      ],
+      "address": "440 HOPEWELL AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0238",
+      "name": "Flemingdon Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.331687,
+        43.717941
+      ],
+      "address": "29 St. Dennis Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0239",
+      "name": "Neilson Park - Scarborough",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.224354,
+        43.813487
+      ],
+      "address": "1555 NEILSON RD",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0240",
+      "name": "Earlescourt Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.449447,
+        43.673552
+      ],
+      "address": "1200 Lansdowne Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0241",
+      "name": "Clover Hill Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.387925,
+        43.665686
+      ],
+      "address": "50 St. Joseph St",
+      "zoneId": "z001",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0242",
+      "name": "Canoe Landing",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.395004,
+        43.639965
+      ],
+      "address": "95 Fort York Blvd",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0243",
+      "name": "Albert Campbell Square",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.256729,
+        43.772167
+      ],
+      "address": "150 Borough Drive",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0244",
+      "name": "Osborne Collection of Early Children's Books",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.397479,
+        43.658284
+      ],
+      "address": "239 College Street, 4th Floor",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0245",
+      "name": "Merrill Collection of Science Fiction, Speculation and Fantasy ",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.397479,
+        43.658284
+      ],
+      "address": "239 College Street, 3rd Floor",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0246",
+      "name": "Greenbrae Parkette",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.230274,
+        43.760371
+      ],
+      "address": "100 Greenbrae Circt.",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0247",
+      "name": "John Innes Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.369955,
+        43.65557
+      ],
+      "address": "150 Sherbourne St",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0248",
+      "name": "Memorial Pool and Health Club",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.519356,
+        43.648428
+      ],
+      "address": "44 Montgomery Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0249",
+      "name": "North Toronto Memorial Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404249,
+        43.706186
+      ],
+      "address": "200 EGLINTON AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0250",
+      "name": "Trace Manes Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.366815,
+        43.704694
+      ],
+      "address": "110 Rumsey Road",
+      "zoneId": "z025",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0251",
+      "name": "Lambton - Kingsway Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.508004,
+        43.657528
+      ],
+      "address": "37 MARQUIS AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0252",
+      "name": "Toronto Island Park - Centre Island",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.376995,
+        43.641143
+      ],
+      "address": "9 Queens Quay West",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0253",
+      "name": "Guildwood Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.199374,
+        43.746852
+      ],
+      "address": "Guildwood Plaza, 123 Guildwood Parkway",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0254",
+      "name": "St. James Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.358037,
+        43.655722
+      ],
+      "address": "120 King Street East",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0255",
+      "name": "Pessoa Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.429085,
+        43.643448
+      ],
+      "address": "405 Dufferin Street",
+      "zoneId": "z015",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0256",
+      "name": "Parkway Forest Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.343894,
+        43.772537
+      ],
+      "address": "55 Forest Manor Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0257",
+      "name": "Morse Street Playground",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.339431,
+        43.656322
+      ],
+      "address": "76 Morse Street",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0258",
+      "name": "Goldhawk Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.278195,
+        43.824089
+      ],
+      "address": "295 Alton Towers Circle",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0259",
+      "name": "McCowan District Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.236221,
+        43.734073
+      ],
+      "address": "150 McCowan Road",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0260",
+      "name": "McCleary Playground",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.344795,
+        43.658306
+      ],
+      "address": "80 McGee Street",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0261",
+      "name": "Eringate Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.581093,
+        43.662572
+      ],
+      "address": "121 WELLESWORTH DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0262",
+      "name": "Westgrove Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.567855,
+        43.681766
+      ],
+      "address": "15 REDGRAVE DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0263",
+      "name": "John Tabor Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.204711,
+        43.806652
+      ],
+      "address": "240 John Tabor Trail",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0264",
+      "name": "Flemingdon Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.326828,
+        43.713359
+      ],
+      "address": "150 Grenoble Drive",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0265",
+      "name": "Ourland Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.508258,
+        43.615097
+      ],
+      "address": "18 Ourland Ave",
+      "zoneId": "z037",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0266",
+      "name": "George Webster Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.300941,
+        43.700382
+      ],
+      "address": "30 Chapman Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0267",
+      "name": "Jimmie Simpson Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.344955,
+        43.659977
+      ],
+      "address": "870 Queen Street East",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0268",
+      "name": "Holy Family Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.435387,
+        43.637642
+      ],
+      "address": "141 Close Avenue",
+      "zoneId": "z018",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0269",
+      "name": "Hillcrest Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.369016,
+        43.797117
+      ],
+      "address": "5801 Leslie St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0270",
+      "name": "Earl Beatty Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3211,
+        43.68655
+      ],
+      "address": "455 Glebeholme Blvd",
+      "zoneId": "z022",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0271",
+      "name": "West Deane Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.561863,
+        43.660649
+      ],
+      "address": "19 SEDGEBROOK CRES",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0272",
+      "name": "Regent Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.36174,
+        43.657994
+      ],
+      "address": "402 Shuter St",
+      "zoneId": "z006",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0273",
+      "name": "Highland Creek Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.175238,
+        43.790069
+      ],
+      "address": "3550 Ellesmere Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0274",
+      "name": "David Appleton Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.488739,
+        43.670456
+      ],
+      "address": "33 Pritchard Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0275",
+      "name": "Wedgewood Park  Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.54773,
+        43.644415
+      ],
+      "address": "15 SWAN AVE",
+      "zoneId": "z036",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0276",
+      "name": "Port Union Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.140291,
+        43.779665
+      ],
+      "address": "5450 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0277",
+      "name": "High Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.448963,
+        43.645135
+      ],
+      "address": "228 Roncesvalles Ave",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0278",
+      "name": "Pleasantview Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.336705,
+        43.787003
+      ],
+      "address": "545 Van Horne Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0279",
+      "name": "Ourland Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.508892,
+        43.615497
+      ],
+      "address": "36 OURLAND AVE",
+      "zoneId": "z037",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0280",
+      "name": "Scarborough Village Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.216758,
+        43.739991
+      ],
+      "address": "3600 Kingston Rd",
+      "zoneId": "z038",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0281",
+      "name": "Humber Summit Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.571599,
+        43.759038
+      ],
+      "address": "2990 Islington Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0282",
+      "name": "Roding Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.492501,
+        43.729092
+      ],
+      "address": "600 Roding St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0283",
+      "name": "Humber Bay Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.491253,
+        43.630324
+      ],
+      "address": "200 Park Lawn Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0284",
+      "name": "Amos Waites Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.488513,
+        43.613291
+      ],
+      "address": "2441 LAKE SHORE BLVD",
+      "zoneId": "z037",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0285",
+      "name": "West Mall Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.566893,
+        43.642492
+      ],
+      "address": "380 THE WEST MALL",
+      "zoneId": "z035",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0286",
+      "name": "Matty Eckler Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3398,
+        43.66789
+      ],
+      "address": "953 Gerrard Street East",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0287",
+      "name": "Regent Park Aquatic Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.360993,
+        43.661286
+      ],
+      "address": "640 Dundas St E",
+      "zoneId": "z006",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0288",
+      "name": "Rotary Peace Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.505916,
+        43.59389
+      ],
+      "address": "25 ELEVENTH ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0289",
+      "name": "Jane/Sheppard Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.510036,
+        43.73996
+      ],
+      "address": "1906 Sheppard Ave W",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0290",
+      "name": "S.H. Armstrong Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.322838,
+        43.66595
+      ],
+      "address": "56 Woodfield Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0291",
+      "name": "Seneca Village Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.351292,
+        43.793884
+      ],
+      "address": "1700 Finch Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0292",
+      "name": "Humberwood Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.619182,
+        43.728886
+      ],
+      "address": "850 Humberwood Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0293",
+      "name": "Jones Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.334547,
+        43.665955
+      ],
+      "address": "118 Jones Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0294",
+      "name": "Leaside Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.36756,
+        43.706461
+      ],
+      "address": "165 McRae Dr",
+      "zoneId": "z025",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0295",
+      "name": "Stephen Leacock Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.302354,
+        43.786528
+      ],
+      "address": "2500 Birchmount Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0296",
+      "name": "Kennedy/Eglinton Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.270364,
+        43.732263
+      ],
+      "address": "Liberty Square Plaza, 2380 Eglinton Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0297",
+      "name": "Stan Wadlow Clubhouse",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.31515,
+        43.698148
+      ],
+      "address": "373 Cedarvale Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0298",
+      "name": "Lillian H. Smith Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.398386,
+        43.657926
+      ],
+      "address": "239 College St",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0299",
+      "name": "Trace Manes Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.367173,
+        43.705726
+      ],
+      "address": "110 Rumsey Rd",
+      "zoneId": "z025",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0300",
+      "name": "Viewmount Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.437241,
+        43.707493
+      ],
+      "address": "169 Viewmount Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0301",
+      "name": "Matty Eckler Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.339771,
+        43.667886
+      ],
+      "address": "953 Gerrard St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0302",
+      "name": "Locke Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.401732,
+        43.724895
+      ],
+      "address": "3083 Yonge St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0303",
+      "name": "Victoria Village ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.31579,
+        43.72309
+      ],
+      "address": "190 Bermondsey Road",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0304",
+      "name": "Antibes Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.446795,
+        43.781211
+      ],
+      "address": "140 Antibes Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0305",
+      "name": "Balmoral Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.450082,
+        43.744809
+      ],
+      "address": "170 FAYWOOD BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0306",
+      "name": "Smythe Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.497846,
+        43.675065
+      ],
+      "address": "61 BLACK CREEK BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0307",
+      "name": "Goulding Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.422164,
+        43.790626
+      ],
+      "address": "45 GOULDING AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0308",
+      "name": "Cummer Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.371262,
+        43.800104
+      ],
+      "address": "6000 Leslie St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0309",
+      "name": "Bellbury Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.361572,
+        43.783705
+      ],
+      "address": "55 VAN HORNE AVE",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0310",
+      "name": "Grandravine Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.490574,
+        43.751803
+      ],
+      "address": "23 GRANDRAVINE DR",
+      "zoneId": "z030",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0311",
+      "name": "Harrison Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.390796,
+        43.651081
+      ],
+      "address": "15 STEPHANIE ST",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0312",
+      "name": "Weston Lions Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.517735,
+        43.69789
+      ],
+      "address": "2125 LAWRENCE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0313",
+      "name": "Irving W. Chapley Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.456089,
+        43.761588
+      ],
+      "address": "205 WILMINGTON AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0314",
+      "name": "Dennis R. Timbrell Resource Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.331687,
+        43.717941
+      ],
+      "address": "29 St Dennis Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0315",
+      "name": "Berner Trail Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.223456,
+        43.801256
+      ],
+      "address": "45 NAHANNI TER",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0316",
+      "name": "Hillcrest Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.415687,
+        43.679051
+      ],
+      "address": "1339 Bathurst Street",
+      "zoneId": "z012",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0317",
+      "name": "Lawrence Heights Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.443102,
+        43.71847
+      ],
+      "address": "5 REPLIN RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0318",
+      "name": "Curran Hall Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.210847,
+        43.777425
+      ],
+      "address": "277 Orton Park Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0319",
+      "name": "Ledbury Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.42596,
+        43.726787
+      ],
+      "address": "160 LEDBURY ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0320",
+      "name": "Totts Tot Lot",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.234429,
+        43.713204
+      ],
+      "address": "1 GRADWELL DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0321",
+      "name": "Don Montgomery Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.261665,
+        43.732663
+      ],
+      "address": "2467 Eglinton Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0322",
+      "name": "Thomson Memorial Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.253268,
+        43.75792
+      ],
+      "address": "1005 BRIMLEY RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0323",
+      "name": "Jimmie Simpson Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.344948,
+        43.660041
+      ],
+      "address": "870 Queen St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0324",
+      "name": "John Innes Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.369955,
+        43.65557
+      ],
+      "address": "150 SHERBOURNE ST",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0325",
+      "name": "Elm Park - North York",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.525416,
+        43.769832
+      ],
+      "address": "230 GOSFORD BLVD",
+      "zoneId": "z031",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0326",
+      "name": "Douglas Snow Aquatic Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.414889,
+        43.767268
+      ],
+      "address": "5100 Yonge St",
+      "zoneId": "z028",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0327",
+      "name": "Lithuania Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.466166,
+        43.658677
+      ],
+      "address": "155 OAKMOUNT RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0328",
+      "name": "Greenwood Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.328748,
+        43.66855
+      ],
+      "address": "150 GREENWOOD AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0329",
+      "name": "Rexlington Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.559179,
+        43.716415
+      ],
+      "address": "30 BERGAMOT AVE",
+      "zoneId": "z034",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0330",
+      "name": "Sackville Playground",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.360702,
+        43.654496
+      ],
+      "address": "420 KING ST E",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0331",
+      "name": "Bert Robinson Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.461057,
+        43.687788
+      ],
+      "address": "400 CALEDONIA RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0332",
+      "name": "Mitchell Field Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.408281,
+        43.774539
+      ],
+      "address": "89 CHURCH AVE",
+      "zoneId": "z027",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0333",
+      "name": "Canoe Landing Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.39867,
+        43.639764
+      ],
+      "address": "45 Fort York Blvd",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0334",
+      "name": "Dentonia Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.293737,
+        43.693628
+      ],
+      "address": "80 THYRA AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0335",
+      "name": "Eastview Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.190349,
+        43.760681
+      ],
+      "address": "33 CORONATION DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0336",
+      "name": "Michael Power Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.531238,
+        43.645228
+      ],
+      "address": "5055 DUNDAS ST",
+      "zoneId": "z036",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0337",
+      "name": "De Havilland 'Mossie' Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.468025,
+        43.7273
+      ],
+      "address": "111 ANTHONY RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0338",
+      "name": "Port Union Village Common Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.135303,
+        43.775692
+      ],
+      "address": "105 BRIDGEND ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0339",
+      "name": "Northwood Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.500372,
+        43.745563
+      ],
+      "address": "15 CLUBHOUSE CRT",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0340",
+      "name": "Fennimore Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.522491,
+        43.745593
+      ],
+      "address": "78 FENNIMORE CRES",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0341",
+      "name": "Scadding Court Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404953,
+        43.651665
+      ],
+      "address": "707 DUNDAS ST",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0342",
+      "name": "Milliken Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.270694,
+        43.829425
+      ],
+      "address": "5555 STEELES AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0343",
+      "name": "Vradenberg Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.310396,
+        43.77479
+      ],
+      "address": "40 VRADENBERG DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0344",
+      "name": "O'Connor Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.301931,
+        43.717663
+      ],
+      "address": "1386 VICTORIA PARK AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0345",
+      "name": "Morningside Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.196507,
+        43.779444
+      ],
+      "address": "390 MORNINGSIDE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0346",
+      "name": "Oriole Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.351131,
+        43.78187
+      ],
+      "address": "2975 DON MILLS RD",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0347",
+      "name": "Grange Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.392427,
+        43.652495
+      ],
+      "address": "26 Grange Rd",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0348",
+      "name": "White Haven Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.249966,
+        43.786413
+      ],
+      "address": "63 INVERGORDON AVE",
+      "zoneId": "z039",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0349",
+      "name": "Oates Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.274424,
+        43.704348
+      ],
+      "address": "10 OATES DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0350",
+      "name": "Bridlewood Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.316586,
+        43.78271
+      ],
+      "address": "445 HUNTINGWOOD DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0351",
+      "name": "Roding Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.492601,
+        43.729276
+      ],
+      "address": "600 RODING ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0352",
+      "name": "Lee Centre Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.246799,
+        43.780958
+      ],
+      "address": "112 CORPORATE DR",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0353",
+      "name": "Flemington Park West",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.444791,
+        43.721254
+      ],
+      "address": "2 FLEMINGTON RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0354",
+      "name": "Scarboro Crescent Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.24222,
+        43.703204
+      ],
+      "address": "61 UNDERCLIFF DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0355",
+      "name": "Elmbank Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.588706,
+        43.7348
+      ],
+      "address": "10 Rampart Rd",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0356",
+      "name": "Oakridge Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.278987,
+        43.692351
+      ],
+      "address": "3459 DANFORTH AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0357",
+      "name": "Pleasantview Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.337102,
+        43.786962
+      ],
+      "address": "545 VAN HORNE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0358",
+      "name": "Ellesmere Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.29861,
+        43.760978
+      ],
+      "address": "20 Canadian Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0359",
+      "name": "Fairfield Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.519801,
+        43.638826
+      ],
+      "address": "90 LOTHIAN AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0360",
+      "name": "Warden Hilltop Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.280944,
+        43.714559
+      ],
+      "address": "25 MENDELSSOHN ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0361",
+      "name": "Fairbank Memorial Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.447997,
+        43.691282
+      ],
+      "address": "2213 Dufferin St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0362",
+      "name": "High Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.463497,
+        43.64654
+      ],
+      "address": "1873 BLOOR ST",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0363",
+      "name": "Sherbourne Common",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.364938,
+        43.644414
+      ],
+      "address": "5 LOWER SHERBOURNE ST",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0364",
+      "name": "Shawn Blu Rose Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.20993,
+        43.812021
+      ],
+      "address": "30 EMPRINGHAM DR",
+      "zoneId": "z040",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0365",
+      "name": "Halbert Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.231513,
+        43.728773
+      ],
+      "address": "24 ROCKWOOD DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0366",
+      "name": "Six Points Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.536136,
+        43.639574
+      ],
+      "address": "10 VIKING LANE",
+      "zoneId": "z036",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0367",
+      "name": "Birchcrest Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.321991,
+        43.798595
+      ],
+      "address": "89 BEVERLY GLEN BLVD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0368",
+      "name": "Elizabeth Simcoe Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.204954,
+        43.739387
+      ],
+      "address": "180 SYLVAN AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0369",
+      "name": "Fairmount Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.315116,
+        43.676646
+      ],
+      "address": "1757 Gerrard St E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0370",
+      "name": "Florence Gell Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.498363,
+        43.661891
+      ],
+      "address": "85 VARSITY RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0371",
+      "name": "Seven Oaks Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.210788,
+        43.788195
+      ],
+      "address": "372 MILITARY TRL",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0372",
+      "name": "Rita Cox Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.425772,
+        43.640078
+      ],
+      "address": "14 MACHELLS AVE",
+      "zoneId": "z018",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0373",
+      "name": "Gledhill Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.310114,
+        43.690795
+      ],
+      "address": "125 GLEDHILL AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0374",
+      "name": "Dufferin And King Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.427726,
+        43.638069
+      ],
+      "address": "256 DUFFERIN ST",
+      "zoneId": "z018",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0375",
+      "name": "Gord and Irene Risk Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.566743,
+        43.747318
+      ],
+      "address": "2650 Finch Ave W\u00c2\u00a0",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0376",
+      "name": "Heron Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.177505,
+        43.769227
+      ],
+      "address": "292  MANSE RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0377",
+      "name": "Oakdale Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.513149,
+        43.747788
+      ],
+      "address": "350 GRANDRAVINE DR",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0378",
+      "name": "Glen Long Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.455802,
+        43.708626
+      ],
+      "address": "35 Glen Long Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0379",
+      "name": "Main Square Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.29985,
+        43.687164
+      ],
+      "address": "245 Main St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0380",
+      "name": "Toronto Island Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.380825,
+        43.622246
+      ],
+      "address": "9 QUEENS QUAY",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0381",
+      "name": "Flemingdon Community Centre and Playground Paradise",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.326603,
+        43.713531
+      ],
+      "address": "150 Grenoble Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0382",
+      "name": "Stanley Park South - Toronto",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.409133,
+        43.641854
+      ],
+      "address": "700 WELLINGTON ST",
+      "zoneId": "z017",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0383",
+      "name": "Stephen Leacock Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.302686,
+        43.787162
+      ],
+      "address": "2530 BIRCHMOUNT RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0384",
+      "name": "Marie Curtis Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.544072,
+        43.585643
+      ],
+      "address": "2 FORTY SECOND ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0385",
+      "name": "Pelmo Park",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.520162,
+        43.714559
+      ],
+      "address": "171 Pellatt Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0386",
+      "name": "Woburn Park - Scarborough",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.227859,
+        43.781429
+      ],
+      "address": "50 DORMINGTON DR",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0387",
+      "name": "York Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.480119,
+        43.686618
+      ],
+      "address": "115 Black Creek Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0388",
+      "name": "East York Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.349401,
+        43.691732
+      ],
+      "address": "1081 Pape Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0389",
+      "name": "Gus Ryder Pool and Health Club",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.522468,
+        43.600757
+      ],
+      "address": "1 Faustina Drive",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0390",
+      "name": "York Civic Centre",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.478281,
+        43.689916
+      ],
+      "address": "2700 Eglinton Ave West",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0391",
+      "name": "Greenwood Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.328748,
+        43.66855
+      ],
+      "address": "150 GREENWOOD AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0392",
+      "name": "Malvern Family Resource Centre",
+      "category": "cooling_centre",
+      "rawType": "Cooling Centre",
+      "position": [
+        -79.205206,
+        43.818517
+      ],
+      "address": "90 Littles Rd",
+      "zoneId": "z042",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0393",
+      "name": "McGregor Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.280762,
+        43.747247
+      ],
+      "address": "2231 LAWRENCE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0394",
+      "name": "Orchard Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.314339,
+        43.668669
+      ],
+      "address": "1987 DUNDAS ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0395",
+      "name": "Humber Community Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.608844,
+        43.730849
+      ],
+      "address": "205 Humber College Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0396",
+      "name": "Trudelle Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.244937,
+        43.741475
+      ],
+      "address": "36 TRUDELLE ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0397",
+      "name": "Kiwanis Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.314255,
+        43.698312
+      ],
+      "address": "375 CEDARVALE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0398",
+      "name": "June Rowlands Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.388729,
+        43.700639
+      ],
+      "address": "220 DAVISVILLE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0399",
+      "name": "High Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.463497,
+        43.64654
+      ],
+      "address": "1873 BLOOR ST",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0400",
+      "name": "Jack Goodlad Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.270119,
+        43.742393
+      ],
+      "address": "929 KENNEDY RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0401",
+      "name": "Stanley Greene Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.478416,
+        43.734554
+      ],
+      "address": "55 Stanley Greene Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0402",
+      "name": "Flemington Park East",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.449,
+        43.719967
+      ],
+      "address": "63 Flemington Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0403",
+      "name": "Bellevue Square Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404424,
+        43.656915
+      ],
+      "address": "5 Bellevue Avenue",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0404",
+      "name": "Liberty Village Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.415139,
+        43.638516
+      ],
+      "address": "70 East Liberty Street",
+      "zoneId": "z017",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0405",
+      "name": "Masaryk Cowan Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.433274,
+        43.640726
+      ],
+      "address": "220 Cowan Ave",
+      "zoneId": "z018",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0406",
+      "name": "Ethennonnhawahstihnen' Community Recreation Centre and Library",
+      "category": "pool",
+      "rawType": "Indoor Pool",
+      "position": [
+        -79.375841,
+        43.768709
+      ],
+      "address": "100 Ethennonnhawahstihnen' Ln.",
+      "zoneId": "z029",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0407",
+      "name": "Ethennonnhawahstihnen' Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.375381,
+        43.768692
+      ],
+      "address": "100 Ethennonnhawahstihnen' Ln.",
+      "zoneId": "z029",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0408",
+      "name": "Clark Centre of the Arts ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.195705,
+        43.74816
+      ],
+      "address": "191 Guildwood Pkwy, Scarborough, ON, M1E 1P5",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0409",
+      "name": "Oke Sioni Seraphim and Cherubim Church",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.269669,
+        43.763618
+      ],
+      "address": "1820 Midland Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0410",
+      "name": "Steve and Sally Stavro YMCA",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.289589,
+        43.680332
+      ],
+      "address": "907 Kingston Road",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0411",
+      "name": "Agincourt Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.293414,
+        43.785219
+      ],
+      "address": "155 Bonis Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0412",
+      "name": "Adams Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.145979,
+        43.792113
+      ],
+      "address": "2 ROZELL RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0413",
+      "name": "Adam Beck Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.28885,
+        43.68286
+      ],
+      "address": "79 Lawlor Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0414",
+      "name": "Agincourt Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.276293,
+        43.788414
+      ],
+      "address": "31 Glen Watford Dr",
+      "zoneId": "z039",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0415",
+      "name": "Albert Campbell Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.269351,
+        43.708065
+      ],
+      "address": "496 Birchmount Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0416",
+      "name": "Agincourt Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.276013,
+        43.788648
+      ],
+      "address": "31 Glen Watford Drive",
+      "zoneId": "z039",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0417",
+      "name": "Albion Pool and Health Club",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.581284,
+        43.739325
+      ],
+      "address": "1485 Albion Rd",
+      "zoneId": "z033",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0418",
+      "name": "Amesbury Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.483619,
+        43.706132
+      ],
+      "address": "151 CULFORD RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0419",
+      "name": "Alex Duff Memorial Pool ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.422726,
+        43.664912
+      ],
+      "address": "779 Crawford St",
+      "zoneId": "z014",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0420",
+      "name": "Aldwych Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.341418,
+        43.684909
+      ],
+      "address": "134 ALDWYCH AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0421",
+      "name": "Alexandra Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404958,
+        43.651152
+      ],
+      "address": "275 BATHURST ST",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0422",
+      "name": "Antibes Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.446977,
+        43.781155
+      ],
+      "address": "140 Antibes Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0423",
+      "name": "Amesbury Sports Complex",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.486735,
+        43.706033
+      ],
+      "address": "155 CULFORD RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0424",
+      "name": "Barbara Frum Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.432208,
+        43.720794
+      ],
+      "address": "20 Covington Rd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0425",
+      "name": "Assembly Hall",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.515821,
+        43.597711
+      ],
+      "address": "1 Colonel Samuel Smith Park Drive, Etobicoke, ON M8V 4B6",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0426",
+      "name": "Bayview Village Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.387794,
+        43.773215
+      ],
+      "address": "2945 BAYVIEW AVE",
+      "zoneId": "z029",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0427",
+      "name": "Avonshire Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.404646,
+        43.757927
+      ],
+      "address": "125 HARRISON GARDEN BLVD",
+      "zoneId": "z027",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0428",
+      "name": "Bob Abate Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.4206,
+        43.66232
+      ],
+      "address": "485 Montrose Avenue",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0429",
+      "name": "Birchmount Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.263111,
+        43.695633
+      ],
+      "address": "93 Birchmount Rd",
+      "zoneId": "z043",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0430",
+      "name": "Broadlands Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.322758,
+        43.745671
+      ],
+      "address": "19 Castlegrove Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0431",
+      "name": "Bloor/Gladstone Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.434018,
+        43.659922
+      ],
+      "address": "1101 Bloor St W",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0432",
+      "name": "Birunthan Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.225781,
+        43.822678
+      ],
+      "address": "31 DRAGONFLY CRES",
+      "zoneId": "z042",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0433",
+      "name": "Birchmount Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.261565,
+        43.69531
+      ],
+      "address": "93 Birchmont Road",
+      "zoneId": "z043",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0434",
+      "name": "Brookbanks Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.325904,
+        43.75955
+      ],
+      "address": "210 Brookbanks Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0435",
+      "name": "Brookbanks Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.332207,
+        43.756212
+      ],
+      "address": "75 BROOKBANKS DR",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0436",
+      "name": "Charles G. Williams Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.443595,
+        43.647743
+      ],
+      "address": "75 Wabash Avenue",
+      "zoneId": "z020",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0437",
+      "name": "Cedar Ridge Creative Centre ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.208859,
+        43.75842
+      ],
+      "address": "225 Confederation Dr, Scarborough, ON, M1G1B2",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0438",
+      "name": "Cedarbrae Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.223968,
+        43.757557
+      ],
+      "address": "545 Markham Rd",
+      "zoneId": "z041",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0439",
+      "name": "Chalkfarm Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.511815,
+        43.724048
+      ],
+      "address": "180 Chalkfarm Dr",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0440",
+      "name": "Cedarvale Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.430757,
+        43.692299
+      ],
+      "address": "443 ARLINGTON AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0441",
+      "name": "Charles Caccia Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.454235,
+        43.688282
+      ],
+      "address": "348 Nairn AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0442",
+      "name": "Cooper Koo Family YMCA",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3601,
+        43.6532
+      ],
+      "address": "461 Cherry Street",
+      "zoneId": "z005",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0443",
+      "name": "Commander Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.26828,
+        43.793891
+      ],
+      "address": "140 Commander Blvd",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0444",
+      "name": "Danforth/Coxwell Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.321356,
+        43.683645
+      ],
+      "address": "1675 Danforth Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0445",
+      "name": "Deer Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.392497,
+        43.688668
+      ],
+      "address": "40 St. Clair Ave E",
+      "zoneId": "z011",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0446",
+      "name": "Corvette Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.259994,
+        43.727123
+      ],
+      "address": "40 CORVETTE AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0447",
+      "name": "Daniel G. Hill Branch ",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.49147,
+        43.665473
+      ],
+      "address": "620 Jane St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0448",
+      "name": "Coronation Park - York",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.479969,
+        43.690937
+      ],
+      "address": "2700 EGLINTON AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0449",
+      "name": "Cummer Park Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.371256,
+        43.800122
+      ],
+      "address": "6000 Leslie Street",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0450",
+      "name": "Dennis R. Timbrell Resource Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.331628,
+        43.718018
+      ],
+      "address": "29 St. Dennis Dr.",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0451",
+      "name": "Domenico Di Luca Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.515844,
+        43.742445
+      ],
+      "address": "25 Stanley Rd",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0452",
+      "name": "Don Mills Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.347476,
+        43.73662
+      ],
+      "address": "888 Lawrence Ave E",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0453",
+      "name": "Domenico Di Luca Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.515673,
+        43.742429
+      ],
+      "address": "25 STANLEY RD",
+      "zoneId": "z032",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0454",
+      "name": "Earl Bales Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.431882,
+        43.752582
+      ],
+      "address": "4169 Bathurst St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0455",
+      "name": "East York Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.34927,
+        43.691784
+      ],
+      "address": "1081 1/2 Pape Ave",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0456",
+      "name": "Driftwood Community Recreation Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.518779,
+        43.765456
+      ],
+      "address": "4401 Jane St",
+      "zoneId": "z031",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0457",
+      "name": "Earl Beatty Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.321143,
+        43.686461
+      ],
+      "address": "455 Glebeholme Blvd",
+      "zoneId": "z022",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0458",
+      "name": "Edithvale Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.426539,
+        43.776994
+      ],
+      "address": "131 Finch Ave W",
+      "zoneId": "z028",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0459",
+      "name": "Dunlop Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.2675,
+        43.712558
+      ],
+      "address": "19 DUNLOP AVE",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0460",
+      "name": "Elmbrook Park Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.583917,
+        43.659933
+      ],
+      "address": "2 Elmbrook Crescent",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0461",
+      "name": "Dufferin/St. Clair Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.442403,
+        43.677005
+      ],
+      "address": "1625 Dufferin St",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0462",
+      "name": "Earl Bales Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.43132,
+        43.752594
+      ],
+      "address": "4169 BATHURST ST",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0463",
+      "name": "Emery Collegiate Institute",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.539236,
+        43.748271
+      ],
+      "address": "3395 WESTON RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0464",
+      "name": "Ethennonnhawahstihnen Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.371448,
+        43.767344
+      ],
+      "address": "80 McMahon Dr. E",
+      "zoneId": "z029",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0465",
+      "name": "Etobicoke Olympium",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.584349,
+        43.650236
+      ],
+      "address": "590 Rathburn Rd.",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0466",
+      "name": "Flagstaff Park Outdoor Pool",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.590832,
+        43.72112
+      ],
+      "address": "42 MERCURY RD",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0467",
+      "name": "Fairview Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.346782,
+        43.77911
+      ],
+      "address": "35 Fairview Mall Dr",
+      "zoneId": "z026",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0468",
+      "name": "Fenside Park",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.327423,
+        43.764841
+      ],
+      "address": "30 SLIDELL CRES",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0469",
+      "name": "Keele Hub",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.472602,
+        43.683993
+      ],
+      "address": "1652 Keele Street",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0470",
+      "name": "City of Toronto Archives",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.407187,
+        43.676855
+      ],
+      "address": "255 Spadina Rd",
+      "zoneId": "z012",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0471",
+      "name": "Swansea Town Hall",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.477856,
+        43.647611
+      ],
+      "address": "95 Lavinia Avenue",
+      "zoneId": "z019",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0472",
+      "name": "Junction Triangle Public Library",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.449913,
+        43.665668
+      ],
+      "address": "305 Campbell Avenue",
+      "zoneId": "z014",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0473",
+      "name": "McDonald YMCA",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.39965,
+        43.647168
+      ],
+      "address": "501 Richmond St W",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0474",
+      "name": "Gibson House Museum",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.414752,
+        43.769659
+      ],
+      "address": "5172 Yonge Street",
+      "zoneId": "z028",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0475",
+      "name": "Todmorden Mills",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.360329,
+        43.68684
+      ],
+      "address": "67 Pottery Road",
+      "zoneId": "z024",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0476",
+      "name": "Monstgomery Inn",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.525692,
+        43.65167
+      ],
+      "address": "4709 Dundas Street West",
+      "zoneId": null,
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0477",
+      "name": "Spadina Museum",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.408859,
+        43.679214
+      ],
+      "address": "285 Spadina Road",
+      "zoneId": "z012",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0478",
+      "name": "Gallery 44",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.394826,
+        43.647819
+      ],
+      "address": "401 Richmond Street West Suite 120",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0479",
+      "name": "Waterfront Neighbourhood Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.3974,
+        43.636039
+      ],
+      "address": "627 Queens Quay W",
+      "zoneId": "z000",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0480",
+      "name": "Cecil Community Centre",
+      "category": "cooling_location",
+      "rawType": "Cooling Location",
+      "position": [
+        -79.398598,
+        43.656452
+      ],
+      "address": "58 Cecil Street",
+      "zoneId": "z003",
+      "source": "Toronto Heat Relief Network"
+    },
+    {
+      "id": "fc0481",
+      "name": "Albion Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.584096,
+        43.739826
+      ],
+      "address": "1515 Albion Road, Toronto, ON, M9V 1B2",
+      "zoneId": "z033",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0482",
+      "name": "Albert Campbell Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.269252,
+        43.708019
+      ],
+      "address": "496 Birchmount Road, Toronto, ON, M1K 1N8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0483",
+      "name": "Alderwood Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.547252,
+        43.601944
+      ],
+      "address": "2 Orianna Drive, Toronto, ON, M8W 4Y1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0484",
+      "name": "Agincourt Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.29343,
+        43.785167
+      ],
+      "address": "155 Bonis Avenue, Toronto, ON, M1T 3W6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0485",
+      "name": "Armour Heights Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.421889,
+        43.739337
+      ],
+      "address": "2140 Avenue Road, Toronto, ON, M5M 4M7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0486",
+      "name": "Annette Street Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.466348,
+        43.663359
+      ],
+      "address": "145 Annette Street, Toronto, ON, M6P 1P3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0487",
+      "name": "Amesbury Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.485726,
+        43.706456
+      ],
+      "address": "1565 Lawrence Avenue West, Toronto, ON, M6L 1A8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0488",
+      "name": "Brookbanks Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.325904,
+        43.759507
+      ],
+      "address": "210 Brookbanks Drive, Toronto, ON, M3A 2T8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0489",
+      "name": "Black Creek Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.510467,
+        43.721219
+      ],
+      "address": "North York Sheridan Mall, 1700 Wilson Avenue, Toronto, ON, M3L 1B2",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0490",
+      "name": "Bendale Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.244052,
+        43.751063
+      ],
+      "address": "1515 Danforth Road, Toronto, ON, M1J 1H5",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0491",
+      "name": "Beaches Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.298526,
+        43.67013
+      ],
+      "address": "2161 Queen Street East, Toronto, ON, M4L 1J1",
+      "zoneId": "z021",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0492",
+      "name": "Barbara Frum Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.432215,
+        43.720752
+      ],
+      "address": "20 Covington Road, Toronto, ON, M6A 3C1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0493",
+      "name": "Bloor/Gladstone Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.434022,
+        43.659878
+      ],
+      "address": "1101 Bloor Street West, Toronto, ON, M6H 1M7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0494",
+      "name": "Brentwood Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.514259,
+        43.647448
+      ],
+      "address": "36 Brentwood Road North, Toronto, ON, M8X 2B5",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0495",
+      "name": "Bridlewood Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.31777,
+        43.797144
+      ],
+      "address": "Bridlewood Mall, 157A-2900 Warden Avenue, Toronto, ON, M1W 2S8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0496",
+      "name": "Burrows Hall Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.23423,
+        43.793885
+      ],
+      "address": "1081 Progress Avenue, Toronto, ON, M1B 5Z6",
+      "zoneId": "z040",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0497",
+      "name": "Cliffcrest Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.23077,
+        43.72517
+      ],
+      "address": "3017 Kingston Road, Toronto, ON, M1M 1P1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0498",
+      "name": "Centennial Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.449578,
+        43.772989
+      ],
+      "address": "578 Finch Avenue West, Toronto, ON, M2R 1N7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0499",
+      "name": "Cedarbrae Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.223963,
+        43.75753
+      ],
+      "address": "545 Markham Road, Toronto, ON, M1H 2A1",
+      "zoneId": "z041",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0500",
+      "name": "City Hall Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.383993,
+        43.653367
+      ],
+      "address": "Nathan Phillips Square, 100 Queen Street West, Toronto, ON, M5H 2N3",
+      "zoneId": "z001",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0501",
+      "name": "North York Central Library Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.414244,
+        43.768078
+      ],
+      "address": "5120 Yonge Street, Toronto, ON, M2N 5N9",
+      "zoneId": "z028",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0502",
+      "name": "College/Shaw Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.420111,
+        43.655159
+      ],
+      "address": "766 College Street, Toronto, ON, M6G 1C4",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0503",
+      "name": "Danforth/Coxwell Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.3214,
+        43.683574
+      ],
+      "address": "1675 Danforth Avenue, Toronto, ON, M4C 5P2",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0504",
+      "name": "Don Mills Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.347341,
+        43.736641
+      ],
+      "address": "888 Lawrence Avenue East, Toronto, ON, M3C 1P6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0505",
+      "name": "Downsview Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.482052,
+        43.72887
+      ],
+      "address": "2793 Keele Street, Toronto, ON, M3M 2G3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0506",
+      "name": "Deer Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.392481,
+        43.688581
+      ],
+      "address": "40 St. Clair Avenue East, Toronto, ON, M4T 1M9",
+      "zoneId": "z011",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0507",
+      "name": "Dawes Road Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.297326,
+        43.701174
+      ],
+      "address": "416 Dawes Road, Toronto, ON, M4B 2E8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0508",
+      "name": "Davenport Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.428452,
+        43.67453
+      ],
+      "address": "1246 Shaw Street, Toronto, ON, M6G 3P1",
+      "zoneId": "z013",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0509",
+      "name": "Dufferin/St. Clair Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.442407,
+        43.67693
+      ],
+      "address": "1625 Dufferin Street, Toronto, ON, M6H 3L9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0510",
+      "name": "Eatonville Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.559163,
+        43.646122
+      ],
+      "address": "430 Burnhamthorpe Road, Toronto, ON, M9B 2B1",
+      "zoneId": "z036",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0511",
+      "name": "Elmbrook Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.583844,
+        43.660122
+      ],
+      "address": "2 Elmbrook Crescent, Toronto, ON, M9C 5B4",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0512",
+      "name": "Evelyn Gregory Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.472348,
+        43.686189
+      ],
+      "address": "120 Trowell Avenue, Toronto, ON, M6M 1L7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0513",
+      "name": "Ethennonnhawahstihnen' Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.375653,
+        43.76875
+      ],
+      "address": "100 Ethennonnhawahstihnen' Lane, Toronto, ON  M2K 3C9",
+      "zoneId": "z029",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0514",
+      "name": "Eglinton Square Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.300333,
+        43.723685
+      ],
+      "address": "Eglinton Square Shopping Centre, 1 Eglinton Square, Unit 126, Toronto, ON, M1L 2K1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0515",
+      "name": "Forest Hill Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.42057,
+        43.702367
+      ],
+      "address": "700 Eglinton Avenue West, Toronto, ON, M5N 1B9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0516",
+      "name": "Fort York Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.40033,
+        43.63932
+      ],
+      "address": "190 Fort York Boulevard, Toronto, ON M5V 0E7",
+      "zoneId": "z000",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0517",
+      "name": "Flemingdon Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.331756,
+        43.717811
+      ],
+      "address": "29 St. Dennis Drive, Toronto, ON, M3C 3J3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0518",
+      "name": "Fairview Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.346644,
+        43.779026
+      ],
+      "address": "35 Fairview Mall Drive, Toronto, ON, M2J 4S4",
+      "zoneId": "z026",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0519",
+      "name": "Gerrard/Ashdale Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.322126,
+        43.672463
+      ],
+      "address": "1432 Gerrard Street East, Toronto, ON, M4L 1Z6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0520",
+      "name": "Goldhawk Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.277993,
+        43.823974
+      ],
+      "address": "295 Alton Towers Circle, Toronto, ON, M1V 4P1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0521",
+      "name": "Guildwood Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.199889,
+        43.74667
+      ],
+      "address": "Guildwood Plaza, 123 Guildwood Parkway, Toronto, ON, M1E 4V2",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0522",
+      "name": "Humber Bay Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.491193,
+        43.629959
+      ],
+      "address": "200 Park Lawn Road, Toronto, ON, M8Y 3J1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0523",
+      "name": "Highland Creek Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.175207,
+        43.789959
+      ],
+      "address": "3550 Ellesmere Road, Toronto, ON, M1C 3Z2",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0524",
+      "name": "Hillcrest Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.369044,
+        43.797026
+      ],
+      "address": "5801 Leslie Street, Toronto, ON, M2H 1J8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0525",
+      "name": "High Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.448985,
+        43.645204
+      ],
+      "address": "228 Roncesvalles Avenue, Toronto, ON, M6R 2L7",
+      "zoneId": "z019",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0526",
+      "name": "Humber Summit Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.571519,
+        43.758981
+      ],
+      "address": "2990 Islington Avenue, Toronto, ON, M9L 2K6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0527",
+      "name": "Humberwood Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.619163,
+        43.728996
+      ],
+      "address": "850 Humberwood Boulevard, Toronto, ON, M9W 7A6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0528",
+      "name": "Jane/Dundas Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.491415,
+        43.66547
+      ],
+      "address": "620 Jane Street, Toronto, ON, M6S 4A6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0529",
+      "name": "Jones Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.334496,
+        43.665952
+      ],
+      "address": "118 Jones Avenue, Toronto, ON, M4M 2Z9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0530",
+      "name": "Jane/Sheppard Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.51005,
+        43.73988
+      ],
+      "address": "1906 Sheppard Avenue West, Toronto, ON, M3L 1Y7",
+      "zoneId": "z032",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0531",
+      "name": "Kennedy/Eglinton Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.270496,
+        43.732159
+      ],
+      "address": "Liberty Square Plaza, 2380 Eglinton Avenue East, Toronto, ON, M1K 2P3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0532",
+      "name": "Long Branch Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.531504,
+        43.595263
+      ],
+      "address": "3500 Lake Shore Boulevard West, Toronto, ON, M8W 1N6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0533",
+      "name": "Leaside Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.367563,
+        43.706493
+      ],
+      "address": "165 McRae Drive, Toronto, ON, M4G 1S8",
+      "zoneId": "z025",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0534",
+      "name": "Locke Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.401815,
+        43.724878
+      ],
+      "address": "3083 Yonge Street, Toronto, ON, M4N 2K7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0535",
+      "name": "Lillian H. Smith Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.3984,
+        43.6581
+      ],
+      "address": "239 College Street, Toronto, ON, M5T 1R5",
+      "zoneId": "z003",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0536",
+      "name": "Main Street Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.299578,
+        43.683359
+      ],
+      "address": "137 Main Street, Toronto, ON, M4E 2V9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0537",
+      "name": "Malvern Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.216067,
+        43.808315
+      ],
+      "address": "30 Sewells Road, Toronto, ON, M1B 3G5",
+      "zoneId": "z040",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0538",
+      "name": "Maria A. Shchuka Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.447193,
+        43.69613
+      ],
+      "address": "1745 Eglinton Avenue W, Toronto, ON, M6E 2H4",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0539",
+      "name": "McGregor Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.280719,
+        43.747707
+      ],
+      "address": "2219 Lawrence Avenue East, Toronto, ON, M1P 2P5",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0540",
+      "name": "Mount Dennis Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.488259,
+        43.686581
+      ],
+      "address": "1123 Weston Road, Toronto, ON, M6N 3S3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0541",
+      "name": "Merril Collection Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.398333,
+        43.657222
+      ],
+      "address": "239 College Street, 3rd floor, Toronto, ON, M5T 1R5",
+      "zoneId": "z003",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0542",
+      "name": "Mimico Centennial Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.493904,
+        43.614907
+      ],
+      "address": "47 Station Road, Toronto, ON, M8V 2R1",
+      "zoneId": "z037",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0543",
+      "name": "Mount Pleasant Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.388126,
+        43.7039
+      ],
+      "address": "599 Mt. Pleasant Road, Toronto, ON, M4S 2M5",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0544",
+      "name": "Maryvale Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.311711,
+        43.757263
+      ],
+      "address": "Parkway Mall, 85 Ellesmere Road, Unit 22, Toronto, ON, M1R 4B9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0545",
+      "name": "Morningside Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.178541,
+        43.769885
+      ],
+      "address": "4279 Lawrence Avenue East, Toronto, ON, M1E 2S8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0546",
+      "name": "Northern District Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.399874,
+        43.708241
+      ],
+      "address": "40 Orchard View Boulevard, Toronto, ON, M4R 1B9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0547",
+      "name": "Northern Elms Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.565548,
+        43.71133
+      ],
+      "address": "123B Rexdale Boulevard, Unit 5, Toronto, ON, M9W 1P1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0548",
+      "name": "New Toronto Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.509741,
+        43.599085
+      ],
+      "address": "110 Eleventh Street, Toronto, ON, M8V 3G5",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0549",
+      "name": "Osborne Collection Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.39864,
+        43.65785
+      ],
+      "address": "239 College Street, 4th floor, Toronto, ON, M5T 1R5",
+      "zoneId": "z003",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0550",
+      "name": "Oakwood Village Library and Arts Centre Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.438111,
+        43.686544
+      ],
+      "address": "341 Oakwood Avenue, Toronto, ON, M6E 2W1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0551",
+      "name": "Pape/Danforth Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.34457,
+        43.678559
+      ],
+      "address": "701 Pape Avenue, Toronto, ON, M4K 3S6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0552",
+      "name": "Perth/Dupont Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.45383,
+        43.665033
+      ],
+      "address": "1589 Dupont Street, Toronto, ON, M6P 3S5",
+      "zoneId": "z014",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0553",
+      "name": "Parkdale Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.432659,
+        43.641174
+      ],
+      "address": "1303 Queen Street West, Toronto, ON, M6K 1L6",
+      "zoneId": "z018",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0554",
+      "name": "Parliament Street Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.3678,
+        43.661804
+      ],
+      "address": "269 Gerrard Street East, Toronto, ON, M5A 2G3",
+      "zoneId": "z005",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0555",
+      "name": "Palmerston Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.414052,
+        43.665093
+      ],
+      "address": "560 Palmerston Avenue, Toronto, ON, M6G 2P7",
+      "zoneId": "z009",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0556",
+      "name": "Port Union Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.140289,
+        43.779478
+      ],
+      "address": "5450 Lawrence Avenue East, Toronto, ON, M1C 3B2",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0557",
+      "name": "Pleasant View Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.33543,
+        43.787559
+      ],
+      "address": "575 Van Horne Avenue, Toronto, ON, M2J 4S8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0558",
+      "name": "Queen/Saulter Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.347593,
+        43.659144
+      ],
+      "address": "765 Queen Street East, Toronto, ON, M4M 1H3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0559",
+      "name": "Riverdale Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.353163,
+        43.665759
+      ],
+      "address": "370 Broadview Avenue, Toronto, ON, M4K 2M8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0560",
+      "name": "Richview Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.541119,
+        43.683404
+      ],
+      "address": "1806 Islington Avenue, Toronto, ON, M9P 3N3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0561",
+      "name": "Runnymede Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.473844,
+        43.651856
+      ],
+      "address": "2178 Bloor Street West, Toronto, ON, M6S 1M8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0562",
+      "name": "Rexdale Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.573207,
+        43.72613
+      ],
+      "address": "2243 Kipling Avenue, Toronto, ON, M9W 4L5",
+      "zoneId": "z034",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0563",
+      "name": "Sanderson Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.405519,
+        43.652085
+      ],
+      "address": "327 Bathurst Street, Toronto, ON, M5T 1J1",
+      "zoneId": "z003",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0564",
+      "name": "Scarborough Civic Centre Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.256764,
+        43.772096
+      ],
+      "address": "156 Borough Drive, Toronto, ON, M1P 4N7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0565",
+      "name": "St. Clair/Silverthorn Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.460585,
+        43.674263
+      ],
+      "address": "1748 St. Clair Avenue West, Toronto, ON, M6N 1J3",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0566",
+      "name": "St. James Town Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.374467,
+        43.667263
+      ],
+      "address": "495 Sherbourne Street, Toronto, ON, M4X 1K7",
+      "zoneId": "z008",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0567",
+      "name": "St. Lawrence Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.368496,
+        43.649981
+      ],
+      "address": "171 Front Street East, Toronto, ON, M5A 4H3",
+      "zoneId": "z000",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0568",
+      "name": "Spadina Road Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.404378,
+        43.667159
+      ],
+      "address": "10 Spadina Road, Toronto, ON, M5R 2S7",
+      "zoneId": "z009",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0569",
+      "name": "Steeles Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.322304,
+        43.815381
+      ],
+      "address": "Bamburgh Gardens Shopping Plaza, C107-375 Bamburgh Circle, Toronto, ON, M1W 3Y1",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0570",
+      "name": "Swansea Memorial Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.478022,
+        43.64793
+      ],
+      "address": "95 Lavinia Avenue, Toronto, ON, M6S 3H9",
+      "zoneId": "z019",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0571",
+      "name": "S. Walter Stewart Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.329696,
+        43.692115
+      ],
+      "address": "170 Memorial Park Avenue, Toronto, ON, M4J 2K5",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0572",
+      "name": "Taylor Memorial Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.271252,
+        43.687781
+      ],
+      "address": "1440 Kingston Road, Toronto, ON, M1N 1R3",
+      "zoneId": "z043",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0573",
+      "name": "Thorncliffe Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.342644,
+        43.702907
+      ],
+      "address": "48 Thorncliffe Park Drive, Toronto, ON, M4H 1J7",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0574",
+      "name": "Todmorden Room Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.349326,
+        43.691626
+      ],
+      "address": "1081 1/2 Pape Ave (at Torrens), Toronto, ON, M4K 3W6",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0575",
+      "name": "Toronto Reference Library Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.386763,
+        43.671737
+      ],
+      "address": "789 Yonge Street, Toronto, ON, M4W 2G8",
+      "zoneId": "z011",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0576",
+      "name": "Victoria Village Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.312911,
+        43.736011
+      ],
+      "address": "184 Sloane Avenue, Toronto, ON, M4A 2C4",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0577",
+      "name": "Weston Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.520585,
+        43.701796
+      ],
+      "address": "2 King Street, Toronto, ON, M9N 1K9",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0578",
+      "name": "Woodview Park Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.538941,
+        43.739722
+      ],
+      "address": "16 Bradstock Road, Toronto, ON, M9M 1M8",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0579",
+      "name": "Woodside Square Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.269548,
+        43.809463
+      ],
+      "address": "Woodside Square Mall, 1571 Sandhurst Circle, Toronto, ON, M1V 1V2",
+      "zoneId": null,
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0580",
+      "name": "Wychwood Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.417548,
+        43.682181
+      ],
+      "address": "1431 Bathurst Street, Toronto, ON, M5R 3J2",
+      "zoneId": "z012",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0581",
+      "name": "Yorkville Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.388644,
+        43.671826
+      ],
+      "address": "22 Yorkville Avenue, Toronto, ON, M4W 1L4",
+      "zoneId": "z009",
+      "source": "Toronto Public Library"
+    },
+    {
+      "id": "fc0582",
+      "name": "York Woods Library",
+      "category": "library",
+      "rawType": "Public Library Branch",
+      "position": [
+        -79.507267,
+        43.758893
+      ],
+      "address": "1785 Finch Avenue West, Toronto, ON, M3N 1M6",
+      "zoneId": "z032",
+      "source": "Toronto Public Library"
+    }
+  ]
+}
