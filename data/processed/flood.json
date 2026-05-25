@@ -295,8 +295,8 @@
       "zoneId": "z036",
       "name": "Islington-City Centre West",
       "floodStudyAreas": 2,
-      "studyAreaFraction": 0.63,
-      "floodRiskScore": 0.819,
+      "studyAreaFraction": 0.612,
+      "floodRiskScore": 0.796,
       "floodRisk": "high"
     },
     {

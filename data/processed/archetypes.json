@@ -807,13 +807,13 @@
       "zoneId": "z036",
       "name": "Islington-City Centre West",
       "mix": {
-        "owner-detached": 0.1358,
-        "condo-owner": 0.3045,
-        "renter-low": 0.1594,
-        "renter-mid": 0.1594,
+        "owner-detached": 0.1359,
+        "condo-owner": 0.3048,
+        "renter-low": 0.1596,
+        "renter-mid": 0.1596,
         "senior": 0.107,
         "student": 0.0848,
-        "small-business": 0.0491
+        "small-business": 0.0484
       },
       "drivers": {
         "renterPct": 0.42,

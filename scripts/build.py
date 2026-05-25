@@ -383,41 +383,93 @@ def load_water_mask():
         return None
 
 
-def clip_ring_to_land(ring: list[list[float]], water, min_area_frac: float = 0.04):
-    """Subtract water from a zone ring. Returns (list-of-land-rings, changed?).
+def _poly_rings(poly, tol: float) -> list[list[list[float]]] | None:
+    """Simplify a shapely Polygon (keeping holes) -> [exterior, *interiors] of [lng,lat] coords.
 
-    Keeps every land part whose area is >= min_area_frac of the largest part (drops slivers), so a
-    waterfront zone like "Waterfront Communities–The Island" keeps both the mainland AND the
-    Toronto Islands. Rings are ordered largest-first and decimated. changed=False => fully inland.
+    Returns None for degenerate/unrepairable parts (e.g. thin creek slivers) so they're skipped.
+    """
+    s = poly.simplify(tol, preserve_topology=True)
+    if s.is_empty or not s.is_valid:
+        s = s.buffer(0)          # repair self-intersections
+    if s.is_empty or s.area <= 0:
+        return None
+    if s.geom_type == "MultiPolygon":
+        s = max(s.geoms, key=lambda p: p.area)
+    if s.geom_type != "Polygon" or not s.is_valid:
+        return None
+    out = [[[round(x, 6), round(y, 6)] for x, y in s.exterior.coords]]
+    for interior in s.interiors:
+        hole = [[round(x, 6), round(y, 6)] for x, y in interior.coords]
+        if len(hole) >= 4:
+            out.append(hole)
+    return out if len(out[0]) >= 4 else None
+
+
+def clean_geom(geom: dict) -> tuple[dict, list[float]]:
+    """Repair a (Multi)Polygon geom dict to be OGC-valid (make_valid), keeping holes/parts.
+
+    Returns (clean geom dict, centroid-of-largest-part [lng,lat])."""
+    from shapely.geometry import shape
+    from shapely.validation import make_valid
+    g = shape(geom)
+    if not g.is_valid:
+        g = make_valid(g)
+    polys = []
+    for p in (g.geoms if g.geom_type in ("MultiPolygon", "GeometryCollection") else [g]):
+        if getattr(p, "geom_type", "") == "Polygon" and p.area > 0:
+            polys.append(p)
+    if not polys:
+        ring = geom["coordinates"][0] if geom["type"] == "Polygon" else geom["coordinates"][0][0]
+        cx, cy = _ring_centroid(ring)
+        return geom, [round(cx, 6), round(cy, 6)]
+    polys.sort(key=lambda p: p.area, reverse=True)
+
+    def rings(p):
+        out = [[[round(x, 6), round(y, 6)] for x, y in p.exterior.coords]]
+        out += [[[round(x, 6), round(y, 6)] for x, y in i.coords] for i in p.interiors]
+        return out
+
+    cx, cy = polys[0].representative_point().x, polys[0].representative_point().y
+    centroid = [round(cx, 6), round(cy, 6)]
+    if len(polys) == 1:
+        return {"type": "Polygon", "coordinates": rings(polys[0])}, centroid
+    return {"type": "MultiPolygon", "coordinates": [rings(p) for p in polys]}, centroid
+
+
+def clip_ring_to_land(ring: list[list[float]], water, min_area_frac: float = 0.02):
+    """Subtract water from a zone ring. Returns (list-of-polygons, changed?).
+
+    Each polygon is [exterior_ring, *hole_rings] so inter-island LAGOONS/channels survive as holes.
+    Keeps every land part >= min_area_frac of the largest (drops slivers), so "Waterfront
+    Communities–The Island" keeps both the mainland AND the Toronto Islands archipelago. Small
+    parts (islands) get finer simplification so they read as the real island chain, not a blob.
+    changed=False => fully inland (unchanged).
     """
     from shapely.geometry import Polygon
     poly = Polygon(ring)
     if not poly.is_valid:
         poly = poly.buffer(0)
     if not poly.intersects(water):
-        return [ring], False  # fully inland — unchanged
+        return [[ring]], False  # fully inland — unchanged
     land = poly.difference(water)
     if land.is_empty:
-        return [ring], False
+        return [[ring]], False
     geoms = list(land.geoms) if land.geom_type == "MultiPolygon" else [land]
     geoms = sorted((g for g in geoms if g.area > 0), key=lambda g: g.area, reverse=True)
     if not geoms:
-        return [ring], False
-    cutoff = geoms[0].area * min_area_frac
-    rings = []
+        return [[ring]], False
+    largest = geoms[0].area
+    cutoff = largest * min_area_frac
+    polys = []
     for g in geoms:
         if g.area < cutoff:
             break
-        # Topology-preserving simplify (keeps geometry valid; ~22 m tolerance) instead of striding.
-        s = g.simplify(0.0002, preserve_topology=True)
-        if s.is_empty:
-            s = g
-        if s.geom_type == "MultiPolygon":
-            s = max(s.geoms, key=lambda p: p.area)
-        coords = [[round(x, 6), round(y, 6)] for x, y in s.exterior.coords]
-        if len(coords) >= 4:
-            rings.append(coords)
-    return (rings or [ring]), bool(rings)
+        # Finer simplification for small (island) parts — they're visually prominent.
+        tol = 0.0002 if g.area >= 0.25 * largest else 0.00004
+        rings = _poly_rings(g, tol)
+        if rings:
+            polys.append(rings)
+    return (polys or [[ring]]), bool(polys)
 
 
 # Former-municipality overrides where a simple centroid rule is wrong (north zones east of the
@@ -1314,14 +1366,13 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
         # Multi-part land (mainland + Toronto Islands) is emitted as a GeoJSON MultiPolygon.
         geom = {"type": "Polygon", "coordinates": polygon_coords}
         if water is not None:
-            rings, changed = clip_ring_to_land(polygon_coords[0], water)
+            polys, changed = clip_ring_to_land(polygon_coords[0], water)
             if changed:
-                if len(rings) == 1:
-                    geom = {"type": "Polygon", "coordinates": [rings[0]]}
+                if len(polys) == 1:
+                    geom = {"type": "Polygon", "coordinates": polys[0]}
                 else:
-                    geom = {"type": "MultiPolygon", "coordinates": [[r] for r in rings]}
-                cx, cy = _ring_centroid(rings[0])  # centroid on the largest land part
-                centroid = [round(cx, 6), round(cy, 6)]
+                    geom = {"type": "MultiPolygon", "coordinates": polys}
+                geom, centroid = clean_geom(geom)  # OGC-valid + centroid on largest part
                 clipped_count += 1
 
         pop = prof.get("population", syn_pop)

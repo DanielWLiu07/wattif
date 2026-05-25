@@ -8,8 +8,8 @@
       "zoneId": "z000",
       "name": "Waterfront Communities\u2013The Island",
       "centroid": [
-        -79.379014,
-        43.645002
+        -79.383982,
+        43.644616
       ],
       "solarPotential": 0.171,
       "pvYieldKwhPerKwp": 1240.3,
@@ -43,8 +43,8 @@
       "zoneId": "z001",
       "name": "Bay Street Corridor",
       "centroid": [
-        -79.38573,
-        43.65752
+        -79.385282,
+        43.657074
       ],
       "solarPotential": 0.048,
       "pvYieldKwhPerKwp": 1251.0,
@@ -78,8 +78,8 @@
       "zoneId": "z002",
       "name": "Church-Yonge Corridor",
       "centroid": [
-        -79.379027,
-        43.659658
+        -79.380789,
+        43.663961
       ],
       "solarPotential": 0.144,
       "pvYieldKwhPerKwp": 1251.1,
@@ -148,8 +148,8 @@
       "zoneId": "z004",
       "name": "University",
       "centroid": [
-        -79.401189,
-        43.662521
+        -79.401333,
+        43.662084
       ],
       "solarPotential": 0.559,
       "pvYieldKwhPerKwp": 1244.5,
@@ -183,8 +183,8 @@
       "zoneId": "z005",
       "name": "Moss Park",
       "centroid": [
-        -79.367366,
-        43.656515
+        -79.369665,
+        43.656731
       ],
       "solarPotential": 0.391,
       "pvYieldKwhPerKwp": 1251.0,
@@ -218,8 +218,8 @@
       "zoneId": "z006",
       "name": "Regent Park",
       "centroid": [
-        -79.360627,
-        43.660011
+        -79.360675,
+        43.659888
       ],
       "solarPotential": 0.411,
       "pvYieldKwhPerKwp": 1264.5,
@@ -253,8 +253,8 @@
       "zoneId": "z007",
       "name": "Cabbagetown-South St.James Town",
       "centroid": [
-        -79.366169,
-        43.667665
+        -79.363554,
+        43.668411
       ],
       "solarPotential": 0.518,
       "pvYieldKwhPerKwp": 1251.3,
@@ -393,8 +393,8 @@
       "zoneId": "z011",
       "name": "Rosedale-Moore Park",
       "centroid": [
-        -79.379675,
-        43.682805
+        -79.379561,
+        43.682779
       ],
       "solarPotential": 0.457,
       "pvYieldKwhPerKwp": 1251.5,
@@ -428,8 +428,8 @@
       "zoneId": "z012",
       "name": "Casa Loma",
       "centroid": [
-        -79.408004,
-        43.681877
+        -79.408284,
+        43.680971
       ],
       "solarPotential": 0.598,
       "pvYieldKwhPerKwp": 1246.3,
@@ -463,8 +463,8 @@
       "zoneId": "z013",
       "name": "Wychwood",
       "centroid": [
-        -79.425519,
-        43.676939
+        -79.424894,
+        43.675798
       ],
       "solarPotential": 0.62,
       "pvYieldKwhPerKwp": 1246.3,
@@ -603,8 +603,8 @@
       "zoneId": "z017",
       "name": "Niagara",
       "centroid": [
-        -79.412517,
-        43.637039
+        -79.411014,
+        43.639752
       ],
       "solarPotential": 0.444,
       "pvYieldKwhPerKwp": 1235.2,
@@ -638,8 +638,8 @@
       "zoneId": "z018",
       "name": "South Parkdale",
       "centroid": [
-        -79.43921,
-        43.636704
+        -79.433302,
+        43.635925
       ],
       "solarPotential": 0.544,
       "pvYieldKwhPerKwp": 1235.1,
@@ -673,8 +673,8 @@
       "zoneId": "z019",
       "name": "High Park-Swansea",
       "centroid": [
-        -79.467847,
-        43.645001
+        -79.458589,
+        43.644822
       ],
       "solarPotential": 0.59,
       "pvYieldKwhPerKwp": 1231.2,
@@ -743,8 +743,8 @@
       "zoneId": "z021",
       "name": "The Beaches",
       "centroid": [
-        -79.299425,
-        43.671091
+        -79.297709,
+        43.669978
       ],
       "solarPotential": 0.563,
       "pvYieldKwhPerKwp": 1238.7,
@@ -813,8 +813,8 @@
       "zoneId": "z023",
       "name": "Greektown (Playter Estates-Danforth)",
       "centroid": [
-        -79.354883,
-        43.67974
+        -79.353721,
+        43.680481
       ],
       "solarPotential": 0.645,
       "pvYieldKwhPerKwp": 1264.8,
@@ -848,8 +848,8 @@
       "zoneId": "z024",
       "name": "East York (Broadview North)",
       "centroid": [
-        -79.355582,
-        43.688782
+        -79.354876,
+        43.690316
       ],
       "solarPotential": 0.377,
       "pvYieldKwhPerKwp": 1265.0,
@@ -883,8 +883,8 @@
       "zoneId": "z025",
       "name": "Leaside-Bennington",
       "centroid": [
-        -79.36609,
-        43.703769
+        -79.365192,
+        43.700145
       ],
       "solarPotential": 0.682,
       "pvYieldKwhPerKwp": 1275.4,
@@ -1268,8 +1268,8 @@
       "zoneId": "z036",
       "name": "Islington-City Centre West",
       "centroid": [
-        -79.543202,
-        43.632767
+        -79.539169,
+        43.634618
       ],
       "solarPotential": 0.56,
       "pvYieldKwhPerKwp": 1246.1,
@@ -1303,8 +1303,8 @@
       "zoneId": "z037",
       "name": "Mimico (Lakeshore)",
       "centroid": [
-        -79.501462,
-        43.61448
+        -79.504309,
+        43.613791
       ],
       "solarPotential": 0.476,
       "pvYieldKwhPerKwp": 1244.6,
@@ -1513,8 +1513,8 @@
       "zoneId": "z043",
       "name": "Birchcliffe-Cliffside",
       "centroid": [
-        -79.265105,
-        43.694557
+        -79.263836,
+        43.694553
       ],
       "solarPotential": 0.572,
       "pvYieldKwhPerKwp": 1280.1,

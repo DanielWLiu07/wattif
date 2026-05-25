@@ -41037,8 +41037,8 @@
     "id": "a02931",
     "zoneId": "z036",
     "position": [
-      -79.550806,
-      43.638914
+      -79.550897,
+      43.639554
     ],
     "archetype": "renter-midincome",
     "demandKwh": 697.5,
@@ -41051,8 +41051,8 @@
     "id": "a02932",
     "zoneId": "z036",
     "position": [
-      -79.543815,
-      43.628653
+      -79.543906,
+      43.629293
     ],
     "archetype": "renter-midincome",
     "demandKwh": 688.0,
@@ -41065,8 +41065,8 @@
     "id": "a02933",
     "zoneId": "z036",
     "position": [
-      -79.544152,
-      43.62376
+      -79.544243,
+      43.6244
     ],
     "archetype": "small-business",
     "demandKwh": 823.2,
@@ -41079,8 +41079,8 @@
     "id": "a02934",
     "zoneId": "z036",
     "position": [
-      -79.52801,
-      43.639867
+      -79.528102,
+      43.640507
     ],
     "archetype": "small-business",
     "demandKwh": 708.7,
@@ -41093,8 +41093,8 @@
     "id": "a02935",
     "zoneId": "z036",
     "position": [
-      -79.543314,
-      43.645063
+      -79.543405,
+      43.645703
     ],
     "archetype": "owner-urban",
     "demandKwh": 837.3,
@@ -41107,8 +41107,8 @@
     "id": "a02936",
     "zoneId": "z036",
     "position": [
-      -79.52909,
-      43.618375
+      -79.529182,
+      43.619015
     ],
     "archetype": "renter-midincome",
     "demandKwh": 598.1,
@@ -41121,8 +41121,8 @@
     "id": "a02937",
     "zoneId": "z036",
     "position": [
-      -79.554874,
-      43.634322
+      -79.554966,
+      43.634962
     ],
     "archetype": "small-business",
     "demandKwh": 577.8,
@@ -41135,8 +41135,8 @@
     "id": "a02938",
     "zoneId": "z036",
     "position": [
-      -79.528512,
-      43.643974
+      -79.528603,
+      43.644614
     ],
     "archetype": "renter-midincome",
     "demandKwh": 768.6,
@@ -41149,8 +41149,8 @@
     "id": "a02939",
     "zoneId": "z036",
     "position": [
-      -79.53933,
-      43.633325
+      -79.539422,
+      43.633965
     ],
     "archetype": "renter-midincome",
     "demandKwh": 915.3,
@@ -41163,8 +41163,8 @@
     "id": "a02940",
     "zoneId": "z036",
     "position": [
-      -79.537787,
-      43.632495
+      -79.537879,
+      43.633135
     ],
     "archetype": "owner-urban",
     "demandKwh": 925.0,
@@ -41177,8 +41177,8 @@
     "id": "a02941",
     "zoneId": "z036",
     "position": [
-      -79.541282,
-      43.624886
+      -79.541373,
+      43.625526
     ],
     "archetype": "owner-urban",
     "demandKwh": 590.8,
@@ -41191,8 +41191,8 @@
     "id": "a02942",
     "zoneId": "z036",
     "position": [
-      -79.527255,
-      43.622892
+      -79.527346,
+      43.623532
     ],
     "archetype": "renter-midincome",
     "demandKwh": 888.4,
@@ -41205,8 +41205,8 @@
     "id": "a02943",
     "zoneId": "z036",
     "position": [
-      -79.545974,
-      43.622595
+      -79.546065,
+      43.623235
     ],
     "archetype": "small-business",
     "demandKwh": 618.5,
@@ -41219,8 +41219,8 @@
     "id": "a02944",
     "zoneId": "z036",
     "position": [
-      -79.55663,
-      43.638713
+      -79.556721,
+      43.639353
     ],
     "archetype": "condo-owner",
     "demandKwh": 752.2,
@@ -41233,8 +41233,8 @@
     "id": "a02945",
     "zoneId": "z036",
     "position": [
-      -79.533763,
-      43.630585
+      -79.533854,
+      43.631225
     ],
     "archetype": "owner-urban",
     "demandKwh": 863.6,
@@ -41247,8 +41247,8 @@
     "id": "a02946",
     "zoneId": "z036",
     "position": [
-      -79.538177,
-      43.617697
+      -79.538268,
+      43.618337
     ],
     "archetype": "condo-owner",
     "demandKwh": 841.2,
@@ -41261,8 +41261,8 @@
     "id": "a02947",
     "zoneId": "z036",
     "position": [
-      -79.554491,
-      43.638729
+      -79.554582,
+      43.639369
     ],
     "archetype": "owner-urban",
     "demandKwh": 809.0,
@@ -41275,8 +41275,8 @@
     "id": "a02948",
     "zoneId": "z036",
     "position": [
-      -79.550225,
-      43.645845
+      -79.550317,
+      43.646485
     ],
     "archetype": "condo-owner",
     "demandKwh": 1086.7,
@@ -41289,8 +41289,8 @@
     "id": "a02949",
     "zoneId": "z036",
     "position": [
-      -79.549841,
-      43.634801
+      -79.549932,
+      43.635441
     ],
     "archetype": "small-business",
     "demandKwh": 708.6,
@@ -41303,8 +41303,8 @@
     "id": "a02950",
     "zoneId": "z036",
     "position": [
-      -79.556012,
-      43.63085
+      -79.556103,
+      43.63149
     ],
     "archetype": "renter-midincome",
     "demandKwh": 697.1,
@@ -41317,8 +41317,8 @@
     "id": "a02951",
     "zoneId": "z036",
     "position": [
-      -79.539143,
-      43.634389
+      -79.539235,
+      43.635029
     ],
     "archetype": "condo-owner",
     "demandKwh": 809.8,
@@ -41331,8 +41331,8 @@
     "id": "a02952",
     "zoneId": "z036",
     "position": [
-      -79.533654,
-      43.629255
+      -79.533746,
+      43.629895
     ],
     "archetype": "condo-owner",
     "demandKwh": 914.3,
@@ -41345,8 +41345,8 @@
     "id": "a02953",
     "zoneId": "z036",
     "position": [
-      -79.533952,
-      43.629597
+      -79.534043,
+      43.630237
     ],
     "archetype": "small-business",
     "demandKwh": 846.7,
@@ -41359,8 +41359,8 @@
     "id": "a02954",
     "zoneId": "z036",
     "position": [
-      -79.549364,
-      43.629385
+      -79.549456,
+      43.630025
     ],
     "archetype": "small-business",
     "demandKwh": 1003.2,
@@ -41373,8 +41373,8 @@
     "id": "a02955",
     "zoneId": "z036",
     "position": [
-      -79.558681,
-      43.619271
+      -79.558772,
+      43.619911
     ],
     "archetype": "renter-midincome",
     "demandKwh": 812.4,
@@ -41387,8 +41387,8 @@
     "id": "a02956",
     "zoneId": "z036",
     "position": [
-      -79.548564,
-      43.629383
+      -79.548656,
+      43.630023
     ],
     "archetype": "renter-midincome",
     "demandKwh": 819.4,
@@ -41401,8 +41401,8 @@
     "id": "a02957",
     "zoneId": "z036",
     "position": [
-      -79.531319,
-      43.641754
+      -79.53141,
+      43.642394
     ],
     "archetype": "small-business",
     "demandKwh": 1154.2,
@@ -41415,8 +41415,8 @@
     "id": "a02958",
     "zoneId": "z036",
     "position": [
-      -79.546777,
-      43.631542
+      -79.546868,
+      43.632182
     ],
     "archetype": "condo-owner",
     "demandKwh": 705.1,
@@ -41429,8 +41429,8 @@
     "id": "a02959",
     "zoneId": "z036",
     "position": [
-      -79.548328,
-      43.638962
+      -79.54842,
+      43.639602
     ],
     "archetype": "small-business",
     "demandKwh": 727.4,
@@ -41443,8 +41443,8 @@
     "id": "a02960",
     "zoneId": "z036",
     "position": [
-      -79.547498,
-      43.633245
+      -79.547589,
+      43.633885
     ],
     "archetype": "small-business",
     "demandKwh": 615.7,
@@ -41457,8 +41457,8 @@
     "id": "a02961",
     "zoneId": "z036",
     "position": [
-      -79.544655,
-      43.643267
+      -79.544746,
+      43.643907
     ],
     "archetype": "renter-midincome",
     "demandKwh": 891.8,
@@ -41471,8 +41471,8 @@
     "id": "a02962",
     "zoneId": "z036",
     "position": [
-      -79.544447,
-      43.621568
+      -79.544539,
+      43.622208
     ],
     "archetype": "small-business",
     "demandKwh": 599.4,
@@ -41485,8 +41485,8 @@
     "id": "a02963",
     "zoneId": "z036",
     "position": [
-      -79.527066,
-      43.636601
+      -79.527158,
+      43.637241
     ],
     "archetype": "small-business",
     "demandKwh": 679.8,
@@ -41499,8 +41499,8 @@
     "id": "a02964",
     "zoneId": "z036",
     "position": [
-      -79.543284,
-      43.645111
+      -79.543376,
+      43.645751
     ],
     "archetype": "condo-owner",
     "demandKwh": 551.8,
@@ -41513,8 +41513,8 @@
     "id": "a02965",
     "zoneId": "z036",
     "position": [
-      -79.552505,
-      43.624887
+      -79.552596,
+      43.625527
     ],
     "archetype": "condo-owner",
     "demandKwh": 745.9,
@@ -41527,8 +41527,8 @@
     "id": "a02966",
     "zoneId": "z036",
     "position": [
-      -79.542234,
-      43.641799
+      -79.542325,
+      43.642439
     ],
     "archetype": "small-business",
     "demandKwh": 897.2,
@@ -41541,8 +41541,8 @@
     "id": "a02967",
     "zoneId": "z036",
     "position": [
-      -79.527522,
-      43.640457
+      -79.527613,
+      43.641097
     ],
     "archetype": "owner-urban",
     "demandKwh": 655.4,
@@ -41555,8 +41555,8 @@
     "id": "a02968",
     "zoneId": "z036",
     "position": [
-      -79.550125,
-      43.641472
+      -79.550217,
+      43.642112
     ],
     "archetype": "owner-urban",
     "demandKwh": 603.1,
@@ -41569,8 +41569,8 @@
     "id": "a02969",
     "zoneId": "z036",
     "position": [
-      -79.538679,
-      43.62481
+      -79.538771,
+      43.62545
     ],
     "archetype": "owner-urban",
     "demandKwh": 715.0,
@@ -41583,8 +41583,8 @@
     "id": "a02970",
     "zoneId": "z036",
     "position": [
-      -79.53663,
-      43.626546
+      -79.536722,
+      43.627186
     ],
     "archetype": "owner-urban",
     "demandKwh": 733.8,
@@ -41597,8 +41597,8 @@
     "id": "a02971",
     "zoneId": "z036",
     "position": [
-      -79.529889,
-      43.63595
+      -79.52998,
+      43.63659
     ],
     "archetype": "owner-urban",
     "demandKwh": 928.8,
@@ -41611,8 +41611,8 @@
     "id": "a02972",
     "zoneId": "z036",
     "position": [
-      -79.543254,
-      43.63179
+      -79.543346,
+      43.63243
     ],
     "archetype": "renter-midincome",
     "demandKwh": 557.6,
@@ -41625,8 +41625,8 @@
     "id": "a02973",
     "zoneId": "z036",
     "position": [
-      -79.540876,
-      43.638331
+      -79.540967,
+      43.638971
     ],
     "archetype": "renter-midincome",
     "demandKwh": 685.8,
@@ -41639,8 +41639,8 @@
     "id": "a02974",
     "zoneId": "z036",
     "position": [
-      -79.54423,
-      43.637447
+      -79.544321,
+      43.638087
     ],
     "archetype": "small-business",
     "demandKwh": 830.6,
@@ -41653,8 +41653,8 @@
     "id": "a02975",
     "zoneId": "z036",
     "position": [
-      -79.548658,
-      43.631663
+      -79.54875,
+      43.632303
     ],
     "archetype": "renter-midincome",
     "demandKwh": 623.9,
@@ -41667,8 +41667,8 @@
     "id": "a02976",
     "zoneId": "z036",
     "position": [
-      -79.556997,
-      43.647095
+      -79.557089,
+      43.647735
     ],
     "archetype": "condo-owner",
     "demandKwh": 855.1,
@@ -41681,8 +41681,8 @@
     "id": "a02977",
     "zoneId": "z036",
     "position": [
-      -79.547669,
-      43.635276
+      -79.54776,
+      43.635916
     ],
     "archetype": "small-business",
     "demandKwh": 660.2,
@@ -41695,8 +41695,8 @@
     "id": "a02978",
     "zoneId": "z036",
     "position": [
-      -79.53286,
-      43.618977
+      -79.532951,
+      43.619617
     ],
     "archetype": "renter-midincome",
     "demandKwh": 796.0,
@@ -41709,8 +41709,8 @@
     "id": "a02979",
     "zoneId": "z036",
     "position": [
-      -79.549943,
-      43.624158
+      -79.550035,
+      43.624798
     ],
     "archetype": "condo-owner",
     "demandKwh": 688.5,
@@ -41723,8 +41723,8 @@
     "id": "a02980",
     "zoneId": "z036",
     "position": [
-      -79.527824,
-      43.632591
+      -79.527915,
+      43.633231
     ],
     "archetype": "small-business",
     "demandKwh": 765.8,
@@ -41737,8 +41737,8 @@
     "id": "a02981",
     "zoneId": "z036",
     "position": [
-      -79.550411,
-      43.635967
+      -79.550502,
+      43.636607
     ],
     "archetype": "renter-midincome",
     "demandKwh": 829.6,
@@ -41751,8 +41751,8 @@
     "id": "a02982",
     "zoneId": "z036",
     "position": [
-      -79.554224,
-      43.628309
+      -79.554316,
+      43.628949
     ],
     "archetype": "owner-urban",
     "demandKwh": 855.7,
@@ -41765,8 +41765,8 @@
     "id": "a02983",
     "zoneId": "z036",
     "position": [
-      -79.541781,
-      43.623136
+      -79.541873,
+      43.623776
     ],
     "archetype": "small-business",
     "demandKwh": 560.3,
@@ -41779,8 +41779,8 @@
     "id": "a02984",
     "zoneId": "z036",
     "position": [
-      -79.535671,
-      43.637275
+      -79.535762,
+      43.637915
     ],
     "archetype": "owner-urban",
     "demandKwh": 836.5,
@@ -41793,8 +41793,8 @@
     "id": "a02985",
     "zoneId": "z036",
     "position": [
-      -79.550339,
-      43.627834
+      -79.55043,
+      43.628474
     ],
     "archetype": "small-business",
     "demandKwh": 656.7,
@@ -41807,8 +41807,8 @@
     "id": "a02986",
     "zoneId": "z036",
     "position": [
-      -79.559845,
-      43.623573
+      -79.559936,
+      43.624213
     ],
     "archetype": "owner-urban",
     "demandKwh": 1140.5,
@@ -41821,8 +41821,8 @@
     "id": "a02987",
     "zoneId": "z036",
     "position": [
-      -79.558993,
-      43.636936
+      -79.559085,
+      43.637576
     ],
     "archetype": "renter-midincome",
     "demandKwh": 632.4,
@@ -41835,8 +41835,8 @@
     "id": "a02988",
     "zoneId": "z036",
     "position": [
-      -79.55727,
-      43.62712
+      -79.557361,
+      43.62776
     ],
     "archetype": "renter-midincome",
     "demandKwh": 855.8,
@@ -41849,8 +41849,8 @@
     "id": "a02989",
     "zoneId": "z036",
     "position": [
-      -79.528831,
-      43.61942
+      -79.528923,
+      43.62006
     ],
     "archetype": "owner-urban",
     "demandKwh": 560.2,
@@ -41863,8 +41863,8 @@
     "id": "a02990",
     "zoneId": "z036",
     "position": [
-      -79.554773,
-      43.63783
+      -79.554864,
+      43.63847
     ],
     "archetype": "small-business",
     "demandKwh": 786.3,
@@ -41877,8 +41877,8 @@
     "id": "a02991",
     "zoneId": "z036",
     "position": [
-      -79.537698,
-      43.632045
+      -79.53779,
+      43.632685
     ],
     "archetype": "small-business",
     "demandKwh": 914.9,
@@ -41891,8 +41891,8 @@
     "id": "a02992",
     "zoneId": "z036",
     "position": [
-      -79.548109,
-      43.622357
+      -79.5482,
+      43.622997
     ],
     "archetype": "renter-midincome",
     "demandKwh": 905.1,
@@ -41905,8 +41905,8 @@
     "id": "a02993",
     "zoneId": "z036",
     "position": [
-      -79.528427,
-      43.626694
+      -79.528519,
+      43.627334
     ],
     "archetype": "condo-owner",
     "demandKwh": 589.7,
@@ -41919,8 +41919,8 @@
     "id": "a02994",
     "zoneId": "z036",
     "position": [
-      -79.545903,
-      43.634093
+      -79.545995,
+      43.634733
     ],
     "archetype": "small-business",
     "demandKwh": 580.6,
@@ -41933,8 +41933,8 @@
     "id": "a02995",
     "zoneId": "z036",
     "position": [
-      -79.533902,
-      43.646157
+      -79.533993,
+      43.646797
     ],
     "archetype": "owner-urban",
     "demandKwh": 884.2,
@@ -41947,8 +41947,8 @@
     "id": "a02996",
     "zoneId": "z036",
     "position": [
-      -79.546397,
-      43.641402
+      -79.546488,
+      43.642042
     ],
     "archetype": "condo-owner",
     "demandKwh": 721.9,
@@ -41961,8 +41961,8 @@
     "id": "a02997",
     "zoneId": "z036",
     "position": [
-      -79.539033,
-      43.63332
+      -79.539125,
+      43.63396
     ],
     "archetype": "renter-midincome",
     "demandKwh": 596.8,
@@ -41975,8 +41975,8 @@
     "id": "a02998",
     "zoneId": "z036",
     "position": [
-      -79.529152,
-      43.620752
+      -79.529244,
+      43.621392
     ],
     "archetype": "condo-owner",
     "demandKwh": 705.2,
@@ -41989,8 +41989,8 @@
     "id": "a02999",
     "zoneId": "z036",
     "position": [
-      -79.532038,
-      43.61963
+      -79.532129,
+      43.62027
     ],
     "archetype": "condo-owner",
     "demandKwh": 879.1,
@@ -42003,8 +42003,8 @@
     "id": "a03000",
     "zoneId": "z036",
     "position": [
-      -79.535491,
-      43.641278
+      -79.535583,
+      43.641918
     ],
     "archetype": "small-business",
     "demandKwh": 872.0,
@@ -42017,8 +42017,8 @@
     "id": "a03001",
     "zoneId": "z036",
     "position": [
-      -79.541007,
-      43.638637
+      -79.541098,
+      43.639277
     ],
     "archetype": "owner-urban",
     "demandKwh": 696.8,
@@ -42031,8 +42031,8 @@
     "id": "a03002",
     "zoneId": "z036",
     "position": [
-      -79.558752,
-      43.636184
+      -79.558844,
+      43.636824
     ],
     "archetype": "owner-urban",
     "demandKwh": 786.3,
@@ -42045,8 +42045,8 @@
     "id": "a03003",
     "zoneId": "z036",
     "position": [
-      -79.544495,
-      43.645422
+      -79.544586,
+      43.646062
     ],
     "archetype": "owner-urban",
     "demandKwh": 928.6,
@@ -42059,8 +42059,8 @@
     "id": "a03004",
     "zoneId": "z036",
     "position": [
-      -79.537697,
-      43.623302
+      -79.537789,
+      43.623942
     ],
     "archetype": "owner-urban",
     "demandKwh": 859.6,
@@ -42073,8 +42073,8 @@
     "id": "a03005",
     "zoneId": "z036",
     "position": [
-      -79.550004,
-      43.622248
+      -79.550096,
+      43.622888
     ],
     "archetype": "small-business",
     "demandKwh": 609.6,
@@ -42087,8 +42087,8 @@
     "id": "a03006",
     "zoneId": "z036",
     "position": [
-      -79.555499,
-      43.62566
+      -79.555591,
+      43.6263
     ],
     "archetype": "renter-midincome",
     "demandKwh": 828.0,
@@ -42101,8 +42101,8 @@
     "id": "a03007",
     "zoneId": "z036",
     "position": [
-      -79.542552,
-      43.635831
+      -79.542644,
+      43.636471
     ],
     "archetype": "small-business",
     "demandKwh": 828.1,
@@ -42115,8 +42115,8 @@
     "id": "a03008",
     "zoneId": "z036",
     "position": [
-      -79.54011,
-      43.629045
+      -79.540202,
+      43.629685
     ],
     "archetype": "renter-midincome",
     "demandKwh": 868.0,
@@ -42129,8 +42129,8 @@
     "id": "a03009",
     "zoneId": "z036",
     "position": [
-      -79.546257,
-      43.634907
+      -79.546348,
+      43.635547
     ],
     "archetype": "condo-owner",
     "demandKwh": 660.7,
@@ -42143,8 +42143,8 @@
     "id": "a03010",
     "zoneId": "z036",
     "position": [
-      -79.551886,
-      43.619758
+      -79.551977,
+      43.620398
     ],
     "archetype": "condo-owner",
     "demandKwh": 896.7,
@@ -42157,8 +42157,8 @@
     "id": "a03011",
     "zoneId": "z036",
     "position": [
-      -79.553866,
-      43.641318
+      -79.553958,
+      43.641958
     ],
     "archetype": "owner-urban",
     "demandKwh": 678.2,
@@ -42171,8 +42171,8 @@
     "id": "a03012",
     "zoneId": "z036",
     "position": [
-      -79.534983,
-      43.637281
+      -79.535074,
+      43.637921
     ],
     "archetype": "condo-owner",
     "demandKwh": 847.0,
@@ -42185,8 +42185,8 @@
     "id": "a03013",
     "zoneId": "z036",
     "position": [
-      -79.547204,
-      43.628734
+      -79.547296,
+      43.629374
     ],
     "archetype": "condo-owner",
     "demandKwh": 660.4,
@@ -42199,8 +42199,8 @@
     "id": "a03014",
     "zoneId": "z036",
     "position": [
-      -79.53981,
-      43.629102
+      -79.539902,
+      43.629742
     ],
     "archetype": "condo-owner",
     "demandKwh": 923.4,
@@ -42213,8 +42213,8 @@
     "id": "a03015",
     "zoneId": "z036",
     "position": [
-      -79.540692,
-      43.632271
+      -79.540784,
+      43.632911
     ],
     "archetype": "small-business",
     "demandKwh": 867.3,
@@ -42227,8 +42227,8 @@
     "id": "a03016",
     "zoneId": "z036",
     "position": [
-      -79.558489,
-      43.637946
+      -79.558581,
+      43.638586
     ],
     "archetype": "owner-urban",
     "demandKwh": 911.0,
@@ -42241,8 +42241,8 @@
     "id": "a03017",
     "zoneId": "z036",
     "position": [
-      -79.52874,
-      43.63575
+      -79.528831,
+      43.63639
     ],
     "archetype": "small-business",
     "demandKwh": 608.3,
@@ -42255,8 +42255,8 @@
     "id": "a03018",
     "zoneId": "z036",
     "position": [
-      -79.546542,
-      43.623158
+      -79.546633,
+      43.623798
     ],
     "archetype": "renter-midincome",
     "demandKwh": 887.8,
@@ -42269,8 +42269,8 @@
     "id": "a03019",
     "zoneId": "z036",
     "position": [
-      -79.550247,
-      43.628163
+      -79.550338,
+      43.628803
     ],
     "archetype": "condo-owner",
     "demandKwh": 639.8,
@@ -42283,8 +42283,8 @@
     "id": "a03020",
     "zoneId": "z036",
     "position": [
-      -79.543582,
-      43.627806
+      -79.543674,
+      43.628446
     ],
     "archetype": "condo-owner",
     "demandKwh": 859.6,
@@ -42297,8 +42297,8 @@
     "id": "a03021",
     "zoneId": "z036",
     "position": [
-      -79.545148,
-      43.618506
+      -79.545239,
+      43.619146
     ],
     "archetype": "renter-midincome",
     "demandKwh": 582.2,
@@ -42311,8 +42311,8 @@
     "id": "a03022",
     "zoneId": "z036",
     "position": [
-      -79.558261,
-      43.62297
+      -79.558353,
+      43.62361
     ],
     "archetype": "condo-owner",
     "demandKwh": 912.9,
@@ -42325,8 +42325,8 @@
     "id": "a03023",
     "zoneId": "z036",
     "position": [
-      -79.556304,
-      43.637231
+      -79.556396,
+      43.637871
     ],
     "archetype": "condo-owner",
     "demandKwh": 1103.9,
@@ -42339,8 +42339,8 @@
     "id": "a03024",
     "zoneId": "z036",
     "position": [
-      -79.559199,
-      43.628318
+      -79.55929,
+      43.628958
     ],
     "archetype": "renter-midincome",
     "demandKwh": 944.8,
@@ -42353,8 +42353,8 @@
     "id": "a03025",
     "zoneId": "z036",
     "position": [
-      -79.539256,
-      43.627764
+      -79.539347,
+      43.628404
     ],
     "archetype": "small-business",
     "demandKwh": 740.6,
@@ -42367,8 +42367,8 @@
     "id": "a03026",
     "zoneId": "z036",
     "position": [
-      -79.533658,
-      43.643846
+      -79.53375,
+      43.644486
     ],
     "archetype": "owner-urban",
     "demandKwh": 577.4,
@@ -42381,8 +42381,8 @@
     "id": "a03027",
     "zoneId": "z036",
     "position": [
-      -79.557641,
-      43.6243
+      -79.557732,
+      43.62494
     ],
     "archetype": "renter-midincome",
     "demandKwh": 861.9,
@@ -42395,8 +42395,8 @@
     "id": "a03028",
     "zoneId": "z036",
     "position": [
-      -79.54132,
-      43.637452
+      -79.541411,
+      43.638092
     ],
     "archetype": "small-business",
     "demandKwh": 828.5,
@@ -42409,8 +42409,8 @@
     "id": "a03029",
     "zoneId": "z036",
     "position": [
-      -79.547164,
-      43.623294
+      -79.547255,
+      43.623934
     ],
     "archetype": "small-business",
     "demandKwh": 782.6,
@@ -42423,8 +42423,8 @@
     "id": "a03030",
     "zoneId": "z036",
     "position": [
-      -79.544516,
-      43.63859
+      -79.544607,
+      43.63923
     ],
     "archetype": "owner-urban",
     "demandKwh": 645.2,
@@ -42437,8 +42437,8 @@
     "id": "a03031",
     "zoneId": "z036",
     "position": [
-      -79.53974,
-      43.621719
+      -79.539832,
+      43.622359
     ],
     "archetype": "small-business",
     "demandKwh": 674.4,
@@ -42451,8 +42451,8 @@
     "id": "a03032",
     "zoneId": "z036",
     "position": [
-      -79.553711,
-      43.645741
+      -79.553803,
+      43.646381
     ],
     "archetype": "owner-urban",
     "demandKwh": 717.7,
@@ -42465,8 +42465,8 @@
     "id": "a03033",
     "zoneId": "z036",
     "position": [
-      -79.537517,
-      43.628627
+      -79.537609,
+      43.629267
     ],
     "archetype": "small-business",
     "demandKwh": 780.6,
@@ -42479,8 +42479,8 @@
     "id": "a03034",
     "zoneId": "z036",
     "position": [
-      -79.542181,
-      43.636879
+      -79.542272,
+      43.637519
     ],
     "archetype": "small-business",
     "demandKwh": 742.5,
@@ -42493,8 +42493,8 @@
     "id": "a03035",
     "zoneId": "z036",
     "position": [
-      -79.556149,
-      43.621863
+      -79.55624,
+      43.622503
     ],
     "archetype": "condo-owner",
     "demandKwh": 673.6,
@@ -42507,8 +42507,8 @@
     "id": "a03036",
     "zoneId": "z036",
     "position": [
-      -79.533483,
-      43.640525
+      -79.533574,
+      43.641165
     ],
     "archetype": "renter-midincome",
     "demandKwh": 562.5,
@@ -42521,8 +42521,8 @@
     "id": "a03037",
     "zoneId": "z036",
     "position": [
-      -79.528608,
-      43.630444
+      -79.528699,
+      43.631084
     ],
     "archetype": "owner-urban",
     "demandKwh": 572.9,
@@ -42535,8 +42535,8 @@
     "id": "a03038",
     "zoneId": "z036",
     "position": [
-      -79.529796,
-      43.618623
+      -79.529887,
+      43.619263
     ],
     "archetype": "condo-owner",
     "demandKwh": 887.1,
@@ -42549,8 +42549,8 @@
     "id": "a03039",
     "zoneId": "z036",
     "position": [
-      -79.557089,
-      43.621341
+      -79.55718,
+      43.621981
     ],
     "archetype": "renter-midincome",
     "demandKwh": 903.8,
@@ -42563,8 +42563,8 @@
     "id": "a03040",
     "zoneId": "z036",
     "position": [
-      -79.545535,
-      43.620637
+      -79.545626,
+      43.621277
     ],
     "archetype": "owner-urban",
     "demandKwh": 923.8,
@@ -42577,8 +42577,8 @@
     "id": "a03041",
     "zoneId": "z036",
     "position": [
-      -79.539996,
-      43.644918
+      -79.540088,
+      43.645558
     ],
     "archetype": "condo-owner",
     "demandKwh": 1190.6,
@@ -42591,8 +42591,8 @@
     "id": "a03042",
     "zoneId": "z036",
     "position": [
-      -79.551439,
-      43.630605
+      -79.55153,
+      43.631245
     ],
     "archetype": "owner-urban",
     "demandKwh": 611.7,
@@ -42605,8 +42605,8 @@
     "id": "a03043",
     "zoneId": "z036",
     "position": [
-      -79.536464,
-      43.634498
+      -79.536555,
+      43.635138
     ],
     "archetype": "owner-urban",
     "demandKwh": 637.0,
@@ -42619,8 +42619,8 @@
     "id": "a03044",
     "zoneId": "z036",
     "position": [
-      -79.538525,
-      43.626232
+      -79.538616,
+      43.626872
     ],
     "archetype": "renter-midincome",
     "demandKwh": 766.1,
@@ -42633,8 +42633,8 @@
     "id": "a03045",
     "zoneId": "z036",
     "position": [
-      -79.531677,
-      43.628139
+      -79.531768,
+      43.628779
     ],
     "archetype": "condo-owner",
     "demandKwh": 777.3,
@@ -42647,8 +42647,8 @@
     "id": "a03046",
     "zoneId": "z036",
     "position": [
-      -79.527158,
-      43.619877
+      -79.52725,
+      43.620517
     ],
     "archetype": "renter-midincome",
     "demandKwh": 702.6,
@@ -42661,8 +42661,8 @@
     "id": "a03047",
     "zoneId": "z036",
     "position": [
-      -79.546882,
-      43.643566
+      -79.546973,
+      43.644206
     ],
     "archetype": "small-business",
     "demandKwh": 794.3,
@@ -42675,8 +42675,8 @@
     "id": "a03048",
     "zoneId": "z036",
     "position": [
-      -79.543074,
-      43.636584
+      -79.543165,
+      43.637224
     ],
     "archetype": "renter-midincome",
     "demandKwh": 663.2,
@@ -42689,8 +42689,8 @@
     "id": "a03049",
     "zoneId": "z036",
     "position": [
-      -79.549517,
-      43.641947
+      -79.549608,
+      43.642587
     ],
     "archetype": "condo-owner",
     "demandKwh": 650.9,
@@ -42703,8 +42703,8 @@
     "id": "a03050",
     "zoneId": "z036",
     "position": [
-      -79.532293,
-      43.626152
+      -79.532384,
+      43.626792
     ],
     "archetype": "owner-urban",
     "demandKwh": 896.0,
@@ -42717,8 +42717,8 @@
     "id": "a03051",
     "zoneId": "z036",
     "position": [
-      -79.531772,
-      43.639608
+      -79.531863,
+      43.640248
     ],
     "archetype": "small-business",
     "demandKwh": 580.4,
@@ -42731,8 +42731,8 @@
     "id": "a03052",
     "zoneId": "z036",
     "position": [
-      -79.549262,
-      43.631048
+      -79.549353,
+      43.631688
     ],
     "archetype": "small-business",
     "demandKwh": 687.2,
@@ -42745,8 +42745,8 @@
     "id": "a03053",
     "zoneId": "z036",
     "position": [
-      -79.533938,
-      43.629395
+      -79.53403,
+      43.630035
     ],
     "archetype": "renter-midincome",
     "demandKwh": 894.3,
@@ -42759,8 +42759,8 @@
     "id": "a03054",
     "zoneId": "z036",
     "position": [
-      -79.55391,
-      43.629576
+      -79.554001,
+      43.630216
     ],
     "archetype": "renter-midincome",
     "demandKwh": 955.8,
@@ -42773,8 +42773,8 @@
     "id": "a03055",
     "zoneId": "z036",
     "position": [
-      -79.553133,
-      43.621622
+      -79.553224,
+      43.622262
     ],
     "archetype": "small-business",
     "demandKwh": 661.2,
@@ -42787,8 +42787,8 @@
     "id": "a03056",
     "zoneId": "z036",
     "position": [
-      -79.54858,
-      43.620455
+      -79.548671,
+      43.621095
     ],
     "archetype": "owner-urban",
     "demandKwh": 559.7,
@@ -42801,8 +42801,8 @@
     "id": "a03057",
     "zoneId": "z036",
     "position": [
-      -79.552961,
-      43.645688
+      -79.553052,
+      43.646328
     ],
     "archetype": "small-business",
     "demandKwh": 907.7,
@@ -42815,8 +42815,8 @@
     "id": "a03058",
     "zoneId": "z036",
     "position": [
-      -79.528156,
-      43.621728
+      -79.528248,
+      43.622368
     ],
     "archetype": "small-business",
     "demandKwh": 763.9,
@@ -42829,8 +42829,8 @@
     "id": "a03059",
     "zoneId": "z036",
     "position": [
-      -79.539081,
-      43.646753
+      -79.539172,
+      43.647393
     ],
     "archetype": "renter-midincome",
     "demandKwh": 667.0,
@@ -42843,8 +42843,8 @@
     "id": "a03060",
     "zoneId": "z036",
     "position": [
-      -79.545174,
-      43.624227
+      -79.545266,
+      43.624867
     ],
     "archetype": "condo-owner",
     "demandKwh": 560.8,
@@ -42857,8 +42857,8 @@
     "id": "a03061",
     "zoneId": "z036",
     "position": [
-      -79.532888,
-      43.631758
+      -79.532979,
+      43.632398
     ],
     "archetype": "small-business",
     "demandKwh": 819.8,
@@ -42871,8 +42871,8 @@
     "id": "a03062",
     "zoneId": "z036",
     "position": [
-      -79.538345,
-      43.648393
+      -79.538436,
+      43.649033
     ],
     "archetype": "condo-owner",
     "demandKwh": 656.8,
@@ -42885,8 +42885,8 @@
     "id": "a03063",
     "zoneId": "z036",
     "position": [
-      -79.542363,
-      43.636949
+      -79.542454,
+      43.637589
     ],
     "archetype": "condo-owner",
     "demandKwh": 708.7,
@@ -42899,8 +42899,8 @@
     "id": "a03064",
     "zoneId": "z036",
     "position": [
-      -79.536931,
-      43.620944
+      -79.537022,
+      43.621584
     ],
     "archetype": "renter-midincome",
     "demandKwh": 830.5,
@@ -42913,8 +42913,8 @@
     "id": "a03065",
     "zoneId": "z036",
     "position": [
-      -79.559535,
-      43.629952
+      -79.559626,
+      43.630592
     ],
     "archetype": "owner-urban",
     "demandKwh": 758.4,
@@ -42927,8 +42927,8 @@
     "id": "a03066",
     "zoneId": "z036",
     "position": [
-      -79.553919,
-      43.639454
+      -79.554011,
+      43.640094
     ],
     "archetype": "owner-urban",
     "demandKwh": 818.7,
@@ -42941,8 +42941,8 @@
     "id": "a03067",
     "zoneId": "z036",
     "position": [
-      -79.548534,
-      43.618468
+      -79.548626,
+      43.619108
     ],
     "archetype": "owner-urban",
     "demandKwh": 1005.1,
@@ -42955,8 +42955,8 @@
     "id": "a03068",
     "zoneId": "z036",
     "position": [
-      -79.529765,
-      43.632112
+      -79.529856,
+      43.632752
     ],
     "archetype": "owner-urban",
     "demandKwh": 682.6,
@@ -42969,8 +42969,8 @@
     "id": "a03069",
     "zoneId": "z036",
     "position": [
-      -79.553622,
-      43.64101
+      -79.553714,
+      43.64165
     ],
     "archetype": "small-business",
     "demandKwh": 745.4,
@@ -42983,8 +42983,8 @@
     "id": "a03070",
     "zoneId": "z036",
     "position": [
-      -79.557233,
-      43.624615
+      -79.557324,
+      43.625255
     ],
     "archetype": "owner-urban",
     "demandKwh": 747.4,
@@ -42997,8 +42997,8 @@
     "id": "a03071",
     "zoneId": "z036",
     "position": [
-      -79.556168,
-      43.637702
+      -79.55626,
+      43.638342
     ],
     "archetype": "renter-midincome",
     "demandKwh": 808.9,
@@ -43011,8 +43011,8 @@
     "id": "a03072",
     "zoneId": "z036",
     "position": [
-      -79.533406,
-      43.633268
+      -79.533497,
+      43.633908
     ],
     "archetype": "condo-owner",
     "demandKwh": 795.4,
@@ -43025,8 +43025,8 @@
     "id": "a03073",
     "zoneId": "z036",
     "position": [
-      -79.527354,
-      43.64047
+      -79.527446,
+      43.64111
     ],
     "archetype": "condo-owner",
     "demandKwh": 947.5,
@@ -43039,8 +43039,8 @@
     "id": "a03074",
     "zoneId": "z036",
     "position": [
-      -79.552715,
-      43.622566
+      -79.552806,
+      43.623206
     ],
     "archetype": "owner-urban",
     "demandKwh": 935.8,
@@ -43053,8 +43053,8 @@
     "id": "a03075",
     "zoneId": "z036",
     "position": [
-      -79.546664,
-      43.617631
+      -79.546756,
+      43.618271
     ],
     "archetype": "renter-midincome",
     "demandKwh": 672.9,
@@ -43067,8 +43067,8 @@
     "id": "a03076",
     "zoneId": "z036",
     "position": [
-      -79.528341,
-      43.634003
+      -79.528432,
+      43.634643
     ],
     "archetype": "condo-owner",
     "demandKwh": 598.2,
@@ -43081,8 +43081,8 @@
     "id": "a03077",
     "zoneId": "z036",
     "position": [
-      -79.532386,
-      43.643448
+      -79.532477,
+      43.644088
     ],
     "archetype": "condo-owner",
     "demandKwh": 652.2,
@@ -43095,8 +43095,8 @@
     "id": "a03078",
     "zoneId": "z036",
     "position": [
-      -79.537954,
-      43.640207
+      -79.538045,
+      43.640847
     ],
     "archetype": "owner-urban",
     "demandKwh": 798.5,
@@ -43109,8 +43109,8 @@
     "id": "a03079",
     "zoneId": "z036",
     "position": [
-      -79.548528,
-      43.644727
+      -79.548619,
+      43.645367
     ],
     "archetype": "renter-midincome",
     "demandKwh": 861.2,
@@ -43123,8 +43123,8 @@
     "id": "a03080",
     "zoneId": "z036",
     "position": [
-      -79.535804,
-      43.635422
+      -79.535896,
+      43.636062
     ],
     "archetype": "small-business",
     "demandKwh": 703.0,
@@ -43137,8 +43137,8 @@
     "id": "a03081",
     "zoneId": "z036",
     "position": [
-      -79.535657,
-      43.64884
+      -79.535749,
+      43.64948
     ],
     "archetype": "condo-owner",
     "demandKwh": 796.6,
@@ -43151,8 +43151,8 @@
     "id": "a03082",
     "zoneId": "z036",
     "position": [
-      -79.537747,
-      43.625626
+      -79.537839,
+      43.626266
     ],
     "archetype": "condo-owner",
     "demandKwh": 613.0,
@@ -43165,8 +43165,8 @@
     "id": "a03083",
     "zoneId": "z036",
     "position": [
-      -79.530047,
-      43.637313
+      -79.530139,
+      43.637953
     ],
     "archetype": "renter-midincome",
     "demandKwh": 890.3,
@@ -43179,8 +43179,8 @@
     "id": "a03084",
     "zoneId": "z036",
     "position": [
-      -79.53719,
-      43.638363
+      -79.537281,
+      43.639003
     ],
     "archetype": "small-business",
     "demandKwh": 949.4,
@@ -43193,8 +43193,8 @@
     "id": "a03085",
     "zoneId": "z036",
     "position": [
-      -79.553925,
-      43.641248
+      -79.554017,
+      43.641888
     ],
     "archetype": "renter-midincome",
     "demandKwh": 757.3,
@@ -43207,8 +43207,8 @@
     "id": "a03086",
     "zoneId": "z036",
     "position": [
-      -79.554902,
-      43.634033
+      -79.554993,
+      43.634673
     ],
     "archetype": "small-business",
     "demandKwh": 956.9,
@@ -43221,8 +43221,8 @@
     "id": "a03087",
     "zoneId": "z036",
     "position": [
-      -79.55196,
-      43.64131
+      -79.552052,
+      43.64195
     ],
     "archetype": "owner-urban",
     "demandKwh": 807.7,
@@ -43235,8 +43235,8 @@
     "id": "a03088",
     "zoneId": "z036",
     "position": [
-      -79.534349,
-      43.647636
+      -79.534441,
+      43.648276
     ],
     "archetype": "renter-midincome",
     "demandKwh": 767.2,
@@ -43249,8 +43249,8 @@
     "id": "a03089",
     "zoneId": "z036",
     "position": [
-      -79.531636,
-      43.626953
+      -79.531727,
+      43.627593
     ],
     "archetype": "owner-urban",
     "demandKwh": 584.0,
@@ -43263,8 +43263,8 @@
     "id": "a03090",
     "zoneId": "z036",
     "position": [
-      -79.547495,
-      43.61841
+      -79.547586,
+      43.61905
     ],
     "archetype": "owner-urban",
     "demandKwh": 812.2,
@@ -43277,8 +43277,8 @@
     "id": "a03091",
     "zoneId": "z036",
     "position": [
-      -79.530689,
-      43.627545
+      -79.530781,
+      43.628185
     ],
     "archetype": "owner-urban",
     "demandKwh": 593.7,
@@ -43291,8 +43291,8 @@
     "id": "a03092",
     "zoneId": "z036",
     "position": [
-      -79.527958,
-      43.638775
+      -79.528049,
+      43.639415
     ],
     "archetype": "condo-owner",
     "demandKwh": 753.1,
@@ -43305,8 +43305,8 @@
     "id": "a03093",
     "zoneId": "z036",
     "position": [
-      -79.549756,
-      43.620547
+      -79.549847,
+      43.621187
     ],
     "archetype": "owner-urban",
     "demandKwh": 1015.9,
@@ -43319,8 +43319,8 @@
     "id": "a03094",
     "zoneId": "z036",
     "position": [
-      -79.538765,
-      43.629576
+      -79.538856,
+      43.630216
     ],
     "archetype": "condo-owner",
     "demandKwh": 564.2,
@@ -43333,8 +43333,8 @@
     "id": "a03095",
     "zoneId": "z036",
     "position": [
-      -79.529433,
-      43.634488
+      -79.529525,
+      43.635128
     ],
     "archetype": "condo-owner",
     "demandKwh": 587.2,

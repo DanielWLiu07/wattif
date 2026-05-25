@@ -6,15 +6,17 @@
     {
       "zoneId": "z000",
       "name": "Waterfront Communities\u2013The Island",
-      "esaCount": 3,
+      "esaCount": 5,
       "esaNames": [
+        "West Algonquin Island",
         "Centre Island Meadow/Wildlife Sanctuary",
         "Hanlans Beach",
+        "Muggs Island",
         "Wards Island"
       ],
-      "protectedAreaFraction": 0.085,
+      "protectedAreaFraction": 0.101,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.128,
+      "sitingPenalty": 0.152,
       "noBuild": false
     },
     {
@@ -400,8 +402,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.819,
-      "sitingPenalty": 0.491,
+      "floodRisk": 0.796,
+      "sitingPenalty": 0.478,
       "noBuild": false
     },
     {
