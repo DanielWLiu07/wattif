@@ -116,6 +116,7 @@ export function Hud() {
   const metrics = useStore((s) => s.metrics);
   const history = useStore((s) => s.history);
   const generationMix = useStore((s) => s.generationMix);
+  const sbei = useStore((s) => s.sbei);
   if (!metrics) return null;
 
   const chartData = history.map((h) => ({
@@ -231,6 +232,32 @@ export function Hud() {
               {generationMix.marginalGco2PerKwh} gCO₂/kWh
             </span>
           </div>
+        )}
+
+        {sbei?.communityWideMtCO2e != null && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="mt-2 cursor-help rounded-lg border border-border/60 bg-secondary/20 px-2.5 py-2">
+                <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  Toronto context
+                </div>
+                <div className="mt-0.5 text-xs leading-snug">
+                  <b className="text-orange-300">{sbei.communityWideMtCO2e} Mt CO₂e/yr</b>
+                  {sbei.sectorSharePct?.buildings != null && (
+                    <>
+                      {" · "}buildings{" "}
+                      <b>{sbei.sectorSharePct.buildings}%</b>
+                    </>
+                  )}
+                  {" · net-zero by 2040"}
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-[260px]">
+              {sbei.note ??
+                "City-wide emissions — buildings are the biggest lever, complementing the clean grid."}
+            </TooltipContent>
+          </Tooltip>
         )}
       </div>
     </div>

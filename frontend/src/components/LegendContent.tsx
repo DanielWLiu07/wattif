@@ -61,6 +61,9 @@ export function LegendContent() {
         <div className="mt-1 text-[10px] text-muted-foreground">
           hollow rings = existing (real) renewables / EV
         </div>
+        <div className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <Swatch color="rgba(45,212,191,0.5)" /> existing district energy (Enwave)
+        </div>
       </div>
       <div>
         <div className="mb-1 text-muted-foreground">Facilities</div>

@@ -232,7 +232,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
   // ---- Existing district energy (Enwave) — distinct teal service-area tint ----
   if (layers.district && Object.keys(districtEnergy).length && zones.length) {
     const feats = zones
-      .filter((z) => districtEnergy[z.id])
+      .filter((z) => (districtEnergy[z.id]?.servedFraction ?? 0) > 0.05)
       .map((z) => ({
         type: "Feature" as const,
         geometry: z.polygon,

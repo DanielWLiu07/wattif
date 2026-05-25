@@ -122,6 +122,7 @@ export function MapView() {
   const environment = useStore((s) => s.environment);
   const floodRisk = useStore((s) => s.floodRisk);
   const heatVuln = useStore((s) => s.heatVuln);
+  const districtEnergy = useStore((s) => s.districtEnergy);
   const flyTo = useStore((s) => s.flyTo);
   const addInfraAt = useStore((s) => s.addInfraAt);
   const selectInfra = useStore((s) => s.selectInfra);
@@ -189,6 +190,7 @@ export function MapView() {
       existingInfra,
       constraints,
       floodRisk,
+      districtEnergy,
       scenarioTargeting,
       gatheringZones,
       targetZoneId,
@@ -234,6 +236,7 @@ export function MapView() {
     existingInfra,
     constraints,
     floodRisk,
+    districtEnergy,
     scenarioTargeting,
     gatheringZones,
     targetZoneId,
@@ -326,11 +329,15 @@ export function MapView() {
         floodRisk[o.properties.id] != null
           ? `<br/>Flood risk: ${(floodRisk[o.properties.id] * 100).toFixed(0)}%`
           : ""
+      }${
+        districtEnergy[o.properties.id]?.servedFraction > 0.05
+          ? `<br/><span style="color:#2dd4bf">District energy: ${(districtEnergy[o.properties.id].servedFraction * 100).toFixed(0)}% · ${districtEnergy[o.properties.id].systemName}</span>`
+          : ""
       }`;
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, heatVuln, floodRisk, scenarioTargeting, setTargetZone]);
+  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, scenarioTargeting, setTargetZone]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;
