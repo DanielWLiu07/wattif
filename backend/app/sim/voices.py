@@ -319,6 +319,92 @@ def generate_voices(
                 text=text,
                 stance=stance,  # type: ignore[arg-type]
                 topic=kind,
+                position=tuple(agent.position),
             )
         )
     return voices
+
+
+# ---------------------------------------------------------------------------
+# Event-driven REACTION voices (placement / scenario), tied to specific zones+agents.
+# ---------------------------------------------------------------------------
+_PLACEMENT_LINES = {
+    "solar": [
+        "Panels going up near me in {zone} — about time.",
+        "Solar on our block in {zone}? I'm here for it.",
+        "Nice to see rooftop solar finally reaching {zone}.",
+    ],
+    "battery": [
+        "A battery near my building in {zone}, finally — backup when we need it.",
+        "Storage in {zone} means the lights stay on. Good call.",
+        "Glad {zone} is getting battery storage — peace of mind.",
+    ],
+    "wind": [
+        "A turbine near {zone}? Clean power — I'll keep an ear out for noise.",
+        "Wind coming to {zone}; let's see how it spins.",
+        "Didn't expect a turbine by {zone}, but I'll take the clean energy.",
+    ],
+    "microgrid": [
+        "A community microgrid in {zone} — this is exactly what we asked for.",
+        "Our own microgrid in {zone}? Resilience at last.",
+        "{zone} getting a microgrid is the best news I've heard all year.",
+    ],
+}
+
+
+def reaction_voices(
+    sentiment,
+    zones_by_id: dict,
+    zone_idxs: list[int] | None,
+    trigger: str,
+    kind: str | None = None,
+    n: int = 4,
+    rng: np.random.Generator | None = None,
+) -> list[AgentVoice]:
+    """A few prompt REACTION voices from agents in the affected zones.
+
+    trigger="placement" (with `kind`) -> placement reaction lines; otherwise `trigger` is a
+    scenario type and we use its event-aware lines. Sampled, keyless, tagged with trigger + position.
+    """
+    if sentiment.n == 0 or n <= 0:
+        return []
+    rng = rng or np.random.default_rng()
+    if zone_idxs:
+        pool = np.where(np.isin(sentiment.zone_idx, np.asarray(zone_idxs)))[0]
+    else:
+        pool = np.arange(sentiment.n)
+    if len(pool) == 0:
+        pool = np.arange(sentiment.n)
+    idxs = rng.choice(pool, size=min(n, len(pool)), replace=False)
+
+    out: list[AgentVoice] = []
+    for i in idxs:
+        agent = sentiment.agents[int(i)]
+        zone = zones_by_id.get(agent.zone_id)
+        zone_name = zone.name if zone else "my area"
+
+        if trigger == "placement" and kind in _PLACEMENT_LINES:
+            text = str(rng.choice(_PLACEMENT_LINES[kind])).format(zone=zone_name)
+            stance, topic = "support", kind
+        else:
+            op = sentiment.opinion[int(i)]
+            stance = _stance_for(float(op.mean()))
+            ki = int(np.argmax(op)) if stance != "oppose" else int(np.argmin(op))
+            topic = KINDS[ki]
+            template, _ = _pick_template(rng, agent.archetype, stance, trigger)
+            text = template.format(topic=_KIND_NOUN[topic], zone=zone_name)
+
+        out.append(
+            AgentVoice(
+                agent_id=agent.id,
+                zone_id=agent.zone_id,
+                archetype=agent.archetype,
+                avatar_seed=agent.id,
+                text=text,
+                stance=stance,  # type: ignore[arg-type]
+                topic=topic,
+                position=tuple(agent.position),
+                trigger=trigger,
+            )
+        )
+    return out

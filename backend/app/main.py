@@ -247,14 +247,27 @@ def get_voices(
     n: int = Query(default=8, ge=1, le=60),
     context: str | None = Query(default=None),
     enrich: bool = Query(default=True),
+    event: str | None = Query(default=None),
+    zone_id: str | None = Query(default=None, alias="zoneId"),
+    kind: str | None = Query(default=None),
 ) -> list[AgentVoice]:
-    """Sampled agent opinion posts. Rule-templated; LLM-enriched when a provider key is set."""
+    """Sampled agent opinion posts (each carries agentId/zoneId/position).
+
+    Pass event=placement (+ zoneId, kind) or event=<scenarioType> (+ zoneId) to get a few
+    prompt REACTION voices from that zone instead of the steady city-wide trickle.
+    Rule-templated; LLM-enriched when a provider key is set.
+    """
     world = get_world()
-    voices = world.voices(n=n, context=context)
+    if event:
+        voices = world.reaction_voices(trigger=event, zone_id=zone_id, kind=kind, n=n)
+    else:
+        voices = world.voices(n=n, context=context)
     if enrich and config.llm_enabled():
         from .sim.llm import enrich_voices
 
-        voices = enrich_voices(voices, context=context or world.last_scenario_type)
+        voices = enrich_voices(
+            voices, context=event or context or world.last_scenario_type
+        )
     return voices
 
 
@@ -603,6 +616,16 @@ async def ws_sim(ws: WebSocket) -> None:
                     await ws.send_json(
                         {"type": "scenario", "scenario": scn.model_dump(by_alias=True)}
                     )
+                    # Prompt reaction chatter from the affected zones.
+                    rxn = world.scenario_reaction_voices(scn, n=4)
+                    if rxn:
+                        await ws.send_json(
+                            {
+                                "type": "voices",
+                                "trigger": scn.type,
+                                "voices": [v.model_dump(by_alias=True) for v in rxn],
+                            }
+                        )
                 elif action == "step":
                     ticks = max(1, min(int(msg.get("ticks", 1) or 1), 120))
                     for _ in range(ticks):

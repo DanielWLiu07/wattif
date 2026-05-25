@@ -312,6 +312,57 @@ def test_voices_event_aware_context():
     assert any(any(k in v.text.lower() for k in kw) for v in voices)
 
 
+def test_voices_carry_ids_and_position():
+    w = fresh_world()
+    for v in w.voices(n=8, rng=np.random.default_rng(2)):
+        assert v.agent_id and v.zone_id
+        assert (
+            v.position is not None and len(v.position) == 2
+        )  # [lng,lat] for a 3D bubble
+
+
+def test_reaction_voices_on_placement():
+    w = fresh_world()
+    zid = w.zones[6].id
+    rxn = w.reaction_voices(
+        trigger="placement",
+        zone_id=zid,
+        kind="battery",
+        n=3,
+        rng=np.random.default_rng(0),
+    )
+    assert rxn
+    for v in rxn:
+        assert v.trigger == "placement"
+        assert v.zone_id == zid  # tied to the placement's zone
+        assert v.position is not None
+
+
+def test_reaction_voices_on_scenario():
+    w = fresh_world()
+    scn = w.apply_scenario("blackout", 1.0, zone_id="z003")
+    rxn = w.scenario_reaction_voices(scn, n=4, rng=np.random.default_rng(0))
+    assert rxn
+    assert all(v.trigger == "blackout" for v in rxn)
+    # blackout was localized to z003 -> reactions come from there
+    assert all(v.zone_id == "z003" for v in rxn)
+
+
+def test_voices_endpoint_event_placement():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+
+    state.reset_world()
+    c = TestClient(app)
+    r = c.get(
+        "/api/agents/voices?event=placement&zoneId=z006&kind=battery&enrich=false"
+    ).json()
+    assert r and all(v["trigger"] == "placement" and v["zoneId"] == "z006" for v in r)
+    assert all("position" in v for v in r)
+
+
 def test_voices_are_varied_not_repetitive():
     """The no-key library must read diverse — most of a large sample should be distinct lines."""
     w = fresh_world()

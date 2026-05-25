@@ -94,6 +94,47 @@ class World:
             self.engine.sentiment, self.zones_by_id, n=n, context=ctx, rng=rng
         )
 
+    def reaction_voices(
+        self,
+        trigger: str,
+        zone_id: str | None = None,
+        kind: str | None = None,
+        n: int = 4,
+        rng=None,
+    ):
+        """Event-driven reaction voices (placement/scenario) from the affected zone(s)."""
+        from .sim.voices import reaction_voices
+
+        zone_idxs = None
+        if zone_id is not None and zone_id in self.zones_by_id:
+            zone_idxs = [next(i for i, z in enumerate(self.zones) if z.id == zone_id)]
+        return reaction_voices(
+            self.engine.sentiment,
+            self.zones_by_id,
+            zone_idxs,
+            trigger=trigger,
+            kind=kind,
+            n=n,
+            rng=rng,
+        )
+
+    def scenario_reaction_voices(self, scn, n: int = 4, rng=None):
+        """Reaction voices for a just-fired scenario, from the zones it touched."""
+        from .sim.voices import reaction_voices
+
+        zone_index = {z.id: i for i, z in enumerate(self.zones)}
+        touched = sorted(
+            {zone_index[e.zone_id] for e in scn.effects if e.zone_id in zone_index}
+        )
+        return reaction_voices(
+            self.engine.sentiment,
+            self.zones_by_id,
+            touched or None,
+            trigger=scn.type,
+            n=n,
+            rng=rng,
+        )
+
     def flows(self) -> list[Flow]:
         return self.engine.flows()
 

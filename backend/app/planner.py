@@ -797,6 +797,15 @@ class PlannerChat:
                     "text": f"{verb} — pivoting to {' and '.join(kinds)} for resilience and to keep the most vulnerable zones served.",
                 }
             )
+            rxn = self.world.scenario_reaction_voices(scn, n=3)
+            if rxn:
+                events.append(
+                    {
+                        "type": "voices",
+                        "trigger": scn.type,
+                        "voices": [v.model_dump(by_alias=True) for v in rxn],
+                    }
+                )
         return events, prefer
 
     async def _demo_turn(self, user_message: str, confirm: ConfirmFn | None):
@@ -924,6 +933,15 @@ class PlannerChat:
         yield {"type": "tool_result", "name": "place_infrastructure", "result": pres}
         if "placed" in pres:
             yield {"type": "placement", "infra": pres["placed"]}
+            rxn = self.world.reaction_voices(
+                trigger="placement", zone_id=rec.get("zoneId"), kind=rec["kind"], n=2
+            )
+            if rxn:
+                yield {
+                    "type": "voices",
+                    "trigger": "placement",
+                    "voices": [v.model_dump(by_alias=True) for v in rxn],
+                }
 
     # -- LLM turn (multi-turn history + scenario observations) ----------
     async def _llm_turn(self, user_message: str, confirm: ConfirmFn | None):

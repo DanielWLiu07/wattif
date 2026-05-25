@@ -214,6 +214,12 @@ class AgentVoice(CamelModel):
     text: str
     stance: Literal["support", "oppose", "neutral"]
     topic: str
+    position: Coord | None = (
+        None  # the speaking agent's [lng,lat] (for a speech bubble in 3D)
+    )
+    trigger: str | None = (
+        None  # what prompted it: None (tick) | "placement" | scenario type
+    )
 
 
 class SentimentSummary(CamelModel):
