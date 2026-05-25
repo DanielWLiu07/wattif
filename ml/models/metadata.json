@@ -1,43 +1,44 @@
 {
   "schema_version": 1,
-  "trained_at": "2026-05-25T11:32:22",
+  "trained_at": "2026-05-25T11:40:41",
   "seed": 42,
   "sklearn_only": true,
   "data_source": "real+synthetic",
   "n_real_zones": 140,
-  "n_real_agents": 4003,
+  "n_real_agents": 8001,
   "models": {
     "demand_zone": {
-      "mae": 177922.55754028555,
-      "r2": 0.9918635719585718,
-      "mae_pct_of_mean": 0.03414889779755029,
+      "mae": 176662.72285961334,
+      "r2": 0.9919398271855908,
+      "mae_pct_of_mean": 0.033907096160102804,
       "n_rows": 7680,
       "n_real_rows": 1680,
       "source": "real+synthetic"
     },
     "demand_agent": {
-      "mae": 131.98747379071776,
-      "r2": 0.7364940649862102,
-      "mae_pct_of_mean": 0.17472654561219736,
-      "n_rows": 17006,
-      "n_real_rows": 8006,
+      "mae": 127.73281626231197,
+      "r2": 0.7378484879724901,
+      "mae_pct_of_mean": 0.15714805452384706,
+      "n_rows": 25002,
+      "n_real_rows": 16002,
       "source": "real+synthetic"
     },
     "adoption": {
-      "auc": 0.7510776796999146,
-      "base_rate": 0.48328438417796665,
-      "n_rows": 16003,
-      "n_real_rows": 4003,
-      "source": "real+synthetic"
+      "auc": 0.7381458466727547,
+      "base_rate": 0.49337533123343835,
+      "n_rows": 20001,
+      "n_real_rows": 8001,
+      "source": "real+synthetic",
+      "incentive_monotonic": true
     },
     "cluster": {
-      "silhouette": 0.299031719177845,
+      "silhouette": 0.30663025248259945,
       "k": 4,
       "labels": {
         "2": "affluent-owner",
         "1": "stable-mixed",
-        "3": "urban-renter",
-        "0": "burdened-renter"
+        "0": "urban-renter",
+        "3": "burdened-renter"
       },
       "source": "data/processed/zones.json (140 zones)",
       "n_rows": 140
