@@ -111,6 +111,28 @@ def load_environment() -> dict[str, dict] | None:
     return out or None
 
 
+def load_flood() -> dict[str, dict] | None:
+    """Per-zone flood risk -> {zoneId: {floodRiskScore, floodRisk, ...}}, or None."""
+    zones = _load_dict_doc("flood.json", "zones")
+    if not zones:
+        return None
+    out = {z["zoneId"]: z for z in zones if "zoneId" in z}
+    if out:
+        log.info("loaded flood.json: %d zones", len(out))
+    return out or None
+
+
+def load_heat_vulnerability() -> dict[str, dict] | None:
+    """Per-zone heat vulnerability -> {zoneId: {heatVulnerabilityIndex, level, ...}}, or None."""
+    zones = _load_dict_doc("heat_vulnerability.json", "zones")
+    if not zones:
+        return None
+    out = {z["zoneId"]: z for z in zones if "zoneId" in z}
+    if out:
+        log.info("loaded heat_vulnerability.json: %d zones", len(out))
+    return out or None
+
+
 def load_generation_mix() -> dict | None:
     """IESO generation mix doc (avg grid intensity + fuel mix) for context/display, or None."""
     path = config.DATA_PROCESSED_DIR / "generation_mix.json"

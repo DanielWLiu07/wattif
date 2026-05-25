@@ -31,6 +31,7 @@ ScenarioType = Literal[
     "grid_upgrade",
     "ev_surge",
     "factory_opening",
+    "flood",
     "custom",
 ]
 

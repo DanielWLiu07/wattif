@@ -99,6 +99,10 @@ _META: dict[str, tuple[str, str]] = {
         "Factory Opening",
         "A new industrial facility concentrates new demand in one area.",
     ),
+    "flood": (
+        "Flood",
+        "Flooding hits the highest flood-risk zones — outages and damaged infrastructure.",
+    ),
 }
 
 _ALL_TYPES: list[ScenarioType] = [t for t in _META.keys()]  # type: ignore[misc]
@@ -158,6 +162,23 @@ def apply_scenario(
         k = min(max(1, k), len(pool))
         return [int(i) for i in rng.choice(pool, size=k, replace=False)]
 
+    def top_by(metric: np.ndarray, k: int) -> list[int]:
+        """Top-k pool zones by `metric` (descending) — e.g. hit highest flood-risk / HVI first."""
+        k = min(max(1, k), len(pool))
+        return sorted(pool, key=lambda zi: float(metric[zi]), reverse=True)[:k]
+
+    def damage_in_zones(zone_idxs: list[int], note: str) -> None:
+        """Damage all (undamaged) infra whose nearest zone is in zone_idxs."""
+        zset = set(zone_idxs)
+        for iid, inf in engine.infra.items():
+            if inf.status != "damaged" and engine._nearest_zone(inf.position) in zset:
+                inf.status = "damaged"
+                effects.append(
+                    ScenarioEffect(
+                        target="infra", infra_id=str(iid), delta=-1.0, note=note
+                    )
+                )
+
     def _microgrid_zone_idxs() -> list[int]:
         idxs = []
         for inf in engine.infra.values():
@@ -208,7 +229,10 @@ def apply_scenario(
 
     def demand(zones: list[int], mult: float, note: str) -> None:
         for zi in zones:
-            engine.zone_demand_mult[zi] *= mult
+            # Clamp cumulative multiplier so rapid repeated scenarios can't blow demand up absurdly.
+            engine.zone_demand_mult[zi] = float(
+                np.clip(engine.zone_demand_mult[zi] * mult, 0.2, 6.0)
+            )
             effects.append(
                 ScenarioEffect(
                     target="demand",
@@ -228,7 +252,10 @@ def apply_scenario(
             )
 
     def grid(mult: float, note: str) -> None:
-        engine.grid_capacity_mult *= mult
+        # Floor/cap so repeated grid damage can't drive capacity to ~0 (huge gridLoadPct).
+        engine.grid_capacity_mult = float(
+            np.clip(engine.grid_capacity_mult * mult, 0.2, 3.0)
+        )
         effects.append(ScenarioEffect(target="grid", delta=mult - 1.0, note=note))
 
     def adopt(boost: float, note: str) -> None:
@@ -263,7 +290,19 @@ def apply_scenario(
         sentiment("microgrid", 0.2 * imult, "resilience desire")
         sentiment("battery", 0.15 * imult, "resilience desire")
     elif scenario_type == "heatwave":
-        demand(pick(int(engine.num_zones * 0.6)), 1 + 0.3 * imult, "cooling demand")
+        # Target the most heat-vulnerable zones (HVI) and scale each zone's cooling spike by
+        # its HVI, so the heat-vulnerable get hit hardest. Falls back to a random spread.
+        if engine.zone_hvi.any():
+            hot = top_by(engine.zone_hvi, int(engine.num_zones * 0.6))
+            for zi in hot:
+                hvi = float(engine.zone_hvi[zi])
+                demand(
+                    [zi],
+                    1 + 0.3 * imult * (0.6 + hvi),
+                    "cooling demand (heat-vulnerable)",
+                )
+        else:
+            demand(pick(int(engine.num_zones * 0.6)), 1 + 0.3 * imult, "cooling demand")
         gather("cooling_center", 0.6 * imult, 8)
         sentiment("solar", 0.15 * imult, "sunny-day enthusiasm")
         sentiment("battery", 0.1 * imult, "peak relief interest")
@@ -321,6 +360,18 @@ def apply_scenario(
     elif scenario_type == "factory_opening":
         demand(pick(1), 1 + 0.6 * imult, "industrial load")
         gather("crowd", 0.5 * imult, 6)
+    elif scenario_type == "flood":
+        # Hit the highest flood-risk zones (flood.json): outage + damage infra there.
+        if engine.zone_flood_risk.any():
+            hit = top_by(engine.zone_flood_risk, max(2, int(2 + 2 * imult)))
+        else:
+            hit = pick(max(2, int(2 + 2 * imult)))
+        outage(hit, "flood outage")
+        damage_in_zones(hit, "damaged by flooding")
+        grid(1 - 0.2 * imult, "flood damage to grid")
+        gather("shelter", 0.8 * imult, 24)
+        sentiment("battery", 0.15 * imult, "flood resilience")
+        sentiment("microgrid", 0.2 * imult, "flood resilience")
     else:  # custom / fallback
         demand(pick(1), 1 + 0.1 * imult, "custom effect")
 

@@ -106,29 +106,52 @@ class SimEngine:
         except Exception:  # noqa: BLE001 — constraints are optional
             pass
 
-        # Equity weight (environment.json, defensive). Blends energy burden with pollution burden
-        # and low-green so the equity score also rewards serving high-pollution / low-green zones.
-        # Defaults to raw energyBurdenIndex when environment.json is absent.
+        # Per-zone flood risk (flood.json) + heat-vulnerability index (heat_vulnerability.json),
+        # defensive. Used by the flood/heatwave scenarios and (HVI) the equity weight.
+        self.zone_flood_risk = np.zeros(self.num_zones)
+        self.zone_hvi = np.zeros(self.num_zones)
+        try:
+            from ..data.loader import load_flood, load_heat_vulnerability
+
+            flood = load_flood() or {}
+            hv = load_heat_vulnerability() or {}
+            for i, z in enumerate(zones):
+                if z.id in flood:
+                    self.zone_flood_risk[i] = float(
+                        flood[z.id].get("floodRiskScore", 0.0)
+                    )
+                if z.id in hv:
+                    self.zone_hvi[i] = float(
+                        hv[z.id].get("heatVulnerabilityIndex", hv[z.id].get("hvi", 0.0))
+                    )
+        except Exception:  # noqa: BLE001 — flood/heat layers are optional
+            pass
+
+        # Equity weight (environment.json + heat vulnerability, defensive). Blends energy burden
+        # with pollution burden, low-green, AND heat vulnerability, so the equity score rewards
+        # serving high-pollution / low-green / heat-vulnerable zones. Defaults to raw burden.
         self.zone_equity_weight = self.zone_burden.copy()
         try:
             from ..data.loader import load_environment
 
-            env = load_environment()
-            if env:
+            env = load_environment() or {}
+            if env or self.zone_hvi.any():
                 for i, z in enumerate(zones):
-                    e = env.get(z.id)
-                    if e:
-                        pollution = float(e.get("pollutionBurden", 0.0))
-                        low_green = 1.0 - float(e.get("greenScore", 0.5))
-                        self.zone_equity_weight[i] = float(
-                            np.clip(
-                                0.55 * self.zone_burden[i]
-                                + 0.30 * pollution
-                                + 0.15 * low_green,
-                                0.0,
-                                1.0,
-                            )
+                    burden = float(self.zone_burden[i])
+                    e = env.get(z.id) or {}
+                    pollution = float(e.get("pollutionBurden", burden))
+                    low_green = 1.0 - float(e.get("greenScore", 0.5))
+                    hvi = float(self.zone_hvi[i]) if self.zone_hvi[i] > 0 else burden
+                    self.zone_equity_weight[i] = float(
+                        np.clip(
+                            0.45 * burden
+                            + 0.20 * pollution
+                            + 0.12 * low_green
+                            + 0.23 * hvi,
+                            0.0,
+                            1.0,
                         )
+                    )
         except Exception:  # noqa: BLE001 — environment layer is optional
             pass
 

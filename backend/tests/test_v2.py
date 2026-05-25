@@ -194,6 +194,63 @@ def test_generation_mix_uses_marginal_not_average():
     assert 400 <= g <= 500  # marginal gas-peaker range, NOT the ~38 g/kWh grid average
 
 
+def test_flood_scenario_targets_high_risk_zones():
+    from app.data.loader import load_flood
+
+    w = fresh_world()
+    eng = w.engine
+    if not eng.zone_flood_risk.any():  # flood.json absent -> random fallback, skip
+        assert load_flood() is None
+        return
+    top_risk = set(
+        sorted(range(eng.num_zones), key=lambda i: -eng.zone_flood_risk[i])[:6]
+    )
+    w.apply_scenario("flood", 1.0)
+    outaged = {i for i in range(eng.num_zones) if eng.zone_outage[i]}
+    assert outaged and outaged <= top_risk  # flooding only hit the highest-risk zones
+
+
+def test_heatwave_targets_high_hvi_zones():
+    w = fresh_world()
+    eng = w.engine
+    if not eng.zone_hvi.any():
+        return
+    w.apply_scenario("heatwave", 1.0)
+    hi = sorted(range(eng.num_zones), key=lambda i: -eng.zone_hvi[i])[:3]
+    lo = sorted(range(eng.num_zones), key=lambda i: eng.zone_hvi[i])[:3]
+    hi_mult = sum(float(eng.zone_demand_mult[i]) for i in hi) / 3
+    lo_mult = sum(float(eng.zone_demand_mult[i]) for i in lo) / 3
+    assert hi_mult > lo_mult  # most heat-vulnerable hit hardest
+
+
+def test_hvi_folded_into_equity_weight():
+    from app.data.loader import load_heat_vulnerability
+
+    w = fresh_world()
+    eng = w.engine
+    assert (eng.zone_equity_weight >= 0).all() and (eng.zone_equity_weight <= 1).all()
+    if load_heat_vulnerability() and eng.zone_hvi.any():
+        i = int(eng.zone_hvi.argmax())
+        assert eng.zone_equity_weight[i] >= eng.zone_burden[i] - 0.15
+
+
+def test_flood_and_heat_endpoints():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+
+    state.reset_world()
+    c = TestClient(app)
+    f = c.get("/api/flood").json()
+    h = c.get("/api/heat-vulnerability").json()
+    assert isinstance(f["zones"], list) and isinstance(h["zones"], list)
+    if f["available"]:
+        assert {"zoneId", "floodRiskScore", "floodRisk"} <= set(f["zones"][0])
+    if h["available"]:
+        assert {"zoneId", "hvi", "level"} <= set(h["zones"][0])
+
+
 def test_sentiment_is_heterogeneous_across_zones():
     """Per-zone approval must be visibly varied (not a flat band) — data-driven baselines."""
     import numpy as np

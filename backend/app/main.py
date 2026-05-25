@@ -318,6 +318,40 @@ def get_environment() -> dict:
     return {"available": env is not None, "zones": zones}
 
 
+@app.get("/api/flood")
+def get_flood() -> dict:
+    """Per-zone flood risk as a LIST (for tinting), same shape as constraints/environment."""
+    from .data.loader import load_flood
+
+    flood = load_flood()
+    zones = [
+        {
+            "zoneId": zid,
+            "floodRiskScore": round(float(z.get("floodRiskScore", 0.0)), 4),
+            "floodRisk": z.get("floodRisk", "low"),
+        }
+        for zid, z in (flood or {}).items()
+    ]
+    return {"available": flood is not None, "zones": zones}
+
+
+@app.get("/api/heat-vulnerability")
+def get_heat_vulnerability() -> dict:
+    """Per-zone heat-vulnerability index as a LIST (for tinting), same shape as constraints."""
+    from .data.loader import load_heat_vulnerability
+
+    hv = load_heat_vulnerability()
+    zones = [
+        {
+            "zoneId": zid,
+            "hvi": round(float(z.get("heatVulnerabilityIndex", z.get("hvi", 0.0))), 4),
+            "level": z.get("level", "low"),
+        }
+        for zid, z in (hv or {}).items()
+    ]
+    return {"available": hv is not None, "zones": zones}
+
+
 @app.get("/api/existing_infra")
 @app.get("/api/existing-infra")
 def get_existing_infra() -> dict:
@@ -420,32 +454,44 @@ async def ws_planner(ws: WebSocket) -> None:
         return msg.get("text") or msg.get("message") or msg.get("goal")
 
     async def receiver() -> None:
-        while True:
-            msg = await ws.receive_json()
-            action = msg.get("action")
-            mtype = msg.get("type")
-            if action == "stop" or mtype == "stop":
-                await user_q.put(None)
-                return
-            if action in ("approve", "reject"):
-                await approval_q.put(action == "approve")
-            elif action == "scenario" or mtype == "scenario":
-                scn = world.apply_scenario(
-                    msg.get("scenarioType", "random"),
-                    float(msg.get("intensity", 1.0)),
-                    zone_id=msg.get("zoneId"),
-                    center=msg.get("center"),
-                    radius_km=msg.get("radiusKm"),
-                )
-                chat.inject_scenario(scn)
-                # If no turn is active, kick off a reactive turn so the agent responds now.
-                if not running["v"]:
-                    await user_q.put(f"React to the {scn.label} that just occurred.")
-            elif (
-                mtype == "user_message" or action in ("message", "msg")
-            ) and _extract_text(msg):
-                # Honor the typed instruction (frontend's primary continue-turn shape).
-                await user_q.put(_extract_text(msg))
+        # On ANY disconnect/receive error, push the stop sentinel so the main loop unblocks
+        # (otherwise it could hang forever on user_q.get() after an idle disconnect).
+        try:
+            while True:
+                msg = await ws.receive_json()
+                if not isinstance(msg, dict):
+                    continue  # ignore malformed frames
+                action = msg.get("action")
+                mtype = msg.get("type")
+                if action == "stop" or mtype == "stop":
+                    return
+                if action in ("approve", "reject"):
+                    await approval_q.put(action == "approve")
+                elif action == "scenario" or mtype == "scenario":
+                    try:
+                        scn = world.apply_scenario(
+                            msg.get("scenarioType", "random"),
+                            float(msg.get("intensity", 1.0) or 1.0),
+                            zone_id=msg.get("zoneId"),
+                            center=msg.get("center"),
+                            radius_km=msg.get("radiusKm"),
+                        )
+                        chat.inject_scenario(scn)
+                        if not running["v"]:
+                            await user_q.put(
+                                f"React to the {scn.label} that just occurred."
+                            )
+                    except Exception as exc:  # noqa: BLE001 — malformed scenario must not kill the socket
+                        log.warning("planner WS scenario inject failed: %s", exc)
+                elif (
+                    mtype == "user_message" or action in ("message", "msg")
+                ) and _extract_text(msg):
+                    # Honor the typed instruction (frontend's primary continue-turn shape).
+                    await user_q.put(_extract_text(msg))
+        except (WebSocketDisconnect, RuntimeError, ValueError):
+            pass
+        finally:
+            await user_q.put(None)  # always unblock the main loop
 
     recv_task = asyncio.create_task(receiver())
     cfn = confirm if mode == "step" else None
@@ -459,7 +505,7 @@ async def ws_planner(ws: WebSocket) -> None:
             async for ev in chat.turn(user_msg, cfn):
                 await ws.send_json(ev)
             running["v"] = False
-    except WebSocketDisconnect:
+    except (WebSocketDisconnect, RuntimeError):
         pass
     finally:
         recv_task.cancel()
@@ -527,48 +573,63 @@ async def ws_sim(ws: WebSocket) -> None:
     async def receiver() -> None:
         nonlocal playing, seconds_per_tick
         while True:
-            msg = await ws.receive_json()
-            action = msg.get("action")
-            if action == "play":
-                playing = True
-            elif action == "pause":
-                playing = False
-            elif action == "reset":
-                engine.reset()
-                await ws.send_json(
-                    {"type": "state", **engine.current_tick().model_dump(by_alias=True)}
-                )
-            elif action == "scenario":
-                scn = world.apply_scenario(
-                    msg.get("scenarioType", "random"),
-                    float(msg.get("intensity", 1.0)),
-                    zone_id=msg.get("zoneId"),
-                    center=msg.get("center"),
-                    radius_km=msg.get("radiusKm"),
-                )
-                await ws.send_json(
-                    {"type": "scenario", "scenario": scn.model_dump(by_alias=True)}
-                )
-            elif action == "step":
-                ticks = int(msg.get("ticks", 1))
-                for _ in range(max(1, ticks)):
-                    await stream_tick(engine.step())
-            elif action == "speed":
-                seconds_per_tick = max(
-                    0.05, float(msg.get("seconds", seconds_per_tick))
-                )
+            msg = (
+                await ws.receive_json()
+            )  # raises WebSocketDisconnect on close (caught below)
+            if not isinstance(msg, dict):
+                continue
+            try:
+                action = msg.get("action")
+                if action == "play":
+                    playing = True
+                elif action == "pause":
+                    playing = False
+                elif action == "reset":
+                    engine.reset()
+                    await ws.send_json(
+                        {
+                            "type": "state",
+                            **engine.current_tick().model_dump(by_alias=True),
+                        }
+                    )
+                elif action == "scenario":
+                    scn = world.apply_scenario(
+                        msg.get("scenarioType", "random"),
+                        float(msg.get("intensity", 1.0) or 1.0),
+                        zone_id=msg.get("zoneId"),
+                        center=msg.get("center"),
+                        radius_km=msg.get("radiusKm"),
+                    )
+                    await ws.send_json(
+                        {"type": "scenario", "scenario": scn.model_dump(by_alias=True)}
+                    )
+                elif action == "step":
+                    ticks = max(1, min(int(msg.get("ticks", 1) or 1), 120))
+                    for _ in range(ticks):
+                        await stream_tick(engine.step())
+                elif action == "speed":
+                    seconds_per_tick = max(
+                        0.05, float(msg.get("seconds", seconds_per_tick) or 0.1)
+                    )
+            except (WebSocketDisconnect, RuntimeError):
+                raise  # disconnect -> exit the receiver
+            except Exception as exc:  # noqa: BLE001 — a bad message must not kill the stream
+                log.warning("ws/sim: ignoring bad message %r (%s)", msg, exc)
 
     async def ticker() -> None:
-        while True:
-            if playing:
-                await stream_tick(engine.step())
-            await asyncio.sleep(seconds_per_tick if playing else 0.1)
+        try:
+            while True:
+                if playing:
+                    await stream_tick(engine.step())
+                await asyncio.sleep(seconds_per_tick if playing else 0.1)
+        except (WebSocketDisconnect, RuntimeError):
+            pass  # client went away mid-send — stop quietly
 
     recv_task = asyncio.create_task(receiver())
     tick_task = asyncio.create_task(ticker())
     try:
         await recv_task
-    except WebSocketDisconnect:
+    except (WebSocketDisconnect, RuntimeError):
         pass
     finally:
         tick_task.cancel()
