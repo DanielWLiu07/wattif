@@ -1,5 +1,5 @@
 # --- docs / markdown: excluded for now (code only, no README yet) ---
-*.md
+# *.md
 
 # --- internal / not tracked ---
 _ref/
