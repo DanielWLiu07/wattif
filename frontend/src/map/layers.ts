@@ -165,6 +165,11 @@ export function buildLayers(input: LayerInputs): Layer[] {
   const outageSet = new Set(outageZones);
   const gatheringSet = new Set(gatheringZones);
 
+  // Push ground choropleth fills slightly back in the shared (interleaved) depth
+  // buffer so 3D buildings, infra models, and agents always draw cleanly on top
+  // (no z-fighting / no colored plane cutting through the 3D geometry).
+  const groundOffset = () => [1, 1] as [number, number];
+
   // ---- No-build / siting-penalty constraints (tint the zone polygons) ----
   if (layers.constraints && constraints.length && zones.length) {
     const byZone = new Map(constraints.map((c) => [c.zoneId, c]));
@@ -197,6 +202,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
           getLineColor: (f: any) =>
             f.properties.noBuild ? [248, 113, 113, 200] : [251, 191, 36, 150],
           lineWidthMinPixels: 1,
+          extruded: false,
+          getPolygonOffset: groundOffset,
           pickable: false,
         })
       );
@@ -223,6 +230,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
             [56, 132, 255, Math.round(30 + f.properties.risk * 120)] as any,
           getLineColor: [96, 165, 250, 160],
           lineWidthMinPixels: 0.5,
+          extruded: false,
+          getPolygonOffset: groundOffset,
           pickable: false,
         })
       );
@@ -249,6 +258,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
             [45, 212, 191, Math.round(25 + f.properties.f * 70)] as any,
           getLineColor: [45, 212, 191, 200],
           lineWidthMinPixels: 1.5,
+          extruded: false,
+          getPolygonOffset: groundOffset,
           pickable: false,
         })
       );
@@ -274,6 +285,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
           getFillColor: [250, 204, 21, 40],
           getLineColor: [250, 204, 21, 230],
           lineWidthMinPixels: 2.5,
+          extruded: false,
+          getPolygonOffset: groundOffset,
           pickable: false,
         })
       );
@@ -313,6 +326,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getFillColor: [125, 211, 252, Math.round(40 + pulse * 60)],
         getLineColor: [186, 230, 253, 255],
         lineWidthMinPixels: 2.5,
+        extruded: false,
+        getPolygonOffset: groundOffset,
         pickable: false,
         updateTriggers: { getFillColor: [time] },
       })
@@ -347,6 +362,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getLineColor: (f: any) =>
           f.properties.lit ? [52, 211, 153, 200] : [90, 30, 30, 160],
         lineWidthMinPixels: 1.5,
+        extruded: false,
+        getPolygonOffset: groundOffset,
         pickable: false,
       })
     );
@@ -372,21 +389,19 @@ export function buildLayers(input: LayerInputs): Layer[] {
         data: fc,
         filled: true,
         stroked: true,
-        extruded: extrude,
+        // strictly ground-level: flat tint, sits under all 3D geometry
+        extruded: false,
+        getPolygonOffset: groundOffset,
         getFillColor: (f: any) => {
           const [r, g, b] = burdenColor(f.properties.burden);
-          // flat → more transparent so basemap/labels read through; 3D → opaque
-          const a = f.properties.id === selectedZoneId ? 215 : extrude ? 170 : 120;
+          const a = f.properties.id === selectedZoneId ? 200 : 120;
           return [r, g, b, a];
         },
         getLineColor: [255, 255, 255, 50],
-        getElevation: (f: any) => f.properties.burden * 900,
-        elevationScale: extrude ? 1 : 0,
         lineWidthMinPixels: 1,
         pickable: true,
         updateTriggers: {
-          getFillColor: [selectedZoneId, extrude],
-          getElevation: [extrude],
+          getFillColor: [selectedZoneId],
         },
       })
     );
@@ -421,6 +436,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         },
         getLineColor: [255, 255, 255, 45],
         lineWidthMinPixels: 0.5,
+        extruded: false,
+        getPolygonOffset: groundOffset,
         pickable: true,
         updateTriggers: { getFillColor: [sentiment] },
       })
@@ -447,6 +464,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         stroked: false,
         getFillColor: (f: any) =>
           [250, 204, 21, Math.round(10 + f.properties.a * 90)] as any,
+        extruded: false,
+        getPolygonOffset: groundOffset,
         pickable: false,
         updateTriggers: { getFillColor: [adoptionByZone] },
       })

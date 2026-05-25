@@ -49,9 +49,9 @@ export function LayersPanel() {
         <div className="space-y-1.5 rounded-lg border border-border/60 bg-secondary/20 p-2.5">
           <label className="flex cursor-pointer items-center justify-between">
             <span className="text-xs">
-              3D height (extrude)
+              3D demand height
               <span className="ml-1 text-[10px] text-muted-foreground">
-                demand · equity
+                extrude hexbins
               </span>
             </span>
             <Switch checked={extrude} onCheckedChange={toggleExtrude} />
