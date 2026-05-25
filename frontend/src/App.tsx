@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore } from "@/store";
+import { Landing } from "@/Landing";
 import { MapView } from "@/components/MapView";
 import { TopBar } from "@/components/TopBar";
 import { LeftDock } from "@/components/LeftDock";
@@ -48,10 +49,12 @@ function App() {
   const toggleRight = useStore((s) => s.toggleRight);
   const setRegionCursorMode = useStore((s) => s.setRegionCursorMode);
   const setHoveredRegion = useStore((s) => s.setHoveredRegion);
+  const showRegionSelector = useStore((s) => s.showRegionSelector);
 
+  // All hooks must run unconditionally before any conditional return.
   useEffect(() => {
-    void init();
-  }, [init]);
+    if (!showRegionSelector) void init();
+  }, [init, showRegionSelector]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -83,6 +86,11 @@ function App() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // Show the landing journey until the user picks a scope.
+  if (showRegionSelector) {
+    return <Landing />;
+  }
 
   return (
     <TooltipProvider delayDuration={150}>
