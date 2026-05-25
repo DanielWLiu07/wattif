@@ -149,6 +149,7 @@ type State = {
 
   // actions
   init: () => Promise<void>;
+  refetchLive: () => Promise<void>;
   toggleLayer: (k: LayerKey) => void;
   setLayers: (partial: Partial<Record<LayerKey, boolean>>) => void;
   setPrimaryOverlay: (k: "equity" | "sentiment" | "demand" | "flood" | "none") => void;
@@ -223,6 +224,7 @@ const hashStr = (s: string) => {
 let vidSeq = 0;
 const tagVoices = (vs: AgentVoice[]): AgentVoice[] =>
   vs.map((v) => (v.id ? v : { ...v, id: `v${vidSeq++}` }));
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -456,10 +458,16 @@ export const useStore = create<State>((set, get) => ({
   loaded: false,
 
   init: async () => {
-    const [{ data: zones, live: zLive }, { data: rawAgents }] = await Promise.all([
-      api.getZones(),
-      api.getAgents(),
-    ]);
+    // Retry the REST fetch a few times before settling for mock — a page opened
+    // during a backend blip/restart shouldn't get stranded on mock data.
+    let zRes = await api.getZones();
+    for (let i = 0; i < 4 && !zRes.live; i++) {
+      await sleep(600);
+      zRes = await api.getZones();
+    }
+    const zones = zRes.data;
+    const zLive = zRes.live;
+    const { data: rawAgents } = await api.getAgents();
     // Clip markers that fall on water — keep only points inside a land zone.
     const onLand = makeLandTest(zones);
     const agents = rawAgents.filter((a) => onLand(a.position));
@@ -569,12 +577,62 @@ export const useStore = create<State>((set, get) => ({
           }
         }
       },
-      (status) =>
+      (status) => {
         set({
           wsConnected: status === "open",
           wsReconnecting: status === "reconnecting",
-        })
+        });
+        // WS came (back) up but we're on mock → the backend is reachable now,
+        // so re-pull live data and flip the badge to Live automatically.
+        if (status === "open" && !get().live) void get().refetchLive();
+      }
     );
+  },
+
+  refetchLive: async () => {
+    const { data: zones, live } = await api.getZones();
+    if (!live) return;
+    const { data: rawAgents } = await api.getAgents();
+    const onLand = makeLandTest(zones);
+    const agents = rawAgents.filter((a) => onLand(a.position));
+    const step = Math.max(1, Math.floor(agents.length / 320));
+    const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 360);
+    const infra = get().infra;
+    const [{ data: sentiment }, { data: flows }] = await Promise.all([
+      api.getSentiment(infra),
+      api.getFlows(infra),
+    ]);
+    set((s) => ({
+      zones,
+      agents,
+      sampledAgents,
+      sentiment,
+      flows,
+      live: true,
+      approvalHistory: Object.fromEntries(
+        Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
+      ),
+      metrics: s.metrics
+        ? { ...s.metrics, approvalPct: sentiment.cityApprovalPct }
+        : s.metrics,
+    }));
+    // refresh the optional data layers too
+    void Promise.all([
+      api.getFacilities(),
+      api.getExistingInfra(),
+      api.getConstraints(),
+      api.getEnvironment(),
+      api.getDistrictEnergy(),
+    ]).then(([facilities, existingInfra, constraints, environment, districtEnergy]) =>
+      set({
+        facilities: facilities.filter((f) => onLand(f.position)),
+        existingInfra: existingInfra.filter((e) => onLand(e.position)),
+        constraints,
+        environment,
+        districtEnergy,
+      })
+    );
+    get().pushToast("Reconnected — live data restored", "good");
   },
 
   toggleLayer: (k) =>

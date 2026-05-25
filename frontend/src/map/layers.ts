@@ -686,13 +686,11 @@ export function buildLayers(input: LayerInputs): Layer[] {
           data: items,
           scenegraph: items[0].modelUrl,
           getPosition: (i: Infra) => i.position,
-          // If the upgraded glTF bakes a rotor clip on blade_0/1/2, play it; the
-          // gentle whole-model yaw is a fallback so wind always reads as moving.
-          getOrientation: (i: Infra) =>
-            spin
-              ? [0, (time / 26 + hashSeed(i.id) % 360) % 360, 90]
-              : [0, 0, 90],
-          ...(spin ? { _animations: { "*": { speed: 1.5 } } } : {}),
+          // Fixed orientation. Wind plays its BAKED "rotor_spin" glTF clip via
+          // _animations (luma GLTFAnimator auto-loops) — only the blades spin
+          // about the hub axis; no whole-model yaw (that would compound).
+          getOrientation: () => [0, 0, 90],
+          ...(spin ? { _animations: { "*": { speed: 1 } } } : {}),
           // animate IN (overshoot) on place, OUT (shrink) on remove
           getScale: (i: Infra) => {
             const s = infraScale(i.id);
@@ -704,7 +702,6 @@ export function buildLayers(input: LayerInputs): Layer[] {
           autoHighlight: true,
           highlightColor: [255, 255, 255, 90],
           updateTriggers: {
-            getOrientation: spin ? [time] : [],
             getScale: [time, removalTimes],
           },
           onClick: (info: any) => info.object && onInfraClick(info.object),

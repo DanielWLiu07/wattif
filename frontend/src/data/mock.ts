@@ -18,7 +18,7 @@ import type {
   Zone,
 } from "@/types";
 import { INFRA_PRESETS, MODEL_URL } from "@/types";
-import type { Polygon } from "geojson";
+import zonesFixture from "./zonesFixture.json";
 
 // Small seeded PRNG so mock data is stable across reloads.
 function mulberry32(seed: number) {
@@ -33,72 +33,10 @@ function mulberry32(seed: number) {
 }
 const rng = mulberry32(20260524);
 
-// ~24 Toronto neighbourhoods: [name, lng, lat]. Roughly geographically placed.
-const NEIGHBOURHOODS: Array<[string, number, number]> = [
-  ["Downtown Yonge", -79.3807, 43.6561],
-  ["Financial District", -79.3805, 43.6489],
-  ["St. Lawrence", -79.3712, 43.6489],
-  ["Distillery District", -79.3597, 43.6503],
-  ["Regent Park", -79.3607, 43.6595],
-  ["Cabbagetown", -79.3662, 43.6669],
-  ["Kensington Market", -79.4006, 43.6547],
-  ["Chinatown", -79.3979, 43.6529],
-  ["Trinity Bellwoods", -79.4136, 43.6479],
-  ["Liberty Village", -79.4205, 43.6371],
-  ["Parkdale", -79.4366, 43.6396],
-  ["High Park", -79.4658, 43.6465],
-  ["The Annex", -79.4045, 43.6705],
-  ["Yorkville", -79.3915, 43.6709],
-  ["Rosedale", -79.3782, 43.6802],
-  ["Leslieville", -79.3329, 43.6638],
-  ["The Beaches", -79.2972, 43.6717],
-  ["Riverdale", -79.3525, 43.6677],
-  ["Junction", -79.4646, 43.6655],
-  ["Davenport", -79.4399, 43.6724],
-  ["St. Clair West", -79.4297, 43.6817],
-  ["North York Centre", -79.4112, 43.7615],
-  ["Scarborough Junction", -79.2628, 43.7299],
-  ["Etobicoke Centre", -79.5345, 43.6446],
-];
-
-function squarePolygon(lng: number, lat: number, r: number): Polygon {
-  // r in degrees; jitter the corners a touch for organic boundaries.
-  const j = () => (rng() - 0.5) * r * 0.35;
-  return {
-    type: "Polygon",
-    coordinates: [
-      [
-        [lng - r + j(), lat - r + j()],
-        [lng + r + j(), lat - r + j()],
-        [lng + r + j(), lat + r + j()],
-        [lng - r + j(), lat + r + j()],
-        [lng - r + j(), lat - r + j()],
-      ],
-    ],
-  };
-}
-
-export const ZONES: Zone[] = NEIGHBOURHOODS.map(([name, lng, lat], i) => {
-  const population = Math.round(8000 + rng() * 34000);
-  const medianIncome = Math.round(34000 + rng() * 96000);
-  const renterPct = +(0.25 + rng() * 0.6).toFixed(2);
-  // burden correlates inversely with income + positively with renters
-  const incomeNorm = (medianIncome - 34000) / 96000;
-  const energyBurdenIndex = +Math.min(
-    1,
-    Math.max(0, 0.85 - incomeNorm * 0.7 + renterPct * 0.25 + (rng() - 0.5) * 0.15)
-  ).toFixed(2);
-  return {
-    id: `zone-${i + 1}`,
-    name,
-    polygon: squarePolygon(lng, lat, 0.012 + rng() * 0.006),
-    centroid: [lng, lat] as LngLat,
-    demographics: { population, medianIncome, renterPct, energyBurdenIndex },
-    demandKwhMonthly: Math.round(population * (260 + rng() * 180)),
-    solarPotential: +(0.45 + rng() * 0.5).toFixed(2),
-    windPotential: +(0.1 + rng() * 0.6).toFixed(2),
-  };
-});
+// Real Toronto neighbourhood boundaries snapshot (from data/processed/zones.json,
+// coords rounded). Using real non-overlapping polygons means the OFFLINE/mock
+// view looks exactly like live — no overlapping placeholder rectangles.
+export const ZONES: Zone[] = zonesFixture as unknown as Zone[];
 
 const ARCHETYPES = [
   "renter-lowincome",
