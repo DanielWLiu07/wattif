@@ -910,7 +910,7 @@ export const useStore = create<State>((set, get) => ({
   setHoveredRegion: (region) => set({ hoveredRegion: region }),
 
   addInfraAt: async (pos) => {
-    const { placeKind, infra, allInfra, selectedRegion, zones } = get();
+    const { placeKind, selectedRegion, zones } = get();
     const preset = INFRA_PRESETS[placeKind];
     const z = nearestZone(pos);
 

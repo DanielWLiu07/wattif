@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-
-// Tween a number toward its target (count-up) instead of snapping. Cubic ease-out.
-export function useCountUp(target: number, duration = 550): number {
+// Count-up tween is currently disabled — returns the target directly.
+// (Kept as a hook seam so the animation can be re-enabled without churn.)
+export function useCountUp(target: number): number {
   return target;
 }
