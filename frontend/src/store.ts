@@ -19,12 +19,13 @@ import type {
   ScenarioType,
   Sentiment,
   SimMetrics,
+  SitingPriorityZone,
   Zone,
 } from "@/types";
 import { INFRA_PRESETS, MODEL_URL } from "@/types";
 import * as api from "@/api/client";
 import { nearestZone, scenarioImpact } from "@/data/mock";
-import { makeLandTest } from "@/lib/geo";
+import { makeLandTest, sampleInside } from "@/lib/geo";
 
 export type LayerKey =
   | "buildings"
@@ -39,7 +40,9 @@ export type LayerKey =
   | "existing"
   | "constraints"
   | "flood"
-  | "district";
+  | "district"
+  | "rooftops"
+  | "priority";
 
 export type ToolMode = "select" | "place";
 
@@ -67,6 +70,22 @@ type State = {
   history: SimMetrics[];
   recommendations: Recommendation[];
 
+  // Master copies for region-based filtering
+  allZones: Zone[];
+  allAgents: Agent[];
+  allSampledAgents: Agent[];
+  allFacilities: Facility[];
+  allExistingInfra: ExistingInfra[];
+  allInfra: Infra[];
+
+  selectedRegion: string;
+  showRegionSelector: boolean;
+  regionCursorMode: boolean;
+  hoveredRegion: string | null;
+  setSelectedRegion: (region: string) => void;
+  setRegionCursorMode: (on: boolean) => void;
+  setHoveredRegion: (region: string | null) => void;
+
   // v2 data
   scenarios: Scenario[];
   sentiment: Sentiment | null;
@@ -86,6 +105,8 @@ type State = {
   heatVuln: Record<string, number>; // per-zone 0..1 (data-2)
   districtEnergy: Record<string, api.DistrictEnergyZone>; // existing district energy
   sbei: api.Sbei | null; // city-wide emissions context
+  sitingPriority: SitingPriorityZone[]; // ranked "where to build next"
+  equityWeight: number; // 0..1 weight for the build-priority ranking
   gatheringZones: string[]; // zones showing crowds (target + neighbours)
   lastTargetZoneId: string | null; // zone the last scenario hit
 
@@ -110,6 +131,14 @@ type State = {
   // agent communication (map ↔ voices-log linking)
   selectedVoiceId: string | null;
   focusVoiceNonce: number; // bumps to pull the Voices tab into focus
+
+  // distributed rooftop solar + programs
+  rooftopPoints: Record<string, LngLat[]>; // per-zone candidate rooftop sites
+  programs: { type: string; label: string; zones: string[]; startedTick: number }[];
+  // subject-tied sentiment readout ("X% support this <thing> here")
+  subjectApproval:
+    | { label: string; support: number; oppose: number; neutral: number }
+    | null;
 
   // v3 chat (real-time agentic conversation)
   chat: ChatItem[];
@@ -152,7 +181,9 @@ type State = {
   refetchLive: () => Promise<void>;
   toggleLayer: (k: LayerKey) => void;
   setLayers: (partial: Partial<Record<LayerKey, boolean>>) => void;
-  setPrimaryOverlay: (k: "equity" | "sentiment" | "demand" | "flood" | "none") => void;
+  setPrimaryOverlay: (
+    k: "equity" | "sentiment" | "demand" | "flood" | "priority" | "none"
+  ) => void;
   setMode: (m: ToolMode) => void;
   setPlacementMode: (m: PlacementMode) => void;
   setPlaceKind: (k: InfraKind) => void;
@@ -190,6 +221,13 @@ type State = {
   selectVoiceFromLog: (id: string) => void; // log click → fly camera + pop bubble
   clearSelectedVoice: () => void;
 
+  // programs (rebates/incentives) — drive distributed rooftop adoption
+  launchProgram: (type: string, zoneIds?: string[]) => void;
+
+  // build-priority overlay
+  setEquityWeight: (w: number) => void;
+  refreshSitingPriority: () => Promise<void>;
+
   // v3 actions
   sendChat: (text: string) => void;
   clearChat: () => void;
@@ -225,6 +263,65 @@ let vidSeq = 0;
 const tagVoices = (vs: AgentVoice[]): AgentVoice[] =>
   vs.map((v) => (v.id ? v : { ...v, id: `v${vidSeq++}` }));
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+// approval (0..1) → support/oppose/neutral % toward a specific subject
+const subjectSplit = (base: number) => {
+  const support = Math.round(Math.max(5, Math.min(92, base * 100)));
+  const oppose = Math.round(Math.max(4, (1 - base) * 55));
+  return { support, oppose, neutral: Math.max(0, 100 - support - oppose) };
+};
+// Normalize a backend response (counts at any scale, or just an approval 0..1)
+// into support/oppose/neutral percentages summing ~100.
+const toSplit = (
+  approval?: number,
+  s?: number,
+  o?: number,
+  n?: number
+): { support: number; oppose: number; neutral: number } => {
+  if (s != null && o != null && n != null) {
+    const tot = s + o + n || 1;
+    return {
+      support: Math.round((s / tot) * 100),
+      oppose: Math.round((o / tot) * 100),
+      neutral: Math.round((n / tot) * 100),
+    };
+  }
+  return subjectSplit(approval ?? 0.5);
+};
+const PROGRAM_LABEL: Record<string, string> = {
+  rooftop_solar_rebate: "Rooftop solar rebate",
+  ev_incentive: "EV charging incentive",
+  retrofit_grant: "Home retrofit grant",
+};
+// how a given infra kind shifts local support (wind = noise/visual concerns, etc.)
+const KIND_BIAS: Record<InfraKind, number> = {
+  solar: 0.06,
+  wind: -0.12,
+  battery: 0.08,
+  microgrid: 0.12,
+};
+
+export const getZoneRegion = (zoneName: string, centroid?: [number, number]): string => {
+  if (centroid) {
+    const [lng, lat] = centroid;
+    if (lng > -79.30) return "Scarborough";
+    if (lng < -79.49) return "Etobicoke";
+    if (lat > 43.72) return "North York";
+    if (lng > -79.358) return "East Toronto";
+    if (lng < -79.425) return "West Toronto";
+    if (lat > 43.672) return "Midtown";
+    return "Downtown";
+  }
+
+  const name = zoneName.toLowerCase();
+  if (name.includes("scarborough") || name.includes("agincourt") || name.includes("malvern")) return "Scarborough";
+  if (name.includes("north york") || name.includes("willowdale") || name.includes("don mills") || name.includes("thorncliffe")) return "North York";
+  if (name.includes("etobicoke") || name.includes("rexdale") || name.includes("mimico")) return "Etobicoke";
+  if (name.includes("weston") || name.includes("junction") || name.includes("high park") || name.includes("roncesvalles") || name.includes("bloor west")) return "West Toronto";
+  if (name.includes("riverdale") || name.includes("leslieville") || name.includes("beaches") || name.includes("east york")) return "East Toronto";
+  if (name.includes("rosedale") || name.includes("forest hill") || name.includes("davisville") || name.includes("leaside") || name.includes("st. clair")) return "Midtown";
+  return "Downtown";
+};
+
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -320,6 +417,12 @@ function attachSession(
       void get().reset();
       void get().refreshFlows();
       void get().refreshSentiment();
+      void get().refreshSitingPriority();
+    }
+    // Agent launched an incentive program (rooftop rebate / EV / retrofit).
+    if (e.type === "tool_result" && e.name === "launch_program") {
+      const r = (e.result ?? {}) as { program?: string; zones?: string[] };
+      if (r.program) get().launchProgram(r.program, r.zones);
     }
     if (e.type === "done") {
       set({ chatBusy: false, chatAwaiting: false });
@@ -379,6 +482,18 @@ export const useStore = create<State>((set, get) => ({
   history: [],
   recommendations: [],
 
+  allZones: [],
+  allAgents: [],
+  allSampledAgents: [],
+  allFacilities: [],
+  allExistingInfra: [],
+  allInfra: [],
+
+  selectedRegion: "All",
+  showRegionSelector: true,
+  regionCursorMode: false,
+  hoveredRegion: null,
+
   scenarios: [],
   sentiment: null,
   voices: [],
@@ -396,6 +511,8 @@ export const useStore = create<State>((set, get) => ({
   heatVuln: {},
   districtEnergy: {},
   sbei: null,
+  sitingPriority: [],
+  equityWeight: 0.4,
   gatheringZones: [],
   lastTargetZoneId: null,
 
@@ -411,6 +528,9 @@ export const useStore = create<State>((set, get) => ({
   agentMobilizedAt: 0,
   selectedVoiceId: null,
   focusVoiceNonce: 0,
+  rooftopPoints: {},
+  programs: [],
+  subjectApproval: null,
 
   chat: [],
   chatConnected: false,
@@ -435,6 +555,8 @@ export const useStore = create<State>((set, get) => ({
     constraints: true,
     flood: true, // flood-risk overlay (lights up when data-2 ships it)
     district: true, // existing district-energy service area
+    rooftops: true, // distributed rooftop-solar glints (per-home adoption)
+    priority: false, // build-priority choropleth (opt-in via overlay switcher)
   },
   mode: "select",
   placementMode: "manual",
@@ -471,9 +593,15 @@ export const useStore = create<State>((set, get) => ({
     // Clip markers that fall on water — keep only points inside a land zone.
     const onLand = makeLandTest(zones);
     const agents = rawAgents.filter((a) => onLand(a.position));
-    // Sample ~320 agents to animate as "living" people (don't move all 4000).
-    const step = Math.max(1, Math.floor(agents.length / 320));
-    const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 360);
+    // Sample ~800 agents to animate as "living" people (don't move all 4000) —
+    // denser so the 140 zones each read as populated; still 60fps-cheap.
+    const step = Math.max(1, Math.floor(agents.length / 800));
+    const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 900);
+    // candidate rooftop-solar sites per zone (capped) — glints reveal as adoption climbs
+    const rooftopPoints: Record<string, LngLat[]> = {};
+    zones.forEach((z, i) => {
+      rooftopPoints[z.id] = sampleInside(z.polygon, 24, i + 7);
+    });
     const infra = api.seedInfra();
     const [{ data: metrics }, { data: sentiment }, { data: flows }] =
       await Promise.all([
@@ -490,6 +618,11 @@ export const useStore = create<State>((set, get) => ({
       zones,
       agents,
       sampledAgents,
+      allZones: zones,
+      allAgents: agents,
+      allSampledAgents: sampledAgents,
+      allInfra: infra,
+      rooftopPoints,
       infra,
       metrics: metricsWithApproval,
       history: [metricsWithApproval],
@@ -502,6 +635,11 @@ export const useStore = create<State>((set, get) => ({
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
     });
+
+    // build-priority ranking (where to build next)
+    void api
+      .getSitingPriority(infra, get().equityWeight)
+      .then((r) => set({ sitingPriority: r.zones, equityWeight: r.equityWeight }));
 
     // v3 real-data layers — degrade gracefully (empty until data-2 lands)
     void Promise.all([
@@ -527,10 +665,14 @@ export const useStore = create<State>((set, get) => ({
         heatVuln,
         districtEnergy,
         sbei,
-      ]) =>
+      ]) => {
+        const facs = facilities.filter((f) => onLand(f.position));
+        const exInf = existingInfra.filter((e) => onLand(e.position));
         set({
-          facilities: facilities.filter((f) => onLand(f.position)),
-          existingInfra: existingInfra.filter((e) => onLand(e.position)),
+          facilities: facs,
+          existingInfra: exInf,
+          allFacilities: facs,
+          allExistingInfra: exInf,
           constraints,
           environment,
           generationMix,
@@ -539,7 +681,8 @@ export const useStore = create<State>((set, get) => ({
           districtEnergy,
           sbei,
           activity: activity.length ? activity.slice(0, 80) : get().activity,
-        })
+        });
+      }
     );
 
     api.openSimSocket(
@@ -606,6 +749,10 @@ export const useStore = create<State>((set, get) => ({
       zones,
       agents,
       sampledAgents,
+      allZones: zones,
+      allAgents: agents,
+      allSampledAgents: sampledAgents,
+      allInfra: s.allInfra,
       sentiment,
       flows,
       live: true,
@@ -623,15 +770,21 @@ export const useStore = create<State>((set, get) => ({
       api.getConstraints(),
       api.getEnvironment(),
       api.getDistrictEnergy(),
-    ]).then(([facilities, existingInfra, constraints, environment, districtEnergy]) =>
+    ]).then(([facilities, existingInfra, constraints, environment, districtEnergy]) => {
+      const facs = facilities.filter((f) => onLand(f.position));
+      const exInf = existingInfra.filter((e) => onLand(e.position));
       set({
-        facilities: facilities.filter((f) => onLand(f.position)),
-        existingInfra: existingInfra.filter((e) => onLand(e.position)),
+        facilities: facs,
+        existingInfra: exInf,
+        allFacilities: facs,
+        allExistingInfra: exInf,
         constraints,
         environment,
         districtEnergy,
-      })
-    );
+      });
+      // Re-apply the active filter on the new master lists
+      get().setSelectedRegion(get().selectedRegion);
+    });
     get().pushToast("Reconnected — live data restored", "good");
   },
 
@@ -649,6 +802,7 @@ export const useStore = create<State>((set, get) => ({
         sentiment: k === "sentiment",
         demand: k === "demand",
         flood: k === "flood",
+        priority: k === "priority",
       },
     })),
   setMode: (m) => set({ mode: m }),
@@ -670,7 +824,31 @@ export const useStore = create<State>((set, get) => ({
       if (z) set({ flyTo: { target: z.centroid, zoom: 13.6, nonce: Date.now() } });
     }
   },
-  selectInfra: (id) => set({ selectedInfraId: id }),
+  selectInfra: (id) => {
+    set({ selectedInfraId: id });
+    const inf = id && get().infra.find((i) => i.id === id);
+    if (!inf) {
+      set({ subjectApproval: null });
+      return;
+    }
+    // instant mock readout, then refine from the live subject route if available
+    const base = (get().sentiment?.perZone[inf.zoneId ?? ""] ?? 0.5) + KIND_BIAS[inf.kind];
+    set({
+      subjectApproval: {
+        label: `this ${inf.kind}`,
+        ...subjectSplit(Math.max(0, Math.min(1, base))),
+      },
+    });
+    void api.getSubjectApproval(`infra:${inf.id}`).then((r) => {
+      if (r && get().selectedInfraId === id)
+        set({
+          subjectApproval: {
+            label: `this ${inf.kind}`,
+            ...toSplit(r.approval, r.support, r.oppose, r.neutral),
+          },
+        });
+    });
+  },
   flyToInfra: (id) => {
     const inf = get().infra.find((i) => i.id === id);
     if (inf)
@@ -691,10 +869,58 @@ export const useStore = create<State>((set, get) => ({
       },
     }),
 
+  setSelectedRegion: (region) => {
+    const { allZones, allAgents, allSampledAgents, allFacilities, allExistingInfra, allInfra } = get();
+    set({ selectedRegion: region });
+    if (region === "All") {
+      set({
+        zones: allZones,
+        agents: allAgents,
+        sampledAgents: allSampledAgents,
+        facilities: allFacilities,
+        existingInfra: allExistingInfra,
+        infra: allInfra,
+      });
+      get().resetView();
+    } else {
+      const filteredZones = allZones.filter(z => getZoneRegion(z.name, z.centroid) === region);
+      const zIds = new Set(filteredZones.map(z => z.id));
+      const onRegionLand = makeLandTest(filteredZones);
+      
+      set({
+        zones: filteredZones,
+        agents: allAgents.filter(a => zIds.has(a.zoneId)),
+        sampledAgents: allSampledAgents.filter(a => zIds.has(a.zoneId)),
+        facilities: allFacilities.filter(f => onRegionLand(f.position)),
+        existingInfra: allExistingInfra.filter(e => onRegionLand(e.position)),
+        infra: allInfra.filter(i => (i.zoneId && zIds.has(i.zoneId)) || onRegionLand(i.position)),
+      });
+
+      if (filteredZones.length > 0) {
+        const avgLng = filteredZones.reduce((sum, z) => sum + z.centroid[0], 0) / filteredZones.length;
+        const avgLat = filteredZones.reduce((sum, z) => sum + z.centroid[1], 0) / filteredZones.length;
+        set({
+          flyTo: { target: [avgLng, avgLat], zoom: 12.5, nonce: Date.now() }
+        });
+      }
+    }
+  },
+
+  setRegionCursorMode: (on) => set({ regionCursorMode: on }),
+  setHoveredRegion: (region) => set({ hoveredRegion: region }),
+
   addInfraAt: async (pos) => {
-    const { placeKind, infra } = get();
+    const { placeKind, infra, allInfra, selectedRegion, zones } = get();
     const preset = INFRA_PRESETS[placeKind];
     const z = nearestZone(pos);
+
+    // Enforce region-locked placement: reject placing outside active filtered zones
+    const activeZoneIds = new Set(zones.map(zone => zone.id));
+    if (selectedRegion !== "All" && z && !activeZoneIds.has(z.id)) {
+      get().pushToast(`Cannot place infrastructure outside the active region (${selectedRegion})`, "warn");
+      return;
+    }
+
     const optimistic: Infra = {
       id: `infra-${placeKind}-${Date.now()}`,
       kind: placeKind,
@@ -706,16 +932,39 @@ export const useStore = create<State>((set, get) => ({
       placedBy: "you",
       zoneId: z?.id,
     };
-    set({ infra: [...infra, optimistic] });
+    set((s) => ({ 
+      infra: [...s.infra, optimistic], 
+      allInfra: [...s.allInfra, optimistic] 
+    }));
+    
     const saved = await api.placeInfra(optimistic);
     set((s) => ({
       infra: s.infra.map((i) => (i.id === optimistic.id ? saved : i)),
+      allInfra: s.allInfra.map((i) => (i.id === optimistic.id ? saved : i)),
       spawnTimes: { ...s.spawnTimes, [saved.id]: Date.now(), [optimistic.id]: Date.now() },
     }));
     get().pushToast(
       `Placed ${optimistic.kind} in ${z?.name ?? "the city"}`,
       "good"
     );
+    // subject-tied sentiment: "X% support this <kind> here".
+    // Prefer the backend's proposalApproval + vote counts; else fall back to mock.
+    {
+      const sp = saved as api.PlacedInfra;
+      const hasLive =
+        sp.proposalApproval != null || sp.supportCount != null;
+      const split = hasLive
+        ? toSplit(
+            sp.proposalApproval,
+            sp.supportCount,
+            sp.opposeCount,
+            sp.neutralCount
+          )
+        : subjectSplit(
+            Math.max(0, Math.min(1, (get().sentiment?.perZone[z?.id ?? ""] ?? 0.5) + KIND_BIAS[placeKind]))
+          );
+      set({ subjectApproval: { label: `this ${placeKind}`, ...split } });
+    }
     // nearby people orient toward the new installation (gentle cluster)
     {
       const d2 = (a: LngLat, b: LngLat) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
@@ -747,6 +996,7 @@ export const useStore = create<State>((set, get) => ({
     await get().reset();
     await get().refreshSentiment();
     await get().refreshFlows();
+    void get().refreshSitingPriority(); // priority drops where we just built
     await get().refreshVoices(4, optimistic.kind);
   },
 
@@ -761,7 +1011,11 @@ export const useStore = create<State>((set, get) => ({
       set((s) => {
         const rt = { ...s.removalTimes };
         delete rt[id];
-        return { infra: s.infra.filter((i) => i.id !== id), removalTimes: rt };
+        return { 
+          infra: s.infra.filter((i) => i.id !== id), 
+          allInfra: s.allInfra.filter((i) => i.id !== id), 
+          removalTimes: rt 
+        };
       });
       void get().reset();
       void get().refreshFlows();
@@ -1067,6 +1321,8 @@ export const useStore = create<State>((set, get) => ({
       spawnTimes: {},
       agentTargets: {},
       agentMobilizedAt: 0,
+      programs: [],
+      subjectApproval: null,
     });
     get().pushToast("Session reset", "info");
   },
@@ -1130,6 +1386,18 @@ export const useStore = create<State>((set, get) => ({
     session?.reject();
   },
 
+  // ---------------- build-priority overlay ----------------
+
+  setEquityWeight: (w) => {
+    set({ equityWeight: w });
+    void get().refreshSitingPriority();
+  },
+  refreshSitingPriority: async () => {
+    const { infra, equityWeight } = get();
+    const r = await api.getSitingPriority(infra, equityWeight);
+    set({ sitingPriority: r.zones });
+  },
+
   // ---------------- juice: toasts ----------------
 
   pushToast: (text, kind = "info") => {
@@ -1155,6 +1423,60 @@ export const useStore = create<State>((set, get) => ({
       set({ flyTo: { target, zoom: 14.5, pitch: 50, nonce: Date.now() } });
   },
   clearSelectedVoice: () => set({ selectedVoiceId: null }),
+
+  launchProgram: (type, zoneIds) => {
+    const { zones, sentiment } = get();
+    const label = PROGRAM_LABEL[type] ?? type.replace(/_/g, " ");
+    // default targets = the highest energy-burden neighbourhoods
+    const targets =
+      zoneIds && zoneIds.length
+        ? zoneIds
+        : [...zones]
+            .sort(
+              (a, b) =>
+                b.demographics.energyBurdenIndex - a.demographics.energyBurdenIndex
+            )
+            .slice(0, 6)
+            .map((z) => z.id);
+    // boost rooftop adoption in target zones → glints start appearing
+    const adopt = { ...get().adoptionByZone };
+    for (const zid of targets) adopt[zid] = Math.min(1, (adopt[zid] ?? 0) + 0.22);
+    const m = get().metrics;
+    const base =
+      targets.reduce((s, z) => s + (sentiment?.perZone[z] ?? 0.5), 0) /
+      Math.max(1, targets.length);
+    set((s) => ({
+      programs: [
+        ...s.programs,
+        { type, label, zones: targets, startedTick: m?.tick ?? 0 },
+      ],
+      adoptionByZone: adopt,
+      subjectApproval: { label, ...subjectSplit(Math.min(1, base + 0.12)) },
+    }));
+    void api.getSubjectApproval(`program:${type}`).then((r) => {
+      if (r)
+        set({
+          subjectApproval: {
+            label,
+            ...toSplit(r.approval, r.support, r.oppose, r.neutral),
+          },
+        });
+    });
+    get().pushToast(`${label} launched in ${targets.length} neighbourhoods`, "good");
+    logActivity(
+      set,
+      [
+        {
+          text: `${label} launched — rooftop adoption rising across ${targets.length} high-burden neighbourhoods`,
+          severity: "good",
+        },
+      ],
+      m?.tick ?? 0,
+      m?.year ?? 2026,
+      targets
+    );
+    void get().refreshVoices(5, type);
+  },
 
   // ---------------- v3 chat / targeting ----------------
 

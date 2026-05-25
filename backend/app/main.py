@@ -21,7 +21,6 @@ from .models import (
     Recommendation,
     Scenario,
     ScenarioRequest,
-    SentimentSummary,
     SimMetrics,
     StepRequest,
     Zone,
@@ -132,6 +131,78 @@ def get_forecast(
     }
 
 
+@app.get("/api/siting-priority")
+def get_siting_priority(
+    equity_weight: float = Query(default=0.4, ge=0.0, le=1.0, alias="equityWeight"),
+    n: int = Query(default=0, ge=0, le=200),
+) -> dict:
+    """Per-zone build priority: WHERE to add clean infra next, fusing UNMET demand
+    (demand − current clean supply) with energy burden — the demand-matching + equity
+    siting signal. Uses ml.siting_priority if present, else a backend heuristic. Priority
+    falls as a zone gets served (current clean supply is fed in per zone), so it reflects
+    the live session state. `equityWeight` blends equity vs raw demand-matching."""
+    import numpy as np  # noqa: PLC0415
+
+    world = get_world()
+    engine = world.engine
+
+    # Per-zone current clean supply (placed infra + rooftop), mirroring the optimizer.
+    infra_supply, _, _, _ = engine._infra_supply_by_zone()
+    from .sim.agents import rooftop_supply_kwh  # noqa: PLC0415
+
+    rooftop = rooftop_supply_kwh(engine.agent_arrays)
+    rooftop_by_zone = np.zeros(engine.num_zones)
+    np.add.at(rooftop_by_zone, engine.agent_arrays.zone_idx, rooftop)
+    rooftop_by_zone *= engine.zone_representation
+    clean_supply = infra_supply + rooftop_by_zone
+
+    items: list[dict] = []
+    for i, zone in enumerate(world.zones):
+        ctx = {
+            "renewable_supply_kwh": float(clean_supply[i]),
+            "equity_weight": equity_weight,
+        }
+        res = ml_bridge.siting_priority(zone, ctx)
+        if res is None:
+            # Backend fallback (ml/ absent): unmet ratio blended with energy burden.
+            demand = max(float(zone.demand_kwh_monthly), 1.0)
+            unmet = max(demand - float(clean_supply[i]), 0.0)
+            unmet_ratio = min(unmet / demand, 1.0)
+            burden = float(zone.demographics.energy_burden_index)
+            score = (1.0 - equity_weight) * unmet_ratio + equity_weight * burden
+            res = {
+                "score": round(score, 4),
+                "unmetDemandKwh": round(unmet, 1),
+                "unmetRatio": round(unmet_ratio, 4),
+                "energyBurden": round(burden, 4),
+                "equityWeight": equity_weight,
+                "rationale": f"{zone.name}: {unmet_ratio * 100:.0f}% of demand unserved, "
+                f"energy burden {burden:.2f}.",
+            }
+        items.append(
+            {"zoneId": zone.id, "name": zone.name, **_camelize_priority(res)}
+        )
+
+    items.sort(key=lambda x: x["score"], reverse=True)
+    return {
+        "source": "ml" if ml_bridge.ml_available() else "heuristic",
+        "equityWeight": equity_weight,
+        "zones": items[:n] if n else items,
+    }
+
+
+def _camelize_priority(res: dict) -> dict:
+    """Accept ml's snake/camel keys and normalize to camelCase for the frontend."""
+    alias = {
+        "unmet_demand_kwh": "unmetDemandKwh",
+        "unmet_ratio": "unmetRatio",
+        "energy_burden": "energyBurden",
+        "equity_weight": "equityWeight",
+        "demand_signal": "demandSignal",
+    }
+    return {alias.get(k, k): v for k, v in res.items()}
+
+
 @app.get("/api/rationales", response_model=list[dict])
 def get_rationales(
     zone_id: str | None = Query(default=None, alias="zoneId"),
@@ -156,9 +227,19 @@ def list_infra() -> list[Infra]:
     return get_world().engine.list_infra()
 
 
-@app.post("/api/infra", response_model=Infra)
-def place_infra(payload: InfraCreate) -> Infra:
-    return get_world().place_infra(payload)
+@app.post("/api/infra")
+def place_infra(payload: InfraCreate) -> dict:
+    """Place infra and return it PLUS subject-tied proposal approval among nearby agents.
+
+    Response = all Infra fields (camelCase) + {proposalApproval, supportCount, opposeCount,
+    neutralCount} reflecting local support/oppose toward THIS specific installation's kind.
+    """
+    world = get_world()
+    infra = world.place_infra(payload)
+    return {
+        **infra.model_dump(by_alias=True),
+        **world.proposal_approval_for_infra(infra),
+    }
 
 
 @app.delete("/api/infra/{infra_id}")
@@ -237,9 +318,25 @@ def get_scenarios() -> list[Scenario]:
 # ---------------------------------------------------------------------------
 # v2: Sentiment / voices
 # ---------------------------------------------------------------------------
-@app.get("/api/sentiment", response_model=SentimentSummary)
-def get_sentiment() -> SentimentSummary:
-    return get_world().sentiment_summary()
+@app.get("/api/sentiment")
+def get_sentiment(subject: str | None = Query(default=None)) -> dict:
+    """Without ?subject: city + per-zone approval (0..1) — the global shape.
+
+    With ?subject=infra:<id>|kind:<k>|program:<name>: support/oppose toward THAT specific
+    subject among the relevant (nearby) agents — returns {subject, approval, support, oppose,
+    neutral, n} (counts as ints)."""
+    world = get_world()
+    if subject:
+        s = world.subject_approval(subject)
+        return {
+            "subject": s["subject"],
+            "approval": s["approval"],  # 0..1 (None if no relevant agents)
+            "support": int(s.get("supportCount", 0)),
+            "oppose": int(s.get("opposeCount", 0)),
+            "neutral": int(s.get("neutralCount", 0)),
+            "n": int(s.get("n", 0)),
+        }
+    return world.sentiment_summary().model_dump(by_alias=True)
 
 
 @app.get("/api/agents/voices", response_model=list[AgentVoice])

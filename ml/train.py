@@ -71,6 +71,29 @@ def _classifier(numeric: list[str], categorical: list[str]) -> Pipeline:
     return Pipeline([("pre", pre), ("model", model)])
 
 
+# Monotonic constraints for the adoption classifier, aligned to F.ADOPTION_NUMERIC:
+# more income / rooftop / neighbourhood adoption / incentive / solar / learning-curve
+# trend must never DECREASE adoption probability. Guarantees the policy levers behave
+# correctly in the sim (raising the incentive slider can't lower adoption) and is more
+# principled than letting the GBM learn a wiggly response.
+#   [income_weight, has_rooftop, ev_owner, neighbourhood_adoption, incentive_level,
+#    solar_potential, trend]
+_ADOPTION_MONOTONIC = [1, 1, 0, 1, 1, 1, 1]
+
+
+def _adoption_classifier() -> Pipeline:
+    """Numeric-only (income_bracket is redundant with income_weight) so monotonic
+    constraints align directly to the feature columns."""
+    model = HistGradientBoostingClassifier(
+        max_iter=300,
+        learning_rate=0.07,
+        l2_regularization=1.0,
+        monotonic_cst=_ADOPTION_MONOTONIC,
+        random_state=SEED,
+    )
+    return Pipeline([("model", model)])
+
+
 def _load_processed(name: str) -> list[dict] | None:
     path = PROCESSED_DIR / name
     if not path.exists():
@@ -217,7 +240,7 @@ def train_demand_agent(rng, real_agents=None, zsolar=None) -> dict:
 def train_adoption(rng, real_agents=None, zsolar=None) -> dict:
     df = synth.adoption_dataset(rng, n_agents=12000)
     y = df.pop("__target")
-    cols = F.ADOPTION_NUMERIC + F.ADOPTION_CATEGORICAL
+    cols = F.ADOPTION_NUMERIC  # numeric-only -> monotonic constraints align to columns
     X = df[cols]
     n_real = 0
     if real_agents:
@@ -226,15 +249,21 @@ def train_adoption(rng, real_agents=None, zsolar=None) -> dict:
         X = pd.concat([X, Xr[cols]], ignore_index=True)
         y = pd.concat([y, yr], ignore_index=True)
     Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2, random_state=SEED, stratify=y)
-    pipe = _classifier(F.ADOPTION_NUMERIC, F.ADOPTION_CATEGORICAL)
+    pipe = _adoption_classifier()
     pipe.fit(Xtr, ytr)
     proba = pipe.predict_proba(Xte)[:, 1]
+    # verify the incentive lever is actually monotonic on a held-out probe
+    probe = pd.DataFrame(
+        [{**Xte.iloc[0].to_dict(), "incentive_level": lv} for lv in (0.0, 0.5, 1.0)]
+    )[cols]
+    pp = pipe.predict_proba(probe)[:, 1]
     metrics = {
         "auc": float(roc_auc_score(yte, proba)),
         "base_rate": float(y.mean()),
         "n_rows": int(len(X)),
         "n_real_rows": n_real,
         "source": "real+synthetic" if n_real else "synthetic",
+        "incentive_monotonic": bool(pp[0] <= pp[1] <= pp[2]),
     }
     joblib.dump({"pipeline": pipe, "columns": cols}, MODELS_DIR / "adoption.joblib")
     return metrics
@@ -319,7 +348,7 @@ def main() -> None:
     da = train_demand_agent(rng, real_agents, zsolar)
     print(f"[2/4] demand_agent  MAE={da['mae']:.1f} kWh ({da['mae_pct_of_mean']*100:.1f}% of mean)  R2={da['r2']:.3f}  [{da['source']}, {da['n_real_rows']} real rows]")
     ad = train_adoption(rng, real_agents, zsolar)
-    print(f"[3/4] adoption      AUC={ad['auc']:.3f}  base_rate={ad['base_rate']:.3f}  [{ad['source']}, {ad['n_real_rows']} real rows]")
+    print(f"[3/4] adoption      AUC={ad['auc']:.3f}  base_rate={ad['base_rate']:.3f}  incentive_monotonic={ad['incentive_monotonic']}  [{ad['source']}, {ad['n_real_rows']} real rows]")
     cl = train_cluster(rng)
     print(f"[4/4] cluster       silhouette={cl['silhouette']:.3f}  k={cl['k']}  source={cl['source']}")
     print(f"      archetypes: {cl['labels']}")

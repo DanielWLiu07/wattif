@@ -7,6 +7,7 @@ const GROUPS: { title: string; items: { key: LayerKey; label: string }[] }[] = [
     title: "Overlays",
     items: [
       { key: "equity", label: "Energy-equity choropleth" },
+      { key: "priority", label: "Build priority (where to build)" },
       { key: "sentiment", label: "Sentiment + voices" },
       { key: "demand", label: "Demand heatmap" },
       { key: "agents", label: "People (live agents)" },
@@ -17,6 +18,7 @@ const GROUPS: { title: string; items: { key: LayerKey; label: string }[] }[] = [
     items: [
       { key: "infra", label: "Placed infrastructure" },
       { key: "existing", label: "Existing renewables / EV" },
+      { key: "rooftops", label: "Rooftop solar (homes)" },
       { key: "district", label: "District energy (Enwave)" },
       { key: "flows", label: "Energy flows" },
       { key: "recommendations", label: "AI recommendations" },

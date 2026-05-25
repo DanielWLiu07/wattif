@@ -5,6 +5,7 @@ import type {
   Agent,
   AgentVoice,
   ConstraintZone,
+  SitingPriorityZone,
   ExistingInfra,
   Facility,
   Flow,
@@ -27,6 +28,7 @@ import {
   mockPlannerEvents,
   mockScenario,
   mockSentiment,
+  mockSitingPriority,
   mockVoices,
   seedInfra,
 } from "@/data/mock";
@@ -74,12 +76,45 @@ export async function getAgents(
   return { data, live: false };
 }
 
-export async function placeInfra(infra: Infra): Promise<Infra> {
-  const r = await tryFetch<Infra>("/api/infra", {
+// POST returns the Infra plus a proposal-specific approval + vote counts.
+export type PlacedInfra = Infra & {
+  proposalApproval?: number; // 0..1
+  supportCount?: number;
+  opposeCount?: number;
+  neutralCount?: number;
+};
+export async function placeInfra(infra: Infra): Promise<PlacedInfra> {
+  const r = await tryFetch<PlacedInfra>("/api/infra", {
     method: "POST",
     body: JSON.stringify(infra),
   });
   return r ?? infra;
+}
+
+// GET /api/sentiment?subject=infra:<id> | kind:<k> | program:<name>
+// → { subject, approval (0..1), support, oppose, neutral }. null if unavailable.
+export type SubjectSentimentRes = {
+  approval?: number;
+  support?: number;
+  oppose?: number;
+  neutral?: number;
+};
+export async function getSubjectApproval(
+  subject: string
+): Promise<SubjectSentimentRes | null> {
+  const r = await tryFetch<any>(
+    `/api/sentiment?subject=${encodeURIComponent(subject)}`
+  );
+  // Flat top-level subject payload: { subject, approval (0..1, may be null),
+  // support, oppose, neutral, n }. Fall back to mock when there's no approval
+  // (no relevant agents) or it's the global {cityApprovalPct, perZone} shape.
+  if (!r || r.approval == null) return null;
+  return {
+    approval: r.approval,
+    support: r.support ?? r.supportCount,
+    oppose: r.oppose ?? r.opposeCount,
+    neutral: r.neutral ?? r.neutralCount,
+  };
 }
 
 export async function deleteInfra(id: string): Promise<boolean> {
@@ -268,6 +303,21 @@ export async function getEnvironment(): Promise<Record<string, ZoneEnviro>> {
     return out;
   }
   return (r.environment ?? r) as Record<string, ZoneEnviro>;
+}
+
+// GET /api/siting-priority?equityWeight=&n= → ranked "where to build next".
+export async function getSitingPriority(
+  infra: Infra[],
+  equityWeight = 0.4,
+  n?: number
+): Promise<{ equityWeight: number; zones: SitingPriorityZone[] }> {
+  const q = new URLSearchParams();
+  q.set("equityWeight", String(equityWeight));
+  if (n != null) q.set("n", String(n));
+  const r = await tryFetch<any>(`/api/siting-priority?${q.toString()}`);
+  if (r?.zones?.length)
+    return { equityWeight: r.equityWeight ?? equityWeight, zones: r.zones };
+  return mockSitingPriority(equityWeight, infra);
 }
 
 export async function getActivity(): Promise<ActivityItem[]> {

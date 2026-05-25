@@ -34,6 +34,8 @@ class AgentArrays:
     zone_solar: np.ndarray  # float, host zone solar potential
     adopted: np.ndarray = field(default_factory=lambda: np.array([]))
     adopted_baseline: np.ndarray = field(default_factory=lambda: np.array([]))
+    ev: np.ndarray = field(default_factory=lambda: np.array([]))  # bool, owns an EV
+    ev_baseline: np.ndarray = field(default_factory=lambda: np.array([]))
 
     @classmethod
     def build(cls, agents: list[Agent], zones: list[Zone]) -> "AgentArrays":
@@ -49,6 +51,7 @@ class AgentArrays:
             [zones[i].solar_potential for i in zone_idx], dtype=np.float64
         )
         adopted0 = np.array([a.solar_adopted for a in agents], dtype=bool)
+        ev0 = np.array([a.ev_owner for a in agents], dtype=bool)
         arr = cls(
             n=n,
             zone_idx=zone_idx,
@@ -59,10 +62,13 @@ class AgentArrays:
         )
         arr.adopted_baseline = adopted0.copy()
         arr.adopted = adopted0.copy()
+        arr.ev_baseline = ev0.copy()
+        arr.ev = ev0.copy()
         return arr
 
     def reset(self) -> None:
         self.adopted = self.adopted_baseline.copy()
+        self.ev = self.ev_baseline.copy()
 
 
 def adoption_step(
@@ -90,6 +96,31 @@ def adoption_step(
     draws = rng.random(arr.n)
     newly = eligible & (draws < p)
     arr.adopted |= newly
+
+
+def ev_adoption_step(
+    arr: AgentArrays,
+    zone_ev_incentive: np.ndarray,
+    tick: int,
+    rng: np.random.Generator,
+) -> None:
+    """Advance EV adoption by one tick (mutates arr.ev). Driven mainly by an incentive program."""
+    eligible = ~arr.ev
+    if not eligible.any():
+        return
+    incentive = zone_ev_incentive[arr.zone_idx]
+    trend = 1.0 + min(tick, 60) * 0.015
+    # Low baseline hazard; an active ev_incentive program is the main driver.
+    p = (0.004 + 0.06 * incentive) * arr.income_weight * trend
+    p = np.clip(p, 0.0, 0.3)
+    newly = eligible & (rng.random(arr.n) < p)
+    arr.ev |= newly
+
+
+def ev_count_by_zone(arr: AgentArrays, num_zones: int) -> np.ndarray:
+    counts = np.zeros(num_zones)
+    np.add.at(counts, arr.zone_idx, arr.ev.astype(np.float64))
+    return counts
 
 
 def rooftop_supply_kwh(arr: AgentArrays) -> np.ndarray:

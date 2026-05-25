@@ -96,3 +96,19 @@ def zone_clusters(zones) -> dict[str, dict] | None:
     except Exception as exc:  # noqa: BLE001
         log.warning("ml.zone_cluster failed (%s)", exc)
         return None
+
+
+def siting_priority(zone: Any, context: dict | None = None) -> dict | None:
+    """ml-backed build-priority for a zone (fuses unmet demand + energy burden), or None.
+
+    Returns {score, unmet_demand_kwh, unmet_ratio, energy_burden, equity_weight,
+    demand_signal, rationale}. context: {renewable_supply_kwh|coverage_pct, equity_weight, month}.
+    """
+    mod = _ml_module()
+    if mod is None:
+        return None
+    try:
+        return mod.siting_priority(zone, context)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("ml.siting_priority failed (%s)", exc)
+        return None

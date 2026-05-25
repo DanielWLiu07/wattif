@@ -1,7 +1,7 @@
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 
-type OverlayKey = "equity" | "sentiment" | "demand" | "flood" | "none";
+type OverlayKey = "equity" | "sentiment" | "demand" | "flood" | "priority" | "none";
 
 const OVERLAYS: {
   key: OverlayKey;
@@ -38,6 +38,13 @@ const OVERLAYS: {
     high: "high",
     ramp: "from-slate-600 via-sky-500 to-blue-500",
   },
+  {
+    key: "priority",
+    label: "Build priority",
+    low: "low",
+    high: "build here",
+    ramp: "from-slate-700 via-fuchsia-600 to-fuchsia-400",
+  },
 ];
 
 export function OverlayLegend() {
@@ -46,7 +53,7 @@ export function OverlayLegend() {
 
   // Active overlay = highest-priority toggled-on choropleth.
   const active =
-    (["equity", "sentiment", "demand", "flood"] as OverlayKey[]).find(
+    (["equity", "sentiment", "demand", "flood", "priority"] as OverlayKey[]).find(
       (k) => layers[k as keyof typeof layers]
     ) ?? "none";
   const meta = OVERLAYS.find((o) => o.key === active);

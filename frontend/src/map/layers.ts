@@ -24,6 +24,7 @@ import type {
   Zone,
 } from "@/types";
 import { INFRA_COLOR, STANCE_COLOR, FACILITY_META } from "@/types";
+import { getZoneRegion } from "@/store";
 import type { LayerKey } from "@/store";
 
 type RGB = [number, number, number];
@@ -83,12 +84,14 @@ export type LayerInputs = {
   flows: Flow[];
   outageZones: string[];
   adoptionByZone: Record<string, number>;
+  rooftopPoints: Record<string, [number, number][]>;
   voices: AgentVoice[];
   facilities: Facility[];
   existingInfra: ExistingInfra[];
   constraints: ConstraintZone[];
   floodRisk: Record<string, number>;
   districtEnergy: Record<string, { servedFraction: number; systemName: string }>;
+  sitingPriority: { zoneId: string; score: number }[];
   scenarioTargeting: boolean;
   gatheringZones: string[];
   targetZoneId: string | null;
@@ -104,6 +107,8 @@ export type LayerInputs = {
   time: number; // animation clock (ms)
   onInfraClick: (i: Infra) => void;
   onVoiceClick: (id: string) => void;
+  regionCursorMode?: boolean;
+  hoveredRegion?: string | null;
 };
 
 export function buildLayers(input: LayerInputs): Layer[] {
@@ -119,12 +124,14 @@ export function buildLayers(input: LayerInputs): Layer[] {
     flows,
     outageZones,
     adoptionByZone,
+    rooftopPoints,
     voices,
     facilities,
     existingInfra,
     constraints,
     floodRisk,
     districtEnergy,
+    sitingPriority,
     gatheringZones,
     targetZoneId,
     flashZones,
@@ -139,6 +146,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
     time,
     onInfraClick,
     onVoiceClick,
+    regionCursorMode,
+    hoveredRegion,
   } = input;
   const out: Layer[] = [];
   const zoneById = new Map(zones.map((z) => [z.id, z]));
@@ -238,6 +247,38 @@ export function buildLayers(input: LayerInputs): Layer[] {
     }
   }
 
+  // ---- Build-priority choropleth (where to build next — fuchsia, by score) ----
+  if (layers.priority && sitingPriority.length && zones.length) {
+    const scoreById = new Map(sitingPriority.map((s) => [s.zoneId, s.score]));
+    const fc: FeatureCollection = {
+      type: "FeatureCollection",
+      features: zones
+        .filter((z) => scoreById.has(z.id))
+        .map((z) => ({
+          type: "Feature",
+          geometry: z.polygon,
+          properties: { score: scoreById.get(z.id) ?? 0 },
+        })),
+    };
+    out.push(
+      new GeoJsonLayer({
+        id: "priority",
+        data: fc,
+        filled: true,
+        stroked: true,
+        extruded: false,
+        getPolygonOffset: groundOffset,
+        // higher score = build here first → brighter fuchsia
+        getFillColor: (f: any) =>
+          [217, 70, 239, Math.round(25 + f.properties.score * 180)] as any,
+        getLineColor: [240, 171, 252, 60],
+        lineWidthMinPixels: 0.5,
+        pickable: true,
+        updateTriggers: { getFillColor: [sitingPriority] },
+      })
+    );
+  }
+
   // ---- Existing district energy (Enwave) — distinct teal service-area tint ----
   if (layers.district && Object.keys(districtEnergy).length && zones.length) {
     const feats = zones
@@ -301,11 +342,40 @@ export function buildLayers(input: LayerInputs): Layer[] {
           stroked: true,
           getLineColor: [250, 204, 21, 220],
           lineWidthMinPixels: 2,
+          parameters: { depthTest: false } as any,
           updateTriggers: { getRadius: [time] },
           pickable: false,
         })
       );
     }
+  }
+
+  // ---- Interactive region cursor selection highlight ----
+  if (regionCursorMode && hoveredRegion && zones.length) {
+    const fc = {
+      type: "FeatureCollection",
+      features: zones
+        .filter((z) => getZoneRegion(z.name, z.centroid) === hoveredRegion)
+        .map((z) => ({
+          type: "Feature",
+          geometry: z.polygon,
+          properties: {},
+        })),
+    };
+    out.push(
+      new GeoJsonLayer({
+        id: "region-cursor-highlight",
+        data: fc as any,
+        filled: true,
+        stroked: true,
+        getFillColor: [16, 185, 129, 65],
+        getLineColor: [52, 211, 153, 230],
+        lineWidthMinPixels: 2.5,
+        extruded: false,
+        getPolygonOffset: groundOffset,
+        pickable: false,
+      })
+    );
   }
 
   // ---- Step-change flash (what changed this tick/action) ----
@@ -472,6 +542,39 @@ export function buildLayers(input: LayerInputs): Layer[] {
     );
   }
 
+  // ---- Rooftop solar glints (per-home adoption — more appear as it climbs) ----
+  if (layers.rooftops && Object.keys(rooftopPoints).length) {
+    type Glint = { position: [number, number]; ph: number };
+    const glints: Glint[] = [];
+    for (const [zid, pts] of Object.entries(rooftopPoints)) {
+      const adoption = adoptionByZone[zid] ?? 0;
+      const show = Math.min(pts.length, Math.round(adoption * pts.length));
+      for (let i = 0; i < show; i++)
+        glints.push({ position: pts[i], ph: (i * 73 + zid.length * 31) % 360 });
+    }
+    if (glints.length) {
+      out.push(
+        new ScatterplotLayer({
+          id: "rooftop-solar",
+          data: glints,
+          getPosition: (g: Glint) => g.position,
+          // soft glint: brightness twinkles over time, per-point phase
+          getFillColor: (g: Glint) => {
+            const tw = 0.55 + 0.45 * Math.sin(time / 350 + g.ph);
+            return [253, 224, 71, Math.round(150 + tw * 105)] as any;
+          },
+          getRadius: 9,
+          radiusMinPixels: 1.5,
+          radiusMaxPixels: 4,
+          stroked: false,
+          parameters: { depthTest: false } as any,
+          updateTriggers: { getFillColor: [time] },
+          pickable: false,
+        })
+      );
+    }
+  }
+
   // ---- Demand heat ----
   if (layers.demand && agents.length) {
     out.push(
@@ -508,18 +611,18 @@ export function buildLayers(input: LayerInputs): Layer[] {
     const ease = mobAge < 0.5 ? 2 * mobAge * mobAge : 1 - (-2 * mobAge + 2) ** 2 / 2;
     const livePos = (a: Agent): [number, number] => {
       const home = a.position;
-      const ph = hashSeed(a.id);
-      // gentle idle drift so people are never perfectly still
-      const dx = Math.sin(time * 0.0006 + ph) * 0.00035;
-      const dy = Math.cos(time * 0.0005 + ph * 1.3) * 0.00035;
       const tgt = agentTargets[a.id];
       if (tgt) {
+        const ph = hashSeed(a.id);
+        // gentle idle drift so people are never perfectly still while moving
+        const dx = Math.sin(time * 0.0006 + ph) * 0.00035;
+        const dy = Math.cos(time * 0.0005 + ph * 1.3) * 0.00035;
         return [
           home[0] + (tgt[0] - home[0]) * ease + dx * 0.4,
           home[1] + (tgt[1] - home[1]) * ease + dy * 0.4,
         ];
       }
-      return [home[0] + dx, home[1] + dy];
+      return home;
     };
     out.push(
       new ScatterplotLayer({
@@ -539,6 +642,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
         stroked: true,
         getLineColor: [255, 255, 255, 110],
         lineWidthMinPixels: 0.5,
+        // billboard + no depth test → people dots always read ON TOP of the
+        // 3D city and never get clipped by building extrusions as they move.
+        billboard: true,
+        parameters: { depthTest: false } as any,
         pickable: false,
         updateTriggers: {
           getPosition: [time, agentTargets, agentMobilizedAt],
@@ -585,6 +692,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
         jointRounded: true,
         opacity: 0.9,
         fadeTrail: true,
+        parameters: { depthTest: false } as any,
       })
     );
   }
@@ -618,6 +726,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getRadius: 230 + (0.5 + 0.5 * Math.sin(time / 350)) * 90,
         lineWidthMinPixels: 2,
         radiusMinPixels: 8,
+        billboard: true,
+        parameters: { depthTest: false } as any,
         pickable: true,
         updateTriggers: { getRadius: [time] },
       })
@@ -753,6 +863,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         radiusMaxPixels: 9,
         lineWidthMinPixels: 1.5,
         opacity: 0.9,
+        billboard: true,
+        parameters: { depthTest: false } as any,
         pickable: true,
       })
     );

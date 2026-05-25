@@ -7,7 +7,7 @@ import logging
 
 from .. import config
 from ..models import Agent, Zone
-from .seed import build_world
+from .seed import build_world, generate_agents
 
 log = logging.getLogger("wattif.data")
 
@@ -218,9 +218,13 @@ def load_world() -> tuple[list[Zone], list[Agent], str]:
             if agents_raw is not None:
                 agents = [Agent.model_validate(a) for a in agents_raw]
             else:
-                # zones from data/, but synthesize agents to match
-                _, agents = build_world()
-                agents = [a for a in agents]
+                # zones from data/ but no agents.json: synthesize agents bound to the
+                # LOADED zones (not seed zones), scaled to config.NUM_AGENTS so the city
+                # stays populated regardless of zone count.
+                import numpy as np
+
+                rng = np.random.default_rng(config.RANDOM_SEED)
+                agents = generate_agents(zones, rng, config.NUM_AGENTS)
             log.info(
                 "loaded %d zones from data/processed (source=processed)", len(zones)
             )

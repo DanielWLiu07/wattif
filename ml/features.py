@@ -209,6 +209,25 @@ def _load_buildings() -> dict[str, dict[str, float]]:
         return {}
 
 
+@lru_cache(maxsize=1)
+def zone_demand_scale() -> float:
+    """A city-scale reference for monthly zone demand (75th percentile from real
+    zones.json) used to normalize unmet-demand into 0..1. Falls back to a constant
+    if no fixtures are present, so it never blocks the heuristic."""
+    try:
+        zones = json.loads((_BUILDINGS_PATH.parent / "zones.json").read_text())
+        vals = sorted(
+            float(z.get("demandKwhMonthly", 0) or 0)
+            for z in (zones if isinstance(zones, list) else [])
+        )
+        vals = [v for v in vals if v > 0]
+        if vals:
+            return vals[int(0.75 * (len(vals) - 1))]
+    except (OSError, json.JSONDecodeError, AttributeError, TypeError, ValueError):
+        pass
+    return 5_000_000.0
+
+
 def derive_avg_levels(population: float, renter_pct: float) -> float:
     """Fallback storeys estimate when no real building data — denser/more-rental
     neighbourhoods skew taller. Calibrated to the real OSM range (~1.7..13.3)."""

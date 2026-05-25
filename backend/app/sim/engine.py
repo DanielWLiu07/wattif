@@ -212,6 +212,12 @@ class SimEngine:
         self.zone_outage = np.zeros(self.num_zones, dtype=bool)  # darkened zones
         self.grid_capacity_mult = 1.0  # grid damage
         self.adoption_incentive = 0.0  # policy/gas-spike boost 0..1
+        # Promptable individual-adoption programs (launch_program) — per-zone propensity boosts.
+        self.zone_adoption_incentive = np.zeros(
+            self.num_zones
+        )  # rooftop-solar adoption boost
+        self.zone_ev_incentive = np.zeros(self.num_zones)  # EV adoption boost
+        self.active_programs: list[dict] = []
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -265,6 +271,88 @@ class SimEngine:
 
     def list_infra(self) -> list[Infra]:
         return list(self.infra.values())
+
+    # ------------------------------------------------------------------
+    # v2: promptable individual-adoption programs (distributed adoption)
+    # ------------------------------------------------------------------
+    # program -> (solar-adoption boost, ev boost, sentiment kind shifts)
+    _PROGRAMS = {
+        "rooftop_solar_rebate": (0.6, 0.0, {"solar": 0.18}),
+        "retrofit_grant": (0.4, 0.05, {"solar": 0.1, "battery": 0.1}),
+        "ev_incentive": (0.15, 0.6, {"battery": 0.15}),
+    }
+
+    def launch_program(
+        self, program: str, zone_idxs: list[int], intensity: float = 1.0
+    ) -> dict:
+        """Raise adoption propensity for matching agents/zones so more households flip over ticks."""
+        spec = self._PROGRAMS.get(program)
+        if spec is None:
+            return {"error": f"unknown program {program!r}"}
+        if not zone_idxs:
+            zone_idxs = list(range(self.num_zones))
+        intensity = float(max(0.1, min(intensity, 2.0)))
+        solar_boost, ev_boost, sent = spec
+        idx = np.asarray(zone_idxs)
+        self.zone_adoption_incentive[idx] = np.clip(
+            self.zone_adoption_incentive[idx] + solar_boost * intensity, 0.0, 1.0
+        )
+        if ev_boost:
+            self.zone_ev_incentive[idx] = np.clip(
+                self.zone_ev_incentive[idx] + ev_boost * intensity, 0.0, 1.0
+            )
+        for kind, delta in sent.items():
+            self.sentiment.shift_target(kind, delta * intensity, list(zone_idxs))
+        zone_ids = [self.zones[i].id for i in zone_idxs]
+        self.active_programs.append(
+            {"program": program, "zones": zone_ids, "intensity": intensity}
+        )
+        return {
+            "program": program,
+            "zones": zone_ids,  # RESOLVED zone ids the program targets (FE lights these up)
+            "zoneCount": len(zone_ids),
+            "intensity": round(intensity, 2),
+            "solarBoost": round(solar_boost * intensity, 3),
+            "evBoost": round(ev_boost * intensity, 3),
+        }
+
+    # ------------------------------------------------------------------
+    # v2: subject-tied sentiment (support/oppose toward a specific subject)
+    # ------------------------------------------------------------------
+    def subject_approval(self, kind: str, zone_idxs: list[int] | None = None) -> dict:
+        """Support/oppose toward a SPECIFIC kind among the relevant (e.g. nearby) agents."""
+        from .sentiment import KIND_IDX
+
+        if kind not in KIND_IDX:
+            return {
+                "approval": None,
+                "supportCount": 0,
+                "opposeCount": 0,
+                "neutralCount": 0,
+                "n": 0,
+            }
+        op = self.sentiment.opinion[:, KIND_IDX[kind]]
+        if zone_idxs:
+            mask = np.isin(self.sentiment.zone_idx, np.asarray(zone_idxs))
+            op = op[mask]
+        n = int(op.size)
+        if n == 0:
+            return {
+                "approval": None,
+                "supportCount": 0,
+                "opposeCount": 0,
+                "neutralCount": 0,
+                "n": 0,
+            }
+        support = int((op >= 0.55).sum())
+        oppose = int((op < 0.45).sum())
+        return {
+            "approval": round(float(op.mean()), 4),
+            "supportCount": support,
+            "opposeCount": oppose,
+            "neutralCount": n - support - oppose,
+            "n": n,
+        }
 
     # ------------------------------------------------------------------
     # Helpers
@@ -392,6 +480,9 @@ class SimEngine:
                 np.float64
             ),
         )
+        from .agents import ev_count_by_zone
+
+        ev_counts = ev_count_by_zone(self.agent_arrays, self.num_zones)
         deltas = [
             ZoneDelta(
                 zone_id=self.zones[i].id,
@@ -402,6 +493,7 @@ class SimEngine:
                 approval=round(float(approval_by_zone[i]), 3),
                 demand_intensity=round(float(demand_intensity[i]), 3),
                 adoption_count=int(adopted_counts[i]),
+                ev_count=int(ev_counts[i]),
                 outage=bool(self.zone_outage[i]),
             )
             for i in range(self.num_zones)
@@ -415,11 +507,23 @@ class SimEngine:
         """Advance one tick (one month) and return metrics + per-zone deltas."""
         self.tick += 1
 
-        # Local infra (+ scenario adoption incentive) raises adoption appetite in a zone.
+        # Local infra + scenario incentive + launched-program incentive raise local adoption.
         _, _, supportive, _ = self._infra_supply_by_zone()
-        zone_infra_boost = np.clip(supportive / 3.0 + self.adoption_incentive, 0.0, 1.0)
+        zone_infra_boost = np.clip(
+            supportive / 3.0 + self.adoption_incentive + self.zone_adoption_incentive,
+            0.0,
+            1.0,
+        )
 
         adoption_step(self.agent_arrays, self.tick, zone_infra_boost, self._rng)
+        if (
+            self.zone_ev_incentive.any()
+        ):  # EV adoption only moves when a program is active
+            from .agents import ev_adoption_step
+
+            ev_adoption_step(
+                self.agent_arrays, self.zone_ev_incentive, self.tick, self._rng
+            )
         self.sentiment.step()  # drift public opinion toward current targets
 
         metrics, deltas = self._compute()

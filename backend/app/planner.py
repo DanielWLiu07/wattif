@@ -106,9 +106,32 @@ _TOOLS: list[dict] = [
             "required": ["ticks"],
         },
     },
+    {
+        "name": "launch_program",
+        "description": (
+            "Launch an INDIVIDUAL-adoption incentive program so more households adopt over time "
+            "(distributed adoption, distinct from placing infrastructure). Use for prompts like "
+            "'offer a rooftop solar rebate in high-burden neighbourhoods'."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "program": {
+                    "type": "string",
+                    "enum": ["rooftop_solar_rebate", "ev_incentive", "retrofit_grant"],
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "a zoneId, 'high_burden', or 'all'",
+                },
+                "intensity": {"type": "number", "minimum": 0.1, "maximum": 2},
+            },
+            "required": ["program"],
+        },
+    },
 ]
 
-MUTATING_TOOLS = {"place_infrastructure", "remove_infrastructure"}
+MUTATING_TOOLS = {"place_infrastructure", "remove_infrastructure", "launch_program"}
 
 
 def _anthropic_tools() -> list[dict]:
@@ -290,6 +313,12 @@ class PlannerTools:
         ticks = min(int(args.get("ticks", 1)), MAX_SIM_TICKS)
         metrics = self.engine.step_many(ticks)
         return {"ranTicks": ticks, "metrics": metrics.model_dump(by_alias=True)}
+
+    def _t_launch_program(self, args: dict) -> dict:
+        program = args.get("program")
+        scope = args.get("scope") or args.get("zoneId") or "all"
+        intensity = float(args.get("intensity", 1.0) or 1.0)
+        return self.world.launch_program(program, scope, intensity)
 
 
 # ---------------------------------------------------------------------------
@@ -728,7 +757,32 @@ def parse_intent(text: str) -> dict:
     m = _re.search(r"\b(\d+)\b", t)
     if m:
         n = max(1, min(int(m.group(1)), 10))
-    return {"kind": kind, "n": n, "zone_query": zone_query}
+
+    # Individual-adoption program intent (distinct from placing infrastructure).
+    program = None
+    if "ev" in t and any(w in t for w in ("incentive", "rebate", "subsidy", "program")):
+        program = "ev_incentive"
+    elif any(w in t for w in ("retrofit", "efficiency", "grant")):
+        program = "retrofit_grant"
+    elif any(
+        w in t for w in ("rebate", "incentive", "subsidy", "adopt", "rooftop program")
+    ):
+        program = "rooftop_solar_rebate"
+    scope = (
+        "high_burden"
+        if (
+            zone_query
+            in ("high burden", "high-burden", "equity", "low income", "low-income")
+        )
+        else "all"
+    )
+    return {
+        "kind": kind,
+        "n": n,
+        "zone_query": zone_query,
+        "program": program,
+        "scope": scope,
+    }
 
 
 class PlannerChat:
@@ -815,6 +869,12 @@ class PlannerChat:
             "text": f'Got it: "{user_message.strip()}". Let me assess the city and act.',
         }
         await _sleep()
+
+        # Program intent -> launch an individual-adoption incentive (distributed adoption).
+        if intent.get("program"):
+            async for ev in self._demo_program_turn(intent, confirm):
+                yield ev
+            return
 
         # Observe the world.
         yield {"type": "tool_call", "name": "get_metrics", "args": {}}
@@ -908,6 +968,77 @@ class PlannerChat:
                 f"Done. Placed {placed} installation(s) this turn ({self.tools.spent:,.0f} CAD spent total). "
                 f"Coverage {m1.get('coveragePct', 0) * 100:.1f}%, equity {m1.get('equityScore', 0) * 100:.0f}%, "
                 f"approval {m1.get('approvalPct', 0) * 100:.0f}%. What next?"
+            ),
+            "placements": self.tools.placements,
+            "spentCad": round(self.tools.spent, 2),
+        }
+
+    async def _demo_program_turn(self, intent: dict, confirm: ConfirmFn | None):
+        program = intent["program"]
+        scope = intent.get("scope", "all")
+        label = {
+            "rooftop_solar_rebate": "rooftop-solar rebate",
+            "ev_incentive": "EV incentive",
+            "retrofit_grant": "retrofit grant",
+        }.get(program, program)
+        where = (
+            "high energy-burden neighbourhoods"
+            if scope == "high_burden"
+            else "the whole city"
+        )
+        yield {
+            "type": "thought",
+            "text": f"Launching a {label} across {where} to drive individual household adoption.",
+        }
+
+        # adoption baseline before
+        before = sum(
+            d.adoption_count for d in self.tools.engine.current_tick().zone_deltas
+        )
+
+        args = {"program": program, "scope": scope, "intensity": 1.0}
+        yield {"type": "tool_call", "name": "launch_program", "args": args}
+        if not await _maybe_confirm({"name": "launch_program", "args": args}, confirm):
+            yield {
+                "type": "tool_result",
+                "name": "launch_program",
+                "result": {"rejected": True},
+            }
+            yield {
+                "type": "done",
+                "summary": "Program cancelled.",
+                "placements": self.tools.placements,
+                "spentCad": round(self.tools.spent, 2),
+            }
+            return
+        res = self.tools.execute("launch_program", args)
+        yield {"type": "tool_result", "name": "launch_program", "result": res}
+        rxn = self.world.reaction_voices(trigger=f"program:{program}", n=3)
+        if rxn:
+            yield {
+                "type": "voices",
+                "trigger": f"program:{program}",
+                "voices": [v.model_dump(by_alias=True) for v in rxn],
+            }
+        await _sleep()
+
+        yield {
+            "type": "thought",
+            "text": "Running 18 months to let households take up the incentive.",
+        }
+        yield {"type": "tool_call", "name": "run_simulation", "args": {"ticks": 18}}
+        sim = self.tools.execute("run_simulation", {"ticks": 18})
+        yield {"type": "tool_result", "name": "run_simulation", "result": sim}
+
+        after_tick = self.tools.engine.current_tick()
+        after = sum(d.adoption_count for d in after_tick.zone_deltas)
+        m = sim.get("metrics", {})
+        yield {
+            "type": "done",
+            "summary": (
+                f"{label.capitalize()} active across {where}. Rooftop-solar adopters grew from "
+                f"{before:,} to {after:,} households (+{after - before:,}) over 18 months; "
+                f"coverage now {m.get('coveragePct', 0) * 100:.1f}%. What next?"
             ),
             "placements": self.tools.placements,
             "spentCad": round(self.tools.spent, 2),

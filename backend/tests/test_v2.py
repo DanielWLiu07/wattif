@@ -413,7 +413,8 @@ def test_reaction_voices_on_placement():
     )
     assert rxn
     for v in rxn:
-        assert v.trigger == "placement"
+        # trigger now NAMES the subject (the kind being placed)
+        assert v.trigger == "placement:battery"
         assert v.zone_id == zid  # tied to the placement's zone
         assert v.position is not None
 
@@ -439,7 +440,9 @@ def test_voices_endpoint_event_placement():
     r = c.get(
         "/api/agents/voices?event=placement&zoneId=z006&kind=battery&enrich=false"
     ).json()
-    assert r and all(v["trigger"] == "placement" and v["zoneId"] == "z006" for v in r)
+    assert r and all(
+        v["trigger"] == "placement:battery" and v["zoneId"] == "z006" for v in r
+    )
     assert all("position" in v for v in r)
 
 
@@ -573,3 +576,205 @@ def test_sentiment_perzone_and_city_same_scale():
     assert (
         abs(s.city_approval_pct - vals.mean()) < 0.05
     )  # consistent (agent-count weighting aside)
+
+
+# --- adoption programs (promptable individual adoption) --------------------
+def test_launch_program_raises_adoption_in_high_burden_zones():
+    """A rooftop-solar rebate scoped to high-burden zones must lift solar adoption there."""
+    w = fresh_world()
+    w.session_reset()
+    hb = [
+        i for i, z in enumerate(w.zones) if z.demographics.energy_burden_index >= 0.55
+    ]
+    assert hb, "expected at least one high-burden zone in seed data"
+    before = {i: w.engine.current_tick().zone_deltas[i].adoption_count for i in hb}
+    res = w.launch_program("rooftop_solar_rebate", "high_burden", 1.0)
+    assert res["program"] == "rooftop_solar_rebate"
+    assert res["scope"] == "high_burden"
+    assert res["solarBoost"] > 0
+    # result.zones must be the RESOLVED zone ids (FE lights up exactly these rooftops)
+    assert isinstance(res["zones"], list)
+    hb_ids = {w.zones[i].id for i in hb}
+    assert set(res["zones"]) == hb_ids
+    assert res["zoneCount"] == len(hb_ids)
+    w.engine.step_many(18)
+    after_deltas = w.engine.current_tick().zone_deltas
+    grew = sum(1 for i in hb if after_deltas[i].adoption_count > before[i])
+    # most targeted high-burden zones should show MORE solar adopters after 18 months
+    assert grew >= max(1, len(hb) // 2)
+
+
+def test_ev_incentive_program_grows_ev_ownership():
+    w = fresh_world()
+    w.session_reset()
+    ev0 = sum(d.ev_count for d in w.engine.current_tick().zone_deltas)
+    res = w.launch_program("ev_incentive", "all", 1.0)
+    assert res["evBoost"] > 0
+    w.engine.step_many(18)
+    ev1 = sum(d.ev_count for d in w.engine.current_tick().zone_deltas)
+    assert ev1 > ev0  # citywide EV ownership climbs
+
+
+def test_zone_delta_exposes_ev_count():
+    w = fresh_world()
+    w.session_reset()
+    for d in w.engine.current_tick().zone_deltas:
+        assert d.ev_count >= 0
+
+
+# --- subject-tied sentiment ------------------------------------------------
+def test_proposal_approval_for_infra():
+    """POST-style proposal approval is specific to the placed installation's host zone."""
+    w = fresh_world()
+    w.session_reset()
+    inf = w.place_infra(InfraCreate(kind="wind", position=w.zones[0].centroid))
+    pa = w.proposal_approval_for_infra(inf)
+    assert set(pa) == {
+        "proposalApproval",
+        "supportCount",
+        "opposeCount",
+        "neutralCount",
+    }
+    assert 0.0 <= pa["proposalApproval"] <= 1.0
+    n = pa["supportCount"] + pa["opposeCount"] + pa["neutralCount"]
+    assert n > 0
+
+
+def test_subject_approval_by_kind_and_program():
+    w = fresh_world()
+    w.session_reset()
+    k = w.subject_approval("kind:solar")
+    assert k["subject"] == "kind:solar"
+    assert k["n"] > 0
+    assert 0.0 <= k["approval"] <= 1.0
+    # program subject works once a program is active
+    w.launch_program("rooftop_solar_rebate", "high_burden", 1.0)
+    p = w.subject_approval("program:rooftop_solar_rebate")
+    assert p["subject"] == "program:rooftop_solar_rebate"
+    assert p["n"] > 0
+
+
+def test_infra_endpoint_returns_proposal_approval():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+
+    state.reset_world()
+    c = TestClient(app)
+    z = c.get("/api/zones").json()[0]
+    r = c.post(
+        "/api/infra",
+        json={"kind": "wind", "position": z["centroid"]},
+    ).json()
+    assert "proposalApproval" in r
+    assert "supportCount" in r and "opposeCount" in r and "neutralCount" in r
+    assert r["kind"] == "wind"
+
+
+def test_sentiment_endpoint_with_subject():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+
+    state.reset_world()
+    c = TestClient(app)
+    # no subject -> global shape unchanged
+    g = c.get("/api/sentiment").json()
+    assert "cityApprovalPct" in g and "perZone" in g
+    # subject -> flat {subject, approval, support, oppose, neutral, n} with int counts
+    r = c.get("/api/sentiment?subject=kind:wind").json()
+    assert r["subject"] == "kind:wind"
+    assert 0.0 <= r["approval"] <= 1.0
+    assert isinstance(r["support"], int) and isinstance(r["oppose"], int)
+    assert isinstance(r["neutral"], int)
+    assert r["n"] == r["support"] + r["oppose"] + r["neutral"]
+    assert r["n"] > 0
+
+
+def test_reaction_voices_name_the_program_subject():
+    w = fresh_world()
+    w.session_reset()
+    w.launch_program("rooftop_solar_rebate", "high_burden", 1.0)
+    rxn = w.reaction_voices(
+        trigger="program:rooftop_solar_rebate", n=3, rng=np.random.default_rng(0)
+    )
+    assert rxn
+    for v in rxn:
+        assert v.trigger == "program:rooftop_solar_rebate"
+
+
+# --- scaling to the full ~140-neighbourhood city --------------------------
+def _synth_zones(n: int):
+    """n jittered zones with fresh ids, derived from the seed generator."""
+    from app.data.seed import generate_zones
+    from app.models import Zone
+
+    rng = np.random.default_rng(42)
+    base = generate_zones(rng)
+    zones = []
+    i = 0
+    while len(zones) < n:
+        for z in base:
+            if len(zones) >= n:
+                break
+            d = z.model_dump()
+            d["id"] = f"z{i:03d}"
+            lng, lat = d["centroid"]
+            d["centroid"] = [
+                lng + rng.uniform(-0.02, 0.02),
+                lat + rng.uniform(-0.02, 0.02),
+            ]
+            zones.append(Zone.model_validate(d))
+            i += 1
+    return zones
+
+
+def test_sim_and_optimizer_scale_to_140_zones():
+    from app.data.seed import generate_agents
+    from app.optimizer import optimize
+    from app.sim.engine import SimEngine
+
+    zones = _synth_zones(140)
+    agents = generate_agents(zones, np.random.default_rng(7), 8000)
+    assert len(zones) == 140
+    assert len(agents) >= 140  # populated city
+    eng = SimEngine(zones, agents)
+    eng.step_many(12)
+    tk = eng.current_tick()
+    assert len(tk.zone_deltas) == 140  # every zone reported
+    recs = optimize(eng, n=8)
+    assert recs  # optimizer produces candidates across the bigger city
+    appr = eng.sentiment.mean_opinion_by_zone()
+    assert len(appr) == 140
+    # launch_program resolves zone ids within the bigger set
+    hb = [j for j, z in enumerate(zones) if z.demographics.energy_burden_index >= 0.55]
+    if hb:
+        res = eng.launch_program("rooftop_solar_rebate", hb, 1.0)
+        assert set(res["zones"]) == {zones[j].id for j in hb}
+
+
+def test_loader_synthesizes_agents_for_loaded_zones_when_agents_absent(tmp_path):
+    """zones.json present but no agents.json -> agents synthesized & BOUND to loaded zones."""
+    import json
+
+    import app.config as config
+    from app.data.loader import load_world
+
+    zones = _synth_zones(60)
+    (tmp_path / "zones.json").write_text(
+        json.dumps([z.model_dump(by_alias=True) for z in zones])
+    )
+    old_dir = config.DATA_PROCESSED_DIR
+    config.DATA_PROCESSED_DIR = tmp_path
+    try:
+        loaded_zones, agents, source = load_world()
+    finally:
+        config.DATA_PROCESSED_DIR = old_dir
+    assert source == "processed"
+    assert len(loaded_zones) == 60
+    assert agents  # synthesized
+    zone_ids = {z.id for z in loaded_zones}
+    # every synthesized agent is bound to a REAL loaded zone (not stale seed zones)
+    assert all(a.zone_id in zone_ids for a in agents)

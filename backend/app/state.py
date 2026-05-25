@@ -141,6 +141,75 @@ class World:
     def flows(self) -> list[Flow]:
         return self.engine.flows()
 
+    # -- v2: adoption programs + subject-tied sentiment ---------------
+    def _resolve_scope(self, scope: str | None) -> list[int]:
+        """zoneId | 'high_burden' | 'all' | None -> zone indices."""
+        if scope in (None, "all", ""):
+            return list(range(self.engine.num_zones))
+        if scope == "high_burden":
+            return [
+                i
+                for i, z in enumerate(self.zones)
+                if z.demographics.energy_burden_index >= 0.55
+            ] or list(range(self.engine.num_zones))
+        if scope in self.zones_by_id:
+            return [next(i for i, z in enumerate(self.zones) if z.id == scope)]
+        return list(range(self.engine.num_zones))
+
+    def launch_program(
+        self, program: str, scope: str | None = "all", intensity: float = 1.0
+    ) -> dict:
+        zone_idxs = self._resolve_scope(scope)
+        result = self.engine.launch_program(program, zone_idxs, intensity)
+        result["scope"] = scope or "all"
+        return result
+
+    _PROGRAM_KIND = {
+        "rooftop_solar_rebate": "solar",
+        "retrofit_grant": "solar",
+        "ev_incentive": "battery",
+    }
+
+    def subject_approval(self, subject: str) -> dict:
+        """support/oppose toward a specific subject: 'infra:<id>' | 'kind:<k>' | 'program:<name>'."""
+        kind, zone_idxs = None, None
+        if subject.startswith("infra:"):
+            inf = self.engine.infra.get(subject.split(":", 1)[1])
+            if inf is not None:
+                kind = inf.kind
+                zone_idxs = [
+                    self.engine._nearest_zone(inf.position)
+                ]  # nearby = host zone
+        elif subject.startswith("kind:"):
+            kind = subject.split(":", 1)[1]
+        elif subject.startswith("program:"):
+            prog = subject.split(":", 1)[1]
+            kind = self._PROGRAM_KIND.get(prog)
+            active = [
+                i
+                for i in range(self.engine.num_zones)
+                if self.engine.zone_adoption_incentive[i] > 0
+            ]
+            zone_idxs = active or None
+        out = (
+            self.engine.subject_approval(kind, zone_idxs)
+            if kind
+            else {"approval": None, "n": 0}
+        )
+        out["subject"] = subject
+        return out
+
+    def proposal_approval_for_infra(self, infra) -> dict:
+        """Approval toward THIS specific installation among its host-zone agents."""
+        zi = self.engine._nearest_zone(infra.position)
+        out = self.engine.subject_approval(infra.kind, [zi])
+        return {
+            "proposalApproval": out["approval"],
+            "supportCount": out["supportCount"],
+            "opposeCount": out["opposeCount"],
+            "neutralCount": out["neutralCount"],
+        }
+
     # -- infra ---------------------------------------------------------
     def place_infra(self, payload: InfraCreate) -> Infra:
         kind = payload.kind

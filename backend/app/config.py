@@ -45,8 +45,9 @@ SECONDS_PER_TICK: float = float(os.getenv("WATTIF_TICK_SECONDS", "1.0"))
 START_YEAR: int = int(os.getenv("WATTIF_START_YEAR", "2025"))
 RANDOM_SEED: int = int(os.getenv("WATTIF_SEED", "42"))
 
-# Synthetic data sizing
-NUM_AGENTS: int = int(os.getenv("WATTIF_NUM_AGENTS", "3000"))
+# Synthetic data sizing. ~8000 keeps the full ~140-neighbourhood city populated (~55/zone)
+# when agents are synthesized; data/processed/agents.json (if shipped) overrides this count.
+NUM_AGENTS: int = int(os.getenv("WATTIF_NUM_AGENTS", "8000"))
 
 # CORS — Vite dev server
 CORS_ORIGINS: list[str] = os.getenv(

@@ -12,7 +12,7 @@ from __future__ import annotations
 import numpy as np
 
 from ..models import AgentVoice
-from .sentiment import KINDS
+from .sentiment import KIND_IDX, KINDS
 
 _KIND_NOUN = {
     "solar": "rooftop solar",
@@ -503,6 +503,64 @@ _PLACEMENT_LINES = {
 }
 
 
+# Opposition lines for a placed/proposed installation (NIMBY / cost / who-pays).
+_PLACEMENT_OPPOSE = {
+    "solar": [
+        "Solar going up in {zone}? Who's footing the bill — and will it reach renters?",
+        "Panels in {zone} are fine, just not on my hydro bill.",
+    ],
+    "battery": [
+        "A battery installation in {zone}? Hope it's safe and actually lowers bills.",
+        "Storage in {zone} — sure, but who's paying for it?",
+    ],
+    "wind": [
+        "A turbine proposed near me in {zone}? Hard no — the noise.",
+        "Keep that wind turbine away from {zone}'s homes, please.",
+    ],
+    "microgrid": [
+        "A microgrid in {zone}? Sounds pricey — show me it cuts bills first.",
+        "Not sure {zone} needs its own grid — who maintains it?",
+    ],
+}
+
+# Reaction lines for an individual-adoption PROGRAM, by program name.
+_PROGRAM_LINES = {
+    "rooftop_solar_rebate": {
+        "support": [
+            "I'm taking the rooftop-solar rebate in {zone} — finally affordable.",
+            "A solar rebate for {zone}? Signing up today.",
+        ],
+        "oppose": [
+            "A solar rebate in {zone}? Only helps people who own their roof.",
+            "Rebates in {zone} sound nice, but renters get nothing.",
+        ],
+    },
+    "ev_incentive": {
+        "support": [
+            "With this EV incentive, I'm finally going electric in {zone}.",
+            "EV rebate in {zone}? My next car's electric.",
+        ],
+        "oppose": [
+            "EV incentives in {zone} help the well-off buy cars — what about transit?",
+        ],
+    },
+    "retrofit_grant": {
+        "support": [
+            "Taking the retrofit grant in {zone} — lower bills, warmer winters.",
+            "A retrofit grant for {zone}? My drafty place needs it.",
+        ],
+        "oppose": [
+            "Retrofit grants in {zone}? Landlords should pay, not tenants.",
+        ],
+    },
+}
+_PROGRAM_KIND = {
+    "rooftop_solar_rebate": "solar",
+    "retrofit_grant": "solar",
+    "ev_incentive": "battery",
+}
+
+
 def reaction_voices(
     sentiment,
     zones_by_id: dict,
@@ -512,10 +570,12 @@ def reaction_voices(
     n: int = 4,
     rng: np.random.Generator | None = None,
 ) -> list[AgentVoice]:
-    """A few prompt REACTION voices from agents in the affected zones.
+    """A few prompt REACTION voices from agents in the affected zones, NAMING the subject.
 
-    trigger="placement" (with `kind`) -> placement reaction lines; otherwise `trigger` is a
-    scenario type and we use its event-aware lines. Sampled, keyless, tagged with trigger + position.
+    trigger forms: "placement" (+kind) -> support/oppose the specific install; "program:<name>" or a
+    bare program name -> support/oppose the program; otherwise a scenario type -> event-aware lines.
+    Each voice's stance reflects the agent's own opinion toward the subject. Tagged with a subject
+    `trigger` label + position. Sampled, keyless.
     """
     if sentiment.n == 0 or n <= 0:
         return []
@@ -528,17 +588,41 @@ def reaction_voices(
         pool = np.arange(sentiment.n)
     idxs = rng.choice(pool, size=min(n, len(pool)), replace=False)
 
+    program = None
+    if trigger.startswith("program:"):
+        program = trigger.split(":", 1)[1]
+    elif trigger in _PROGRAM_LINES:
+        program = trigger
+
     out: list[AgentVoice] = []
     for i in idxs:
         agent = sentiment.agents[int(i)]
+        op = sentiment.opinion[int(i)]
         zone = zones_by_id.get(agent.zone_id)
         zone_name = zone.name if zone else "my area"
 
-        if trigger == "placement" and kind in _PLACEMENT_LINES:
-            text = str(rng.choice(_PLACEMENT_LINES[kind])).format(zone=zone_name)
-            stance, topic = "support", kind
+        if program and program in _PROGRAM_LINES:
+            subj_kind = _PROGRAM_KIND.get(program, "solar")
+            stance = "support" if float(op[KIND_IDX[subj_kind]]) >= 0.5 else "oppose"
+            pool_lines = (
+                _PROGRAM_LINES[program].get(stance)
+                or _PROGRAM_LINES[program]["support"]
+            )
+            text = str(rng.choice(pool_lines)).format(zone=zone_name)
+            topic, subject = subj_kind, f"program:{program}"
+        elif (
+            trigger == "placement" or trigger.startswith("placement")
+        ) and kind in _PLACEMENT_LINES:
+            # Stance toward THIS specific install = the agent's opinion of that kind.
+            stance = "support" if float(op[KIND_IDX[kind]]) >= 0.5 else "oppose"
+            lines = (
+                _PLACEMENT_LINES[kind]
+                if stance == "support"
+                else _PLACEMENT_OPPOSE[kind]
+            )
+            text = str(rng.choice(lines)).format(zone=zone_name)
+            topic, subject = kind, f"placement:{kind}"
         else:
-            op = sentiment.opinion[int(i)]
             mean_op = float(op.mean())
             stance = _stance_for(mean_op)
             ki = int(np.argmax(op)) if stance != "oppose" else int(np.argmin(op))
@@ -546,6 +630,7 @@ def reaction_voices(
             persona = _persona(agent.archetype, mean_op, agent.id)
             template, _ = _pick_template(rng, agent.archetype, stance, trigger, persona)
             text = template.format(topic=_KIND_NOUN[topic], zone=zone_name)
+            subject = trigger
 
         out.append(
             AgentVoice(
@@ -557,7 +642,7 @@ def reaction_voices(
                 stance=stance,  # type: ignore[arg-type]
                 topic=topic,
                 position=tuple(agent.position),
-                trigger=trigger,
+                trigger=subject,
             )
         )
     return out

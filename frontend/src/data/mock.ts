@@ -515,6 +515,14 @@ function parseFacilityTarget(text: string): string | null {
   return null;
 }
 
+function parseProgram(text: string): string | null {
+  const t = text.toLowerCase();
+  if (/\bretrofit|insulat|heat pump|grant\b/.test(t)) return "retrofit_grant";
+  if (/\bev\b|charg|electric vehicle/.test(t)) return "ev_incentive";
+  if (/rebate|incentive|program|subsid/.test(t)) return "rooftop_solar_rebate";
+  return null;
+}
+
 export function* mockPlannerEvents(
   n: number,
   infra: Infra[],
@@ -524,6 +532,37 @@ export function* mockPlannerEvents(
   const text = opts.text ?? "";
   const forcedKind = parseKind(text);
   const facTarget = parseFacilityTarget(text);
+  const program = parseProgram(text);
+
+  // Program path: launch a distributed incentive (rebate/EV/retrofit) instead of
+  // siting utility infra — drives per-home rooftop adoption in high-burden zones.
+  // (Program keywords like "rebate" win even if a kind like "solar" is mentioned.)
+  if (program) {
+    const label = program.replace(/_/g, " ");
+    yield {
+      type: "thought",
+      text: `A ${label} reaches many households at once. Targeting the highest energy-burden neighbourhoods for the biggest equity impact.`,
+    };
+    yield { type: "tool_call", name: "get_city_state", args: {} };
+    yield { type: "tool_call", name: "launch_program", args: { program } };
+    const targets = [...ZONES]
+      .sort(
+        (a, b) =>
+          b.demographics.energyBurdenIndex - a.demographics.energyBurdenIndex
+      )
+      .slice(0, 6)
+      .map((z) => z.id);
+    yield {
+      type: "tool_result",
+      name: "launch_program",
+      result: { program, zones: targets },
+    };
+    yield {
+      type: "done",
+      summary: `Launched the ${label} across ${targets.length} high-burden neighbourhoods — watch rooftop solar adoption climb there over the next ticks.`,
+    };
+    return;
+  }
 
   yield {
     type: "thought",
@@ -613,4 +652,40 @@ export function* mockPlannerEvents(
       ? `Placed ${placed} ${forcedKind ?? "battery"} unit(s) next to ${facTarget.replace(/_/g, " ")}s for ~${(spent / 1e6).toFixed(1)}M CAD — resilient backup where vulnerable people shelter.`
       : `Placed ${placed} assets for ~${(spent / 1e6).toFixed(1)}M CAD, prioritizing high-burden zones with strong renewable potential.`,
   };
+}
+
+// ---- Mock build-priority ranking (offline fallback for /api/siting-priority) ----
+export function mockSitingPriority(
+  equityWeight: number,
+  infra: Infra[]
+): { equityWeight: number; zones: import("@/types").SitingPriorityZone[] } {
+  const zones = ZONES.map((z) => {
+    const near = infra.filter(
+      (i) =>
+        (i.position[0] - z.centroid[0]) ** 2 +
+          (i.position[1] - z.centroid[1]) ** 2 <
+        0.0006
+    ).length;
+    const servedFrac = Math.min(1, near * 0.35);
+    const unmetRatio = +(1 - servedFrac).toFixed(3);
+    const eb = z.demographics.energyBurdenIndex;
+    const demandSignal = Math.min(1, z.demandKwhMonthly / 6e6);
+    const score = +(
+      eb * equityWeight + (unmetRatio * 0.6 + demandSignal * 0.4) * (1 - equityWeight)
+    ).toFixed(3);
+    return {
+      zoneId: z.id,
+      name: z.name,
+      score,
+      unmetRatio,
+      energyBurden: eb,
+      unmetDemandKwh: Math.round(z.demandKwhMonthly * unmetRatio),
+      rationale: `${(unmetRatio * 100).toFixed(0)}% of demand unserved in a ${
+        eb > 0.6 ? "high" : "moderate"
+      }-burden zone (${eb.toFixed(2)}) → ${
+        eb > 0.6 ? "strong" : "fair"
+      } demand+equity siting candidate`,
+    };
+  }).sort((a, b) => b.score - a.score);
+  return { equityWeight, zones };
 }

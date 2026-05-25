@@ -232,6 +232,17 @@ export type ChatItem =
   | { id: string; role: "event"; event: PlannerEvent }
   | { id: string; role: "system"; text: string };
 
+// Build-priority ranking — WHERE to build next (unmet demand × energy burden).
+export type SitingPriorityZone = {
+  zoneId: string;
+  name: string;
+  score: number; // 0..1, higher = build here first
+  unmetRatio: number; // 0..1 share of demand unserved
+  energyBurden: number; // 0..1
+  unmetDemandKwh: number;
+  rationale: string;
+};
+
 // Activity log — chronological narration of what changed each tick.
 export type ActivitySeverity = "info" | "good" | "warn" | "bad";
 export type ActivityItem = {

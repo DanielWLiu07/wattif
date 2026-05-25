@@ -80,3 +80,33 @@ export function makeLandTest(zones: Zone[]): (p: LngLat) => boolean {
     return lat >= shorelineAt(lng) - SHORE_BUFFER;
   };
 }
+
+// Deterministically sample up to `n` points INSIDE a zone geometry (rejection
+// sampling within the bbox). Used to scatter rooftop-solar glints over a zone.
+export function sampleInside(
+  geom: Polygon | MultiPolygon,
+  n: number,
+  seed = 1
+): LngLat[] {
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+  for (const rings of polygonsOf(geom))
+    for (const [x, y] of rings[0] ?? []) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  if (!isFinite(minX)) return [];
+  let s = (seed * 2654435761) >>> 0;
+  const rnd = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+  const out: LngLat[] = [];
+  for (let t = 0; t < n * 40 && out.length < n; t++) {
+    const x = minX + rnd() * (maxX - minX);
+    const y = minY + rnd() * (maxY - minY);
+    if (inGeometry(x, y, geom)) out.push([x, y]);
+  }
+  return out;
+}
