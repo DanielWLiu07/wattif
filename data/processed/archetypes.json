@@ -15,13 +15,13 @@
       "zoneId": "z001",
       "name": "West Humber-Clairville",
       "mix": {
-        "owner-detached": 0.2807,
-        "condo-owner": 0.2461,
-        "renter-low": 0.1228,
-        "renter-mid": 0.1228,
+        "owner-detached": 0.2796,
+        "condo-owner": 0.2452,
+        "renter-low": 0.1223,
+        "renter-mid": 0.1223,
         "senior": 0.098,
         "student": 0.0977,
-        "small-business": 0.0319
+        "small-business": 0.0348
       },
       "drivers": {
         "renterPct": 0.318,
@@ -59,13 +59,13 @@
       "zoneId": "z003",
       "name": "Thistletown-Beaumond Heights",
       "mix": {
-        "owner-detached": 0.2744,
-        "condo-owner": 0.1924,
-        "renter-low": 0.143,
-        "renter-mid": 0.143,
+        "owner-detached": 0.2715,
+        "condo-owner": 0.1904,
+        "renter-low": 0.1415,
+        "renter-mid": 0.1415,
         "senior": 0.1135,
         "student": 0.0762,
-        "small-business": 0.0574
+        "small-business": 0.0654
       },
       "drivers": {
         "renterPct": 0.38,
@@ -103,13 +103,13 @@
       "zoneId": "z005",
       "name": "Elms-Old Rexdale",
       "mix": {
-        "owner-detached": 0.2107,
-        "condo-owner": 0.2194,
-        "renter-low": 0.181,
-        "renter-mid": 0.181,
+        "owner-detached": 0.2097,
+        "condo-owner": 0.2183,
+        "renter-low": 0.1801,
+        "renter-mid": 0.1801,
         "senior": 0.0944,
         "student": 0.0779,
-        "small-business": 0.0356
+        "small-business": 0.0395
       },
       "drivers": {
         "renterPct": 0.457,
@@ -125,13 +125,13 @@
       "zoneId": "z006",
       "name": "Kingsview Village-The Westway",
       "mix": {
-        "owner-detached": 0.1362,
-        "condo-owner": 0.2677,
-        "renter-low": 0.1857,
-        "renter-mid": 0.1857,
+        "owner-detached": 0.1357,
+        "condo-owner": 0.2667,
+        "renter-low": 0.185,
+        "renter-mid": 0.185,
         "senior": 0.1139,
-        "student": 0.0732,
-        "small-business": 0.0375
+        "student": 0.0733,
+        "small-business": 0.0405
       },
       "drivers": {
         "renterPct": 0.479,

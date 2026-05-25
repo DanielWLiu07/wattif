@@ -34,7 +34,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = REPO_ROOT / "data" / "processed"
 SEED = 1729
-N_AGENTS = 4000
+N_AGENTS = 8000  # distributed across all 140 zones by population (~57/zone)
 
 # Lake Ontario shoreline reference latitude near downtown Toronto.
 # Wind potential rises as a zone sits closer to (lower latitude than) the lake / waterfront.

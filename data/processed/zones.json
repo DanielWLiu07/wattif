@@ -668,8 +668,8 @@
       "energyBurdenIndex": 0.631
     },
     "demandKwhMonthly": 10064681.1,
-    "solarPotential": 0.629,
-    "windPotential": 0.689
+    "solarPotential": 0.598,
+    "windPotential": 0.724
   },
   {
     "id": "z002",
@@ -1764,8 +1764,8 @@
       "energyBurdenIndex": 0.777
     },
     "demandKwhMonthly": 9712987.2,
-    "solarPotential": 0.249,
-    "windPotential": 0.581
+    "solarPotential": 0.248,
+    "windPotential": 0.606
   },
   {
     "id": "z003",
@@ -2444,8 +2444,8 @@
       "energyBurdenIndex": 0.675
     },
     "demandKwhMonthly": 3102907.8,
-    "solarPotential": 0.539,
-    "windPotential": 0.614
+    "solarPotential": 0.468,
+    "windPotential": 0.621
   },
   {
     "id": "z004",
@@ -2900,8 +2900,8 @@
       "energyBurdenIndex": 0.702
     },
     "demandKwhMonthly": 3147305.3,
-    "solarPotential": 0.707,
-    "windPotential": 0.602
+    "solarPotential": 0.706,
+    "windPotential": 0.607
   },
   {
     "id": "z005",
@@ -4020,8 +4020,8 @@
       "energyBurdenIndex": 0.726
     },
     "demandKwhMonthly": 2806090.4,
-    "solarPotential": 0.529,
-    "windPotential": 0.603
+    "solarPotential": 0.216,
+    "windPotential": 0.594
   },
   {
     "id": "z006",
@@ -4280,8 +4280,8 @@
       "energyBurdenIndex": 0.73
     },
     "demandKwhMonthly": 6541112.1,
-    "solarPotential": 0.491,
-    "windPotential": 0.627
+    "solarPotential": 0.087,
+    "windPotential": 0.608
   },
   {
     "id": "z007",
@@ -5336,8 +5336,8 @@
       "energyBurdenIndex": 0.677
     },
     "demandKwhMonthly": 6719053.9,
-    "solarPotential": 0.516,
-    "windPotential": 0.669
+    "solarPotential": 0.497,
+    "windPotential": 0.67
   },
   {
     "id": "z008",
@@ -5484,8 +5484,8 @@
       "energyBurdenIndex": 0.662
     },
     "demandKwhMonthly": 3303544.6,
-    "solarPotential": 0.568,
-    "windPotential": 0.631
+    "solarPotential": 0.58,
+    "windPotential": 0.607
   },
   {
     "id": "z009",
@@ -5654,8 +5654,8 @@
       "energyBurdenIndex": 0.633
     },
     "demandKwhMonthly": 4783284.3,
-    "solarPotential": 0.521,
-    "windPotential": 0.64
+    "solarPotential": 0.545,
+    "windPotential": 0.646
   },
   {
     "id": "z010",
@@ -5788,8 +5788,8 @@
       "energyBurdenIndex": 0.293
     },
     "demandKwhMonthly": 3732767.4,
-    "solarPotential": 0.612,
-    "windPotential": 0.795
+    "solarPotential": 0.642,
+    "windPotential": 0.789
   },
   {
     "id": "z011",
@@ -5992,8 +5992,8 @@
       "energyBurdenIndex": 0.503
     },
     "demandKwhMonthly": 5773638.9,
-    "solarPotential": 0.691,
-    "windPotential": 0.818
+    "solarPotential": 0.667,
+    "windPotential": 0.785
   },
   {
     "id": "z012",
@@ -6848,8 +6848,8 @@
       "energyBurdenIndex": 0.545
     },
     "demandKwhMonthly": 3274557.9,
-    "solarPotential": 0.626,
-    "windPotential": 0.785
+    "solarPotential": 0.611,
+    "windPotential": 0.769
   },
   {
     "id": "z013",
@@ -7693,7 +7693,7 @@
     },
     "demandKwhMonthly": 3540680.1,
     "solarPotential": 0.331,
-    "windPotential": 0.711
+    "windPotential": 0.699
   },
   {
     "id": "z014",
@@ -8162,8 +8162,8 @@
       "energyBurdenIndex": 0.659
     },
     "demandKwhMonthly": 13344567.0,
-    "solarPotential": 0.56,
-    "windPotential": 0.688
+    "solarPotential": 0.559,
+    "windPotential": 0.704
   },
   {
     "id": "z015",
@@ -8286,8 +8286,8 @@
       "energyBurdenIndex": 0.255
     },
     "demandKwhMonthly": 3190955.5,
-    "solarPotential": 0.654,
-    "windPotential": 0.773
+    "solarPotential": 0.614,
+    "windPotential": 0.762
   },
   {
     "id": "z016",
@@ -9032,8 +9032,8 @@
       "energyBurdenIndex": 0.588
     },
     "demandKwhMonthly": 7750797.8,
-    "solarPotential": 0.588,
-    "windPotential": 0.727
+    "solarPotential": 0.524,
+    "windPotential": 0.673
   },
   {
     "id": "z017",
@@ -10119,7 +10119,7 @@
     },
     "demandKwhMonthly": 10245789.6,
     "solarPotential": 0.476,
-    "windPotential": 0.665
+    "windPotential": 0.689
   },
   {
     "id": "z018",
@@ -10416,8 +10416,8 @@
       "energyBurdenIndex": 0.784
     },
     "demandKwhMonthly": 3376490.7,
-    "solarPotential": 0.46,
-    "windPotential": 0.63
+    "solarPotential": 0.464,
+    "windPotential": 0.67
   },
   {
     "id": "z019",
@@ -10548,8 +10548,8 @@
       "energyBurdenIndex": 0.744
     },
     "demandKwhMonthly": 3007629.5,
-    "solarPotential": 0.443,
-    "windPotential": 0.657
+    "solarPotential": 0.509,
+    "windPotential": 0.685
   },
   {
     "id": "z020",
@@ -11236,8 +11236,8 @@
       "energyBurdenIndex": 0.537
     },
     "demandKwhMonthly": 3722146.1,
-    "solarPotential": 0.64,
-    "windPotential": 0.785
+    "solarPotential": 0.618,
+    "windPotential": 0.779
   },
   {
     "id": "z021",
@@ -12216,8 +12216,8 @@
       "energyBurdenIndex": 0.66
     },
     "demandKwhMonthly": 3693764.9,
-    "solarPotential": 0.611,
-    "windPotential": 0.645
+    "solarPotential": 0.638,
+    "windPotential": 0.686
   },
   {
     "id": "z022",
@@ -13344,8 +13344,8 @@
       "energyBurdenIndex": 0.739
     },
     "demandKwhMonthly": 4599947.1,
-    "solarPotential": 0.559,
-    "windPotential": 0.574
+    "solarPotential": 0.521,
+    "windPotential": 0.605
   },
   {
     "id": "z023",
@@ -14152,8 +14152,8 @@
       "energyBurdenIndex": 0.545
     },
     "demandKwhMonthly": 3282897.0,
-    "solarPotential": 0.577,
-    "windPotential": 0.64
+    "solarPotential": 0.64,
+    "windPotential": 0.644
   },
   {
     "id": "z024",
@@ -15116,8 +15116,8 @@
       "energyBurdenIndex": 0.849
     },
     "demandKwhMonthly": 6328169.5,
-    "solarPotential": 0.409,
-    "windPotential": 0.557
+    "solarPotential": 0.408,
+    "windPotential": 0.559
   },
   {
     "id": "z025",
@@ -15840,8 +15840,8 @@
       "energyBurdenIndex": 0.76
     },
     "demandKwhMonthly": 8954690.0,
-    "solarPotential": 0.248,
-    "windPotential": 0.514
+    "solarPotential": 0.247,
+    "windPotential": 0.539
   },
   {
     "id": "z026",
@@ -16512,8 +16512,8 @@
       "energyBurdenIndex": 0.756
     },
     "demandKwhMonthly": 10376694.5,
-    "solarPotential": 0.466,
-    "windPotential": 0.488
+    "solarPotential": 0.546,
+    "windPotential": 0.482
   },
   {
     "id": "z027",
@@ -17248,8 +17248,8 @@
       "energyBurdenIndex": 0.778
     },
     "demandKwhMonthly": 8124889.3,
-    "solarPotential": 0.542,
-    "windPotential": 0.547
+    "solarPotential": 0.541,
+    "windPotential": 0.531
   },
   {
     "id": "z028",
@@ -17380,8 +17380,8 @@
       "energyBurdenIndex": 0.832
     },
     "demandKwhMonthly": 2893620.8,
-    "solarPotential": 0.459,
-    "windPotential": 0.462
+    "solarPotential": 0.445,
+    "windPotential": 0.468
   },
   {
     "id": "z029",
@@ -17912,8 +17912,8 @@
       "energyBurdenIndex": 0.706
     },
     "demandKwhMonthly": 3017039.0,
-    "solarPotential": 0.562,
-    "windPotential": 0.5
+    "solarPotential": 0.51,
+    "windPotential": 0.482
   },
   {
     "id": "z030",
@@ -18030,8 +18030,8 @@
       "energyBurdenIndex": 0.8
     },
     "demandKwhMonthly": 5221485.6,
-    "solarPotential": 0.468,
-    "windPotential": 0.499
+    "solarPotential": 0.472,
+    "windPotential": 0.514
   },
   {
     "id": "z031",
@@ -18730,8 +18730,8 @@
       "energyBurdenIndex": 0.679
     },
     "demandKwhMonthly": 4429458.2,
-    "solarPotential": 0.542,
-    "windPotential": 0.494
+    "solarPotential": 0.56,
+    "windPotential": 0.493
   },
   {
     "id": "z032",
@@ -19586,8 +19586,8 @@
       "energyBurdenIndex": 0.769
     },
     "demandKwhMonthly": 6652202.3,
-    "solarPotential": 0.453,
-    "windPotential": 0.421
+    "solarPotential": 0.537,
+    "windPotential": 0.416
   },
   {
     "id": "z033",
@@ -20262,8 +20262,8 @@
       "energyBurdenIndex": 0.681
     },
     "demandKwhMonthly": 4984904.0,
-    "solarPotential": 0.473,
-    "windPotential": 0.455
+    "solarPotential": 0.514,
+    "windPotential": 0.489
   },
   {
     "id": "z034",
@@ -20930,8 +20930,8 @@
       "energyBurdenIndex": 0.677
     },
     "demandKwhMonthly": 4812974.7,
-    "solarPotential": 0.516,
-    "windPotential": 0.535
+    "solarPotential": 0.569,
+    "windPotential": 0.524
   },
   {
     "id": "z035",
@@ -21518,8 +21518,8 @@
       "energyBurdenIndex": 0.792
     },
     "demandKwhMonthly": 7758946.6,
-    "solarPotential": 0.431,
-    "windPotential": 0.492
+    "solarPotential": 0.47,
+    "windPotential": 0.49
   },
   {
     "id": "z036",
@@ -21986,8 +21986,8 @@
       "energyBurdenIndex": 0.74
     },
     "demandKwhMonthly": 7046983.5,
-    "solarPotential": 0.517,
-    "windPotential": 0.584
+    "solarPotential": 0.522,
+    "windPotential": 0.582
   },
   {
     "id": "z037",
@@ -22354,8 +22354,8 @@
       "energyBurdenIndex": 0.666
     },
     "demandKwhMonthly": 5080281.0,
-    "solarPotential": 0.307,
-    "windPotential": 0.577
+    "solarPotential": 0.306,
+    "windPotential": 0.522
   },
   {
     "id": "z038",
@@ -23410,8 +23410,8 @@
       "energyBurdenIndex": 0.629
     },
     "demandKwhMonthly": 4966807.1,
-    "solarPotential": 0.508,
-    "windPotential": 0.464
+    "solarPotential": 0.533,
+    "windPotential": 0.474
   },
   {
     "id": "z039",
@@ -24502,8 +24502,8 @@
       "energyBurdenIndex": 0.405
     },
     "demandKwhMonthly": 7679774.8,
-    "solarPotential": 0.582,
-    "windPotential": 0.435
+    "solarPotential": 0.601,
+    "windPotential": 0.471
   },
   {
     "id": "z040",
@@ -25190,8 +25190,8 @@
       "energyBurdenIndex": 0.513
     },
     "demandKwhMonthly": 5666977.5,
-    "solarPotential": 0.56,
-    "windPotential": 0.493
+    "solarPotential": 0.586,
+    "windPotential": 0.503
   },
   {
     "id": "z041",
@@ -25834,8 +25834,8 @@
       "energyBurdenIndex": 0.035
     },
     "demandKwhMonthly": 3409888.0,
-    "solarPotential": 0.633,
-    "windPotential": 0.509
+    "solarPotential": 0.638,
+    "windPotential": 0.5
   },
   {
     "id": "z042",
@@ -26510,8 +26510,8 @@
       "energyBurdenIndex": 0.631
     },
     "demandKwhMonthly": 8469534.3,
-    "solarPotential": 0.585,
-    "windPotential": 0.457
+    "solarPotential": 0.601,
+    "windPotential": 0.45
   },
   {
     "id": "z043",
@@ -27638,8 +27638,8 @@
       "energyBurdenIndex": 0.796
     },
     "demandKwhMonthly": 5149902.6,
-    "solarPotential": 0.495,
-    "windPotential": 0.422
+    "solarPotential": 0.496,
+    "windPotential": 0.412
   },
   {
     "id": "z044",
@@ -27810,8 +27810,8 @@
       "energyBurdenIndex": 0.796
     },
     "demandKwhMonthly": 6412485.7,
-    "solarPotential": 0.518,
-    "windPotential": 0.424
+    "solarPotential": 0.528,
+    "windPotential": 0.412
   },
   {
     "id": "z045",
@@ -28414,8 +28414,8 @@
       "energyBurdenIndex": 0.76
     },
     "demandKwhMonthly": 10422393.7,
-    "solarPotential": 0.508,
-    "windPotential": 0.464
+    "solarPotential": 0.469,
+    "windPotential": 0.466
   },
   {
     "id": "z046",
@@ -28786,8 +28786,8 @@
       "energyBurdenIndex": 0.605
     },
     "demandKwhMonthly": 4774633.3,
-    "solarPotential": 0.582,
-    "windPotential": 0.646
+    "solarPotential": 0.589,
+    "windPotential": 0.64
   },
   {
     "id": "z047",
@@ -29407,7 +29407,7 @@
     },
     "demandKwhMonthly": 8095137.0,
     "solarPotential": 0.156,
-    "windPotential": 0.564
+    "windPotential": 0.551
   },
   {
     "id": "z048",
@@ -29978,8 +29978,8 @@
       "energyBurdenIndex": 0.581
     },
     "demandKwhMonthly": 5158396.5,
-    "solarPotential": 0.605,
-    "windPotential": 0.649
+    "solarPotential": 0.607,
+    "windPotential": 0.628
   },
   {
     "id": "z049",
@@ -30514,8 +30514,8 @@
       "energyBurdenIndex": 0.637
     },
     "demandKwhMonthly": 4031464.1,
-    "solarPotential": 0.565,
-    "windPotential": 0.569
+    "solarPotential": 0.52,
+    "windPotential": 0.599
   },
   {
     "id": "z050",
@@ -30918,8 +30918,8 @@
       "energyBurdenIndex": 0.667
     },
     "demandKwhMonthly": 4815983.1,
-    "solarPotential": 0.564,
-    "windPotential": 0.605
+    "solarPotential": 0.54,
+    "windPotential": 0.602
   },
   {
     "id": "z051",
@@ -31878,8 +31878,8 @@
       "energyBurdenIndex": 0.682
     },
     "demandKwhMonthly": 15062792.4,
-    "solarPotential": 0.22,
-    "windPotential": 0.537
+    "solarPotential": 0.219,
+    "windPotential": 0.52
   },
   {
     "id": "z052",
@@ -32794,8 +32794,8 @@
       "energyBurdenIndex": 0.675
     },
     "demandKwhMonthly": 6443566.0,
-    "solarPotential": 0.067,
-    "windPotential": 0.563
+    "solarPotential": 0.066,
+    "windPotential": 0.519
   },
   {
     "id": "z053",
@@ -33550,8 +33550,8 @@
       "energyBurdenIndex": 0.799
     },
     "demandKwhMonthly": 4649842.3,
-    "solarPotential": 0.482,
-    "windPotential": 0.49
+    "solarPotential": 0.441,
+    "windPotential": 0.475
   },
   {
     "id": "z054",
@@ -33868,8 +33868,8 @@
       "energyBurdenIndex": 0.748
     },
     "demandKwhMonthly": 5560848.8,
-    "solarPotential": 0.501,
-    "windPotential": 0.465
+    "solarPotential": 0.53,
+    "windPotential": 0.467
   },
   {
     "id": "z055",
@@ -34068,8 +34068,8 @@
       "energyBurdenIndex": 0.936
     },
     "demandKwhMonthly": 6139510.8,
-    "solarPotential": 0.334,
-    "windPotential": 0.342
+    "solarPotential": 0.421,
+    "windPotential": 0.306
   },
   {
     "id": "z056",
@@ -34674,8 +34674,8 @@
       "energyBurdenIndex": 0.361
     },
     "demandKwhMonthly": 5640605.1,
-    "solarPotential": 0.682,
-    "windPotential": 0.456
+    "solarPotential": 0.681,
+    "windPotential": 0.433
   },
   {
     "id": "z057",
@@ -34980,8 +34980,8 @@
       "energyBurdenIndex": 0.831
     },
     "demandKwhMonthly": 3383160.2,
-    "solarPotential": 0.426,
-    "windPotential": 0.358
+    "solarPotential": 0.406,
+    "windPotential": 0.35
   },
   {
     "id": "z058",
@@ -35112,8 +35112,8 @@
       "energyBurdenIndex": 0.611
     },
     "demandKwhMonthly": 2827863.4,
-    "solarPotential": 0.539,
-    "windPotential": 0.431
+    "solarPotential": 0.605,
+    "windPotential": 0.433
   },
   {
     "id": "z059",
@@ -35524,8 +35524,8 @@
       "energyBurdenIndex": 0.574
     },
     "demandKwhMonthly": 5297214.7,
-    "solarPotential": 0.582,
-    "windPotential": 0.467
+    "solarPotential": 0.61,
+    "windPotential": 0.457
   },
   {
     "id": "z060",
@@ -35584,8 +35584,8 @@
       "energyBurdenIndex": 0.604
     },
     "demandKwhMonthly": 2403310.9,
-    "solarPotential": 0.565,
-    "windPotential": 0.504
+    "solarPotential": 0.579,
+    "windPotential": 0.492
   },
   {
     "id": "z061",
@@ -35666,8 +35666,8 @@
       "energyBurdenIndex": 0.853
     },
     "demandKwhMonthly": 4561479.6,
-    "solarPotential": 0.449,
-    "windPotential": 0.464
+    "solarPotential": 0.466,
+    "windPotential": 0.466
   },
   {
     "id": "z062",
@@ -36118,8 +36118,8 @@
       "energyBurdenIndex": 0.674
     },
     "demandKwhMonthly": 6486203.7,
-    "solarPotential": 0.554,
-    "windPotential": 0.505
+    "solarPotential": 0.518,
+    "windPotential": 0.522
   },
   {
     "id": "z063",
@@ -36385,7 +36385,7 @@
     },
     "demandKwhMonthly": 6866978.6,
     "solarPotential": 0.563,
-    "windPotential": 0.549
+    "windPotential": 0.562
   },
   {
     "id": "z064",
@@ -36692,8 +36692,8 @@
       "energyBurdenIndex": 0.63
     },
     "demandKwhMonthly": 3852227.2,
-    "solarPotential": 0.521,
-    "windPotential": 0.516
+    "solarPotential": 0.536,
+    "windPotential": 0.479
   },
   {
     "id": "z065",
@@ -37136,8 +37136,8 @@
       "energyBurdenIndex": 0.651
     },
     "demandKwhMonthly": 4382148.8,
-    "solarPotential": 0.567,
-    "windPotential": 0.499
+    "solarPotential": 0.524,
+    "windPotential": 0.485
   },
   {
     "id": "z066",
@@ -37444,8 +37444,8 @@
       "energyBurdenIndex": 0.601
     },
     "demandKwhMonthly": 2976794.5,
-    "solarPotential": 0.67,
-    "windPotential": 0.456
+    "solarPotential": 0.669,
+    "windPotential": 0.489
   },
   {
     "id": "z067",
@@ -37544,8 +37544,8 @@
       "energyBurdenIndex": 0.69
     },
     "demandKwhMonthly": 2382724.0,
-    "solarPotential": 0.463,
-    "windPotential": 0.398
+    "solarPotential": 0.53,
+    "windPotential": 0.393
   },
   {
     "id": "z068",
@@ -37612,8 +37612,8 @@
       "energyBurdenIndex": 0.602
     },
     "demandKwhMonthly": 3717199.7,
-    "solarPotential": 0.523,
-    "windPotential": 0.411
+    "solarPotential": 0.564,
+    "windPotential": 0.401
   },
   {
     "id": "z069",
@@ -38052,8 +38052,8 @@
       "energyBurdenIndex": 0.678
     },
     "demandKwhMonthly": 2340964.5,
-    "solarPotential": 0.544,
-    "windPotential": 0.417
+    "solarPotential": 0.547,
+    "windPotential": 0.397
   },
   {
     "id": "z070",
@@ -39336,8 +39336,8 @@
       "energyBurdenIndex": 0.629
     },
     "demandKwhMonthly": 8544702.8,
-    "solarPotential": 0.523,
-    "windPotential": 0.456
+    "solarPotential": 0.561,
+    "windPotential": 0.485
   },
   {
     "id": "z071",
@@ -39477,7 +39477,7 @@
     },
     "demandKwhMonthly": 3493995.8,
     "solarPotential": 0.518,
-    "windPotential": 0.296
+    "windPotential": 0.348
   },
   {
     "id": "z072",
@@ -39521,7 +39521,7 @@
     },
     "demandKwhMonthly": 3128875.2,
     "solarPotential": 0.411,
-    "windPotential": 0.278
+    "windPotential": 0.238
   },
   {
     "id": "z073",
@@ -39585,7 +39585,7 @@
     },
     "demandKwhMonthly": 6053229.7,
     "solarPotential": 0.391,
-    "windPotential": 0.252
+    "windPotential": 0.229
   },
   {
     "id": "z074",
@@ -39873,7 +39873,7 @@
     },
     "demandKwhMonthly": 5376266.2,
     "solarPotential": 0.048,
-    "windPotential": 0.229
+    "windPotential": 0.242
   },
   {
     "id": "z075",
@@ -39997,7 +39997,7 @@
     },
     "demandKwhMonthly": 9281449.6,
     "solarPotential": 0.144,
-    "windPotential": 0.244
+    "windPotential": 0.262
   },
   {
     "id": "z076",
@@ -40297,7 +40297,7 @@
     },
     "demandKwhMonthly": 7540150.1,
     "solarPotential": 0.048,
-    "windPotential": 0.236
+    "windPotential": 0.2
   },
   {
     "id": "z077",
@@ -44375,7 +44375,7 @@
     },
     "demandKwhMonthly": 20174555.0,
     "solarPotential": 0.171,
-    "windPotential": 0.233
+    "windPotential": 0.243
   },
   {
     "id": "z078",
@@ -44735,7 +44735,7 @@
     },
     "demandKwhMonthly": 5232063.6,
     "solarPotential": 0.525,
-    "windPotential": 0.246
+    "windPotential": 0.261
   },
   {
     "id": "z079",
@@ -44853,7 +44853,7 @@
     },
     "demandKwhMonthly": 2259311.6,
     "solarPotential": 0.559,
-    "windPotential": 0.3
+    "windPotential": 0.314
   },
   {
     "id": "z080",
@@ -45140,8 +45140,8 @@
       "energyBurdenIndex": 0.727
     },
     "demandKwhMonthly": 4188117.8,
-    "solarPotential": 0.502,
-    "windPotential": 0.398
+    "solarPotential": 0.47,
+    "windPotential": 0.403
   },
   {
     "id": "z081",
@@ -45497,7 +45497,7 @@
     },
     "demandKwhMonthly": 5026544.2,
     "solarPotential": 0.584,
-    "windPotential": 0.428
+    "windPotential": 0.417
   },
   {
     "id": "z082",
@@ -45911,7 +45911,7 @@
     },
     "demandKwhMonthly": 9552271.5,
     "solarPotential": 0.444,
-    "windPotential": 0.41
+    "windPotential": 0.437
   },
   {
     "id": "z083",
@@ -46230,8 +46230,8 @@
       "energyBurdenIndex": 0.773
     },
     "demandKwhMonthly": 3505444.9,
-    "solarPotential": 0.497,
-    "windPotential": 0.439
+    "solarPotential": 0.482,
+    "windPotential": 0.446
   },
   {
     "id": "z084",
@@ -47007,7 +47007,7 @@
     },
     "demandKwhMonthly": 4676121.0,
     "solarPotential": 0.516,
-    "windPotential": 0.428
+    "windPotential": 0.472
   },
   {
     "id": "z085",
@@ -47225,7 +47225,7 @@
     },
     "demandKwhMonthly": 6318218.9,
     "solarPotential": 0.544,
-    "windPotential": 0.416
+    "windPotential": 0.435
   },
   {
     "id": "z086",
@@ -47861,7 +47861,7 @@
     },
     "demandKwhMonthly": 4493193.6,
     "solarPotential": 0.598,
-    "windPotential": 0.507
+    "windPotential": 0.476
   },
   {
     "id": "z087",
@@ -48386,8 +48386,8 @@
       "energyBurdenIndex": 0.627
     },
     "demandKwhMonthly": 7380705.9,
-    "solarPotential": 0.59,
-    "windPotential": 0.621
+    "solarPotential": 0.589,
+    "windPotential": 0.601
   },
   {
     "id": "z088",
@@ -48774,8 +48774,8 @@
       "energyBurdenIndex": 0.764
     },
     "demandKwhMonthly": 6689119.1,
-    "solarPotential": 0.424,
-    "windPotential": 0.531
+    "solarPotential": 0.49,
+    "windPotential": 0.523
   },
   {
     "id": "z089",
@@ -49342,8 +49342,8 @@
       "energyBurdenIndex": 0.416
     },
     "demandKwhMonthly": 3271303.6,
-    "solarPotential": 0.623,
-    "windPotential": 0.708
+    "solarPotential": 0.606,
+    "windPotential": 0.667
   },
   {
     "id": "z090",
@@ -49894,8 +49894,8 @@
       "energyBurdenIndex": 0.65
     },
     "demandKwhMonthly": 4369607.3,
-    "solarPotential": 0.537,
-    "windPotential": 0.596
+    "solarPotential": 0.565,
+    "windPotential": 0.56
   },
   {
     "id": "z091",
@@ -50846,8 +50846,8 @@
       "energyBurdenIndex": 0.699
     },
     "demandKwhMonthly": 3308011.4,
-    "solarPotential": 0.568,
-    "windPotential": 0.559
+    "solarPotential": 0.552,
+    "windPotential": 0.506
   },
   {
     "id": "z092",
@@ -51638,8 +51638,8 @@
       "energyBurdenIndex": 0.649
     },
     "demandKwhMonthly": 4276311.4,
-    "solarPotential": 0.537,
-    "windPotential": 0.531
+    "solarPotential": 0.571,
+    "windPotential": 0.509
   },
   {
     "id": "z093",
@@ -52386,8 +52386,8 @@
       "energyBurdenIndex": 0.717
     },
     "demandKwhMonthly": 10989205.6,
-    "solarPotential": 0.655,
-    "windPotential": 0.471
+    "solarPotential": 0.654,
+    "windPotential": 0.453
   },
   {
     "id": "z094",
@@ -52469,7 +52469,7 @@
     },
     "demandKwhMonthly": 4324487.5,
     "solarPotential": 0.62,
-    "windPotential": 0.432
+    "windPotential": 0.409
   },
   {
     "id": "z095",
@@ -53081,7 +53081,7 @@
     },
     "demandKwhMonthly": 9260649.6,
     "solarPotential": 0.492,
-    "windPotential": 0.321
+    "windPotential": 0.341
   },
   {
     "id": "z096",
@@ -53185,7 +53185,7 @@
     },
     "demandKwhMonthly": 3440203.1,
     "solarPotential": 0.598,
-    "windPotential": 0.341
+    "windPotential": 0.36
   },
   {
     "id": "z097",
@@ -53580,8 +53580,8 @@
       "energyBurdenIndex": 0.705
     },
     "demandKwhMonthly": 3849388.8,
-    "solarPotential": 0.547,
-    "windPotential": 0.372
+    "solarPotential": 0.546,
+    "windPotential": 0.361
   },
   {
     "id": "z098",
@@ -53805,7 +53805,7 @@
     },
     "demandKwhMonthly": 6767990.3,
     "solarPotential": 0.457,
-    "windPotential": 0.396
+    "windPotential": 0.375
   },
   {
     "id": "z099",
@@ -53974,8 +53974,8 @@
       "energyBurdenIndex": 0.575
     },
     "demandKwhMonthly": 5286073.0,
-    "solarPotential": 0.527,
-    "windPotential": 0.384
+    "solarPotential": 0.592,
+    "windPotential": 0.429
   },
   {
     "id": "z100",
@@ -54074,8 +54074,8 @@
       "energyBurdenIndex": 0.702
     },
     "demandKwhMonthly": 3633930.3,
-    "solarPotential": 0.426,
-    "windPotential": 0.35
+    "solarPotential": 0.502,
+    "windPotential": 0.374
   },
   {
     "id": "z101",
@@ -54222,8 +54222,8 @@
       "energyBurdenIndex": 0.594
     },
     "demandKwhMonthly": 3374067.8,
-    "solarPotential": 0.467,
-    "windPotential": 0.414
+    "solarPotential": 0.541,
+    "windPotential": 0.4
   },
   {
     "id": "z102",
@@ -54554,8 +54554,8 @@
       "energyBurdenIndex": 0.751
     },
     "demandKwhMonthly": 3885496.6,
-    "solarPotential": 0.45,
-    "windPotential": 0.358
+    "solarPotential": 0.48,
+    "windPotential": 0.414
   },
   {
     "id": "z103",
@@ -55102,7 +55102,7 @@
       "energyBurdenIndex": 0.282
     },
     "demandKwhMonthly": 5260246.4,
-    "solarPotential": 0.583,
+    "solarPotential": 0.632,
     "windPotential": 0.46
   },
   {
@@ -55208,8 +55208,8 @@
       "energyBurdenIndex": 0.821
     },
     "demandKwhMonthly": 8856744.4,
-    "solarPotential": 0.361,
-    "windPotential": 0.319
+    "solarPotential": 0.478,
+    "windPotential": 0.33
   },
   {
     "id": "z105",
@@ -55504,8 +55504,8 @@
       "energyBurdenIndex": 0.291
     },
     "demandKwhMonthly": 4999938.1,
-    "solarPotential": 0.624,
-    "windPotential": 0.481
+    "solarPotential": 0.628,
+    "windPotential": 0.439
   },
   {
     "id": "z106",
@@ -55956,8 +55956,8 @@
       "energyBurdenIndex": 0.78
     },
     "demandKwhMonthly": 4294855.1,
-    "solarPotential": 0.462,
-    "windPotential": 0.418
+    "solarPotential": 0.516,
+    "windPotential": 0.374
   },
   {
     "id": "z107",
@@ -56352,8 +56352,8 @@
       "energyBurdenIndex": 0.723
     },
     "demandKwhMonthly": 6316094.1,
-    "solarPotential": 0.525,
-    "windPotential": 0.483
+    "solarPotential": 0.545,
+    "windPotential": 0.476
   },
   {
     "id": "z108",
@@ -56776,8 +56776,8 @@
       "energyBurdenIndex": 0.733
     },
     "demandKwhMonthly": 4250964.9,
-    "solarPotential": 0.492,
-    "windPotential": 0.49
+    "solarPotential": 0.552,
+    "windPotential": 0.455
   },
   {
     "id": "z109",
@@ -57380,8 +57380,8 @@
       "energyBurdenIndex": 0.661
     },
     "demandKwhMonthly": 2986502.4,
-    "solarPotential": 0.525,
-    "windPotential": 0.514
+    "solarPotential": 0.564,
+    "windPotential": 0.498
   },
   {
     "id": "z110",
@@ -57501,7 +57501,7 @@
     },
     "demandKwhMonthly": 3289033.6,
     "solarPotential": 0.577,
-    "windPotential": 0.562
+    "windPotential": 0.541
   },
   {
     "id": "z111",
@@ -57944,8 +57944,8 @@
       "energyBurdenIndex": 0.725
     },
     "demandKwhMonthly": 6578245.7,
-    "solarPotential": 0.505,
-    "windPotential": 0.604
+    "solarPotential": 0.48,
+    "windPotential": 0.606
   },
   {
     "id": "z112",
@@ -58036,8 +58036,8 @@
       "energyBurdenIndex": 0.851
     },
     "demandKwhMonthly": 1911420.5,
-    "solarPotential": 0.439,
-    "windPotential": 0.464
+    "solarPotential": 0.479,
+    "windPotential": 0.475
   },
   {
     "id": "z113",
@@ -59080,8 +59080,8 @@
       "energyBurdenIndex": 0.832
     },
     "demandKwhMonthly": 5245480.4,
-    "solarPotential": 0.442,
-    "windPotential": 0.504
+    "solarPotential": 0.463,
+    "windPotential": 0.541
   },
   {
     "id": "z114",
@@ -59262,8 +59262,8 @@
       "energyBurdenIndex": 0.593
     },
     "demandKwhMonthly": 2487751.6,
-    "solarPotential": 0.489,
-    "windPotential": 0.677
+    "solarPotential": 0.52,
+    "windPotential": 0.647
   },
   {
     "id": "z115",
@@ -59448,8 +59448,8 @@
       "energyBurdenIndex": 0.778
     },
     "demandKwhMonthly": 3990774.3,
-    "solarPotential": 0.473,
-    "windPotential": 0.564
+    "solarPotential": 0.481,
+    "windPotential": 0.562
   },
   {
     "id": "z116",
@@ -59772,8 +59772,8 @@
       "energyBurdenIndex": 0.585
     },
     "demandKwhMonthly": 7396400.4,
-    "solarPotential": 0.619,
-    "windPotential": 0.705
+    "solarPotential": 0.679,
+    "windPotential": 0.72
   },
   {
     "id": "z117",
@@ -60572,8 +60572,8 @@
       "energyBurdenIndex": 0.679
     },
     "demandKwhMonthly": 13081438.1,
-    "solarPotential": 0.513,
-    "windPotential": 0.631
+    "solarPotential": 0.614,
+    "windPotential": 0.614
   },
   {
     "id": "z118",
@@ -61184,8 +61184,8 @@
       "energyBurdenIndex": 0.716
     },
     "demandKwhMonthly": 8151102.7,
-    "solarPotential": 0.469,
-    "windPotential": 0.595
+    "solarPotential": 0.588,
+    "windPotential": 0.56
   },
   {
     "id": "z119",
@@ -62256,8 +62256,8 @@
       "energyBurdenIndex": 0.687
     },
     "demandKwhMonthly": 8342449.1,
-    "solarPotential": 0.498,
-    "windPotential": 0.501
+    "solarPotential": 0.548,
+    "windPotential": 0.488
   },
   {
     "id": "z120",
@@ -62456,8 +62456,8 @@
       "energyBurdenIndex": 0.649
     },
     "demandKwhMonthly": 8126512.3,
-    "solarPotential": 0.508,
-    "windPotential": 0.551
+    "solarPotential": 0.597,
+    "windPotential": 0.537
   },
   {
     "id": "z121",
@@ -62600,8 +62600,8 @@
       "energyBurdenIndex": 0.879
     },
     "demandKwhMonthly": 3987360.0,
-    "solarPotential": 0.4,
-    "windPotential": 0.473
+    "solarPotential": 0.501,
+    "windPotential": 0.431
   },
   {
     "id": "z122",
@@ -62962,8 +62962,8 @@
       "energyBurdenIndex": 0.62
     },
     "demandKwhMonthly": 6783101.4,
-    "solarPotential": 0.572,
-    "windPotential": 0.576
+    "solarPotential": 0.571,
+    "windPotential": 0.615
   },
   {
     "id": "z123",
@@ -63410,8 +63410,8 @@
       "energyBurdenIndex": 0.616
     },
     "demandKwhMonthly": 4856490.4,
-    "solarPotential": 0.532,
-    "windPotential": 0.595
+    "solarPotential": 0.596,
+    "windPotential": 0.599
   },
   {
     "id": "z124",
@@ -64030,8 +64030,8 @@
       "energyBurdenIndex": 0.75
     },
     "demandKwhMonthly": 5023545.5,
-    "solarPotential": 0.531,
-    "windPotential": 0.535
+    "solarPotential": 0.544,
+    "windPotential": 0.527
   },
   {
     "id": "z125",
@@ -64462,8 +64462,8 @@
       "energyBurdenIndex": 0.804
     },
     "demandKwhMonthly": 4011607.7,
-    "solarPotential": 0.419,
-    "windPotential": 0.458
+    "solarPotential": 0.462,
+    "windPotential": 0.489
   },
   {
     "id": "z126",
@@ -65094,8 +65094,8 @@
       "energyBurdenIndex": 0.705
     },
     "demandKwhMonthly": 7401587.8,
-    "solarPotential": 0.554,
-    "windPotential": 0.55
+    "solarPotential": 0.6,
+    "windPotential": 0.572
   },
   {
     "id": "z127",
@@ -65846,8 +65846,8 @@
       "energyBurdenIndex": 0.679
     },
     "demandKwhMonthly": 8914138.3,
-    "solarPotential": 0.564,
-    "windPotential": 0.604
+    "solarPotential": 0.606,
+    "windPotential": 0.62
   },
   {
     "id": "z128",
@@ -66767,7 +66767,7 @@
     },
     "demandKwhMonthly": 7076888.8,
     "solarPotential": 0.533,
-    "windPotential": 0.655
+    "windPotential": 0.665
   },
   {
     "id": "z129",
@@ -67722,8 +67722,8 @@
       "energyBurdenIndex": 0.601
     },
     "demandKwhMonthly": 8724198.6,
-    "solarPotential": 0.637,
-    "windPotential": 0.689
+    "solarPotential": 0.625,
+    "windPotential": 0.717
   },
   {
     "id": "z130",
@@ -68506,8 +68506,8 @@
       "energyBurdenIndex": 0.571
     },
     "demandKwhMonthly": 7968233.8,
-    "solarPotential": 0.644,
-    "windPotential": 0.705
+    "solarPotential": 0.699,
+    "windPotential": 0.732
   },
   {
     "id": "z131",
@@ -69131,7 +69131,7 @@
     },
     "demandKwhMonthly": 14520619.2,
     "solarPotential": 0.654,
-    "windPotential": 0.676
+    "windPotential": 0.688
   },
   {
     "id": "z132",
@@ -69782,8 +69782,8 @@
       "energyBurdenIndex": 0.649
     },
     "demandKwhMonthly": 13091967.6,
-    "solarPotential": 0.412,
-    "windPotential": 0.658
+    "solarPotential": 0.411,
+    "windPotential": 0.638
   },
   {
     "id": "z133",
@@ -70422,8 +70422,8 @@
       "energyBurdenIndex": 0.355
     },
     "demandKwhMonthly": 4346708.5,
-    "solarPotential": 0.681,
-    "windPotential": 0.759
+    "solarPotential": 0.656,
+    "windPotential": 0.754
   },
   {
     "id": "z134",
@@ -71498,8 +71498,8 @@
       "energyBurdenIndex": 0.433
     },
     "demandKwhMonthly": 3968245.7,
-    "solarPotential": 0.59,
-    "windPotential": 0.689
+    "solarPotential": 0.601,
+    "windPotential": 0.739
   },
   {
     "id": "z135",
@@ -72310,8 +72310,8 @@
       "energyBurdenIndex": 0.696
     },
     "demandKwhMonthly": 5197519.2,
-    "solarPotential": 0.521,
-    "windPotential": 0.606
+    "solarPotential": 0.531,
+    "windPotential": 0.612
   },
   {
     "id": "z136",
@@ -72922,8 +72922,8 @@
       "energyBurdenIndex": 0.712
     },
     "demandKwhMonthly": 8110358.6,
-    "solarPotential": 0.516,
-    "windPotential": 0.647
+    "solarPotential": 0.5,
+    "windPotential": 0.603
   },
   {
     "id": "z137",
@@ -73627,7 +73627,7 @@
     },
     "demandKwhMonthly": 15818809.0,
     "solarPotential": 0.36,
-    "windPotential": 0.59
+    "windPotential": 0.573
   },
   {
     "id": "z138",
@@ -74230,8 +74230,8 @@
       "energyBurdenIndex": 0.784
     },
     "demandKwhMonthly": 6692761.3,
-    "solarPotential": 0.498,
-    "windPotential": 0.53
+    "solarPotential": 0.49,
+    "windPotential": 0.523
   },
   {
     "id": "z139",
@@ -74894,8 +74894,8 @@
       "energyBurdenIndex": 0.794
     },
     "demandKwhMonthly": 4889763.9,
-    "solarPotential": 0.368,
-    "windPotential": 0.579
+    "solarPotential": 0.367,
+    "windPotential": 0.559
   },
   {
     "id": "z140",
@@ -75642,7 +75642,7 @@
       "energyBurdenIndex": 0.535
     },
     "demandKwhMonthly": 3075510.7,
-    "solarPotential": 0.639,
-    "windPotential": 0.685
+    "solarPotential": 0.573,
+    "windPotential": 0.651
   }
 ]

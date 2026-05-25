@@ -3,18 +3,18 @@
   "source": "OpenStreetMap / Overpass API (ODbL)",
   "typicalFootprintM2": 160.0,
   "metresPerLevel": 3.1,
-  "realZones": 42,
+  "realZones": 46,
   "zones": [
     {
       "zoneId": "z001",
       "name": "West Humber-Clairville",
-      "buildingCount": 2776,
+      "buildingCount": 6918,
       "areaKm2": 30.009,
-      "buildingDensityPerKm2": 92.5,
-      "avgLevels": 4.4,
-      "avgHeightM": 13.6,
-      "estFootprintAreaM2": 444160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 230.5,
+      "avgLevels": 3.35,
+      "avgHeightM": 10.4,
+      "estFootprintAreaM2": 1106880.0,
+      "source": "osm"
     },
     {
       "zoneId": "z002",
@@ -30,13 +30,13 @@
     {
       "zoneId": "z003",
       "name": "Thistletown-Beaumond Heights",
-      "buildingCount": 863,
+      "buildingCount": 2143,
       "areaKm2": 3.306,
-      "buildingDensityPerKm2": 261.1,
-      "avgLevels": 4.9,
-      "avgHeightM": 15.2,
-      "estFootprintAreaM2": 138080.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 648.3,
+      "avgLevels": 5.22,
+      "avgHeightM": 16.2,
+      "estFootprintAreaM2": 342880.0,
+      "source": "osm"
     },
     {
       "zoneId": "z004",
@@ -52,24 +52,24 @@
     {
       "zoneId": "z005",
       "name": "Elms-Old Rexdale",
-      "buildingCount": 788,
+      "buildingCount": 1339,
       "areaKm2": 2.914,
-      "buildingDensityPerKm2": 270.4,
-      "avgLevels": 5.6,
-      "avgHeightM": 17.4,
-      "estFootprintAreaM2": 126080.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 459.5,
+      "avgLevels": 9.17,
+      "avgHeightM": 28.4,
+      "estFootprintAreaM2": 214240.0,
+      "source": "osm"
     },
     {
       "zoneId": "z006",
       "name": "Kingsview Village-The Westway",
-      "buildingCount": 1833,
+      "buildingCount": 2561,
       "areaKm2": 5.01,
-      "buildingDensityPerKm2": 365.8,
-      "avgLevels": 5.8,
-      "avgHeightM": 18.0,
-      "estFootprintAreaM2": 293280.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 511.1,
+      "avgLevels": 11.24,
+      "avgHeightM": 34.8,
+      "estFootprintAreaM2": 409760.0,
+      "source": "osm"
     },
     {
       "zoneId": "z007",
