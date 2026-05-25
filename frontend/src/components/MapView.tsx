@@ -112,6 +112,11 @@ export function MapView() {
   const approvalDeltas = useStore((s) => s.approvalDeltas);
   const approvalHistory = useStore((s) => s.approvalHistory);
   const spawnTimes = useStore((s) => s.spawnTimes);
+  const sampledAgents = useStore((s) => s.sampledAgents);
+  const agentTargets = useStore((s) => s.agentTargets);
+  const agentMobilizedAt = useStore((s) => s.agentMobilizedAt);
+  const selectedVoiceId = useStore((s) => s.selectedVoiceId);
+  const selectVoiceFromMap = useStore((s) => s.selectVoiceFromMap);
   const extrude = useStore((s) => s.extrude);
   const environment = useStore((s) => s.environment);
   const floodRisk = useStore((s) => s.floodRisk);
@@ -189,9 +194,14 @@ export function MapView() {
       flashZones,
       approvalDeltas,
       spawnTimes,
+      sampledAgents,
+      agentTargets,
+      agentMobilizedAt,
       extrude,
+      selectedVoiceId,
       time,
       onInfraClick,
+      onVoiceClick: selectVoiceFromMap,
     });
     if (GOOGLE_KEY && layerToggles.buildings) {
       base.unshift(
@@ -228,9 +238,14 @@ export function MapView() {
     flashZones,
     approvalDeltas,
     spawnTimes,
+    sampledAgents,
+    agentTargets,
+    agentMobilizedAt,
     extrude,
+    selectedVoiceId,
     time,
     onInfraClick,
+    selectVoiceFromMap,
   ]);
 
   const handleClick = useCallback(

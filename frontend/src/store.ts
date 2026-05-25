@@ -98,6 +98,15 @@ type State = {
   spawnTimes: Record<string, number>; // infraId -> ms when placed (scale-in anim)
   toasts: { id: string; text: string; kind: "info" | "good" | "warn" | "bad" }[];
 
+  // living world: a sampled set of agents that move + act
+  sampledAgents: Agent[]; // ~320 agents, .position = home
+  agentTargets: Record<string, LngLat>; // agentId -> where they're streaming to
+  agentMobilizedAt: number; // ms when the current mobilization began
+
+  // agent communication (map ↔ voices-log linking)
+  selectedVoiceId: string | null;
+  focusVoiceNonce: number; // bumps to pull the Voices tab into focus
+
   // v3 chat (real-time agentic conversation)
   chat: ChatItem[];
   chatConnected: boolean;
@@ -171,6 +180,11 @@ type State = {
   pushToast: (text: string, kind?: "info" | "good" | "warn" | "bad") => void;
   dismissToast: (id: string) => void;
 
+  // agent communication
+  selectVoiceFromMap: (id: string) => void; // bubble click → focus log entry
+  selectVoiceFromLog: (id: string) => void; // log click → fly camera + pop bubble
+  clearSelectedVoice: () => void;
+
   // v3 actions
   sendChat: (text: string) => void;
   clearChat: () => void;
@@ -197,6 +211,14 @@ let chatSeq = 0;
 const cid = () => `c${chatSeq++}`;
 let actSeq = 0;
 const aid = () => `a${actSeq++}`;
+const hashStr = (s: string) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return h;
+};
+let vidSeq = 0;
+const tagVoices = (vs: AgentVoice[]): AgentVoice[] =>
+  vs.map((v) => (v.id ? v : { ...v, id: `v${vidSeq++}` }));
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -375,6 +397,11 @@ export const useStore = create<State>((set, get) => ({
   approvalDeltas: [],
   spawnTimes: {},
   toasts: [],
+  sampledAgents: [],
+  agentTargets: {},
+  agentMobilizedAt: 0,
+  selectedVoiceId: null,
+  focusVoiceNonce: 0,
 
   chat: [],
   chatConnected: false,
@@ -389,7 +416,7 @@ export const useStore = create<State>((set, get) => ({
     buildings: true,
     demand: false, // heavy hexbins — off by default for a clean hero; demo + toggle enable it
     equity: false,
-    agents: false,
+    agents: true, // "people" — sampled animated agents, on by default (living world)
     infra: true,
     recommendations: true,
     flows: true,
@@ -428,6 +455,9 @@ export const useStore = create<State>((set, get) => ({
     // Clip markers that fall on water — keep only points inside a land zone.
     const onLand = makeLandTest(zones);
     const agents = rawAgents.filter((a) => onLand(a.position));
+    // Sample ~320 agents to animate as "living" people (don't move all 4000).
+    const step = Math.max(1, Math.floor(agents.length / 320));
+    const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 360);
     const infra = api.seedInfra();
     const [{ data: metrics }, { data: sentiment }, { data: flows }] =
       await Promise.all([
@@ -443,12 +473,13 @@ export const useStore = create<State>((set, get) => ({
     set({
       zones,
       agents,
+      sampledAgents,
       infra,
       metrics: metricsWithApproval,
       history: [metricsWithApproval],
       sentiment,
       flows,
-      voices,
+      voices: tagVoices(voices),
       live: zLive,
       loaded: true,
       approvalHistory: Object.fromEntries(
@@ -500,7 +531,7 @@ export const useStore = create<State>((set, get) => ({
         } else if (msg.type === "placements") {
           set((s) => ({ infra: [...s.infra, ...msg.infra] }));
         } else if (msg.type === "voices") {
-          set((s) => ({ voices: [...msg.voices, ...s.voices].slice(0, 40) }));
+          set((s) => ({ voices: [...tagVoices(msg.voices), ...s.voices].slice(0, 40) }));
         } else if (msg.type === "tick_complete" || msg.type === "metrics") {
           const m = msg.metrics;
           set((s) => ({
@@ -613,6 +644,18 @@ export const useStore = create<State>((set, get) => ({
       `Placed ${optimistic.kind} in ${z?.name ?? "the city"}`,
       "good"
     );
+    // nearby people orient toward the new installation (gentle cluster)
+    {
+      const d2 = (a: LngLat, b: LngLat) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+      const near: Record<string, LngLat> = {};
+      for (const a of get().sampledAgents)
+        if (d2(a.position, pos) < 0.000012) near[a.id] = pos;
+      if (Object.keys(near).length)
+        set((s) => ({
+          agentTargets: { ...s.agentTargets, ...near },
+          agentMobilizedAt: Date.now(),
+        }));
+    }
     const m0 = get().metrics;
     logActivity(
       set,
@@ -663,7 +706,7 @@ export const useStore = create<State>((set, get) => ({
       infra,
       sentiment ?? { cityApprovalPct: approval, perZone: {} }
     );
-    set((s) => ({ voices: [...newVoices, ...s.voices].slice(0, 40) }));
+    set((s) => ({ voices: [...tagVoices(newVoices), ...s.voices].slice(0, 40) }));
 
     // Phase 3: tick_complete — metrics + adoption spread
     const { data, live } = await api.stepSim(nextTick, infra);
@@ -807,12 +850,40 @@ export const useStore = create<State>((set, get) => ({
       outage = new Set(impact.outageZones);
       gathering = [...impact.outageZones];
     }
+    // People ACT: agents in affected zones stream toward the relevant facilities
+    // (heatwave→cooling centres, blackout/ice→shelters), else the zone centroid.
+    const facCat =
+      scenario.type === "heatwave"
+        ? "cooling_centre"
+        : scenario.type === "blackout" || scenario.type === "ice_storm"
+        ? "shelter"
+        : null;
+    const gset = new Set(gathering);
+    const facs = get().facilities;
+    const d2 = (a: LngLat, b: LngLat) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+    const targets: Record<string, LngLat> = {};
+    for (const a of get().sampledAgents) {
+      if (!gset.has(a.zoneId)) continue;
+      const z = zones.find((zz) => zz.id === a.zoneId);
+      if (!z) continue;
+      let cand = facs.filter(
+        (f) => (!facCat || f.kind === facCat) && d2(f.position, z.centroid) < 0.0004
+      );
+      if (!cand.length)
+        cand = facs.filter((f) => d2(f.position, z.centroid) < 0.0004);
+      targets[a.id] = cand.length
+        ? cand[Math.abs(hashStr(a.id)) % cand.length].position
+        : z.centroid;
+    }
+
     set({
       scenarios: nextScenarios,
       infra: nextInfra,
       outageZones: [...outage],
       gatheringZones: gathering,
       lastTargetZoneId: zoneId ?? null,
+      agentTargets: targets,
+      agentMobilizedAt: Date.now(),
     });
     get().pushToast(
       `${scenario.label} ${zones.find((z) => z.id === zoneId)?.name
@@ -897,7 +968,7 @@ export const useStore = create<State>((set, get) => ({
       recommendations: [],
       sentiment,
       flows,
-      voices,
+      voices: tagVoices(voices),
       metrics: { ...metrics, approvalPct: sentiment.cityApprovalPct },
       history: [{ ...metrics, approvalPct: sentiment.cityApprovalPct }],
       planner: { events: [], running: false, awaitingApproval: false, summary: null },
@@ -914,6 +985,8 @@ export const useStore = create<State>((set, get) => ({
       approvalHistory: {},
       approvalDeltas: [],
       spawnTimes: {},
+      agentTargets: {},
+      agentMobilizedAt: 0,
     });
     get().pushToast("Session reset", "info");
   },
@@ -939,7 +1012,7 @@ export const useStore = create<State>((set, get) => ({
       sentiment ?? { cityApprovalPct: 0.6, perZone: {} },
       context
     );
-    set((s) => ({ voices: [...data, ...s.voices].slice(0, 40) }));
+    set((s) => ({ voices: [...tagVoices(data), ...s.voices].slice(0, 40) }));
   },
 
   refreshFlows: async () => {
@@ -989,6 +1062,16 @@ export const useStore = create<State>((set, get) => ({
   },
   dismissToast: (id) =>
     set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
+
+  selectVoiceFromMap: (id) =>
+    set((s) => ({ selectedVoiceId: id, focusVoiceNonce: s.focusVoiceNonce + 1 })),
+  selectVoiceFromLog: (id) => {
+    const v = get().voices.find((x) => x.id === id);
+    set({ selectedVoiceId: id });
+    const z = v && get().zones.find((zz) => zz.id === v.zoneId);
+    if (z) set({ flyTo: { target: z.centroid, zoom: 14, pitch: 50, nonce: Date.now() } });
+  },
+  clearSelectedVoice: () => set({ selectedVoiceId: null }),
 
   // ---------------- v3 chat / targeting ----------------
 

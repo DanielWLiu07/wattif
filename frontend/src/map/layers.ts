@@ -94,9 +94,14 @@ export type LayerInputs = {
   flashZones: string[]; // briefly highlighted zones (what changed this step)
   approvalDeltas: { zoneId: string; delta: number }[]; // transient "+x%" labels
   spawnTimes: Record<string, number>; // infraId -> ms placed (scale-in + ripple)
+  sampledAgents: Agent[]; // sampled "living" people
+  agentTargets: Record<string, [number, number]>; // agentId -> stream target
+  agentMobilizedAt: number; // ms when mobilization began
   extrude: boolean; // 3D height on demand hexbins + equity choropleth
+  selectedVoiceId: string | null;
   time: number; // animation clock (ms)
   onInfraClick: (i: Infra) => void;
+  onVoiceClick: (id: string) => void;
 };
 
 export function buildLayers(input: LayerInputs): Layer[] {
@@ -122,9 +127,14 @@ export function buildLayers(input: LayerInputs): Layer[] {
     flashZones,
     approvalDeltas,
     spawnTimes,
+    sampledAgents,
+    agentTargets,
+    agentMobilizedAt,
     extrude,
+    selectedVoiceId,
     time,
     onInfraClick,
+    onVoiceClick,
   } = input;
   const out: Layer[] = [];
   const zoneById = new Map(zones.map((z) => [z.id, z]));
@@ -435,81 +445,50 @@ export function buildLayers(input: LayerInputs): Layer[] {
     );
   }
 
-  // ---- Agents scatter (opinion- or income-colored) ----
-  if (layers.agents && agents.length) {
-    const colorByOpinion = layers.sentiment && !!sentiment;
+  // ---- People (sampled agents that MOVE: idle drift + stream to targets) ----
+  if (layers.agents && sampledAgents.length) {
+    const mobAge = agentMobilizedAt
+      ? Math.min(1, (Date.now() - agentMobilizedAt) / 3500)
+      : 0;
+    const ease = mobAge < 0.5 ? 2 * mobAge * mobAge : 1 - (-2 * mobAge + 2) ** 2 / 2;
+    const livePos = (a: Agent): [number, number] => {
+      const home = a.position;
+      const ph = hashSeed(a.id);
+      // gentle idle drift so people are never perfectly still
+      const dx = Math.sin(time * 0.0006 + ph) * 0.00035;
+      const dy = Math.cos(time * 0.0005 + ph * 1.3) * 0.00035;
+      const tgt = agentTargets[a.id];
+      if (tgt) {
+        return [
+          home[0] + (tgt[0] - home[0]) * ease + dx * 0.4,
+          home[1] + (tgt[1] - home[1]) * ease + dy * 0.4,
+        ];
+      }
+      return [home[0] + dx, home[1] + dy];
+    };
     out.push(
       new ScatterplotLayer({
-        id: "agents",
-        data: agents,
-        getPosition: (a: Agent) => a.position,
-        getFillColor: (a: Agent) => {
-          if (colorByOpinion) {
-            const base = sentiment!.perZone[a.zoneId] ?? 0;
-            return approvalColor(base) as any;
-          }
-          return a.solarAdopted
-            ? ([52, 211, 153] as any)
-            : (incomeColor[a.incomeBracket] as any);
-        },
-        getRadius: (a: Agent) => (a.solarAdopted ? 26 : 16),
-        radiusMinPixels: 1.5,
+        id: "people",
+        data: sampledAgents,
+        getPosition: livePos,
+        getFillColor: (a: Agent) =>
+          (sentiment
+            ? approvalColor(sentiment.perZone[a.zoneId] ?? 0.5)
+            : a.solarAdopted
+            ? [52, 211, 153]
+            : incomeColor[a.incomeBracket]) as any,
+        getRadius: 16,
+        radiusMinPixels: 2,
         radiusMaxPixels: 6,
-        opacity: 0.75,
-        pickable: false,
-        updateTriggers: { getFillColor: [colorByOpinion, sentiment] },
-      })
-    );
-  }
-
-  // ---- Gathering crowds (agents cluster at facilities when an event fires) ----
-  if (gatheringSet.size && sentiment) {
-    type Crowd = { position: [number, number]; stance: number };
-    const crowds: Crowd[] = [];
-    for (const z of zones) {
-      if (!gatheringSet.has(z.id)) continue;
-      // anchor crowds at this zone's real facilities (shelters etc.), else centroid
-      const anchors: [number, number][] = facilities
-        .filter(
-          (f) =>
-            (f.position[0] - z.centroid[0]) ** 2 +
-              (f.position[1] - z.centroid[1]) ** 2 <
-            0.00014
-        )
-        .slice(0, 3)
-        .map((f) => f.position);
-      if (!anchors.length) anchors.push(z.centroid);
-      const approval = sentiment.perZone[z.id] ?? -0.2;
-      anchors.forEach((anchor, ai) => {
-        const seed = hashSeed(z.id + ai);
-        const n = 16;
-        for (let i = 0; i < n; i++) {
-          const ang = ((seed + i * 47) % 360) * (Math.PI / 180);
-          const rad = 0.0004 + ((seed >> (i % 8)) & 7) * 0.00006;
-          crowds.push({
-            position: [
-              anchor[0] + Math.cos(ang) * rad,
-              anchor[1] + Math.sin(ang) * rad,
-            ],
-            stance: approval + ((i % 5) - 2) * 0.12,
-          });
-        }
-      });
-    }
-    out.push(
-      new ScatterplotLayer({
-        id: "gathering",
-        data: crowds,
-        getPosition: (c: Crowd) => c.position,
-        getFillColor: (c: Crowd) => approvalColor(c.stance) as any,
-        getRadius: 12,
-        radiusMinPixels: 2.5,
-        radiusMaxPixels: 7,
         opacity: 0.95,
         stroked: true,
-        getLineColor: [255, 255, 255, 120],
+        getLineColor: [255, 255, 255, 110],
         lineWidthMinPixels: 0.5,
         pickable: false,
+        updateTriggers: {
+          getPosition: [time, agentTargets, agentMobilizedAt],
+          getFillColor: [sentiment],
+        },
       })
     );
   }
@@ -807,41 +786,63 @@ export function buildLayers(input: LayerInputs): Layer[] {
   }
 
   // ---- Speech bubbles (newest voices float over their neighbourhoods) ----
+  // Clickable → opens that line in the Voices log. Selected bubble is enlarged
+  // and always shown (even if not in the newest few).
   if (layers.sentiment && voices.length && zones.length) {
-    const recent = voices.slice(0, 4).map((v) => {
+    const recent = voices.slice(0, 4);
+    const sel = selectedVoiceId
+      ? voices.find((v) => v.id === selectedVoiceId)
+      : undefined;
+    const list =
+      sel && !recent.some((v) => v.id === sel.id) ? [sel, ...recent] : recent;
+    const data = list.map((v) => {
       const z = zoneById.get(v.zoneId);
-      // keep bubbles legible: full sentence, wrapped; soft cap to avoid huge blocks
-      const text = v.text.length > 120 ? v.text.slice(0, 118) + "…" : v.text;
+      const selected = v.id === selectedVoiceId;
+      const cap = selected ? 200 : 120;
+      const text = v.text.length > cap ? v.text.slice(0, cap - 2) + "…" : v.text;
       return {
+        id: v.id,
         position: z ? z.centroid : ([-79.38, 43.65] as [number, number]),
         text,
         stance: v.stance,
+        selected,
       };
     });
     out.push(
       new TextLayer({
         id: "speech",
-        data: recent,
+        data,
         getPosition: (d: any) => d.position,
         getText: (d: any) => d.text,
-        getSize: 12,
+        getSize: (d: any) => (d.selected ? 15 : 12),
         getColor: (d: any) => [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255] as any,
         getPixelOffset: [0, -30],
         background: true,
-        getBackgroundColor: [10, 14, 26, 225],
+        getBackgroundColor: (d: any) =>
+          (d.selected ? [30, 41, 75, 245] : [10, 14, 26, 225]) as any,
+        getBorderColor: (d: any) =>
+          (d.selected
+            ? [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255]
+            : [0, 0, 0, 0]) as any,
+        getBorderWidth: (d: any) => (d.selected ? 1.5 : 0),
         backgroundPadding: [7, 5, 7, 5],
         fontWeight: 600,
         sizeUnits: "pixels",
-        // multi-line wrapping so the whole sentence is readable
         wordBreak: "break-word",
         maxWidth: 16,
         lineHeight: 1.25,
         billboard: true,
         getTextAnchor: "middle",
         getAlignmentBaseline: "center",
-        pickable: false,
+        pickable: true,
+        onClick: (info: any) => info.object?.id && onVoiceClick(info.object.id),
         characterSet: "auto",
         parameters: { depthTest: false } as any,
+        updateTriggers: {
+          getSize: [selectedVoiceId],
+          getBackgroundColor: [selectedVoiceId],
+          getBorderWidth: [selectedVoiceId],
+        },
       })
     );
   }

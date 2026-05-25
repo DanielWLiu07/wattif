@@ -113,11 +113,21 @@ export function RightDock() {
   const chatLen = useStore((s) => s.chat.length);
   const voicesLen = useStore((s) => s.voices.length);
   const activityLen = useStore((s) => s.activity.length);
+  const focusVoiceNonce = useStore((s) => s.focusVoiceNonce);
   const loaded = useStore((s) => s.loaded);
   const [tab, setTab] = useState("chat"); // chat is the headline surface
   const [unread, setUnread] = useState({ chat: 0, voices: 0, activity: 0 });
   const prev = useRef({ chat: chatLen, voices: voicesLen, activity: activityLen });
   const started = useRef(false);
+
+  // Clicking a 3D speech bubble pulls the Voices log into focus.
+  useEffect(() => {
+    if (focusVoiceNonce <= 0) return;
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setTab("voices");
+    setUnread((u) => ({ ...u, voices: 0 }));
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [focusVoiceNonce]);
 
   // Accrue unread on NON-active tabs — never auto-switch the user's tab.
   // (Guarded so the initial data load doesn't count as "unread".)

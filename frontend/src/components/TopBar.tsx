@@ -17,6 +17,8 @@ export function TopBar() {
   const demo = useStore((s) => s.demo);
   const runGuidedDemo = useStore((s) => s.runGuidedDemo);
   const stopDemo = useStore((s) => s.stopDemo);
+  const voicesCount = useStore((s) => s.voices.length);
+  const focusVoices = useStore((s) => s.selectVoiceFromMap);
   const openWelcome = () => useStore.setState({ showWelcome: true });
 
   return (
@@ -34,6 +36,17 @@ export function TopBar() {
           </div>
         </div>
       </div>
+
+      {voicesCount > 0 && (
+        <button
+          onClick={() => focusVoices("")}
+          className="glass pointer-events-auto hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs shadow-lg transition-colors hover:text-foreground md:flex"
+          title="Open the Voices log"
+        >
+          <span className="animate-pulse">💬</span>
+          <b className="tabular-nums">{Math.min(voicesCount, 40)}</b> people talking
+        </button>
+      )}
 
       <div className="glass flex items-center gap-2 rounded-xl px-2.5 py-1.5 shadow-lg">
         <Button

@@ -9,7 +9,7 @@ const GROUPS: { title: string; items: { key: LayerKey; label: string }[] }[] = [
       { key: "equity", label: "Energy-equity choropleth" },
       { key: "sentiment", label: "Sentiment + voices" },
       { key: "demand", label: "Demand heatmap" },
-      { key: "agents", label: "Households / agents" },
+      { key: "agents", label: "People (live agents)" },
     ],
   },
   {

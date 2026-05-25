@@ -128,6 +128,7 @@ export type Scenario = {
 };
 
 export type AgentVoice = {
+  id?: string; // client-assigned stable id (for map↔log linking)
   agentId: string;
   zoneId: string;
   archetype: string;
