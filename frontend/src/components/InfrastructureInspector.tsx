@@ -5,6 +5,7 @@ import type { InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SubjectSentiment } from "@/components/SubjectSentiment";
 import { cn, fmtCompact } from "@/lib/utils";
 
 const KIND_ICON: Record<InfraKind, React.ElementType> = {
@@ -44,6 +45,9 @@ export function InfrastructureInspector() {
         <span className="text-muted-foreground">
           {infra.length} assets · {fmtCompact(totalCapacity)} kW
         </span>
+      </div>
+      <div className="px-2.5 pt-2.5">
+        <SubjectSentiment />
       </div>
       <div className="flex-1 space-y-1.5 overflow-y-auto p-2.5">
         {infra.length === 0 && (

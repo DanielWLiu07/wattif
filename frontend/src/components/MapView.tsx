@@ -99,6 +99,7 @@ export function MapView() {
   const flows = useStore((s) => s.flows);
   const outageZones = useStore((s) => s.outageZones);
   const adoptionByZone = useStore((s) => s.adoptionByZone);
+  const rooftopPoints = useStore((s) => s.rooftopPoints);
   const voices = useStore((s) => s.voices);
   const facilities = useStore((s) => s.facilities);
   const existingInfra = useStore((s) => s.existingInfra);
@@ -185,6 +186,7 @@ export function MapView() {
       flows,
       outageZones,
       adoptionByZone,
+      rooftopPoints,
       voices,
       facilities,
       existingInfra,
@@ -231,6 +233,7 @@ export function MapView() {
     flows,
     outageZones,
     adoptionByZone,
+    rooftopPoints,
     voices,
     facilities,
     existingInfra,

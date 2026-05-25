@@ -83,6 +83,7 @@ export type LayerInputs = {
   flows: Flow[];
   outageZones: string[];
   adoptionByZone: Record<string, number>;
+  rooftopPoints: Record<string, [number, number][]>;
   voices: AgentVoice[];
   facilities: Facility[];
   existingInfra: ExistingInfra[];
@@ -119,6 +120,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     flows,
     outageZones,
     adoptionByZone,
+    rooftopPoints,
     voices,
     facilities,
     existingInfra,
@@ -470,6 +472,39 @@ export function buildLayers(input: LayerInputs): Layer[] {
         updateTriggers: { getFillColor: [adoptionByZone] },
       })
     );
+  }
+
+  // ---- Rooftop solar glints (per-home adoption — more appear as it climbs) ----
+  if (layers.rooftops && Object.keys(rooftopPoints).length) {
+    type Glint = { position: [number, number]; ph: number };
+    const glints: Glint[] = [];
+    for (const [zid, pts] of Object.entries(rooftopPoints)) {
+      const adoption = adoptionByZone[zid] ?? 0;
+      const show = Math.min(pts.length, Math.round(adoption * pts.length));
+      for (let i = 0; i < show; i++)
+        glints.push({ position: pts[i], ph: (i * 73 + zid.length * 31) % 360 });
+    }
+    if (glints.length) {
+      out.push(
+        new ScatterplotLayer({
+          id: "rooftop-solar",
+          data: glints,
+          getPosition: (g: Glint) => g.position,
+          // soft glint: brightness twinkles over time, per-point phase
+          getFillColor: (g: Glint) => {
+            const tw = 0.55 + 0.45 * Math.sin(time / 350 + g.ph);
+            return [253, 224, 71, Math.round(150 + tw * 105)] as any;
+          },
+          getRadius: 9,
+          radiusMinPixels: 1.5,
+          radiusMaxPixels: 4,
+          stroked: false,
+          parameters: { depthTest: false } as any,
+          updateTriggers: { getFillColor: [time] },
+          pickable: false,
+        })
+      );
+    }
   }
 
   // ---- Demand heat ----

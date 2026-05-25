@@ -162,6 +162,7 @@ class ZoneDelta(CamelModel):
     )
     demand_intensity: float = 0.0  # 0..1 normalized, for day/night pulse
     adoption_count: int = 0  # households with rooftop solar adopted
+    ev_count: int = 0  # households owning an EV
     outage: bool = False  # darkened by a scenario (blackout/earthquake)
 
 

@@ -24,7 +24,7 @@ import type {
 import { INFRA_PRESETS, MODEL_URL } from "@/types";
 import * as api from "@/api/client";
 import { nearestZone, scenarioImpact } from "@/data/mock";
-import { makeLandTest } from "@/lib/geo";
+import { makeLandTest, sampleInside } from "@/lib/geo";
 
 export type LayerKey =
   | "buildings"
@@ -39,7 +39,8 @@ export type LayerKey =
   | "existing"
   | "constraints"
   | "flood"
-  | "district";
+  | "district"
+  | "rooftops";
 
 export type ToolMode = "select" | "place";
 
@@ -110,6 +111,14 @@ type State = {
   // agent communication (map ↔ voices-log linking)
   selectedVoiceId: string | null;
   focusVoiceNonce: number; // bumps to pull the Voices tab into focus
+
+  // distributed rooftop solar + programs
+  rooftopPoints: Record<string, LngLat[]>; // per-zone candidate rooftop sites
+  programs: { type: string; label: string; zones: string[]; startedTick: number }[];
+  // subject-tied sentiment readout ("X% support this <thing> here")
+  subjectApproval:
+    | { label: string; support: number; oppose: number; neutral: number }
+    | null;
 
   // v3 chat (real-time agentic conversation)
   chat: ChatItem[];
@@ -190,6 +199,9 @@ type State = {
   selectVoiceFromLog: (id: string) => void; // log click → fly camera + pop bubble
   clearSelectedVoice: () => void;
 
+  // programs (rebates/incentives) — drive distributed rooftop adoption
+  launchProgram: (type: string, zoneIds?: string[]) => void;
+
   // v3 actions
   sendChat: (text: string) => void;
   clearChat: () => void;
@@ -225,6 +237,24 @@ let vidSeq = 0;
 const tagVoices = (vs: AgentVoice[]): AgentVoice[] =>
   vs.map((v) => (v.id ? v : { ...v, id: `v${vidSeq++}` }));
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+// approval (0..1) → support/oppose/neutral % toward a specific subject
+const subjectSplit = (base: number) => {
+  const support = Math.round(Math.max(5, Math.min(92, base * 100)));
+  const oppose = Math.round(Math.max(4, (1 - base) * 55));
+  return { support, oppose, neutral: Math.max(0, 100 - support - oppose) };
+};
+const PROGRAM_LABEL: Record<string, string> = {
+  rooftop_solar_rebate: "Rooftop solar rebate",
+  ev_incentive: "EV charging incentive",
+  retrofit_grant: "Home retrofit grant",
+};
+// how a given infra kind shifts local support (wind = noise/visual concerns, etc.)
+const KIND_BIAS: Record<InfraKind, number> = {
+  solar: 0.06,
+  wind: -0.12,
+  battery: 0.08,
+  microgrid: 0.12,
+};
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -321,6 +351,11 @@ function attachSession(
       void get().refreshFlows();
       void get().refreshSentiment();
     }
+    // Agent launched an incentive program (rooftop rebate / EV / retrofit).
+    if (e.type === "tool_result" && e.name === "launch_program") {
+      const r = (e.result ?? {}) as { program?: string; zones?: string[] };
+      if (r.program) get().launchProgram(r.program, r.zones);
+    }
     if (e.type === "done") {
       set({ chatBusy: false, chatAwaiting: false });
       get().pushToast(e.summary || "AI planning complete", "good");
@@ -411,6 +446,9 @@ export const useStore = create<State>((set, get) => ({
   agentMobilizedAt: 0,
   selectedVoiceId: null,
   focusVoiceNonce: 0,
+  rooftopPoints: {},
+  programs: [],
+  subjectApproval: null,
 
   chat: [],
   chatConnected: false,
@@ -435,6 +473,7 @@ export const useStore = create<State>((set, get) => ({
     constraints: true,
     flood: true, // flood-risk overlay (lights up when data-2 ships it)
     district: true, // existing district-energy service area
+    rooftops: true, // distributed rooftop-solar glints (per-home adoption)
   },
   mode: "select",
   placementMode: "manual",
@@ -474,6 +513,11 @@ export const useStore = create<State>((set, get) => ({
     // Sample ~320 agents to animate as "living" people (don't move all 4000).
     const step = Math.max(1, Math.floor(agents.length / 320));
     const sampledAgents = agents.filter((_, i) => i % step === 0).slice(0, 360);
+    // candidate rooftop-solar sites per zone (capped) — glints reveal as adoption climbs
+    const rooftopPoints: Record<string, LngLat[]> = {};
+    zones.forEach((z, i) => {
+      rooftopPoints[z.id] = sampleInside(z.polygon, 24, i + 7);
+    });
     const infra = api.seedInfra();
     const [{ data: metrics }, { data: sentiment }, { data: flows }] =
       await Promise.all([
@@ -490,6 +534,7 @@ export const useStore = create<State>((set, get) => ({
       zones,
       agents,
       sampledAgents,
+      rooftopPoints,
       infra,
       metrics: metricsWithApproval,
       history: [metricsWithApproval],
@@ -670,7 +715,21 @@ export const useStore = create<State>((set, get) => ({
       if (z) set({ flyTo: { target: z.centroid, zoom: 13.6, nonce: Date.now() } });
     }
   },
-  selectInfra: (id) => set({ selectedInfraId: id }),
+  selectInfra: (id) => {
+    set({ selectedInfraId: id });
+    const inf = id && get().infra.find((i) => i.id === id);
+    if (inf) {
+      const base = (get().sentiment?.perZone[inf.zoneId ?? ""] ?? 0.5) + KIND_BIAS[inf.kind];
+      set({
+        subjectApproval: {
+          label: `this ${inf.kind}`,
+          ...subjectSplit(Math.max(0, Math.min(1, base))),
+        },
+      });
+    } else {
+      set({ subjectApproval: null });
+    }
+  },
   flyToInfra: (id) => {
     const inf = get().infra.find((i) => i.id === id);
     if (inf)
@@ -716,6 +775,17 @@ export const useStore = create<State>((set, get) => ({
       `Placed ${optimistic.kind} in ${z?.name ?? "the city"}`,
       "good"
     );
+    // subject-tied sentiment: "X% support this <kind> here"
+    {
+      const base =
+        (get().sentiment?.perZone[z?.id ?? ""] ?? 0.5) + KIND_BIAS[placeKind];
+      set({
+        subjectApproval: {
+          label: `this ${placeKind}`,
+          ...subjectSplit(Math.max(0, Math.min(1, base))),
+        },
+      });
+    }
     // nearby people orient toward the new installation (gentle cluster)
     {
       const d2 = (a: LngLat, b: LngLat) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
@@ -1067,6 +1137,8 @@ export const useStore = create<State>((set, get) => ({
       spawnTimes: {},
       agentTargets: {},
       agentMobilizedAt: 0,
+      programs: [],
+      subjectApproval: null,
     });
     get().pushToast("Session reset", "info");
   },
@@ -1155,6 +1227,51 @@ export const useStore = create<State>((set, get) => ({
       set({ flyTo: { target, zoom: 14.5, pitch: 50, nonce: Date.now() } });
   },
   clearSelectedVoice: () => set({ selectedVoiceId: null }),
+
+  launchProgram: (type, zoneIds) => {
+    const { zones, sentiment } = get();
+    const label = PROGRAM_LABEL[type] ?? type.replace(/_/g, " ");
+    // default targets = the highest energy-burden neighbourhoods
+    const targets =
+      zoneIds && zoneIds.length
+        ? zoneIds
+        : [...zones]
+            .sort(
+              (a, b) =>
+                b.demographics.energyBurdenIndex - a.demographics.energyBurdenIndex
+            )
+            .slice(0, 6)
+            .map((z) => z.id);
+    // boost rooftop adoption in target zones → glints start appearing
+    const adopt = { ...get().adoptionByZone };
+    for (const zid of targets) adopt[zid] = Math.min(1, (adopt[zid] ?? 0) + 0.22);
+    const m = get().metrics;
+    const base =
+      targets.reduce((s, z) => s + (sentiment?.perZone[z] ?? 0.5), 0) /
+      Math.max(1, targets.length);
+    set((s) => ({
+      programs: [
+        ...s.programs,
+        { type, label, zones: targets, startedTick: m?.tick ?? 0 },
+      ],
+      adoptionByZone: adopt,
+      subjectApproval: { label, ...subjectSplit(Math.min(1, base + 0.12)) },
+    }));
+    get().pushToast(`${label} launched in ${targets.length} neighbourhoods`, "good");
+    logActivity(
+      set,
+      [
+        {
+          text: `${label} launched — rooftop adoption rising across ${targets.length} high-burden neighbourhoods`,
+          severity: "good",
+        },
+      ],
+      m?.tick ?? 0,
+      m?.year ?? 2026,
+      targets
+    );
+    void get().refreshVoices(5, type);
+  },
 
   // ---------------- v3 chat / targeting ----------------
 

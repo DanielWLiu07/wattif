@@ -515,6 +515,14 @@ function parseFacilityTarget(text: string): string | null {
   return null;
 }
 
+function parseProgram(text: string): string | null {
+  const t = text.toLowerCase();
+  if (/\bretrofit|insulat|heat pump|grant\b/.test(t)) return "retrofit_grant";
+  if (/\bev\b|charg|electric vehicle/.test(t)) return "ev_incentive";
+  if (/rebate|incentive|program|subsid/.test(t)) return "rooftop_solar_rebate";
+  return null;
+}
+
 export function* mockPlannerEvents(
   n: number,
   infra: Infra[],
@@ -524,6 +532,37 @@ export function* mockPlannerEvents(
   const text = opts.text ?? "";
   const forcedKind = parseKind(text);
   const facTarget = parseFacilityTarget(text);
+  const program = parseProgram(text);
+
+  // Program path: launch a distributed incentive (rebate/EV/retrofit) instead of
+  // siting utility infra — drives per-home rooftop adoption in high-burden zones.
+  // (Program keywords like "rebate" win even if a kind like "solar" is mentioned.)
+  if (program) {
+    const label = program.replace(/_/g, " ");
+    yield {
+      type: "thought",
+      text: `A ${label} reaches many households at once. Targeting the highest energy-burden neighbourhoods for the biggest equity impact.`,
+    };
+    yield { type: "tool_call", name: "get_city_state", args: {} };
+    yield { type: "tool_call", name: "launch_program", args: { program } };
+    const targets = [...ZONES]
+      .sort(
+        (a, b) =>
+          b.demographics.energyBurdenIndex - a.demographics.energyBurdenIndex
+      )
+      .slice(0, 6)
+      .map((z) => z.id);
+    yield {
+      type: "tool_result",
+      name: "launch_program",
+      result: { program, zones: targets },
+    };
+    yield {
+      type: "done",
+      summary: `Launched the ${label} across ${targets.length} high-burden neighbourhoods — watch rooftop solar adoption climb there over the next ticks.`,
+    };
+    return;
+  }
 
   yield {
     type: "thought",

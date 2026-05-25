@@ -156,9 +156,19 @@ def list_infra() -> list[Infra]:
     return get_world().engine.list_infra()
 
 
-@app.post("/api/infra", response_model=Infra)
-def place_infra(payload: InfraCreate) -> Infra:
-    return get_world().place_infra(payload)
+@app.post("/api/infra")
+def place_infra(payload: InfraCreate) -> dict:
+    """Place infra and return it PLUS subject-tied proposal approval among nearby agents.
+
+    Response = all Infra fields (camelCase) + {proposalApproval, supportCount, opposeCount,
+    neutralCount} reflecting local support/oppose toward THIS specific installation's kind.
+    """
+    world = get_world()
+    infra = world.place_infra(payload)
+    return {
+        **infra.model_dump(by_alias=True),
+        **world.proposal_approval_for_infra(infra),
+    }
 
 
 @app.delete("/api/infra/{infra_id}")
@@ -237,9 +247,15 @@ def get_scenarios() -> list[Scenario]:
 # ---------------------------------------------------------------------------
 # v2: Sentiment / voices
 # ---------------------------------------------------------------------------
-@app.get("/api/sentiment", response_model=SentimentSummary)
-def get_sentiment() -> SentimentSummary:
-    return get_world().sentiment_summary()
+@app.get("/api/sentiment")
+def get_sentiment(subject: str | None = Query(default=None)) -> dict:
+    """City + per-zone approval (0..1). With ?subject=infra:<id>|kind:<k>|program:<name>, also
+    returns support/oppose toward THAT specific subject among the relevant (nearby) agents."""
+    world = get_world()
+    summary = world.sentiment_summary().model_dump(by_alias=True)
+    if subject:
+        summary["subject"] = world.subject_approval(subject)
+    return summary
 
 
 @app.get("/api/agents/voices", response_model=list[AgentVoice])

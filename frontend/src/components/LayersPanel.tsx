@@ -17,6 +17,7 @@ const GROUPS: { title: string; items: { key: LayerKey; label: string }[] }[] = [
     items: [
       { key: "infra", label: "Placed infrastructure" },
       { key: "existing", label: "Existing renewables / EV" },
+      { key: "rooftops", label: "Rooftop solar (homes)" },
       { key: "district", label: "District energy (Enwave)" },
       { key: "flows", label: "Energy flows" },
       { key: "recommendations", label: "AI recommendations" },
