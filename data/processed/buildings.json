@@ -3,7 +3,7 @@
   "source": "OpenStreetMap / Overpass API (ODbL)",
   "typicalFootprintM2": 160.0,
   "metresPerLevel": 3.1,
-  "realZones": 63,
+  "realZones": 132,
   "zones": [
     {
       "zoneId": "z001",
@@ -162,13 +162,13 @@
     {
       "zoneId": "z015",
       "name": "Kingsway South",
-      "buildingCount": 772,
+      "buildingCount": 2596,
       "areaKm2": 2.623,
-      "buildingDensityPerKm2": 294.4,
-      "avgLevels": 3.2,
-      "avgHeightM": 9.9,
-      "estFootprintAreaM2": 123520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 989.9,
+      "avgLevels": 2.77,
+      "avgHeightM": 8.6,
+      "estFootprintAreaM2": 415360.0,
+      "source": "osm"
     },
     {
       "zoneId": "z016",
@@ -250,13 +250,13 @@
     {
       "zoneId": "z023",
       "name": "Pelmo Park-Humberlea",
-      "buildingCount": 893,
+      "buildingCount": 2534,
       "areaKm2": 4.251,
-      "buildingDensityPerKm2": 210.1,
-      "avgLevels": 3.1,
-      "avgHeightM": 9.6,
-      "estFootprintAreaM2": 142880.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 596.1,
+      "avgLevels": 3.71,
+      "avgHeightM": 11.5,
+      "estFootprintAreaM2": 405440.0,
+      "source": "osm"
     },
     {
       "zoneId": "z024",
@@ -360,46 +360,46 @@
     {
       "zoneId": "z033",
       "name": "Clanton Park",
-      "buildingCount": 1372,
+      "buildingCount": 2942,
       "areaKm2": 4.118,
-      "buildingDensityPerKm2": 333.2,
-      "avgLevels": 5.6,
-      "avgHeightM": 17.4,
-      "estFootprintAreaM2": 219520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 714.4,
+      "avgLevels": 3.5,
+      "avgHeightM": 10.8,
+      "estFootprintAreaM2": 470720.0,
+      "source": "osm"
     },
     {
       "zoneId": "z034",
       "name": "Bathurst Manor",
-      "buildingCount": 1322,
+      "buildingCount": 2857,
       "areaKm2": 4.731,
-      "buildingDensityPerKm2": 279.4,
+      "buildingDensityPerKm2": 603.8,
       "avgLevels": 5.6,
       "avgHeightM": 17.4,
-      "estFootprintAreaM2": 211520.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 457120.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z035",
       "name": "Westminster-Branson",
-      "buildingCount": 2189,
+      "buildingCount": 1507,
       "areaKm2": 3.646,
-      "buildingDensityPerKm2": 600.4,
-      "avgLevels": 6.9,
-      "avgHeightM": 21.4,
-      "estFootprintAreaM2": 350240.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 413.3,
+      "avgLevels": 13.68,
+      "avgHeightM": 42.4,
+      "estFootprintAreaM2": 241120.0,
+      "source": "osm"
     },
     {
       "zoneId": "z036",
       "name": "Newtonbrook West",
-      "buildingCount": 1985,
+      "buildingCount": 3455,
       "areaKm2": 4.668,
-      "buildingDensityPerKm2": 425.3,
-      "avgLevels": 5.8,
-      "avgHeightM": 18.0,
-      "estFootprintAreaM2": 317600.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 740.2,
+      "avgLevels": 5.28,
+      "avgHeightM": 16.4,
+      "estFootprintAreaM2": 552800.0,
+      "source": "osm"
     },
     {
       "zoneId": "z037",
@@ -415,101 +415,101 @@
     {
       "zoneId": "z038",
       "name": "Lansing-Westgate",
-      "buildingCount": 1347,
+      "buildingCount": 2905,
       "areaKm2": 5.314,
-      "buildingDensityPerKm2": 253.5,
-      "avgLevels": 5.2,
-      "avgHeightM": 16.1,
-      "estFootprintAreaM2": 215520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 546.6,
+      "avgLevels": 5.41,
+      "avgHeightM": 16.8,
+      "estFootprintAreaM2": 464800.0,
+      "source": "osm"
     },
     {
       "zoneId": "z039",
       "name": "Bedford Park-Nortown",
-      "buildingCount": 1936,
+      "buildingCount": 5481,
       "areaKm2": 5.485,
-      "buildingDensityPerKm2": 353.0,
-      "avgLevels": 4.2,
-      "avgHeightM": 13.0,
-      "estFootprintAreaM2": 309760.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 999.3,
+      "avgLevels": 3.6,
+      "avgHeightM": 11.2,
+      "estFootprintAreaM2": 876960.0,
+      "source": "osm"
     },
     {
       "zoneId": "z040",
       "name": "St.Andrew-Windfields",
-      "buildingCount": 1484,
+      "buildingCount": 3627,
       "areaKm2": 7.256,
-      "buildingDensityPerKm2": 204.5,
-      "avgLevels": 4.5,
-      "avgHeightM": 14.0,
-      "estFootprintAreaM2": 237440.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 499.9,
+      "avgLevels": 4.87,
+      "avgHeightM": 15.1,
+      "estFootprintAreaM2": 580320.0,
+      "source": "osm"
     },
     {
       "zoneId": "z041",
       "name": "Bridle Path-Sunnybrook-York Mills",
-      "buildingCount": 772,
+      "buildingCount": 2741,
       "areaKm2": 8.785,
-      "buildingDensityPerKm2": 87.9,
-      "avgLevels": 2.3,
-      "avgHeightM": 7.1,
-      "estFootprintAreaM2": 123520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 312.0,
+      "avgLevels": 2.75,
+      "avgHeightM": 8.5,
+      "estFootprintAreaM2": 438560.0,
+      "source": "osm"
     },
     {
       "zoneId": "z042",
       "name": "Banbury-Don Mills",
-      "buildingCount": 2307,
+      "buildingCount": 4281,
       "areaKm2": 9.981,
-      "buildingDensityPerKm2": 231.1,
+      "buildingDensityPerKm2": 428.9,
       "avgLevels": 5.0,
       "avgHeightM": 15.5,
-      "estFootprintAreaM2": 369120.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 684960.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z043",
       "name": "Victoria Village",
-      "buildingCount": 1459,
+      "buildingCount": 1902,
       "areaKm2": 4.727,
-      "buildingDensityPerKm2": 308.7,
-      "avgLevels": 6.8,
-      "avgHeightM": 21.1,
-      "estFootprintAreaM2": 233440.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 402.4,
+      "avgLevels": 3.9,
+      "avgHeightM": 12.1,
+      "estFootprintAreaM2": 304320.0,
+      "source": "osm"
     },
     {
       "zoneId": "z044",
       "name": "Flemingdon Park",
-      "buildingCount": 1827,
+      "buildingCount": 253,
       "areaKm2": 2.458,
-      "buildingDensityPerKm2": 743.2,
-      "avgLevels": 6.5,
-      "avgHeightM": 20.2,
-      "estFootprintAreaM2": 292320.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 102.9,
+      "avgLevels": 5.25,
+      "avgHeightM": 16.3,
+      "estFootprintAreaM2": 40480.0,
+      "source": "osm"
     },
     {
       "zoneId": "z045",
       "name": "Parkwoods-Donalda",
-      "buildingCount": 2900,
+      "buildingCount": 3706,
       "areaKm2": 7.42,
-      "buildingDensityPerKm2": 390.9,
-      "avgLevels": 6.9,
-      "avgHeightM": 21.4,
-      "estFootprintAreaM2": 464000.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 499.5,
+      "avgLevels": 8.63,
+      "avgHeightM": 26.8,
+      "estFootprintAreaM2": 592960.0,
+      "source": "osm"
     },
     {
       "zoneId": "z046",
       "name": "Pleasant View",
-      "buildingCount": 1318,
+      "buildingCount": 2373,
       "areaKm2": 2.95,
-      "buildingDensityPerKm2": 446.8,
-      "avgLevels": 3.7,
-      "avgHeightM": 11.5,
-      "estFootprintAreaM2": 210880.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 804.5,
+      "avgLevels": 6.57,
+      "avgHeightM": 20.4,
+      "estFootprintAreaM2": 379680.0,
+      "source": "osm"
     },
     {
       "zoneId": "z047",
@@ -525,35 +525,35 @@
     {
       "zoneId": "z048",
       "name": "Hillcrest Village",
-      "buildingCount": 1411,
+      "buildingCount": 2698,
       "areaKm2": 5.363,
-      "buildingDensityPerKm2": 263.1,
-      "avgLevels": 3.6,
-      "avgHeightM": 11.2,
-      "estFootprintAreaM2": 225760.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 503.1,
+      "avgLevels": 7.84,
+      "avgHeightM": 24.3,
+      "estFootprintAreaM2": 431680.0,
+      "source": "osm"
     },
     {
       "zoneId": "z049",
       "name": "Bayview Woods-Steeles",
-      "buildingCount": 1096,
+      "buildingCount": 2346,
       "areaKm2": 4.064,
-      "buildingDensityPerKm2": 269.7,
-      "avgLevels": 5.3,
-      "avgHeightM": 16.4,
-      "estFootprintAreaM2": 175360.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 577.2,
+      "avgLevels": 2.25,
+      "avgHeightM": 7.0,
+      "estFootprintAreaM2": 375360.0,
+      "source": "osm"
     },
     {
       "zoneId": "z050",
       "name": "Newtonbrook East",
-      "buildingCount": 1341,
+      "buildingCount": 3295,
       "areaKm2": 4.06,
-      "buildingDensityPerKm2": 330.3,
-      "avgLevels": 4.7,
-      "avgHeightM": 14.6,
-      "estFootprintAreaM2": 214560.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 811.5,
+      "avgLevels": 2.18,
+      "avgHeightM": 6.8,
+      "estFootprintAreaM2": 527200.0,
+      "source": "osm"
     },
     {
       "zoneId": "z051",
@@ -580,35 +580,35 @@
     {
       "zoneId": "z053",
       "name": "Henry Farm",
-      "buildingCount": 1310,
+      "buildingCount": 800,
       "areaKm2": 2.578,
-      "buildingDensityPerKm2": 508.2,
-      "avgLevels": 7.2,
-      "avgHeightM": 22.3,
-      "estFootprintAreaM2": 209600.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 310.4,
+      "avgLevels": 9.23,
+      "avgHeightM": 28.6,
+      "estFootprintAreaM2": 128000.0,
+      "source": "osm"
     },
     {
       "zoneId": "z054",
       "name": "O'Connor-Parkview",
-      "buildingCount": 1556,
+      "buildingCount": 3651,
       "areaKm2": 4.847,
-      "buildingDensityPerKm2": 321.0,
-      "avgLevels": 6.3,
-      "avgHeightM": 19.5,
-      "estFootprintAreaM2": 248960.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 753.2,
+      "avgLevels": 4.12,
+      "avgHeightM": 12.8,
+      "estFootprintAreaM2": 584160.0,
+      "source": "osm"
     },
     {
       "zoneId": "z055",
       "name": "Thorncliffe Park",
-      "buildingCount": 1759,
+      "buildingCount": 309,
       "areaKm2": 3.108,
-      "buildingDensityPerKm2": 566.0,
-      "avgLevels": 9.5,
-      "avgHeightM": 29.4,
-      "estFootprintAreaM2": 281440.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 99.4,
+      "avgLevels": 5.4,
+      "avgHeightM": 16.7,
+      "estFootprintAreaM2": 49440.0,
+      "source": "osm"
     },
     {
       "zoneId": "z056",
@@ -624,68 +624,68 @@
     {
       "zoneId": "z057",
       "name": "Broadview North",
-      "buildingCount": 958,
+      "buildingCount": 1349,
       "areaKm2": 1.735,
-      "buildingDensityPerKm2": 552.0,
+      "buildingDensityPerKm2": 777.3,
       "avgLevels": 7.6,
       "avgHeightM": 23.6,
-      "estFootprintAreaM2": 153280.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 215840.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z058",
       "name": "Old East York",
-      "buildingCount": 769,
+      "buildingCount": 2824,
       "areaKm2": 2.336,
-      "buildingDensityPerKm2": 329.2,
-      "avgLevels": 4.6,
-      "avgHeightM": 14.3,
-      "estFootprintAreaM2": 123040.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1209.1,
+      "avgLevels": 2.21,
+      "avgHeightM": 6.9,
+      "estFootprintAreaM2": 451840.0,
+      "source": "osm"
     },
     {
       "zoneId": "z059",
       "name": "Danforth East York",
-      "buildingCount": 1431,
+      "buildingCount": 4539,
       "areaKm2": 2.175,
-      "buildingDensityPerKm2": 657.8,
-      "avgLevels": 4.1,
-      "avgHeightM": 12.7,
-      "estFootprintAreaM2": 228960.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 2086.4,
+      "avgLevels": 1.77,
+      "avgHeightM": 5.5,
+      "estFootprintAreaM2": 726240.0,
+      "source": "osm"
     },
     {
       "zoneId": "z060",
       "name": "Woodbine-Lumsden",
-      "buildingCount": 655,
+      "buildingCount": 2410,
       "areaKm2": 1.189,
-      "buildingDensityPerKm2": 550.9,
-      "avgLevels": 4.4,
-      "avgHeightM": 13.6,
-      "estFootprintAreaM2": 104800.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 2026.8,
+      "avgLevels": 6.33,
+      "avgHeightM": 19.6,
+      "estFootprintAreaM2": 385600.0,
+      "source": "osm"
     },
     {
       "zoneId": "z061",
       "name": "Taylor-Massey",
-      "buildingCount": 1306,
+      "buildingCount": 963,
       "areaKm2": 1.056,
-      "buildingDensityPerKm2": 1236.2,
-      "avgLevels": 7.5,
-      "avgHeightM": 23.2,
-      "estFootprintAreaM2": 208960.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 911.5,
+      "avgLevels": 6.44,
+      "avgHeightM": 20.0,
+      "estFootprintAreaM2": 154080.0,
+      "source": "osm"
     },
     {
       "zoneId": "z062",
       "name": "East End-Danforth",
-      "buildingCount": 1781,
+      "buildingCount": 3819,
       "areaKm2": 2.623,
-      "buildingDensityPerKm2": 679.0,
-      "avgLevels": 5.6,
-      "avgHeightM": 17.4,
-      "estFootprintAreaM2": 284960.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1455.9,
+      "avgLevels": 4.32,
+      "avgHeightM": 13.4,
+      "estFootprintAreaM2": 611040.0,
+      "source": "osm"
     },
     {
       "zoneId": "z063",
@@ -701,24 +701,24 @@
     {
       "zoneId": "z064",
       "name": "Woodbine Corridor",
-      "buildingCount": 1045,
+      "buildingCount": 2216,
       "areaKm2": 1.586,
-      "buildingDensityPerKm2": 658.9,
-      "avgLevels": 5.3,
-      "avgHeightM": 16.4,
-      "estFootprintAreaM2": 167200.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1397.2,
+      "avgLevels": 2.78,
+      "avgHeightM": 8.6,
+      "estFootprintAreaM2": 354560.0,
+      "source": "osm"
     },
     {
       "zoneId": "z065",
       "name": "Greenwood-Coxwell",
-      "buildingCount": 1201,
+      "buildingCount": 2739,
       "areaKm2": 1.665,
-      "buildingDensityPerKm2": 721.3,
-      "avgLevels": 5.2,
-      "avgHeightM": 16.1,
-      "estFootprintAreaM2": 192160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1644.9,
+      "avgLevels": 3.0,
+      "avgHeightM": 9.3,
+      "estFootprintAreaM2": 438240.0,
+      "source": "osm"
     },
     {
       "zoneId": "z066",
@@ -734,46 +734,46 @@
     {
       "zoneId": "z067",
       "name": "Playter Estates-Danforth",
-      "buildingCount": 650,
+      "buildingCount": 1620,
       "areaKm2": 0.882,
-      "buildingDensityPerKm2": 736.7,
-      "avgLevels": 6.3,
-      "avgHeightM": 19.5,
-      "estFootprintAreaM2": 104000.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1836.1,
+      "avgLevels": 2.23,
+      "avgHeightM": 6.9,
+      "estFootprintAreaM2": 259200.0,
+      "source": "osm"
     },
     {
       "zoneId": "z068",
       "name": "North Riverdale",
-      "buildingCount": 993,
+      "buildingCount": 2230,
       "areaKm2": 1.775,
-      "buildingDensityPerKm2": 559.3,
-      "avgLevels": 5.5,
-      "avgHeightM": 17.1,
-      "estFootprintAreaM2": 158880.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1256.1,
+      "avgLevels": 2.15,
+      "avgHeightM": 6.7,
+      "estFootprintAreaM2": 356800.0,
+      "source": "osm"
     },
     {
       "zoneId": "z069",
       "name": "Blake-Jones",
-      "buildingCount": 643,
+      "buildingCount": 1290,
       "areaKm2": 0.936,
-      "buildingDensityPerKm2": 687.3,
-      "avgLevels": 5.6,
-      "avgHeightM": 17.4,
-      "estFootprintAreaM2": 102880.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1378.8,
+      "avgLevels": 2.33,
+      "avgHeightM": 7.2,
+      "estFootprintAreaM2": 206400.0,
+      "source": "osm"
     },
     {
       "zoneId": "z070",
       "name": "South Riverdale",
-      "buildingCount": 2323,
+      "buildingCount": 3951,
       "areaKm2": 10.901,
-      "buildingDensityPerKm2": 213.1,
-      "avgLevels": 5.1,
-      "avgHeightM": 15.8,
-      "estFootprintAreaM2": 371680.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 362.5,
+      "avgLevels": 2.59,
+      "avgHeightM": 8.0,
+      "estFootprintAreaM2": 632160.0,
+      "source": "osm"
     },
     {
       "zoneId": "z071",
@@ -877,13 +877,13 @@
     {
       "zoneId": "z080",
       "name": "Palmerston-Little Italy",
-      "buildingCount": 1152,
+      "buildingCount": 2349,
       "areaKm2": 1.427,
-      "buildingDensityPerKm2": 807.5,
-      "avgLevels": 6.8,
-      "avgHeightM": 21.1,
-      "estFootprintAreaM2": 184320.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1646.5,
+      "avgLevels": 2.38,
+      "avgHeightM": 7.4,
+      "estFootprintAreaM2": 375840.0,
+      "source": "osm"
     },
     {
       "zoneId": "z081",
@@ -910,13 +910,13 @@
     {
       "zoneId": "z083",
       "name": "Dufferin Grove",
-      "buildingCount": 982,
+      "buildingCount": 2182,
       "areaKm2": 1.38,
-      "buildingDensityPerKm2": 711.7,
-      "avgLevels": 6.9,
-      "avgHeightM": 21.4,
-      "estFootprintAreaM2": 157120.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1581.5,
+      "avgLevels": 2.79,
+      "avgHeightM": 8.6,
+      "estFootprintAreaM2": 349120.0,
+      "source": "osm"
     },
     {
       "zoneId": "z084",
@@ -965,57 +965,57 @@
     {
       "zoneId": "z088",
       "name": "High Park North",
-      "buildingCount": 1846,
+      "buildingCount": 2857,
       "areaKm2": 1.871,
-      "buildingDensityPerKm2": 986.6,
-      "avgLevels": 7.5,
-      "avgHeightM": 23.2,
-      "estFootprintAreaM2": 295360.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1527.0,
+      "avgLevels": 2.96,
+      "avgHeightM": 9.2,
+      "estFootprintAreaM2": 457120.0,
+      "source": "osm"
     },
     {
       "zoneId": "z089",
       "name": "Runnymede-Bloor West Village",
-      "buildingCount": 839,
+      "buildingCount": 2845,
       "areaKm2": 1.584,
-      "buildingDensityPerKm2": 529.5,
-      "avgLevels": 3.4,
-      "avgHeightM": 10.5,
-      "estFootprintAreaM2": 134240.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1795.6,
+      "avgLevels": 1.96,
+      "avgHeightM": 6.1,
+      "estFootprintAreaM2": 455200.0,
+      "source": "osm"
     },
     {
       "zoneId": "z090",
       "name": "Junction Area",
-      "buildingCount": 1197,
+      "buildingCount": 2906,
       "areaKm2": 2.616,
-      "buildingDensityPerKm2": 457.5,
-      "avgLevels": 5.2,
-      "avgHeightM": 16.1,
-      "estFootprintAreaM2": 191520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1110.8,
+      "avgLevels": 2.24,
+      "avgHeightM": 6.9,
+      "estFootprintAreaM2": 464960.0,
+      "source": "osm"
     },
     {
       "zoneId": "z091",
       "name": "Weston-Pelham Park",
-      "buildingCount": 924,
+      "buildingCount": 2363,
       "areaKm2": 1.452,
-      "buildingDensityPerKm2": 636.4,
-      "avgLevels": 5.2,
-      "avgHeightM": 16.1,
-      "estFootprintAreaM2": 147840.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1627.5,
+      "avgLevels": 2.11,
+      "avgHeightM": 6.5,
+      "estFootprintAreaM2": 378080.0,
+      "source": "osm"
     },
     {
       "zoneId": "z092",
       "name": "Corso Italia-Davenport",
-      "buildingCount": 1177,
+      "buildingCount": 4995,
       "areaKm2": 1.874,
-      "buildingDensityPerKm2": 628.2,
-      "avgLevels": 4.9,
-      "avgHeightM": 15.2,
-      "estFootprintAreaM2": 188320.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 2666.1,
+      "avgLevels": 2.54,
+      "avgHeightM": 7.9,
+      "estFootprintAreaM2": 799200.0,
+      "source": "osm"
     },
     {
       "zoneId": "z093",
@@ -1086,255 +1086,255 @@
     {
       "zoneId": "z099",
       "name": "Mount Pleasant East",
-      "buildingCount": 1397,
+      "buildingCount": 3753,
       "areaKm2": 3.07,
-      "buildingDensityPerKm2": 455.0,
-      "avgLevels": 5.4,
-      "avgHeightM": 16.7,
-      "estFootprintAreaM2": 223520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1222.3,
+      "avgLevels": 4.14,
+      "avgHeightM": 12.8,
+      "estFootprintAreaM2": 600480.0,
+      "source": "osm"
     },
     {
       "zoneId": "z100",
       "name": "Yonge-Eglinton",
-      "buildingCount": 984,
+      "buildingCount": 2318,
       "areaKm2": 1.641,
-      "buildingDensityPerKm2": 599.8,
+      "buildingDensityPerKm2": 1412.9,
       "avgLevels": 7.0,
       "avgHeightM": 21.7,
-      "estFootprintAreaM2": 157440.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 370880.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z101",
       "name": "Forest Hill South",
-      "buildingCount": 894,
+      "buildingCount": 2165,
       "areaKm2": 2.465,
-      "buildingDensityPerKm2": 362.7,
-      "avgLevels": 5.7,
-      "avgHeightM": 17.7,
-      "estFootprintAreaM2": 143040.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 878.3,
+      "avgLevels": 2.59,
+      "avgHeightM": 8.0,
+      "estFootprintAreaM2": 346400.0,
+      "source": "osm"
     },
     {
       "zoneId": "z102",
       "name": "Forest Hill North",
-      "buildingCount": 1067,
+      "buildingCount": 1754,
       "areaKm2": 1.56,
-      "buildingDensityPerKm2": 684.1,
+      "buildingDensityPerKm2": 1124.5,
       "avgLevels": 7.4,
       "avgHeightM": 22.9,
-      "estFootprintAreaM2": 170720.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 280640.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z103",
       "name": "Lawrence Park South",
-      "buildingCount": 1264,
+      "buildingCount": 3977,
       "areaKm2": 3.223,
-      "buildingDensityPerKm2": 392.2,
-      "avgLevels": 4.2,
-      "avgHeightM": 13.0,
-      "estFootprintAreaM2": 202240.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1233.9,
+      "avgLevels": 2.75,
+      "avgHeightM": 8.5,
+      "estFootprintAreaM2": 636320.0,
+      "source": "osm"
     },
     {
       "zoneId": "z104",
       "name": "Mount Pleasant West",
-      "buildingCount": 2471,
+      "buildingCount": 1253,
       "areaKm2": 1.335,
-      "buildingDensityPerKm2": 1850.6,
-      "avgLevels": 8.2,
-      "avgHeightM": 25.4,
-      "estFootprintAreaM2": 395360.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 938.4,
+      "avgLevels": 6.97,
+      "avgHeightM": 21.6,
+      "estFootprintAreaM2": 200480.0,
+      "source": "osm"
     },
     {
       "zoneId": "z105",
       "name": "Lawrence Park North",
-      "buildingCount": 1217,
+      "buildingCount": 3941,
       "areaKm2": 2.276,
-      "buildingDensityPerKm2": 534.7,
-      "avgLevels": 3.7,
-      "avgHeightM": 11.5,
-      "estFootprintAreaM2": 194720.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1731.4,
+      "avgLevels": 2.5,
+      "avgHeightM": 7.8,
+      "estFootprintAreaM2": 630560.0,
+      "source": "osm"
     },
     {
       "zoneId": "z106",
       "name": "Humewood-Cedarvale",
-      "buildingCount": 1197,
+      "buildingCount": 2615,
       "areaKm2": 1.86,
-      "buildingDensityPerKm2": 643.5,
-      "avgLevels": 7.3,
-      "avgHeightM": 22.6,
-      "estFootprintAreaM2": 191520.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1405.9,
+      "avgLevels": 2.43,
+      "avgHeightM": 7.5,
+      "estFootprintAreaM2": 418400.0,
+      "source": "osm"
     },
     {
       "zoneId": "z107",
       "name": "Oakwood Village",
-      "buildingCount": 1767,
+      "buildingCount": 5155,
       "areaKm2": 2.206,
-      "buildingDensityPerKm2": 801.0,
-      "avgLevels": 5.7,
-      "avgHeightM": 17.7,
-      "estFootprintAreaM2": 282720.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 2336.7,
+      "avgLevels": 2.26,
+      "avgHeightM": 7.0,
+      "estFootprintAreaM2": 824800.0,
+      "source": "osm"
     },
     {
       "zoneId": "z108",
       "name": "Briar Hill-Belgravia",
-      "buildingCount": 1188,
+      "buildingCount": 2538,
       "areaKm2": 1.82,
-      "buildingDensityPerKm2": 652.9,
-      "avgLevels": 6.1,
-      "avgHeightM": 18.9,
-      "estFootprintAreaM2": 190080.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1394.9,
+      "avgLevels": 4.44,
+      "avgHeightM": 13.8,
+      "estFootprintAreaM2": 406080.0,
+      "source": "osm"
     },
     {
       "zoneId": "z109",
       "name": "Caledonia-Fairbank",
-      "buildingCount": 829,
+      "buildingCount": 3684,
       "areaKm2": 1.535,
-      "buildingDensityPerKm2": 540.0,
-      "avgLevels": 4.7,
-      "avgHeightM": 14.6,
-      "estFootprintAreaM2": 132640.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 2399.7,
+      "avgLevels": 2.04,
+      "avgHeightM": 6.3,
+      "estFootprintAreaM2": 589440.0,
+      "source": "osm"
     },
     {
       "zoneId": "z110",
       "name": "Keelesdale-Eglinton West",
-      "buildingCount": 921,
+      "buildingCount": 2956,
       "areaKm2": 1.74,
-      "buildingDensityPerKm2": 529.2,
-      "avgLevels": 5.0,
-      "avgHeightM": 15.5,
-      "estFootprintAreaM2": 147360.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 1698.5,
+      "avgLevels": 2.48,
+      "avgHeightM": 7.7,
+      "estFootprintAreaM2": 472960.0,
+      "source": "osm"
     },
     {
       "zoneId": "z111",
       "name": "Rockcliffe-Smythe",
-      "buildingCount": 1853,
+      "buildingCount": 4234,
       "areaKm2": 5.041,
-      "buildingDensityPerKm2": 367.6,
-      "avgLevels": 5.4,
-      "avgHeightM": 16.7,
-      "estFootprintAreaM2": 296480.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 840.0,
+      "avgLevels": 2.95,
+      "avgHeightM": 9.1,
+      "estFootprintAreaM2": 677440.0,
+      "source": "osm"
     },
     {
       "zoneId": "z112",
       "name": "Beechborough-Greenbrook",
-      "buildingCount": 548,
+      "buildingCount": 984,
       "areaKm2": 1.823,
-      "buildingDensityPerKm2": 300.6,
-      "avgLevels": 7.5,
-      "avgHeightM": 23.2,
-      "estFootprintAreaM2": 87680.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 539.9,
+      "avgLevels": 3.0,
+      "avgHeightM": 9.3,
+      "estFootprintAreaM2": 157440.0,
+      "source": "osm"
     },
     {
       "zoneId": "z113",
       "name": "Weston",
-      "buildingCount": 1499,
+      "buildingCount": 2433,
       "areaKm2": 2.55,
-      "buildingDensityPerKm2": 587.8,
-      "avgLevels": 7.2,
-      "avgHeightM": 22.3,
-      "estFootprintAreaM2": 239840.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 954.0,
+      "avgLevels": 8.01,
+      "avgHeightM": 24.8,
+      "estFootprintAreaM2": 389280.0,
+      "source": "osm"
     },
     {
       "zoneId": "z114",
       "name": "Lambton Baby Point",
-      "buildingCount": 665,
+      "buildingCount": 1753,
       "areaKm2": 1.771,
-      "buildingDensityPerKm2": 375.4,
-      "avgLevels": 5.2,
-      "avgHeightM": 16.1,
-      "estFootprintAreaM2": 106400.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 989.7,
+      "avgLevels": 2.45,
+      "avgHeightM": 7.6,
+      "estFootprintAreaM2": 280480.0,
+      "source": "osm"
     },
     {
       "zoneId": "z115",
       "name": "Mount Dennis",
-      "buildingCount": 1132,
+      "buildingCount": 1501,
       "areaKm2": 2.117,
-      "buildingDensityPerKm2": 534.8,
-      "avgLevels": 6.3,
-      "avgHeightM": 19.5,
-      "estFootprintAreaM2": 181120.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 709.1,
+      "avgLevels": 12.15,
+      "avgHeightM": 37.7,
+      "estFootprintAreaM2": 240160.0,
+      "source": "osm"
     },
     {
       "zoneId": "z116",
       "name": "Steeles",
-      "buildingCount": 2051,
+      "buildingCount": 4172,
       "areaKm2": 4.534,
-      "buildingDensityPerKm2": 452.4,
-      "avgLevels": 2.9,
-      "avgHeightM": 9.0,
-      "estFootprintAreaM2": 328160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 920.2,
+      "avgLevels": 13.13,
+      "avgHeightM": 40.7,
+      "estFootprintAreaM2": 667520.0,
+      "source": "osm"
     },
     {
       "zoneId": "z117",
       "name": "L'Amoreaux",
-      "buildingCount": 3666,
+      "buildingCount": 5181,
       "areaKm2": 7.112,
-      "buildingDensityPerKm2": 515.5,
-      "avgLevels": 4.6,
-      "avgHeightM": 14.3,
-      "estFootprintAreaM2": 586560.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 728.5,
+      "avgLevels": 10.74,
+      "avgHeightM": 33.3,
+      "estFootprintAreaM2": 828960.0,
+      "source": "osm"
     },
     {
       "zoneId": "z118",
       "name": "Tam O'Shanter-Sullivan",
-      "buildingCount": 2287,
+      "buildingCount": 3762,
       "areaKm2": 5.39,
-      "buildingDensityPerKm2": 424.3,
-      "avgLevels": 5.4,
-      "avgHeightM": 16.7,
-      "estFootprintAreaM2": 365920.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 698.0,
+      "avgLevels": 8.88,
+      "avgHeightM": 27.5,
+      "estFootprintAreaM2": 601920.0,
+      "source": "osm"
     },
     {
       "zoneId": "z119",
       "name": "Wexford/Maryvale",
-      "buildingCount": 2326,
+      "buildingCount": 6834,
       "areaKm2": 10.201,
-      "buildingDensityPerKm2": 228.0,
-      "avgLevels": 5.1,
-      "avgHeightM": 15.8,
-      "estFootprintAreaM2": 372160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 669.9,
+      "avgLevels": 2.65,
+      "avgHeightM": 8.2,
+      "estFootprintAreaM2": 1093440.0,
+      "source": "osm"
     },
     {
       "zoneId": "z120",
       "name": "Clairlea-Birchmount",
-      "buildingCount": 2248,
+      "buildingCount": 4835,
       "areaKm2": 7.353,
-      "buildingDensityPerKm2": 305.7,
-      "avgLevels": 4.6,
-      "avgHeightM": 14.3,
-      "estFootprintAreaM2": 359680.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 657.5,
+      "avgLevels": 2.78,
+      "avgHeightM": 8.6,
+      "estFootprintAreaM2": 773600.0,
+      "source": "osm"
     },
     {
       "zoneId": "z121",
       "name": "Oakridge",
-      "buildingCount": 1153,
+      "buildingCount": 1639,
       "areaKm2": 1.867,
-      "buildingDensityPerKm2": 617.5,
+      "buildingDensityPerKm2": 877.8,
       "avgLevels": 7.6,
       "avgHeightM": 23.6,
-      "estFootprintAreaM2": 184480.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 262240.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z122",
@@ -1350,57 +1350,57 @@
     {
       "zoneId": "z123",
       "name": "Cliffcrest",
-      "buildingCount": 1327,
+      "buildingCount": 3963,
       "areaKm2": 7.149,
-      "buildingDensityPerKm2": 185.6,
-      "avgLevels": 4.5,
-      "avgHeightM": 14.0,
-      "estFootprintAreaM2": 212320.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 554.3,
+      "avgLevels": 2.85,
+      "avgHeightM": 8.8,
+      "estFootprintAreaM2": 634080.0,
+      "source": "osm"
     },
     {
       "zoneId": "z124",
       "name": "Kennedy Park",
-      "buildingCount": 1426,
+      "buildingCount": 2656,
       "areaKm2": 3.559,
-      "buildingDensityPerKm2": 400.7,
-      "avgLevels": 5.6,
-      "avgHeightM": 17.4,
-      "estFootprintAreaM2": 228160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 746.3,
+      "avgLevels": 5.21,
+      "avgHeightM": 16.2,
+      "estFootprintAreaM2": 424960.0,
+      "source": "osm"
     },
     {
       "zoneId": "z125",
       "name": "Ionview",
-      "buildingCount": 1136,
+      "buildingCount": 1564,
       "areaKm2": 1.941,
-      "buildingDensityPerKm2": 585.2,
-      "avgLevels": 7.0,
-      "avgHeightM": 21.7,
-      "estFootprintAreaM2": 181760.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 805.7,
+      "avgLevels": 5.82,
+      "avgHeightM": 18.0,
+      "estFootprintAreaM2": 250240.0,
+      "source": "osm"
     },
     {
       "zoneId": "z126",
       "name": "Dorset Park",
-      "buildingCount": 2083,
+      "buildingCount": 2795,
       "areaKm2": 5.975,
-      "buildingDensityPerKm2": 348.6,
-      "avgLevels": 5.0,
-      "avgHeightM": 15.5,
-      "estFootprintAreaM2": 333280.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 467.8,
+      "avgLevels": 4.41,
+      "avgHeightM": 13.7,
+      "estFootprintAreaM2": 447200.0,
+      "source": "osm"
     },
     {
       "zoneId": "z127",
       "name": "Bendale",
-      "buildingCount": 2496,
+      "buildingCount": 5005,
       "areaKm2": 7.412,
-      "buildingDensityPerKm2": 336.8,
-      "avgLevels": 4.7,
-      "avgHeightM": 14.6,
-      "estFootprintAreaM2": 399360.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 675.3,
+      "avgLevels": 7.36,
+      "avgHeightM": 22.8,
+      "estFootprintAreaM2": 800800.0,
+      "source": "osm"
     },
     {
       "zoneId": "z128",
@@ -1416,24 +1416,24 @@
     {
       "zoneId": "z129",
       "name": "Agincourt North",
-      "buildingCount": 2426,
+      "buildingCount": 4652,
       "areaKm2": 7.218,
-      "buildingDensityPerKm2": 336.1,
-      "avgLevels": 3.2,
-      "avgHeightM": 9.9,
-      "estFootprintAreaM2": 388160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 644.5,
+      "avgLevels": 4.18,
+      "avgHeightM": 13.0,
+      "estFootprintAreaM2": 744320.0,
+      "source": "osm"
     },
     {
       "zoneId": "z130",
       "name": "Milliken",
-      "buildingCount": 2214,
+      "buildingCount": 5188,
       "areaKm2": 9.421,
-      "buildingDensityPerKm2": 235.0,
+      "buildingDensityPerKm2": 550.7,
       "avgLevels": 2.5,
       "avgHeightM": 7.8,
-      "estFootprintAreaM2": 354240.0,
-      "source": "modelled"
+      "estFootprintAreaM2": 830080.0,
+      "source": "osm-count-only"
     },
     {
       "zoneId": "z131",
@@ -1460,46 +1460,46 @@
     {
       "zoneId": "z133",
       "name": "Centennial Scarborough",
-      "buildingCount": 1113,
+      "buildingCount": 3853,
       "areaKm2": 5.435,
-      "buildingDensityPerKm2": 204.8,
-      "avgLevels": 2.1,
-      "avgHeightM": 6.5,
-      "estFootprintAreaM2": 178080.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 708.9,
+      "avgLevels": 1.5,
+      "avgHeightM": 4.7,
+      "estFootprintAreaM2": 616480.0,
+      "source": "osm"
     },
     {
       "zoneId": "z134",
       "name": "Highland Creek",
-      "buildingCount": 1041,
+      "buildingCount": 3649,
       "areaKm2": 5.216,
-      "buildingDensityPerKm2": 199.6,
-      "avgLevels": 2.5,
-      "avgHeightM": 7.8,
-      "estFootprintAreaM2": 166560.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 699.6,
+      "avgLevels": 3.42,
+      "avgHeightM": 10.6,
+      "estFootprintAreaM2": 583840.0,
+      "source": "osm"
     },
     {
       "zoneId": "z135",
       "name": "Morningside",
-      "buildingCount": 1454,
+      "buildingCount": 2673,
       "areaKm2": 5.705,
-      "buildingDensityPerKm2": 254.9,
-      "avgLevels": 5.1,
-      "avgHeightM": 15.8,
-      "estFootprintAreaM2": 232640.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 468.5,
+      "avgLevels": 10.5,
+      "avgHeightM": 32.6,
+      "estFootprintAreaM2": 427680.0,
+      "source": "osm"
     },
     {
       "zoneId": "z136",
       "name": "West Hill",
-      "buildingCount": 2282,
+      "buildingCount": 4567,
       "areaKm2": 9.566,
-      "buildingDensityPerKm2": 238.5,
-      "avgLevels": 5.2,
-      "avgHeightM": 16.1,
-      "estFootprintAreaM2": 365120.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 477.4,
+      "avgLevels": 4.14,
+      "avgHeightM": 12.8,
+      "estFootprintAreaM2": 730720.0,
+      "source": "osm"
     },
     {
       "zoneId": "z137",
@@ -1515,13 +1515,13 @@
     {
       "zoneId": "z138",
       "name": "Eglinton East",
-      "buildingCount": 1898,
+      "buildingCount": 2171,
       "areaKm2": 3.204,
-      "buildingDensityPerKm2": 592.5,
-      "avgLevels": 6.5,
-      "avgHeightM": 20.2,
-      "estFootprintAreaM2": 303680.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 677.7,
+      "avgLevels": 7.52,
+      "avgHeightM": 23.3,
+      "estFootprintAreaM2": 347360.0,
+      "source": "osm"
     },
     {
       "zoneId": "z139",
@@ -1537,13 +1537,13 @@
     {
       "zoneId": "z140",
       "name": "Guildwood",
-      "buildingCount": 826,
+      "buildingCount": 2473,
       "areaKm2": 3.781,
-      "buildingDensityPerKm2": 218.4,
-      "avgLevels": 3.5,
-      "avgHeightM": 10.8,
-      "estFootprintAreaM2": 132160.0,
-      "source": "modelled"
+      "buildingDensityPerKm2": 654.0,
+      "avgLevels": 6.33,
+      "avgHeightM": 19.6,
+      "estFootprintAreaM2": 395680.0,
+      "source": "osm"
     }
   ]
 }

@@ -15,13 +15,13 @@
       "zoneId": "z001",
       "name": "West Humber-Clairville",
       "mix": {
-        "owner-detached": 0.2796,
-        "condo-owner": 0.2452,
-        "renter-low": 0.1223,
-        "renter-mid": 0.1223,
+        "owner-detached": 0.2798,
+        "condo-owner": 0.2453,
+        "renter-low": 0.1224,
+        "renter-mid": 0.1224,
         "senior": 0.098,
         "student": 0.0977,
-        "small-business": 0.0348
+        "small-business": 0.0343
       },
       "drivers": {
         "renterPct": 0.318,
@@ -37,13 +37,13 @@
       "zoneId": "z002",
       "name": "Mount Olive-Silverstone-Jamestown",
       "mix": {
-        "owner-detached": 0.1036,
-        "condo-owner": 0.2544,
-        "renter-low": 0.2206,
-        "renter-mid": 0.2206,
+        "owner-detached": 0.1037,
+        "condo-owner": 0.2547,
+        "renter-low": 0.2209,
+        "renter-mid": 0.2209,
         "senior": 0.0755,
         "student": 0.0845,
-        "small-business": 0.0407
+        "small-business": 0.0398
       },
       "drivers": {
         "renterPct": 0.552,
@@ -59,13 +59,13 @@
       "zoneId": "z003",
       "name": "Thistletown-Beaumond Heights",
       "mix": {
-        "owner-detached": 0.2715,
-        "condo-owner": 0.1904,
-        "renter-low": 0.1415,
-        "renter-mid": 0.1415,
+        "owner-detached": 0.2719,
+        "condo-owner": 0.1907,
+        "renter-low": 0.1418,
+        "renter-mid": 0.1418,
         "senior": 0.1135,
         "student": 0.0762,
-        "small-business": 0.0654
+        "small-business": 0.0642
       },
       "drivers": {
         "renterPct": 0.38,
@@ -81,13 +81,13 @@
       "zoneId": "z004",
       "name": "Rexdale-Kipling",
       "mix": {
-        "owner-detached": 0.2509,
-        "condo-owner": 0.1807,
-        "renter-low": 0.1689,
-        "renter-mid": 0.1689,
+        "owner-detached": 0.2514,
+        "condo-owner": 0.1811,
+        "renter-low": 0.1692,
+        "renter-mid": 0.1692,
         "senior": 0.1064,
         "student": 0.075,
-        "small-business": 0.0494
+        "small-business": 0.0476
       },
       "drivers": {
         "renterPct": 0.439,
@@ -103,13 +103,13 @@
       "zoneId": "z005",
       "name": "Elms-Old Rexdale",
       "mix": {
-        "owner-detached": 0.2097,
-        "condo-owner": 0.2183,
-        "renter-low": 0.1801,
-        "renter-mid": 0.1801,
+        "owner-detached": 0.2099,
+        "condo-owner": 0.2186,
+        "renter-low": 0.1803,
+        "renter-mid": 0.1803,
         "senior": 0.0944,
         "student": 0.0779,
-        "small-business": 0.0395
+        "small-business": 0.0386
       },
       "drivers": {
         "renterPct": 0.457,
@@ -125,13 +125,13 @@
       "zoneId": "z006",
       "name": "Kingsview Village-The Westway",
       "mix": {
-        "owner-detached": 0.1357,
-        "condo-owner": 0.2667,
-        "renter-low": 0.185,
-        "renter-mid": 0.185,
+        "owner-detached": 0.1359,
+        "condo-owner": 0.267,
+        "renter-low": 0.1852,
+        "renter-mid": 0.1852,
         "senior": 0.1139,
         "student": 0.0733,
-        "small-business": 0.0405
+        "small-business": 0.0395
       },
       "drivers": {
         "renterPct": 0.479,
@@ -147,13 +147,13 @@
       "zoneId": "z007",
       "name": "Willowridge-Martingrove-Richview",
       "mix": {
-        "owner-detached": 0.2083,
-        "condo-owner": 0.1876,
-        "renter-low": 0.1693,
-        "renter-mid": 0.1693,
+        "owner-detached": 0.2087,
+        "condo-owner": 0.1879,
+        "renter-low": 0.1696,
+        "renter-mid": 0.1696,
         "senior": 0.155,
         "student": 0.0647,
-        "small-business": 0.046
+        "small-business": 0.0445
       },
       "drivers": {
         "renterPct": 0.461,
@@ -169,13 +169,13 @@
       "zoneId": "z008",
       "name": "Humber Heights-Westmount",
       "mix": {
-        "owner-detached": 0.1999,
-        "condo-owner": 0.2597,
-        "renter-low": 0.1481,
-        "renter-mid": 0.1481,
+        "owner-detached": 0.2002,
+        "condo-owner": 0.2601,
+        "renter-low": 0.1484,
+        "renter-mid": 0.1484,
         "senior": 0.1426,
         "student": 0.0575,
-        "small-business": 0.0441
+        "small-business": 0.0428
       },
       "drivers": {
         "renterPct": 0.392,
@@ -191,13 +191,13 @@
       "zoneId": "z009",
       "name": "Edenbridge-Humber Valley",
       "mix": {
-        "owner-detached": 0.1893,
-        "condo-owner": 0.2378,
-        "renter-low": 0.1671,
-        "renter-mid": 0.1671,
+        "owner-detached": 0.1895,
+        "condo-owner": 0.2381,
+        "renter-low": 0.1673,
+        "renter-mid": 0.1673,
         "senior": 0.1334,
         "student": 0.0646,
-        "small-business": 0.0408
+        "small-business": 0.0398
       },
       "drivers": {
         "renterPct": 0.439,
@@ -213,13 +213,13 @@
       "zoneId": "z010",
       "name": "Princess-Rosethorn",
       "mix": {
-        "owner-detached": 0.5626,
-        "condo-owner": 0.0859,
+        "owner-detached": 0.5636,
+        "condo-owner": 0.0861,
         "renter-low": 0.0378,
-        "renter-mid": 0.0803,
+        "renter-mid": 0.0804,
         "senior": 0.128,
         "student": 0.0615,
-        "small-business": 0.044
+        "small-business": 0.0427
       },
       "drivers": {
         "renterPct": 0.154,
@@ -235,13 +235,13 @@
       "zoneId": "z011",
       "name": "Eringate-Centennial-West Deane",
       "mix": {
-        "owner-detached": 0.4534,
-        "condo-owner": 0.184,
-        "renter-low": 0.0371,
-        "renter-mid": 0.0789,
+        "owner-detached": 0.454,
+        "condo-owner": 0.1843,
+        "renter-low": 0.0372,
+        "renter-mid": 0.079,
         "senior": 0.1405,
         "student": 0.0651,
-        "small-business": 0.041
+        "small-business": 0.04
       },
       "drivers": {
         "renterPct": 0.154,
@@ -257,13 +257,13 @@
       "zoneId": "z012",
       "name": "Markland Wood",
       "mix": {
-        "owner-detached": 0.2599,
-        "condo-owner": 0.2806,
-        "renter-low": 0.0935,
-        "renter-mid": 0.0935,
+        "owner-detached": 0.2603,
+        "condo-owner": 0.2811,
+        "renter-low": 0.0936,
+        "renter-mid": 0.0936,
         "senior": 0.1731,
         "student": 0.0558,
-        "small-business": 0.0436
+        "small-business": 0.0424
       },
       "drivers": {
         "renterPct": 0.257,
@@ -279,13 +279,13 @@
       "zoneId": "z013",
       "name": "Etobicoke West Mall",
       "mix": {
-        "owner-detached": 0.1149,
-        "condo-owner": 0.2917,
-        "renter-low": 0.1832,
-        "renter-mid": 0.1832,
+        "owner-detached": 0.1151,
+        "condo-owner": 0.2922,
+        "renter-low": 0.1835,
+        "renter-mid": 0.1835,
         "senior": 0.1007,
         "student": 0.0826,
-        "small-business": 0.0436
+        "small-business": 0.0424
       },
       "drivers": {
         "renterPct": 0.474,
@@ -301,13 +301,13 @@
       "zoneId": "z014",
       "name": "Islington-City Centre West",
       "mix": {
-        "owner-detached": 0.1359,
-        "condo-owner": 0.3048,
-        "renter-low": 0.1596,
-        "renter-mid": 0.1596,
+        "owner-detached": 0.1361,
+        "condo-owner": 0.3051,
+        "renter-low": 0.1597,
+        "renter-mid": 0.1597,
         "senior": 0.107,
         "student": 0.0848,
-        "small-business": 0.0484
+        "small-business": 0.0476
       },
       "drivers": {
         "renterPct": 0.42,
@@ -323,13 +323,13 @@
       "zoneId": "z015",
       "name": "Kingsway South",
       "mix": {
-        "owner-detached": 0.4187,
-        "condo-owner": 0.199,
-        "renter-low": 0.0449,
-        "renter-mid": 0.0953,
+        "owner-detached": 0.4118,
+        "condo-owner": 0.1957,
+        "renter-low": 0.0441,
+        "renter-mid": 0.0938,
         "senior": 0.1431,
         "student": 0.0481,
-        "small-business": 0.0509
+        "small-business": 0.0634
       },
       "drivers": {
         "renterPct": 0.185,
@@ -345,13 +345,13 @@
       "zoneId": "z016",
       "name": "Stonegate-Queensway",
       "mix": {
-        "owner-detached": 0.2977,
-        "condo-owner": 0.1902,
-        "renter-low": 0.1331,
-        "renter-mid": 0.1331,
+        "owner-detached": 0.298,
+        "condo-owner": 0.1904,
+        "renter-low": 0.1332,
+        "renter-mid": 0.1332,
         "senior": 0.1143,
         "student": 0.0561,
-        "small-business": 0.0755
+        "small-business": 0.0747
       },
       "drivers": {
         "renterPct": 0.353,
@@ -389,13 +389,13 @@
       "zoneId": "z018",
       "name": "New Toronto",
       "mix": {
-        "owner-detached": 0.1258,
-        "condo-owner": 0.2073,
-        "renter-low": 0.2172,
-        "renter-mid": 0.2172,
+        "owner-detached": 0.126,
+        "condo-owner": 0.2076,
+        "renter-low": 0.2175,
+        "renter-mid": 0.2175,
         "senior": 0.0931,
         "student": 0.084,
-        "small-business": 0.0555
+        "small-business": 0.0543
       },
       "drivers": {
         "renterPct": 0.566,
@@ -411,13 +411,13 @@
       "zoneId": "z019",
       "name": "Long Branch",
       "mix": {
-        "owner-detached": 0.12,
-        "condo-owner": 0.2298,
-        "renter-low": 0.2012,
-        "renter-mid": 0.2012,
+        "owner-detached": 0.1202,
+        "condo-owner": 0.2303,
+        "renter-low": 0.2017,
+        "renter-mid": 0.2017,
         "senior": 0.0972,
         "student": 0.0829,
-        "small-business": 0.0678
+        "small-business": 0.0661
       },
       "drivers": {
         "renterPct": 0.535,
@@ -433,13 +433,13 @@
       "zoneId": "z020",
       "name": "Alderwood",
       "mix": {
-        "owner-detached": 0.4633,
-        "condo-owner": 0.1529,
-        "renter-low": 0.0794,
-        "renter-mid": 0.0794,
+        "owner-detached": 0.4642,
+        "condo-owner": 0.1532,
+        "renter-low": 0.0796,
+        "renter-mid": 0.0796,
         "senior": 0.1164,
         "student": 0.0625,
-        "small-business": 0.046
+        "small-business": 0.0446
       },
       "drivers": {
         "renterPct": 0.205,
@@ -455,13 +455,13 @@
       "zoneId": "z021",
       "name": "Humber Summit",
       "mix": {
-        "owner-detached": 0.3256,
-        "condo-owner": 0.2021,
-        "renter-low": 0.1125,
-        "renter-mid": 0.1125,
+        "owner-detached": 0.3258,
+        "condo-owner": 0.2023,
+        "renter-low": 0.1126,
+        "renter-mid": 0.1126,
         "senior": 0.1342,
         "student": 0.0771,
-        "small-business": 0.0359
+        "small-business": 0.0354
       },
       "drivers": {
         "renterPct": 0.299,
@@ -499,13 +499,13 @@
       "zoneId": "z023",
       "name": "Pelmo Park-Humberlea",
       "mix": {
-        "owner-detached": 0.4549,
-        "condo-owner": 0.1995,
-        "renter-low": 0.0689,
-        "renter-mid": 0.0689,
+        "owner-detached": 0.4509,
+        "condo-owner": 0.1978,
+        "renter-low": 0.0683,
+        "renter-mid": 0.0683,
         "senior": 0.1032,
         "student": 0.0703,
-        "small-business": 0.0343
+        "small-business": 0.0412
       },
       "drivers": {
         "renterPct": 0.174,
@@ -521,13 +521,13 @@
       "zoneId": "z024",
       "name": "Black Creek",
       "mix": {
-        "owner-detached": 0.089,
-        "condo-owner": 0.1741,
-        "renter-low": 0.3689,
-        "renter-mid": 0.1581,
+        "owner-detached": 0.0891,
+        "condo-owner": 0.1743,
+        "renter-low": 0.3693,
+        "renter-mid": 0.1583,
         "senior": 0.0876,
         "student": 0.0827,
-        "small-business": 0.0396
+        "small-business": 0.0387
       },
       "drivers": {
         "renterPct": 0.667,
@@ -543,13 +543,13 @@
       "zoneId": "z025",
       "name": "Glenfield-Jane Heights",
       "mix": {
-        "owner-detached": 0.2024,
-        "condo-owner": 0.1958,
-        "renter-low": 0.1875,
-        "renter-mid": 0.1875,
+        "owner-detached": 0.2027,
+        "condo-owner": 0.1961,
+        "renter-low": 0.1878,
+        "renter-mid": 0.1878,
         "senior": 0.1104,
         "student": 0.0749,
-        "small-business": 0.0414
+        "small-business": 0.0404
       },
       "drivers": {
         "renterPct": 0.485,
@@ -565,13 +565,13 @@
       "zoneId": "z026",
       "name": "Downsview-Roding-CFB",
       "mix": {
-        "owner-detached": 0.1536,
-        "condo-owner": 0.1882,
-        "renter-low": 0.1866,
-        "renter-mid": 0.1866,
+        "owner-detached": 0.1538,
+        "condo-owner": 0.1884,
+        "renter-low": 0.1868,
+        "renter-mid": 0.1868,
         "senior": 0.11,
         "student": 0.0718,
-        "small-business": 0.1031
+        "small-business": 0.1023
       },
       "drivers": {
         "renterPct": 0.522,
@@ -609,13 +609,13 @@
       "zoneId": "z028",
       "name": "Rustic",
       "mix": {
-        "owner-detached": 0.1087,
-        "condo-owner": 0.1824,
-        "renter-low": 0.3325,
-        "renter-mid": 0.1425,
+        "owner-detached": 0.1089,
+        "condo-owner": 0.1827,
+        "renter-low": 0.333,
+        "renter-mid": 0.1427,
         "senior": 0.1204,
         "student": 0.0697,
-        "small-business": 0.0438
+        "small-business": 0.0425
       },
       "drivers": {
         "renterPct": 0.62,
@@ -631,13 +631,13 @@
       "zoneId": "z029",
       "name": "Maple Leaf",
       "mix": {
-        "owner-detached": 0.2288,
-        "condo-owner": 0.197,
-        "renter-low": 0.1659,
-        "renter-mid": 0.1659,
+        "owner-detached": 0.2293,
+        "condo-owner": 0.1974,
+        "renter-low": 0.1663,
+        "renter-mid": 0.1663,
         "senior": 0.1253,
         "student": 0.0702,
-        "small-business": 0.0468
+        "small-business": 0.0453
       },
       "drivers": {
         "renterPct": 0.438,
@@ -675,13 +675,13 @@
       "zoneId": "z031",
       "name": "Yorkdale-Glen Park",
       "mix": {
-        "owner-detached": 0.2456,
-        "condo-owner": 0.2141,
-        "renter-low": 0.1427,
-        "renter-mid": 0.1427,
+        "owner-detached": 0.2459,
+        "condo-owner": 0.2143,
+        "renter-low": 0.1428,
+        "renter-mid": 0.1428,
         "senior": 0.1265,
         "student": 0.0723,
-        "small-business": 0.0563
+        "small-business": 0.0553
       },
       "drivers": {
         "renterPct": 0.383,
@@ -697,13 +697,13 @@
       "zoneId": "z032",
       "name": "Englemount-Lawrence",
       "mix": {
-        "owner-detached": 0.0873,
-        "condo-owner": 0.2402,
-        "renter-low": 0.228,
-        "renter-mid": 0.228,
+        "owner-detached": 0.0875,
+        "condo-owner": 0.2407,
+        "renter-low": 0.2285,
+        "renter-mid": 0.2285,
         "senior": 0.1031,
         "student": 0.0674,
-        "small-business": 0.0459
+        "small-business": 0.0445
       },
       "drivers": {
         "renterPct": 0.582,
@@ -719,13 +719,13 @@
       "zoneId": "z033",
       "name": "Clanton Park",
       "mix": {
-        "owner-detached": 0.1586,
-        "condo-owner": 0.2692,
-        "renter-low": 0.1815,
-        "renter-mid": 0.1815,
+        "owner-detached": 0.1573,
+        "condo-owner": 0.267,
+        "renter-low": 0.18,
+        "renter-mid": 0.18,
         "senior": 0.1009,
         "student": 0.0715,
-        "small-business": 0.0369
+        "small-business": 0.0434
       },
       "drivers": {
         "renterPct": 0.459,
@@ -741,13 +741,13 @@
       "zoneId": "z034",
       "name": "Bathurst Manor",
       "mix": {
-        "owner-detached": 0.1595,
-        "condo-owner": 0.2594,
-        "renter-low": 0.1784,
-        "renter-mid": 0.1784,
+        "owner-detached": 0.1584,
+        "condo-owner": 0.2575,
+        "renter-low": 0.1771,
+        "renter-mid": 0.1771,
         "senior": 0.1197,
         "student": 0.0688,
-        "small-business": 0.0358
+        "small-business": 0.0413
       },
       "drivers": {
         "renterPct": 0.46,
@@ -763,13 +763,13 @@
       "zoneId": "z035",
       "name": "Westminster-Branson",
       "mix": {
-        "owner-detached": 0.0553,
-        "condo-owner": 0.2433,
-        "renter-low": 0.2268,
-        "renter-mid": 0.2268,
+        "owner-detached": 0.0557,
+        "condo-owner": 0.2448,
+        "renter-low": 0.2282,
+        "renter-mid": 0.2282,
         "senior": 0.1323,
         "student": 0.0732,
-        "small-business": 0.0424
+        "small-business": 0.0378
       },
       "drivers": {
         "renterPct": 0.603,
@@ -785,13 +785,13 @@
       "zoneId": "z036",
       "name": "Newtonbrook West",
       "mix": {
-        "owner-detached": 0.1636,
-        "condo-owner": 0.234,
-        "renter-low": 0.1791,
-        "renter-mid": 0.1791,
+        "owner-detached": 0.1625,
+        "condo-owner": 0.2324,
+        "renter-low": 0.1779,
+        "renter-mid": 0.1779,
         "senior": 0.1178,
         "student": 0.0876,
-        "small-business": 0.0388
+        "small-business": 0.0439
       },
       "drivers": {
         "renterPct": 0.474,
@@ -807,13 +807,13 @@
       "zoneId": "z037",
       "name": "Willowdale West",
       "mix": {
-        "owner-detached": 0.1471,
-        "condo-owner": 0.3114,
-        "renter-low": 0.1312,
-        "renter-mid": 0.1312,
+        "owner-detached": 0.1474,
+        "condo-owner": 0.3122,
+        "renter-low": 0.1315,
+        "renter-mid": 0.1315,
         "senior": 0.1325,
         "student": 0.0981,
-        "small-business": 0.0485
+        "small-business": 0.0468
       },
       "drivers": {
         "renterPct": 0.364,
@@ -829,13 +829,13 @@
       "zoneId": "z038",
       "name": "Lansing-Westgate",
       "mix": {
-        "owner-detached": 0.1674,
-        "condo-owner": 0.293,
-        "renter-low": 0.1639,
-        "renter-mid": 0.1639,
+        "owner-detached": 0.1663,
+        "condo-owner": 0.2911,
+        "renter-low": 0.1629,
+        "renter-mid": 0.1629,
         "senior": 0.0896,
         "student": 0.0869,
-        "small-business": 0.0352
+        "small-business": 0.0403
       },
       "drivers": {
         "renterPct": 0.416,
@@ -851,13 +851,13 @@
       "zoneId": "z039",
       "name": "Bedford Park-Nortown",
       "mix": {
-        "owner-detached": 0.3195,
-        "condo-owner": 0.2314,
-        "renter-low": 0.0763,
-        "renter-mid": 0.1621,
+        "owner-detached": 0.3149,
+        "condo-owner": 0.228,
+        "renter-low": 0.0752,
+        "renter-mid": 0.1597,
         "senior": 0.1173,
         "student": 0.0561,
-        "small-business": 0.0373
+        "small-business": 0.0487
       },
       "drivers": {
         "renterPct": 0.302,
@@ -873,13 +873,13 @@
       "zoneId": "z040",
       "name": "St.Andrew-Windfields",
       "mix": {
-        "owner-detached": 0.3161,
-        "condo-owner": 0.1963,
-        "renter-low": 0.0822,
-        "renter-mid": 0.1747,
+        "owner-detached": 0.3139,
+        "condo-owner": 0.195,
+        "renter-low": 0.0817,
+        "renter-mid": 0.1736,
         "senior": 0.1256,
         "student": 0.0709,
-        "small-business": 0.0342
+        "small-business": 0.0394
       },
       "drivers": {
         "renterPct": 0.334,
@@ -895,13 +895,13 @@
       "zoneId": "z041",
       "name": "Bridle Path-Sunnybrook-York Mills",
       "mix": {
-        "owner-detached": 0.5499,
-        "condo-owner": 0.1512,
-        "renter-low": 0.0225,
-        "renter-mid": 0.0477,
+        "owner-detached": 0.547,
+        "condo-owner": 0.1504,
+        "renter-low": 0.0223,
+        "renter-mid": 0.0475,
         "senior": 0.1322,
         "student": 0.0647,
-        "small-business": 0.0318
+        "small-business": 0.0359
       },
       "drivers": {
         "renterPct": 0.091,
@@ -917,13 +917,13 @@
       "zoneId": "z042",
       "name": "Banbury-Don Mills",
       "mix": {
-        "owner-detached": 0.1699,
-        "condo-owner": 0.2873,
-        "renter-low": 0.1468,
-        "renter-mid": 0.1468,
+        "owner-detached": 0.1692,
+        "condo-owner": 0.2861,
+        "renter-low": 0.1461,
+        "renter-mid": 0.1461,
         "senior": 0.16,
         "student": 0.0544,
-        "small-business": 0.0348
+        "small-business": 0.038
       },
       "drivers": {
         "renterPct": 0.391,
@@ -939,13 +939,13 @@
       "zoneId": "z043",
       "name": "Victoria Village",
       "mix": {
-        "owner-detached": 0.0824,
-        "condo-owner": 0.2351,
-        "renter-low": 0.2266,
-        "renter-mid": 0.2266,
+        "owner-detached": 0.0823,
+        "condo-owner": 0.2347,
+        "renter-low": 0.2263,
+        "renter-mid": 0.2263,
         "senior": 0.1239,
         "student": 0.0689,
-        "small-business": 0.0364
+        "small-business": 0.0375
       },
       "drivers": {
         "renterPct": 0.588,
@@ -961,13 +961,13 @@
       "zoneId": "z044",
       "name": "Flemingdon Park",
       "mix": {
-        "owner-detached": 0.0332,
-        "condo-owner": 0.3153,
-        "renter-low": 0.2156,
-        "renter-mid": 0.2156,
+        "owner-detached": 0.0338,
+        "condo-owner": 0.3207,
+        "renter-low": 0.2193,
+        "renter-mid": 0.2193,
         "senior": 0.0956,
         "student": 0.0794,
-        "small-business": 0.0453
+        "small-business": 0.0319
       },
       "drivers": {
         "renterPct": 0.553,
@@ -983,13 +983,13 @@
       "zoneId": "z045",
       "name": "Parkwoods-Donalda",
       "mix": {
-        "owner-detached": 0.1237,
-        "condo-owner": 0.1879,
-        "renter-low": 0.2356,
-        "renter-mid": 0.2356,
+        "owner-detached": 0.1235,
+        "condo-owner": 0.1875,
+        "renter-low": 0.2352,
+        "renter-mid": 0.2352,
         "senior": 0.1048,
         "student": 0.0744,
-        "small-business": 0.0381
+        "small-business": 0.0394
       },
       "drivers": {
         "renterPct": 0.602,
@@ -1005,13 +1005,13 @@
       "zoneId": "z046",
       "name": "Pleasant View",
       "mix": {
-        "owner-detached": 0.3158,
-        "condo-owner": 0.2467,
-        "renter-low": 0.0903,
-        "renter-mid": 0.0903,
+        "owner-detached": 0.3133,
+        "condo-owner": 0.2448,
+        "renter-low": 0.0896,
+        "renter-mid": 0.0896,
         "senior": 0.1414,
         "student": 0.0763,
-        "small-business": 0.0392
+        "small-business": 0.0451
       },
       "drivers": {
         "renterPct": 0.243,
@@ -1027,13 +1027,13 @@
       "zoneId": "z047",
       "name": "Don Valley Village",
       "mix": {
-        "owner-detached": 0.1521,
-        "condo-owner": 0.2374,
-        "renter-low": 0.1856,
-        "renter-mid": 0.1856,
+        "owner-detached": 0.1524,
+        "condo-owner": 0.2378,
+        "renter-low": 0.1859,
+        "renter-mid": 0.1859,
         "senior": 0.1168,
         "student": 0.0788,
-        "small-business": 0.0435
+        "small-business": 0.0423
       },
       "drivers": {
         "renterPct": 0.488,
@@ -1049,13 +1049,13 @@
       "zoneId": "z048",
       "name": "Hillcrest Village",
       "mix": {
-        "owner-detached": 0.3034,
-        "condo-owner": 0.2439,
-        "renter-low": 0.0841,
-        "renter-mid": 0.0841,
+        "owner-detached": 0.3017,
+        "condo-owner": 0.2426,
+        "renter-low": 0.0836,
+        "renter-mid": 0.0836,
         "senior": 0.178,
         "student": 0.0711,
-        "small-business": 0.0354
+        "small-business": 0.0394
       },
       "drivers": {
         "renterPct": 0.235,
@@ -1071,13 +1071,13 @@
       "zoneId": "z049",
       "name": "Bayview Woods-Steeles",
       "mix": {
-        "owner-detached": 0.2004,
-        "condo-owner": 0.2168,
-        "renter-low": 0.1523,
-        "renter-mid": 0.1523,
+        "owner-detached": 0.199,
+        "condo-owner": 0.2153,
+        "renter-low": 0.1512,
+        "renter-mid": 0.1512,
         "senior": 0.1716,
         "student": 0.0709,
-        "small-business": 0.0356
+        "small-business": 0.0408
       },
       "drivers": {
         "renterPct": 0.422,
@@ -1093,13 +1093,13 @@
       "zoneId": "z050",
       "name": "Newtonbrook East",
       "mix": {
-        "owner-detached": 0.2205,
-        "condo-owner": 0.2598,
-        "renter-low": 0.1305,
-        "renter-mid": 0.1305,
+        "owner-detached": 0.218,
+        "condo-owner": 0.2569,
+        "renter-low": 0.129,
+        "renter-mid": 0.129,
         "senior": 0.1237,
         "student": 0.0982,
-        "small-business": 0.0368
+        "small-business": 0.0452
       },
       "drivers": {
         "renterPct": 0.352,
@@ -1137,13 +1137,13 @@
       "zoneId": "z052",
       "name": "Bayview Village",
       "mix": {
-        "owner-detached": 0.1406,
-        "condo-owner": 0.3019,
-        "renter-low": 0.155,
-        "renter-mid": 0.155,
+        "owner-detached": 0.1408,
+        "condo-owner": 0.3022,
+        "renter-low": 0.1552,
+        "renter-mid": 0.1552,
         "senior": 0.1107,
         "student": 0.0969,
-        "small-business": 0.0399
+        "small-business": 0.039
       },
       "drivers": {
         "renterPct": 0.412,
@@ -1159,13 +1159,13 @@
       "zoneId": "z053",
       "name": "Henry Farm",
       "mix": {
-        "owner-detached": 0.0417,
-        "condo-owner": 0.2431,
-        "renter-low": 0.2425,
-        "renter-mid": 0.2425,
+        "owner-detached": 0.0419,
+        "condo-owner": 0.2446,
+        "renter-low": 0.244,
+        "renter-mid": 0.244,
         "senior": 0.065,
         "student": 0.1247,
-        "small-business": 0.0405
+        "small-business": 0.0358
       },
       "drivers": {
         "renterPct": 0.63,
@@ -1181,13 +1181,13 @@
       "zoneId": "z054",
       "name": "O'Connor-Parkview",
       "mix": {
-        "owner-detached": 0.1633,
-        "condo-owner": 0.2058,
-        "renter-low": 0.2132,
-        "renter-mid": 0.2132,
+        "owner-detached": 0.1618,
+        "condo-owner": 0.2039,
+        "renter-low": 0.2112,
+        "renter-mid": 0.2112,
         "senior": 0.0958,
         "student": 0.0722,
-        "small-business": 0.0366
+        "small-business": 0.0441
       },
       "drivers": {
         "renterPct": 0.536,
@@ -1204,12 +1204,12 @@
       "name": "Thorncliffe Park",
       "mix": {
         "owner-detached": 0.0011,
-        "condo-owner": 0.0888,
-        "renter-low": 0.5092,
-        "renter-mid": 0.2182,
+        "condo-owner": 0.0899,
+        "renter-low": 0.5153,
+        "renter-mid": 0.2208,
         "senior": 0.0701,
         "student": 0.0709,
-        "small-business": 0.0417
+        "small-business": 0.0319
       },
       "drivers": {
         "renterPct": 0.89,
@@ -1225,13 +1225,13 @@
       "zoneId": "z056",
       "name": "Leaside-Bennington",
       "mix": {
-        "owner-detached": 0.3968,
-        "condo-owner": 0.178,
-        "renter-low": 0.0715,
-        "renter-mid": 0.152,
+        "owner-detached": 0.3977,
+        "condo-owner": 0.1785,
+        "renter-low": 0.0717,
+        "renter-mid": 0.1524,
         "senior": 0.0986,
         "student": 0.0521,
-        "small-business": 0.0509
+        "small-business": 0.049
       },
       "drivers": {
         "renterPct": 0.28,
@@ -1247,13 +1247,13 @@
       "zoneId": "z057",
       "name": "Broadview North",
       "mix": {
-        "owner-detached": 0.059,
-        "condo-owner": 0.1846,
-        "renter-low": 0.26,
-        "renter-mid": 0.26,
+        "owner-detached": 0.0587,
+        "condo-owner": 0.1838,
+        "renter-low": 0.2589,
+        "renter-mid": 0.2589,
         "senior": 0.1108,
         "student": 0.0717,
-        "small-business": 0.054
+        "small-business": 0.0572
       },
       "drivers": {
         "renterPct": 0.681,
@@ -1269,13 +1269,13 @@
       "zoneId": "z058",
       "name": "Old East York",
       "mix": {
-        "owner-detached": 0.326,
-        "condo-owner": 0.191,
-        "renter-low": 0.138,
-        "renter-mid": 0.138,
+        "owner-detached": 0.3195,
+        "condo-owner": 0.1871,
+        "renter-low": 0.1352,
+        "renter-mid": 0.1352,
         "senior": 0.1137,
         "student": 0.0566,
-        "small-business": 0.0368
+        "small-business": 0.0527
       },
       "drivers": {
         "renterPct": 0.348,
@@ -1291,13 +1291,13 @@
       "zoneId": "z059",
       "name": "Danforth East York",
       "mix": {
-        "owner-detached": 0.3748,
-        "condo-owner": 0.192,
-        "renter-low": 0.1175,
-        "renter-mid": 0.1175,
+        "owner-detached": 0.3628,
+        "condo-owner": 0.1859,
+        "renter-low": 0.1137,
+        "renter-mid": 0.1137,
         "senior": 0.1055,
         "student": 0.0491,
-        "small-business": 0.0436
+        "small-business": 0.0691
       },
       "drivers": {
         "renterPct": 0.293,
@@ -1313,13 +1313,13 @@
       "zoneId": "z060",
       "name": "Woodbine-Lumsden",
       "mix": {
-        "owner-detached": 0.3548,
-        "condo-owner": 0.1933,
-        "renter-low": 0.1272,
-        "renter-mid": 0.1272,
+        "owner-detached": 0.343,
+        "condo-owner": 0.1869,
+        "renter-low": 0.123,
+        "renter-mid": 0.123,
         "senior": 0.097,
         "student": 0.0591,
-        "small-business": 0.0414
+        "small-business": 0.068
       },
       "drivers": {
         "renterPct": 0.317,
@@ -1335,13 +1335,13 @@
       "zoneId": "z061",
       "name": "Taylor-Massey",
       "mix": {
-        "owner-detached": 0.041,
-        "condo-owner": 0.2206,
-        "renter-low": 0.3752,
-        "renter-mid": 0.1608,
+        "owner-detached": 0.0414,
+        "condo-owner": 0.2229,
+        "renter-low": 0.3791,
+        "renter-mid": 0.1625,
         "senior": 0.069,
         "student": 0.078,
-        "small-business": 0.0555
+        "small-business": 0.0471
       },
       "drivers": {
         "renterPct": 0.672,
@@ -1357,13 +1357,13 @@
       "zoneId": "z062",
       "name": "East End-Danforth",
       "mix": {
-        "owner-detached": 0.1991,
-        "condo-owner": 0.2219,
-        "renter-low": 0.1764,
-        "renter-mid": 0.1764,
+        "owner-detached": 0.1957,
+        "condo-owner": 0.2181,
+        "renter-low": 0.1734,
+        "renter-mid": 0.1734,
         "senior": 0.0799,
         "student": 0.059,
-        "small-business": 0.0872
+        "small-business": 0.1005
       },
       "drivers": {
         "renterPct": 0.456,
@@ -1379,13 +1379,13 @@
       "zoneId": "z063",
       "name": "The Beaches",
       "mix": {
-        "owner-detached": 0.2164,
-        "condo-owner": 0.2485,
-        "renter-low": 0.0896,
-        "renter-mid": 0.1905,
+        "owner-detached": 0.2171,
+        "condo-owner": 0.2493,
+        "renter-low": 0.0899,
+        "renter-mid": 0.1911,
         "senior": 0.0935,
         "student": 0.0533,
-        "small-business": 0.1082
+        "small-business": 0.1057
       },
       "drivers": {
         "renterPct": 0.376,
@@ -1401,13 +1401,13 @@
       "zoneId": "z064",
       "name": "Woodbine Corridor",
       "mix": {
-        "owner-detached": 0.216,
-        "condo-owner": 0.212,
-        "renter-low": 0.1537,
-        "renter-mid": 0.1537,
+        "owner-detached": 0.2123,
+        "condo-owner": 0.2084,
+        "renter-low": 0.1511,
+        "renter-mid": 0.1511,
         "senior": 0.0759,
         "student": 0.0542,
-        "small-business": 0.1345
+        "small-business": 0.1471
       },
       "drivers": {
         "renterPct": 0.418,
@@ -1423,13 +1423,13 @@
       "zoneId": "z065",
       "name": "Greenwood-Coxwell",
       "mix": {
-        "owner-detached": 0.2182,
-        "condo-owner": 0.254,
-        "renter-low": 0.1614,
-        "renter-mid": 0.1614,
+        "owner-detached": 0.2138,
+        "condo-owner": 0.2488,
+        "renter-low": 0.1581,
+        "renter-mid": 0.1581,
         "senior": 0.0796,
         "student": 0.0675,
-        "small-business": 0.0579
+        "small-business": 0.0739
       },
       "drivers": {
         "renterPct": 0.406,
@@ -1445,13 +1445,13 @@
       "zoneId": "z066",
       "name": "Danforth",
       "mix": {
-        "owner-detached": 0.2445,
-        "condo-owner": 0.2445,
-        "renter-low": 0.1357,
-        "renter-mid": 0.1357,
+        "owner-detached": 0.2455,
+        "condo-owner": 0.2455,
+        "renter-low": 0.1363,
+        "renter-mid": 0.1363,
         "senior": 0.1086,
         "student": 0.0643,
-        "small-business": 0.0667
+        "small-business": 0.0633
       },
       "drivers": {
         "renterPct": 0.357,
@@ -1489,13 +1489,13 @@
       "zoneId": "z068",
       "name": "North Riverdale",
       "mix": {
-        "owner-detached": 0.2259,
-        "condo-owner": 0.2255,
-        "renter-low": 0.1135,
-        "renter-mid": 0.2412,
+        "owner-detached": 0.2226,
+        "condo-owner": 0.2221,
+        "renter-low": 0.1118,
+        "renter-mid": 0.2376,
         "senior": 0.0931,
         "student": 0.0593,
-        "small-business": 0.0415
+        "small-business": 0.0536
       },
       "drivers": {
         "renterPct": 0.44,
@@ -1511,13 +1511,13 @@
       "zoneId": "z069",
       "name": "Blake-Jones",
       "mix": {
-        "owner-detached": 0.236,
-        "condo-owner": 0.2016,
-        "renter-low": 0.1856,
-        "renter-mid": 0.1856,
+        "owner-detached": 0.2326,
+        "condo-owner": 0.1987,
+        "renter-low": 0.183,
+        "renter-mid": 0.183,
         "senior": 0.0811,
         "student": 0.0658,
-        "small-business": 0.0442
+        "small-business": 0.0559
       },
       "drivers": {
         "renterPct": 0.459,
@@ -1533,13 +1533,13 @@
       "zoneId": "z070",
       "name": "South Riverdale",
       "mix": {
-        "owner-detached": 0.1991,
-        "condo-owner": 0.2858,
-        "renter-low": 0.1623,
-        "renter-mid": 0.1623,
+        "owner-detached": 0.1985,
+        "condo-owner": 0.285,
+        "renter-low": 0.1618,
+        "renter-mid": 0.1618,
         "senior": 0.0723,
         "student": 0.0724,
-        "small-business": 0.0456
+        "small-business": 0.048
       },
       "drivers": {
         "renterPct": 0.401,
@@ -1555,13 +1555,13 @@
       "zoneId": "z071",
       "name": "Cabbagetown-South St.James Town",
       "mix": {
-        "owner-detached": 0.0649,
-        "condo-owner": 0.2688,
-        "renter-low": 0.2098,
-        "renter-mid": 0.2098,
+        "owner-detached": 0.065,
+        "condo-owner": 0.2693,
+        "renter-low": 0.2102,
+        "renter-mid": 0.2102,
         "senior": 0.1188,
         "student": 0.0839,
-        "small-business": 0.0439
+        "small-business": 0.0426
       },
       "drivers": {
         "renterPct": 0.557,
@@ -1578,12 +1578,12 @@
       "name": "Regent Park",
       "mix": {
         "owner-detached": 0.0231,
-        "condo-owner": 0.1801,
-        "renter-low": 0.4177,
-        "renter-mid": 0.179,
+        "condo-owner": 0.1803,
+        "renter-low": 0.4182,
+        "renter-mid": 0.1792,
         "senior": 0.0463,
         "student": 0.1143,
-        "small-business": 0.0394
+        "small-business": 0.0386
       },
       "drivers": {
         "renterPct": 0.746,
@@ -1622,12 +1622,12 @@
       "name": "North St.James Town",
       "mix": {
         "owner-detached": 0.0009,
-        "condo-owner": 0.078,
-        "renter-low": 0.4967,
-        "renter-mid": 0.2129,
+        "condo-owner": 0.0781,
+        "renter-low": 0.4972,
+        "renter-mid": 0.2131,
         "senior": 0.0598,
         "student": 0.1124,
-        "small-business": 0.0394
+        "small-business": 0.0385
       },
       "drivers": {
         "renterPct": 0.9,
@@ -1644,12 +1644,12 @@
       "name": "Church-Yonge Corridor",
       "mix": {
         "owner-detached": 0.0027,
-        "condo-owner": 0.203,
-        "renter-low": 0.2458,
-        "renter-mid": 0.2458,
+        "condo-owner": 0.2034,
+        "renter-low": 0.2462,
+        "renter-mid": 0.2462,
         "senior": 0.0657,
         "student": 0.1678,
-        "small-business": 0.0693
+        "small-business": 0.0681
       },
       "drivers": {
         "renterPct": 0.705,
@@ -1688,12 +1688,12 @@
       "name": "Waterfront Communities-The Island",
       "mix": {
         "owner-detached": 0.0056,
-        "condo-owner": 0.2589,
-        "renter-low": 0.1879,
-        "renter-mid": 0.1879,
+        "condo-owner": 0.259,
+        "renter-low": 0.188,
+        "renter-mid": 0.188,
         "senior": 0.0489,
         "student": 0.1873,
-        "small-business": 0.1236
+        "small-business": 0.1234
       },
       "drivers": {
         "renterPct": 0.587,
@@ -1731,13 +1731,13 @@
       "zoneId": "z079",
       "name": "University",
       "mix": {
-        "owner-detached": 0.0484,
-        "condo-owner": 0.2106,
-        "renter-low": 0.2158,
-        "renter-mid": 0.2158,
+        "owner-detached": 0.0485,
+        "condo-owner": 0.2111,
+        "renter-low": 0.2163,
+        "renter-mid": 0.2163,
         "senior": 0.0879,
         "student": 0.1659,
-        "small-business": 0.0555
+        "small-business": 0.054
       },
       "drivers": {
         "renterPct": 0.625,
@@ -1753,13 +1753,13 @@
       "zoneId": "z080",
       "name": "Palmerston-Little Italy",
       "mix": {
-        "owner-detached": 0.0676,
-        "condo-owner": 0.1934,
-        "renter-low": 0.1847,
-        "renter-mid": 0.1847,
+        "owner-detached": 0.066,
+        "condo-owner": 0.1891,
+        "renter-low": 0.1805,
+        "renter-mid": 0.1805,
         "senior": 0.0992,
         "student": 0.1368,
-        "small-business": 0.1335
+        "small-business": 0.1477
       },
       "drivers": {
         "renterPct": 0.586,
@@ -1775,13 +1775,13 @@
       "zoneId": "z081",
       "name": "Trinity-Bellwoods",
       "mix": {
-        "owner-detached": 0.1083,
-        "condo-owner": 0.248,
-        "renter-low": 0.1638,
-        "renter-mid": 0.1638,
+        "owner-detached": 0.1088,
+        "condo-owner": 0.249,
+        "renter-low": 0.1644,
+        "renter-mid": 0.1644,
         "senior": 0.0941,
         "student": 0.1154,
-        "small-business": 0.1066
+        "small-business": 0.1038
       },
       "drivers": {
         "renterPct": 0.479,
@@ -1819,13 +1819,13 @@
       "zoneId": "z083",
       "name": "Dufferin Grove",
       "mix": {
-        "owner-detached": 0.0504,
-        "condo-owner": 0.2428,
-        "renter-low": 0.2153,
-        "renter-mid": 0.2153,
+        "owner-detached": 0.0493,
+        "condo-owner": 0.2378,
+        "renter-low": 0.2109,
+        "renter-mid": 0.2109,
         "senior": 0.0894,
         "student": 0.1038,
-        "small-business": 0.0829
+        "small-business": 0.0979
       },
       "drivers": {
         "renterPct": 0.595,
@@ -1864,12 +1864,12 @@
       "name": "South Parkdale",
       "mix": {
         "owner-detached": 0.0058,
-        "condo-owner": 0.0873,
-        "renter-low": 0.4212,
-        "renter-mid": 0.1805,
+        "condo-owner": 0.0875,
+        "renter-low": 0.4219,
+        "renter-mid": 0.1808,
         "senior": 0.0673,
         "student": 0.1135,
-        "small-business": 0.1243
+        "small-business": 0.1232
       },
       "drivers": {
         "renterPct": 0.866,
@@ -1885,13 +1885,13 @@
       "zoneId": "z086",
       "name": "Roncesvalles",
       "mix": {
-        "owner-detached": 0.0914,
-        "condo-owner": 0.2235,
-        "renter-low": 0.2037,
-        "renter-mid": 0.2037,
+        "owner-detached": 0.092,
+        "condo-owner": 0.2249,
+        "renter-low": 0.2049,
+        "renter-mid": 0.2049,
         "senior": 0.0778,
         "student": 0.0768,
-        "small-business": 0.1232
+        "small-business": 0.1187
       },
       "drivers": {
         "renterPct": 0.564,
@@ -1907,13 +1907,13 @@
       "zoneId": "z087",
       "name": "High Park-Swansea",
       "mix": {
-        "owner-detached": 0.138,
-        "condo-owner": 0.2947,
-        "renter-low": 0.1672,
-        "renter-mid": 0.1672,
+        "owner-detached": 0.1383,
+        "condo-owner": 0.2953,
+        "renter-low": 0.1676,
+        "renter-mid": 0.1676,
         "senior": 0.0963,
         "student": 0.0732,
-        "small-business": 0.0635
+        "small-business": 0.0618
       },
       "drivers": {
         "renterPct": 0.436,
@@ -1929,13 +1929,13 @@
       "zoneId": "z088",
       "name": "High Park North",
       "mix": {
-        "owner-detached": 0.0479,
-        "condo-owner": 0.2033,
-        "renter-low": 0.246,
-        "renter-mid": 0.246,
+        "owner-detached": 0.0474,
+        "condo-owner": 0.2011,
+        "renter-low": 0.2433,
+        "renter-mid": 0.2433,
         "senior": 0.0925,
         "student": 0.085,
-        "small-business": 0.0791
+        "small-business": 0.0874
       },
       "drivers": {
         "renterPct": 0.662,
@@ -1951,13 +1951,13 @@
       "zoneId": "z089",
       "name": "Runnymede-Bloor West Village",
       "mix": {
-        "owner-detached": 0.4449,
-        "condo-owner": 0.153,
-        "renter-low": 0.0521,
-        "renter-mid": 0.1107,
+        "owner-detached": 0.4315,
+        "condo-owner": 0.1484,
+        "renter-low": 0.0505,
+        "renter-mid": 0.1074,
         "senior": 0.0865,
         "student": 0.0516,
-        "small-business": 0.1012
+        "small-business": 0.124
       },
       "drivers": {
         "renterPct": 0.214,
@@ -1973,13 +1973,13 @@
       "zoneId": "z090",
       "name": "Junction Area",
       "mix": {
-        "owner-detached": 0.1774,
-        "condo-owner": 0.2903,
-        "renter-low": 0.1612,
-        "renter-mid": 0.1612,
+        "owner-detached": 0.1748,
+        "condo-owner": 0.2861,
+        "renter-low": 0.1588,
+        "renter-mid": 0.1588,
         "senior": 0.0721,
         "student": 0.0773,
-        "small-business": 0.0606
+        "small-business": 0.072
       },
       "drivers": {
         "renterPct": 0.408,
@@ -1995,13 +1995,13 @@
       "zoneId": "z091",
       "name": "Weston-Pelham Park",
       "mix": {
-        "owner-detached": 0.2147,
-        "condo-owner": 0.2316,
-        "renter-low": 0.1576,
-        "renter-mid": 0.1576,
+        "owner-detached": 0.2097,
+        "condo-owner": 0.2263,
+        "renter-low": 0.154,
+        "renter-mid": 0.154,
         "senior": 0.0833,
         "student": 0.081,
-        "small-business": 0.0742
+        "small-business": 0.0916
       },
       "drivers": {
         "renterPct": 0.414,
@@ -2017,13 +2017,13 @@
       "zoneId": "z092",
       "name": "Corso Italia-Davenport",
       "mix": {
-        "owner-detached": 0.2185,
-        "condo-owner": 0.2414,
-        "renter-low": 0.1368,
-        "renter-mid": 0.1368,
+        "owner-detached": 0.2075,
+        "condo-owner": 0.2292,
+        "renter-low": 0.1299,
+        "renter-mid": 0.1299,
         "senior": 0.0993,
         "student": 0.0874,
-        "small-business": 0.0799
+        "small-business": 0.1169
       },
       "drivers": {
         "renterPct": 0.373,
@@ -2039,13 +2039,13 @@
       "zoneId": "z093",
       "name": "Dovercourt-Wallace Emerson-Junction",
       "mix": {
-        "owner-detached": 0.1133,
-        "condo-owner": 0.2413,
-        "renter-low": 0.178,
-        "renter-mid": 0.178,
+        "owner-detached": 0.1138,
+        "condo-owner": 0.2424,
+        "renter-low": 0.1788,
+        "renter-mid": 0.1788,
         "senior": 0.0836,
         "student": 0.1038,
-        "small-business": 0.1018
+        "small-business": 0.0987
       },
       "drivers": {
         "renterPct": 0.501,
@@ -2061,13 +2061,13 @@
       "zoneId": "z094",
       "name": "Wychwood",
       "mix": {
-        "owner-detached": 0.1211,
-        "condo-owner": 0.2184,
-        "renter-low": 0.1809,
-        "renter-mid": 0.1809,
+        "owner-detached": 0.1216,
+        "condo-owner": 0.2194,
+        "renter-low": 0.1818,
+        "renter-mid": 0.1818,
         "senior": 0.1059,
         "student": 0.0799,
-        "small-business": 0.1129
+        "small-business": 0.1095
       },
       "drivers": {
         "renterPct": 0.516,
@@ -2105,13 +2105,13 @@
       "zoneId": "z096",
       "name": "Casa Loma",
       "mix": {
-        "owner-detached": 0.0607,
-        "condo-owner": 0.1839,
-        "renter-low": 0.1169,
-        "renter-mid": 0.2484,
+        "owner-detached": 0.0609,
+        "condo-owner": 0.1845,
+        "renter-low": 0.1173,
+        "renter-mid": 0.2492,
         "senior": 0.1637,
         "student": 0.0797,
-        "small-business": 0.1467
+        "small-business": 0.1447
       },
       "drivers": {
         "renterPct": 0.599,
@@ -2127,13 +2127,13 @@
       "zoneId": "z097",
       "name": "Yonge-St.Clair",
       "mix": {
-        "owner-detached": 0.0401,
-        "condo-owner": 0.1961,
-        "renter-low": 0.1895,
-        "renter-mid": 0.1895,
+        "owner-detached": 0.0403,
+        "condo-owner": 0.1969,
+        "renter-low": 0.1902,
+        "renter-mid": 0.1902,
         "senior": 0.1551,
         "student": 0.0874,
-        "small-business": 0.1425
+        "small-business": 0.14
       },
       "drivers": {
         "renterPct": 0.616,
@@ -2149,13 +2149,13 @@
       "zoneId": "z098",
       "name": "Rosedale-Moore Park",
       "mix": {
-        "owner-detached": 0.1272,
-        "condo-owner": 0.2723,
-        "renter-low": 0.1029,
-        "renter-mid": 0.2187,
+        "owner-detached": 0.1275,
+        "condo-owner": 0.2729,
+        "renter-low": 0.1031,
+        "renter-mid": 0.2192,
         "senior": 0.1663,
         "student": 0.0653,
-        "small-business": 0.0474
+        "small-business": 0.0458
       },
       "drivers": {
         "renterPct": 0.446,
@@ -2171,13 +2171,13 @@
       "zoneId": "z099",
       "name": "Mount Pleasant East",
       "mix": {
-        "owner-detached": 0.2289,
-        "condo-owner": 0.2049,
-        "renter-low": 0.1064,
-        "renter-mid": 0.2262,
+        "owner-detached": 0.2248,
+        "condo-owner": 0.2013,
+        "renter-low": 0.1046,
+        "renter-mid": 0.2222,
         "senior": 0.1027,
         "student": 0.061,
-        "small-business": 0.07
+        "small-business": 0.0835
       },
       "drivers": {
         "renterPct": 0.434,
@@ -2193,13 +2193,13 @@
       "zoneId": "z100",
       "name": "Yonge-Eglinton",
       "mix": {
-        "owner-detached": 0.0959,
-        "condo-owner": 0.1869,
-        "renter-low": 0.224,
-        "renter-mid": 0.224,
+        "owner-detached": 0.0941,
+        "condo-owner": 0.1832,
+        "renter-low": 0.2196,
+        "renter-mid": 0.2196,
         "senior": 0.0948,
         "student": 0.0912,
-        "small-business": 0.0833
+        "small-business": 0.0974
       },
       "drivers": {
         "renterPct": 0.613,
@@ -2215,13 +2215,13 @@
       "zoneId": "z101",
       "name": "Forest Hill South",
       "mix": {
-        "owner-detached": 0.14,
-        "condo-owner": 0.246,
-        "renter-low": 0.1095,
-        "renter-mid": 0.2327,
+        "owner-detached": 0.1383,
+        "condo-owner": 0.2429,
+        "renter-low": 0.1082,
+        "renter-mid": 0.2299,
         "senior": 0.1471,
         "student": 0.0787,
-        "small-business": 0.046
+        "small-business": 0.055
       },
       "drivers": {
         "renterPct": 0.47,
@@ -2237,13 +2237,13 @@
       "zoneId": "z102",
       "name": "Forest Hill North",
       "mix": {
-        "owner-detached": 0.0738,
-        "condo-owner": 0.1913,
-        "renter-low": 0.2562,
-        "renter-mid": 0.2562,
+        "owner-detached": 0.0732,
+        "condo-owner": 0.1896,
+        "renter-low": 0.2539,
+        "renter-mid": 0.2539,
         "senior": 0.1099,
         "student": 0.0685,
-        "small-business": 0.0441
+        "small-business": 0.0511
       },
       "drivers": {
         "renterPct": 0.659,
@@ -2259,13 +2259,13 @@
       "zoneId": "z103",
       "name": "Lawrence Park South",
       "mix": {
-        "owner-detached": 0.3384,
-        "condo-owner": 0.206,
-        "renter-low": 0.0761,
-        "renter-mid": 0.1617,
+        "owner-detached": 0.3319,
+        "condo-owner": 0.202,
+        "renter-low": 0.0746,
+        "renter-mid": 0.1586,
         "senior": 0.0998,
         "student": 0.0645,
-        "small-business": 0.0534
+        "small-business": 0.0684
       },
       "drivers": {
         "renterPct": 0.304,
@@ -2281,13 +2281,13 @@
       "zoneId": "z104",
       "name": "Mount Pleasant West",
       "mix": {
-        "owner-detached": 0.0086,
-        "condo-owner": 0.1662,
-        "renter-low": 0.258,
-        "renter-mid": 0.258,
+        "owner-detached": 0.0088,
+        "condo-owner": 0.1711,
+        "renter-low": 0.2657,
+        "renter-mid": 0.2657,
         "senior": 0.092,
         "student": 0.1054,
-        "small-business": 0.1118
+        "small-business": 0.0912
       },
       "drivers": {
         "renterPct": 0.747,
@@ -2303,13 +2303,13 @@
       "zoneId": "z105",
       "name": "Lawrence Park North",
       "mix": {
-        "owner-detached": 0.4453,
-        "condo-owner": 0.1543,
-        "renter-low": 0.0613,
-        "renter-mid": 0.1302,
+        "owner-detached": 0.4333,
+        "condo-owner": 0.1502,
+        "renter-low": 0.0596,
+        "renter-mid": 0.1267,
         "senior": 0.0903,
         "student": 0.0478,
-        "small-business": 0.0707
+        "small-business": 0.0922
       },
       "drivers": {
         "renterPct": 0.242,
@@ -2325,13 +2325,13 @@
       "zoneId": "z106",
       "name": "Humewood-Cedarvale",
       "mix": {
-        "owner-detached": 0.0862,
-        "condo-owner": 0.1816,
-        "renter-low": 0.2443,
-        "renter-mid": 0.2443,
+        "owner-detached": 0.0847,
+        "condo-owner": 0.1784,
+        "renter-low": 0.2401,
+        "renter-mid": 0.2401,
         "senior": 0.0889,
         "student": 0.0921,
-        "small-business": 0.0626
+        "small-business": 0.0757
       },
       "drivers": {
         "renterPct": 0.646,
@@ -2347,13 +2347,13 @@
       "zoneId": "z107",
       "name": "Oakwood Village",
       "mix": {
-        "owner-detached": 0.1868,
-        "condo-owner": 0.2108,
-        "renter-low": 0.1763,
-        "renter-mid": 0.1763,
+        "owner-detached": 0.18,
+        "condo-owner": 0.2032,
+        "renter-low": 0.1699,
+        "renter-mid": 0.1699,
         "senior": 0.1162,
         "student": 0.07,
-        "small-business": 0.0636
+        "small-business": 0.0909
       },
       "drivers": {
         "renterPct": 0.47,
@@ -2369,13 +2369,13 @@
       "zoneId": "z108",
       "name": "Briar Hill-Belgravia",
       "mix": {
-        "owner-detached": 0.1138,
-        "condo-owner": 0.24,
-        "renter-low": 0.1812,
-        "renter-mid": 0.1812,
+        "owner-detached": 0.1118,
+        "condo-owner": 0.2358,
+        "renter-low": 0.178,
+        "renter-mid": 0.178,
         "senior": 0.1031,
         "student": 0.0768,
-        "small-business": 0.1038
+        "small-business": 0.1165
       },
       "drivers": {
         "renterPct": 0.506,
@@ -2391,13 +2391,13 @@
       "zoneId": "z109",
       "name": "Caledonia-Fairbank",
       "mix": {
-        "owner-detached": 0.2956,
-        "condo-owner": 0.2139,
-        "renter-low": 0.139,
-        "renter-mid": 0.139,
+        "owner-detached": 0.2829,
+        "condo-owner": 0.2047,
+        "renter-low": 0.133,
+        "renter-mid": 0.133,
         "senior": 0.0932,
         "student": 0.0782,
-        "small-business": 0.0411
+        "small-business": 0.075
       },
       "drivers": {
         "renterPct": 0.353,
@@ -2413,13 +2413,13 @@
       "zoneId": "z110",
       "name": "Keelesdale-Eglinton West",
       "mix": {
-        "owner-detached": 0.2213,
-        "condo-owner": 0.2171,
-        "renter-low": 0.1366,
-        "renter-mid": 0.1366,
+        "owner-detached": 0.2147,
+        "condo-owner": 0.2107,
+        "renter-low": 0.1326,
+        "renter-mid": 0.1326,
         "senior": 0.113,
         "student": 0.0756,
-        "small-business": 0.0999
+        "small-business": 0.1208
       },
       "drivers": {
         "renterPct": 0.384,
@@ -2435,13 +2435,13 @@
       "zoneId": "z111",
       "name": "Rockcliffe-Smythe",
       "mix": {
-        "owner-detached": 0.1971,
-        "condo-owner": 0.2428,
-        "renter-low": 0.168,
-        "renter-mid": 0.168,
+        "owner-detached": 0.1951,
+        "condo-owner": 0.2402,
+        "renter-low": 0.1662,
+        "renter-mid": 0.1662,
         "senior": 0.115,
         "student": 0.0716,
-        "small-business": 0.0376
+        "small-business": 0.0458
       },
       "drivers": {
         "renterPct": 0.433,
@@ -2457,13 +2457,13 @@
       "zoneId": "z112",
       "name": "Beechborough-Greenbrook",
       "mix": {
-        "owner-detached": 0.0776,
-        "condo-owner": 0.1925,
-        "renter-low": 0.3703,
-        "renter-mid": 0.1587,
+        "owner-detached": 0.0772,
+        "condo-owner": 0.1916,
+        "renter-low": 0.3685,
+        "renter-mid": 0.1579,
         "senior": 0.0894,
         "student": 0.0753,
-        "small-business": 0.0362
+        "small-business": 0.0401
       },
       "drivers": {
         "renterPct": 0.662,
@@ -2479,13 +2479,13 @@
       "zoneId": "z113",
       "name": "Weston",
       "mix": {
-        "owner-detached": 0.0715,
-        "condo-owner": 0.2025,
-        "renter-low": 0.2343,
-        "renter-mid": 0.2343,
+        "owner-detached": 0.0709,
+        "condo-owner": 0.201,
+        "renter-low": 0.2325,
+        "renter-mid": 0.2325,
         "senior": 0.0864,
         "student": 0.0786,
-        "small-business": 0.0925
+        "small-business": 0.0983
       },
       "drivers": {
         "renterPct": 0.631,
@@ -2501,13 +2501,13 @@
       "zoneId": "z114",
       "name": "Lambton Baby Point",
       "mix": {
-        "owner-detached": 0.3088,
-        "condo-owner": 0.1745,
-        "renter-low": 0.1075,
-        "renter-mid": 0.2283,
+        "owner-detached": 0.3047,
+        "condo-owner": 0.1721,
+        "renter-low": 0.106,
+        "renter-mid": 0.2253,
         "senior": 0.0899,
         "student": 0.0534,
-        "small-business": 0.0377
+        "small-business": 0.0486
       },
       "drivers": {
         "renterPct": 0.41,
@@ -2523,13 +2523,13 @@
       "zoneId": "z115",
       "name": "Mount Dennis",
       "mix": {
-        "owner-detached": 0.1028,
-        "condo-owner": 0.267,
-        "renter-low": 0.2077,
-        "renter-mid": 0.2077,
+        "owner-detached": 0.1025,
+        "condo-owner": 0.2662,
+        "renter-low": 0.2071,
+        "renter-mid": 0.2071,
         "senior": 0.0754,
         "student": 0.0795,
-        "small-business": 0.0599
+        "small-business": 0.0622
       },
       "drivers": {
         "renterPct": 0.529,
@@ -2545,13 +2545,13 @@
       "zoneId": "z116",
       "name": "Steeles",
       "mix": {
-        "owner-detached": 0.3517,
-        "condo-owner": 0.2643,
-        "renter-low": 0.0591,
-        "renter-mid": 0.0591,
+        "owner-detached": 0.3479,
+        "condo-owner": 0.2614,
+        "renter-low": 0.0585,
+        "renter-mid": 0.0585,
         "senior": 0.1542,
         "student": 0.0723,
-        "small-business": 0.0393
+        "small-business": 0.0473
       },
       "drivers": {
         "renterPct": 0.161,
@@ -2567,13 +2567,13 @@
       "zoneId": "z117",
       "name": "L'Amoreaux",
       "mix": {
-        "owner-detached": 0.228,
-        "condo-owner": 0.26,
-        "renter-low": 0.1291,
-        "renter-mid": 0.1291,
+        "owner-detached": 0.2271,
+        "condo-owner": 0.2589,
+        "renter-low": 0.1286,
+        "renter-mid": 0.1286,
         "senior": 0.1364,
         "student": 0.0768,
-        "small-business": 0.0406
+        "small-business": 0.0437
       },
       "drivers": {
         "renterPct": 0.346,
@@ -2589,13 +2589,13 @@
       "zoneId": "z118",
       "name": "Tam O'Shanter-Sullivan",
       "mix": {
-        "owner-detached": 0.1738,
-        "condo-owner": 0.2449,
-        "renter-low": 0.1618,
-        "renter-mid": 0.1618,
+        "owner-detached": 0.1728,
+        "condo-owner": 0.2435,
+        "renter-low": 0.1609,
+        "renter-mid": 0.1609,
         "senior": 0.1475,
         "student": 0.0713,
-        "small-business": 0.0388
+        "small-business": 0.0431
       },
       "drivers": {
         "renterPct": 0.436,
@@ -2611,13 +2611,13 @@
       "zoneId": "z119",
       "name": "Wexford/Maryvale",
       "mix": {
-        "owner-detached": 0.2582,
-        "condo-owner": 0.2024,
-        "renter-low": 0.1516,
-        "renter-mid": 0.1516,
+        "owner-detached": 0.2555,
+        "condo-owner": 0.2003,
+        "renter-low": 0.1501,
+        "renter-mid": 0.1501,
         "senior": 0.11,
         "student": 0.0754,
-        "small-business": 0.0509
+        "small-business": 0.0588
       },
       "drivers": {
         "renterPct": 0.397,
@@ -2633,13 +2633,13 @@
       "zoneId": "z120",
       "name": "Clairlea-Birchmount",
       "mix": {
-        "owner-detached": 0.2992,
-        "condo-owner": 0.2306,
-        "renter-low": 0.1389,
-        "renter-mid": 0.1389,
+        "owner-detached": 0.2969,
+        "condo-owner": 0.2289,
+        "renter-low": 0.1379,
+        "renter-mid": 0.1379,
         "senior": 0.0835,
         "student": 0.0726,
-        "small-business": 0.0363
+        "small-business": 0.0423
       },
       "drivers": {
         "renterPct": 0.344,
@@ -2655,13 +2655,13 @@
       "zoneId": "z121",
       "name": "Oakridge",
       "mix": {
-        "owner-detached": 0.0653,
-        "condo-owner": 0.1815,
-        "renter-low": 0.3705,
-        "renter-mid": 0.1588,
+        "owner-detached": 0.065,
+        "condo-owner": 0.1806,
+        "renter-low": 0.3687,
+        "renter-mid": 0.158,
         "senior": 0.0733,
         "student": 0.0655,
-        "small-business": 0.085
+        "small-business": 0.0888
       },
       "drivers": {
         "renterPct": 0.682,
@@ -2677,13 +2677,13 @@
       "zoneId": "z122",
       "name": "Birchcliffe-Cliffside",
       "mix": {
-        "owner-detached": 0.307,
-        "condo-owner": 0.2166,
-        "renter-low": 0.1301,
-        "renter-mid": 0.1301,
+        "owner-detached": 0.3078,
+        "condo-owner": 0.2171,
+        "renter-low": 0.1304,
+        "renter-mid": 0.1304,
         "senior": 0.1063,
         "student": 0.0585,
-        "small-business": 0.0513
+        "small-business": 0.0494
       },
       "drivers": {
         "renterPct": 0.332,
@@ -2699,13 +2699,13 @@
       "zoneId": "z123",
       "name": "Cliffcrest",
       "mix": {
-        "owner-detached": 0.3484,
-        "condo-owner": 0.1769,
-        "renter-low": 0.13,
-        "renter-mid": 0.13,
+        "owner-detached": 0.3455,
+        "condo-owner": 0.1754,
+        "renter-low": 0.1289,
+        "renter-mid": 0.1289,
         "senior": 0.1168,
         "student": 0.064,
-        "small-business": 0.0338
+        "small-business": 0.0404
       },
       "drivers": {
         "renterPct": 0.331,
@@ -2721,13 +2721,13 @@
       "zoneId": "z124",
       "name": "Kennedy Park",
       "mix": {
-        "owner-detached": 0.1511,
-        "condo-owner": 0.279,
-        "renter-low": 0.1781,
-        "renter-mid": 0.1781,
+        "owner-detached": 0.15,
+        "condo-owner": 0.2769,
+        "renter-low": 0.1768,
+        "renter-mid": 0.1768,
         "senior": 0.1042,
         "student": 0.0713,
-        "small-business": 0.0383
+        "small-business": 0.044
       },
       "drivers": {
         "renterPct": 0.453,
@@ -2743,13 +2743,13 @@
       "zoneId": "z125",
       "name": "Ionview",
       "mix": {
-        "owner-detached": 0.093,
-        "condo-owner": 0.2132,
-        "renter-low": 0.2385,
-        "renter-mid": 0.2385,
+        "owner-detached": 0.0927,
+        "condo-owner": 0.2124,
+        "renter-low": 0.2376,
+        "renter-mid": 0.2376,
         "senior": 0.097,
         "student": 0.0776,
-        "small-business": 0.0421
+        "small-business": 0.0451
       },
       "drivers": {
         "renterPct": 0.609,
@@ -2765,13 +2765,13 @@
       "zoneId": "z126",
       "name": "Dorset Park",
       "mix": {
-        "owner-detached": 0.2076,
-        "condo-owner": 0.2447,
-        "renter-low": 0.1428,
-        "renter-mid": 0.1428,
+        "owner-detached": 0.2071,
+        "condo-owner": 0.2442,
+        "renter-low": 0.1425,
+        "renter-mid": 0.1425,
         "senior": 0.0896,
         "student": 0.0719,
-        "small-business": 0.1006
+        "small-business": 0.1022
       },
       "drivers": {
         "renterPct": 0.387,
@@ -2787,13 +2787,13 @@
       "zoneId": "z127",
       "name": "Bendale",
       "mix": {
-        "owner-detached": 0.2069,
-        "condo-owner": 0.289,
-        "renter-low": 0.1335,
-        "renter-mid": 0.1335,
+        "owner-detached": 0.2054,
+        "condo-owner": 0.2869,
+        "renter-low": 0.1325,
+        "renter-mid": 0.1325,
         "senior": 0.1075,
         "student": 0.0926,
-        "small-business": 0.0369
+        "small-business": 0.0427
       },
       "drivers": {
         "renterPct": 0.35,
@@ -2809,13 +2809,13 @@
       "zoneId": "z128",
       "name": "Agincourt South-Malvern West",
       "mix": {
-        "owner-detached": 0.23,
-        "condo-owner": 0.2815,
-        "renter-low": 0.0975,
-        "renter-mid": 0.0975,
+        "owner-detached": 0.2303,
+        "condo-owner": 0.2819,
+        "renter-low": 0.0976,
+        "renter-mid": 0.0976,
         "senior": 0.1136,
         "student": 0.0906,
-        "small-business": 0.0893
+        "small-business": 0.0883
       },
       "drivers": {
         "renterPct": 0.276,
@@ -2831,13 +2831,13 @@
       "zoneId": "z129",
       "name": "Agincourt North",
       "mix": {
-        "owner-detached": 0.3732,
-        "condo-owner": 0.2336,
-        "renter-low": 0.0707,
-        "renter-mid": 0.0707,
+        "owner-detached": 0.3706,
+        "condo-owner": 0.232,
+        "renter-low": 0.0702,
+        "renter-mid": 0.0702,
         "senior": 0.1391,
         "student": 0.0758,
-        "small-business": 0.0369
+        "small-business": 0.0421
       },
       "drivers": {
         "renterPct": 0.189,
@@ -2853,13 +2853,13 @@
       "zoneId": "z130",
       "name": "Milliken",
       "mix": {
-        "owner-detached": 0.4475,
-        "condo-owner": 0.2286,
-        "renter-low": 0.0426,
-        "renter-mid": 0.0426,
+        "owner-detached": 0.4443,
+        "condo-owner": 0.227,
+        "renter-low": 0.0423,
+        "renter-mid": 0.0423,
         "senior": 0.1222,
         "student": 0.0816,
-        "small-business": 0.0348
+        "small-business": 0.0403
       },
       "drivers": {
         "renterPct": 0.112,
@@ -2875,13 +2875,13 @@
       "zoneId": "z131",
       "name": "Rouge",
       "mix": {
-        "owner-detached": 0.5245,
+        "owner-detached": 0.5249,
         "condo-owner": 0.1363,
         "renter-low": 0.0418,
         "renter-mid": 0.0888,
         "senior": 0.0951,
         "student": 0.0782,
-        "small-business": 0.0353
+        "small-business": 0.0349
       },
       "drivers": {
         "renterPct": 0.165,
@@ -2897,13 +2897,13 @@
       "zoneId": "z132",
       "name": "Malvern",
       "mix": {
-        "owner-detached": 0.3389,
-        "condo-owner": 0.2064,
-        "renter-low": 0.1169,
-        "renter-mid": 0.1169,
+        "owner-detached": 0.3394,
+        "condo-owner": 0.2068,
+        "renter-low": 0.117,
+        "renter-mid": 0.117,
         "senior": 0.0941,
         "student": 0.0836,
-        "small-business": 0.0433
+        "small-business": 0.0421
       },
       "drivers": {
         "renterPct": 0.3,
@@ -2919,13 +2919,13 @@
       "zoneId": "z133",
       "name": "Centennial Scarborough",
       "mix": {
-        "owner-detached": 0.6897,
-        "condo-owner": 0.0349,
-        "renter-low": 0.0159,
-        "renter-mid": 0.0337,
+        "owner-detached": 0.6817,
+        "condo-owner": 0.0345,
+        "renter-low": 0.0157,
+        "renter-mid": 0.0333,
         "senior": 0.1249,
         "student": 0.0667,
-        "small-business": 0.0342
+        "small-business": 0.0433
       },
       "drivers": {
         "renterPct": 0.064,
@@ -2941,13 +2941,13 @@
       "zoneId": "z134",
       "name": "Highland Creek",
       "mix": {
-        "owner-detached": 0.5568,
-        "condo-owner": 0.1026,
-        "renter-low": 0.0263,
-        "renter-mid": 0.056,
+        "owner-detached": 0.55,
+        "condo-owner": 0.1014,
+        "renter-low": 0.026,
+        "renter-mid": 0.0553,
         "senior": 0.1339,
         "student": 0.0902,
-        "small-business": 0.0341
+        "small-business": 0.0431
       },
       "drivers": {
         "renterPct": 0.111,
@@ -2963,13 +2963,13 @@
       "zoneId": "z135",
       "name": "Morningside",
       "mix": {
-        "owner-detached": 0.2563,
-        "condo-owner": 0.2102,
-        "renter-low": 0.1549,
-        "renter-mid": 0.1549,
+        "owner-detached": 0.2552,
+        "condo-owner": 0.2093,
+        "renter-low": 0.1542,
+        "renter-mid": 0.1542,
         "senior": 0.0993,
         "student": 0.0892,
-        "small-business": 0.0353
+        "small-business": 0.0388
       },
       "drivers": {
         "renterPct": 0.399,
@@ -2985,13 +2985,13 @@
       "zoneId": "z136",
       "name": "West Hill",
       "mix": {
-        "owner-detached": 0.24,
-        "condo-owner": 0.2278,
-        "renter-low": 0.1599,
-        "renter-mid": 0.1599,
+        "owner-detached": 0.2388,
+        "condo-owner": 0.2266,
+        "renter-low": 0.159,
+        "renter-mid": 0.159,
         "senior": 0.1029,
         "student": 0.0747,
-        "small-business": 0.0349
+        "small-business": 0.039
       },
       "drivers": {
         "renterPct": 0.406,
@@ -3007,13 +3007,13 @@
       "zoneId": "z137",
       "name": "Woburn",
       "mix": {
-        "owner-detached": 0.1483,
-        "condo-owner": 0.251,
-        "renter-low": 0.177,
-        "renter-mid": 0.177,
+        "owner-detached": 0.1485,
+        "condo-owner": 0.2514,
+        "renter-low": 0.1773,
+        "renter-mid": 0.1773,
         "senior": 0.101,
         "student": 0.0857,
-        "small-business": 0.0601
+        "small-business": 0.0589
       },
       "drivers": {
         "renterPct": 0.47,
@@ -3029,13 +3029,13 @@
       "zoneId": "z138",
       "name": "Eglinton East",
       "mix": {
-        "owner-detached": 0.0977,
-        "condo-owner": 0.2592,
-        "renter-low": 0.2181,
-        "renter-mid": 0.2181,
+        "owner-detached": 0.0976,
+        "condo-owner": 0.2591,
+        "renter-low": 0.218,
+        "renter-mid": 0.218,
         "senior": 0.0927,
         "student": 0.072,
-        "small-business": 0.0422
+        "small-business": 0.0427
       },
       "drivers": {
         "renterPct": 0.55,
@@ -3051,13 +3051,13 @@
       "zoneId": "z139",
       "name": "Scarborough Village",
       "mix": {
-        "owner-detached": 0.0868,
-        "condo-owner": 0.2783,
-        "renter-low": 0.2196,
-        "renter-mid": 0.2196,
+        "owner-detached": 0.0869,
+        "condo-owner": 0.2786,
+        "renter-low": 0.2198,
+        "renter-mid": 0.2198,
         "senior": 0.0818,
         "student": 0.0748,
-        "small-business": 0.0391
+        "small-business": 0.0383
       },
       "drivers": {
         "renterPct": 0.546,
@@ -3073,13 +3073,13 @@
       "zoneId": "z140",
       "name": "Guildwood",
       "mix": {
-        "owner-detached": 0.377,
-        "condo-owner": 0.1968,
-        "renter-low": 0.0843,
-        "renter-mid": 0.0843,
+        "owner-detached": 0.3731,
+        "condo-owner": 0.1947,
+        "renter-low": 0.0834,
+        "renter-mid": 0.0834,
         "senior": 0.1705,
         "student": 0.0527,
-        "small-business": 0.0345
+        "small-business": 0.0423
       },
       "drivers": {
         "renterPct": 0.227,
