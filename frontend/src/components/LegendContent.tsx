@@ -96,13 +96,28 @@ export function LegendContent() {
           <Swatch color="rgba(220,38,38,0.5)" /> no-build
         </span>
         <span className="flex items-center gap-1.5">
+          <Swatch color="rgba(56,132,255,0.6)" /> flood risk
+        </span>
+        <span className="flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded-sm ring-2 ring-yellow-400" />{" "}
           scenario target
         </span>
       </div>
+      <div className="border-t border-border/40 pt-2">
+        <div className="mb-1 text-muted-foreground">Climate vulnerability</div>
+        <div className="flex items-center gap-1">
+          <span>low</span>
+          <span className="h-2 flex-1 rounded-full bg-gradient-to-r from-slate-500 via-orange-400 to-red-500" />
+          <span>high</span>
+        </div>
+        <div className="mt-0.5 text-[9px] text-muted-foreground">
+          heat-vulnerability (HVI) &amp; flood risk — high-HVI zones suffer most
+          in a heatwave; flood zones tint blue.
+        </div>
+      </div>
       <p className="border-t border-border/40 pt-2 text-[10px] text-muted-foreground">
-        Hover a neighbourhood for its energy burden, approval, green score &
-        pollution burden.
+        Hover a neighbourhood for its energy burden, approval, green score,
+        pollution, heat-vulnerability &amp; flood risk.
       </p>
     </div>
   );
