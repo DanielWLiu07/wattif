@@ -25,7 +25,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Compass } from "lucide-react";
 import { useStore } from "@/store";
 import { buildLayers } from "@/map/layers";
-import type { Infra, LngLat } from "@/types";
+import { RecommendationImpact } from "@/components/RecommendationImpact";
+import type { Infra, LngLat, Recommendation } from "@/types";
 
 // Framed on the Toronto neighbourhoods (centre nudged north so Lake Ontario
 // sits at the bottom edge), moderate pitch, zoom where the 44 zones fill the frame.
@@ -130,6 +131,12 @@ export function MapView() {
   const selectZone = useStore((s) => s.selectZone);
 
   const [hover, setHover] = useState<Hover>(null);
+  const [recCard, setRecCard] = useState<{
+    rec: Recommendation;
+    x: number;
+    y: number;
+    pinned: boolean;
+  } | null>(null);
   const mapRef = useRef<MaplibreRef | MapboxMapRef | null>(null);
 
   // ---- animation clock (drives flows / turbine spin / battery pulse) ----
@@ -272,11 +279,17 @@ export function MapView() {
         addInfraAt([lng, lat] as LngLat);
         return;
       }
+      // recommendation marker → pin its impact card
+      if (obj && obj.rationale != null && obj.expectedCoverageGain != null) {
+        setRecCard({ rec: obj as Recommendation, x: info.x ?? 0, y: info.y ?? 0, pinned: true });
+        return;
+      }
       if (obj?.kind && obj?.capacityKw) selectInfra(obj.id);
       else if (obj?.properties?.id) selectZone(obj.properties.id);
       else if (!obj) {
         selectZone(null);
         selectInfra(null);
+        setRecCard((c) => (c?.pinned ? null : c)); // click empty → unpin card
       }
     },
     [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra]
@@ -289,6 +302,16 @@ export function MapView() {
       const id = o?.properties?.id ?? null;
       if (id !== useStore.getState().targetZoneId) setTargetZone(id);
     }
+    // recommendation marker → show its impact card (don't override a pinned one)
+    if (o && o.rationale != null && o.expectedCoverageGain != null) {
+      const rec = o as Recommendation;
+      const x = info.x ?? 0;
+      const y = info.y ?? 0;
+      setRecCard((c) => (c?.pinned ? c : { rec, x, y, pinned: false }));
+      setHover(null);
+      return;
+    }
+    setRecCard((c) => (c?.pinned ? c : null)); // left a rec → drop unpinned card
     if (!o || info.x == null) {
       setHover(null);
       return;
@@ -472,6 +495,23 @@ export function MapView() {
           style={{ left: hover.x + 14, top: hover.y + 14 }}
           dangerouslySetInnerHTML={{ __html: hover.html }}
         />
+      )}
+
+      {recCard && (
+        <div
+          className="pointer-events-auto fixed z-50"
+          style={{
+            left: Math.min(recCard.x + 16, window.innerWidth - 276),
+            top: Math.min(recCard.y + 16, window.innerHeight - 220),
+          }}
+          onMouseLeave={() => setRecCard((c) => (c?.pinned ? c : null))}
+        >
+          <RecommendationImpact
+            rec={recCard.rec}
+            pinned={recCard.pinned}
+            onClose={() => setRecCard(null)}
+          />
+        </div>
       )}
 
       {mode === "place" && !scenarioTargeting && (
