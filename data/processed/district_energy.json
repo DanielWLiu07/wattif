@@ -2,7 +2,7 @@
   "note": "Existing district-energy service area (downtown). MODELED FROM PUBLIC INFORMATION \u2014 no precise open dataset exists. servedFraction 0..1 per zone; the planner can credit served zones as already having low-carbon thermal energy.",
   "source": "Modeled from public info: Enwave Deep Lake Water Cooling / downtown district energy + Regent Park Community Energy System",
   "modeled": true,
-  "servedZones": 7,
+  "servedZones": 6,
   "servicePolygon": {
     "type": "Polygon",
     "coordinates": [
@@ -36,309 +36,981 @@
   },
   "zones": [
     {
-      "zoneId": "z000",
-      "name": "Waterfront Communities\u2013The Island",
-      "districtEnergy": true,
-      "servedFraction": 0.45,
-      "system": "Enwave (Deep Lake Water Cooling, waterfront)"
-    },
-    {
       "zoneId": "z001",
-      "name": "Bay Street Corridor",
-      "districtEnergy": true,
-      "servedFraction": 0.85,
-      "system": "Enwave (Deep Lake Water Cooling / downtown district energy)"
+      "name": "West Humber-Clairville",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
     },
     {
       "zoneId": "z002",
-      "name": "Church-Yonge Corridor",
-      "districtEnergy": true,
-      "servedFraction": 0.55,
-      "system": "Enwave downtown district energy"
-    },
-    {
-      "zoneId": "z003",
-      "name": "Kensington-Chinatown",
-      "districtEnergy": true,
-      "servedFraction": 0.25,
-      "system": "Enwave downtown district energy (edge)"
-    },
-    {
-      "zoneId": "z004",
-      "name": "University",
-      "districtEnergy": true,
-      "servedFraction": 0.7,
-      "system": "Enwave (University Ave health district / Discovery District)"
-    },
-    {
-      "zoneId": "z005",
-      "name": "Moss Park",
-      "districtEnergy": true,
-      "servedFraction": 0.3,
-      "system": "Enwave downtown district energy (edge)"
-    },
-    {
-      "zoneId": "z006",
-      "name": "Regent Park",
-      "districtEnergy": true,
-      "servedFraction": 0.8,
-      "system": "Regent Park Community Energy System"
-    },
-    {
-      "zoneId": "z007",
-      "name": "Cabbagetown-South St.James Town",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z008",
-      "name": "North St.James Town",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z009",
-      "name": "Annex",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z010",
-      "name": "Yonge-St.Clair",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z011",
-      "name": "Rosedale-Moore Park",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z012",
-      "name": "Casa Loma",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z013",
-      "name": "Wychwood",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z014",
-      "name": "Dovercourt-Wallace Emerson-Junction",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z015",
-      "name": "Little Portugal",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z016",
-      "name": "Trinity-Bellwoods",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z017",
-      "name": "Niagara",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z018",
-      "name": "South Parkdale",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z019",
-      "name": "High Park-Swansea",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z020",
-      "name": "Roncesvalles",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z021",
-      "name": "The Beaches",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z022",
-      "name": "Danforth",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z023",
-      "name": "Greektown (Playter Estates-Danforth)",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z024",
-      "name": "East York (Broadview North)",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z025",
-      "name": "Leaside-Bennington",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z026",
-      "name": "Don Valley Village",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z027",
-      "name": "Willowdale East",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z028",
-      "name": "Willowdale West",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z029",
-      "name": "Bayview Village",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z030",
-      "name": "York University Heights",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z031",
-      "name": "Black Creek",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z032",
-      "name": "Glenfield-Jane Heights",
-      "districtEnergy": false,
-      "servedFraction": 0.0,
-      "system": null
-    },
-    {
-      "zoneId": "z033",
       "name": "Mount Olive-Silverstone-Jamestown",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
-      "zoneId": "z034",
+      "zoneId": "z003",
+      "name": "Thistletown-Beaumond Heights",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z004",
       "name": "Rexdale-Kipling",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
-      "zoneId": "z035",
+      "zoneId": "z005",
+      "name": "Elms-Old Rexdale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z006",
+      "name": "Kingsview Village-The Westway",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z007",
+      "name": "Willowridge-Martingrove-Richview",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z008",
+      "name": "Humber Heights-Westmount",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z009",
+      "name": "Edenbridge-Humber Valley",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z010",
+      "name": "Princess-Rosethorn",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z011",
+      "name": "Eringate-Centennial-West Deane",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z012",
+      "name": "Markland Wood",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z013",
       "name": "Etobicoke West Mall",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
-      "zoneId": "z036",
+      "zoneId": "z014",
       "name": "Islington-City Centre West",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
+      "zoneId": "z015",
+      "name": "Kingsway South",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z016",
+      "name": "Stonegate-Queensway",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z017",
+      "name": "Mimico (includes Humber Bay Shores)",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z018",
+      "name": "New Toronto",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z019",
+      "name": "Long Branch",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z020",
+      "name": "Alderwood",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z021",
+      "name": "Humber Summit",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z022",
+      "name": "Humbermede",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z023",
+      "name": "Pelmo Park-Humberlea",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z024",
+      "name": "Black Creek",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z025",
+      "name": "Glenfield-Jane Heights",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z026",
+      "name": "Downsview-Roding-CFB",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z027",
+      "name": "York University Heights",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z028",
+      "name": "Rustic",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z029",
+      "name": "Maple Leaf",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z030",
+      "name": "Brookhaven-Amesbury",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z031",
+      "name": "Yorkdale-Glen Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z032",
+      "name": "Englemount-Lawrence",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z033",
+      "name": "Clanton Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z034",
+      "name": "Bathurst Manor",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z035",
+      "name": "Westminster-Branson",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z036",
+      "name": "Newtonbrook West",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
       "zoneId": "z037",
-      "name": "Mimico (Lakeshore)",
+      "name": "Willowdale West",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
       "zoneId": "z038",
-      "name": "Scarborough Village",
+      "name": "Lansing-Westgate",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
       "zoneId": "z039",
-      "name": "Agincourt South-Malvern West",
+      "name": "Bedford Park-Nortown",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
       "zoneId": "z040",
-      "name": "Malvern",
+      "name": "St.Andrew-Windfields",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
       "zoneId": "z041",
-      "name": "Woburn",
+      "name": "Bridle Path-Sunnybrook-York Mills",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
       "zoneId": "z042",
-      "name": "Rouge",
+      "name": "Banbury-Don Mills",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null
     },
     {
       "zoneId": "z043",
+      "name": "Victoria Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z044",
+      "name": "Flemingdon Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z045",
+      "name": "Parkwoods-Donalda",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z046",
+      "name": "Pleasant View",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z047",
+      "name": "Don Valley Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z048",
+      "name": "Hillcrest Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z049",
+      "name": "Bayview Woods-Steeles",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z050",
+      "name": "Newtonbrook East",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z051",
+      "name": "Willowdale East",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z052",
+      "name": "Bayview Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z053",
+      "name": "Henry Farm",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z054",
+      "name": "O'Connor-Parkview",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z055",
+      "name": "Thorncliffe Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z056",
+      "name": "Leaside-Bennington",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z057",
+      "name": "Broadview North",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z058",
+      "name": "Old East York",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z059",
+      "name": "Danforth East York",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z060",
+      "name": "Woodbine-Lumsden",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z061",
+      "name": "Taylor-Massey",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z062",
+      "name": "East End-Danforth",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z063",
+      "name": "The Beaches",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z064",
+      "name": "Woodbine Corridor",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z065",
+      "name": "Greenwood-Coxwell",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z066",
+      "name": "Danforth",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z067",
+      "name": "Playter Estates-Danforth",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z068",
+      "name": "North Riverdale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z069",
+      "name": "Blake-Jones",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z070",
+      "name": "South Riverdale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z071",
+      "name": "Cabbagetown-South St.James Town",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z072",
+      "name": "Regent Park",
+      "districtEnergy": true,
+      "servedFraction": 0.8,
+      "system": "Regent Park Community Energy System"
+    },
+    {
+      "zoneId": "z073",
+      "name": "Moss Park",
+      "districtEnergy": true,
+      "servedFraction": 0.3,
+      "system": "Enwave downtown district energy (edge)"
+    },
+    {
+      "zoneId": "z074",
+      "name": "North St.James Town",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z075",
+      "name": "Church-Yonge Corridor",
+      "districtEnergy": true,
+      "servedFraction": 0.55,
+      "system": "Enwave downtown district energy"
+    },
+    {
+      "zoneId": "z076",
+      "name": "Bay Street Corridor",
+      "districtEnergy": true,
+      "servedFraction": 0.85,
+      "system": "Enwave (Deep Lake Water Cooling / downtown district energy)"
+    },
+    {
+      "zoneId": "z077",
+      "name": "Waterfront Communities-The Island",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z078",
+      "name": "Kensington-Chinatown",
+      "districtEnergy": true,
+      "servedFraction": 0.25,
+      "system": "Enwave downtown district energy (edge)"
+    },
+    {
+      "zoneId": "z079",
+      "name": "University",
+      "districtEnergy": true,
+      "servedFraction": 0.7,
+      "system": "Enwave (University Ave health district / Discovery District)"
+    },
+    {
+      "zoneId": "z080",
+      "name": "Palmerston-Little Italy",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z081",
+      "name": "Trinity-Bellwoods",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z082",
+      "name": "Niagara",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z083",
+      "name": "Dufferin Grove",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z084",
+      "name": "Little Portugal",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z085",
+      "name": "South Parkdale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z086",
+      "name": "Roncesvalles",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z087",
+      "name": "High Park-Swansea",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z088",
+      "name": "High Park North",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z089",
+      "name": "Runnymede-Bloor West Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z090",
+      "name": "Junction Area",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z091",
+      "name": "Weston-Pelham Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z092",
+      "name": "Corso Italia-Davenport",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z093",
+      "name": "Dovercourt-Wallace Emerson-Junction",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z094",
+      "name": "Wychwood",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z095",
+      "name": "Annex",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z096",
+      "name": "Casa Loma",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z097",
+      "name": "Yonge-St.Clair",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z098",
+      "name": "Rosedale-Moore Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z099",
+      "name": "Mount Pleasant East",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z100",
+      "name": "Yonge-Eglinton",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z101",
+      "name": "Forest Hill South",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z102",
+      "name": "Forest Hill North",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z103",
+      "name": "Lawrence Park South",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z104",
+      "name": "Mount Pleasant West",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z105",
+      "name": "Lawrence Park North",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z106",
+      "name": "Humewood-Cedarvale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z107",
+      "name": "Oakwood Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z108",
+      "name": "Briar Hill-Belgravia",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z109",
+      "name": "Caledonia-Fairbank",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z110",
+      "name": "Keelesdale-Eglinton West",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z111",
+      "name": "Rockcliffe-Smythe",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z112",
+      "name": "Beechborough-Greenbrook",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z113",
+      "name": "Weston",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z114",
+      "name": "Lambton Baby Point",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z115",
+      "name": "Mount Dennis",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z116",
+      "name": "Steeles",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z117",
+      "name": "L'Amoreaux",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z118",
+      "name": "Tam O'Shanter-Sullivan",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z119",
+      "name": "Wexford/Maryvale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z120",
+      "name": "Clairlea-Birchmount",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z121",
+      "name": "Oakridge",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z122",
       "name": "Birchcliffe-Cliffside",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z123",
+      "name": "Cliffcrest",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z124",
+      "name": "Kennedy Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z125",
+      "name": "Ionview",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z126",
+      "name": "Dorset Park",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z127",
+      "name": "Bendale",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z128",
+      "name": "Agincourt South-Malvern West",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z129",
+      "name": "Agincourt North",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z130",
+      "name": "Milliken",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z131",
+      "name": "Rouge",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z132",
+      "name": "Malvern",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z133",
+      "name": "Centennial Scarborough",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z134",
+      "name": "Highland Creek",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z135",
+      "name": "Morningside",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z136",
+      "name": "West Hill",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z137",
+      "name": "Woburn",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z138",
+      "name": "Eglinton East",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z139",
+      "name": "Scarborough Village",
+      "districtEnergy": false,
+      "servedFraction": 0.0,
+      "system": null
+    },
+    {
+      "zoneId": "z140",
+      "name": "Guildwood",
       "districtEnergy": false,
       "servedFraction": 0.0,
       "system": null

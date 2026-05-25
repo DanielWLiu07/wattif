@@ -1,274 +1,18 @@
 {
   "note": "Per-zone flood risk from Toronto chronic basement-flooding study areas (centroid overlap with our zones). floodRiskScore 0..1. Enables flood scenario + siting penalty.",
   "source": "Toronto Basement Flooding Study Areas (Open Data)",
-  "flaggedZones": 13,
+  "flaggedZones": 52,
   "zones": [
     {
-      "zoneId": "z000",
-      "name": "Waterfront Communities\u2013The Island",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
       "zoneId": "z001",
-      "name": "Bay Street Corridor",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
+      "name": "West Humber-Clairville",
+      "floodStudyAreas": 2,
+      "studyAreaFraction": 0.775,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
     },
     {
       "zoneId": "z002",
-      "name": "Church-Yonge Corridor",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z003",
-      "name": "Kensington-Chinatown",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z004",
-      "name": "University",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z005",
-      "name": "Moss Park",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z006",
-      "name": "Regent Park",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z007",
-      "name": "Cabbagetown-South St.James Town",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z008",
-      "name": "North St.James Town",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z009",
-      "name": "Annex",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 1.0,
-      "floodRiskScore": 1.0,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z010",
-      "name": "Yonge-St.Clair",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z011",
-      "name": "Rosedale-Moore Park",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z012",
-      "name": "Casa Loma",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z013",
-      "name": "Wychwood",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z014",
-      "name": "Dovercourt-Wallace Emerson-Junction",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z015",
-      "name": "Little Portugal",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z016",
-      "name": "Trinity-Bellwoods",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 1.0,
-      "floodRiskScore": 1.0,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z017",
-      "name": "Niagara",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z018",
-      "name": "South Parkdale",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z019",
-      "name": "High Park-Swansea",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z020",
-      "name": "Roncesvalles",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z021",
-      "name": "The Beaches",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z022",
-      "name": "Danforth",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z023",
-      "name": "Greektown (Playter Estates-Danforth)",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z024",
-      "name": "East York (Broadview North)",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z025",
-      "name": "Leaside-Bennington",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 0.963,
-      "floodRiskScore": 1.0,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z026",
-      "name": "Don Valley Village",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z027",
-      "name": "Willowdale East",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
-    },
-    {
-      "zoneId": "z028",
-      "name": "Willowdale West",
-      "floodStudyAreas": 2,
-      "studyAreaFraction": 1.0,
-      "floodRiskScore": 1.0,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z029",
-      "name": "Bayview Village",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 0.551,
-      "floodRiskScore": 0.716,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z030",
-      "name": "York University Heights",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 0.35,
-      "floodRiskScore": 0.455,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z031",
-      "name": "Black Creek",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 1.0,
-      "floodRiskScore": 1.0,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z032",
-      "name": "Glenfield-Jane Heights",
-      "floodStudyAreas": 1,
-      "studyAreaFraction": 0.63,
-      "floodRiskScore": 0.819,
-      "floodRisk": "high"
-    },
-    {
-      "zoneId": "z033",
       "name": "Mount Olive-Silverstone-Jamestown",
       "floodStudyAreas": 1,
       "studyAreaFraction": 0.751,
@@ -276,7 +20,15 @@
       "floodRisk": "high"
     },
     {
-      "zoneId": "z034",
+      "zoneId": "z003",
+      "name": "Thistletown-Beaumond Heights",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z004",
       "name": "Rexdale-Kipling",
       "floodStudyAreas": 0,
       "studyAreaFraction": 0.0,
@@ -284,7 +36,71 @@
       "floodRisk": "low"
     },
     {
-      "zoneId": "z035",
+      "zoneId": "z005",
+      "name": "Elms-Old Rexdale",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z006",
+      "name": "Kingsview Village-The Westway",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z007",
+      "name": "Willowridge-Martingrove-Richview",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z008",
+      "name": "Humber Heights-Westmount",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z009",
+      "name": "Edenbridge-Humber Valley",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z010",
+      "name": "Princess-Rosethorn",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.312,
+      "floodRiskScore": 0.406,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z011",
+      "name": "Eringate-Centennial-West Deane",
+      "floodStudyAreas": 3,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z012",
+      "name": "Markland Wood",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z013",
       "name": "Etobicoke West Mall",
       "floodStudyAreas": 0,
       "studyAreaFraction": 0.0,
@@ -292,7 +108,7 @@
       "floodRisk": "low"
     },
     {
-      "zoneId": "z036",
+      "zoneId": "z014",
       "name": "Islington-City Centre West",
       "floodStudyAreas": 2,
       "studyAreaFraction": 0.612,
@@ -300,32 +116,208 @@
       "floodRisk": "high"
     },
     {
-      "zoneId": "z037",
-      "name": "Mimico (Lakeshore)",
+      "zoneId": "z015",
+      "name": "Kingsway South",
       "floodStudyAreas": 0,
       "studyAreaFraction": 0.0,
       "floodRiskScore": 0.0,
       "floodRisk": "low"
+    },
+    {
+      "zoneId": "z016",
+      "name": "Stonegate-Queensway",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z017",
+      "name": "Mimico (includes Humber Bay Shores)",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z018",
+      "name": "New Toronto",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z019",
+      "name": "Long Branch",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z020",
+      "name": "Alderwood",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z021",
+      "name": "Humber Summit",
+      "floodStudyAreas": 2,
+      "studyAreaFraction": 0.949,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z022",
+      "name": "Humbermede",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z023",
+      "name": "Pelmo Park-Humberlea",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z024",
+      "name": "Black Creek",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z025",
+      "name": "Glenfield-Jane Heights",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.63,
+      "floodRiskScore": 0.819,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z026",
+      "name": "Downsview-Roding-CFB",
+      "floodStudyAreas": 2,
+      "studyAreaFraction": 0.425,
+      "floodRiskScore": 0.552,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z027",
+      "name": "York University Heights",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.35,
+      "floodRiskScore": 0.455,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z028",
+      "name": "Rustic",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z029",
+      "name": "Maple Leaf",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z030",
+      "name": "Brookhaven-Amesbury",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z031",
+      "name": "Yorkdale-Glen Park",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.85,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z032",
+      "name": "Englemount-Lawrence",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z033",
+      "name": "Clanton Park",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z034",
+      "name": "Bathurst Manor",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z035",
+      "name": "Westminster-Branson",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z036",
+      "name": "Newtonbrook West",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z037",
+      "name": "Willowdale West",
+      "floodStudyAreas": 2,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
     },
     {
       "zoneId": "z038",
-      "name": "Scarborough Village",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
+      "name": "Lansing-Westgate",
+      "floodStudyAreas": 2,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
     },
     {
       "zoneId": "z039",
-      "name": "Agincourt South-Malvern West",
-      "floodStudyAreas": 0,
-      "studyAreaFraction": 0.0,
-      "floodRiskScore": 0.0,
-      "floodRisk": "low"
+      "name": "Bedford Park-Nortown",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.457,
+      "floodRiskScore": 0.594,
+      "floodRisk": "high"
     },
     {
       "zoneId": "z040",
-      "name": "Malvern",
+      "name": "St.Andrew-Windfields",
       "floodStudyAreas": 0,
       "studyAreaFraction": 0.0,
       "floodRiskScore": 0.0,
@@ -333,14 +325,726 @@
     },
     {
       "zoneId": "z041",
-      "name": "Woburn",
+      "name": "Bridle Path-Sunnybrook-York Mills",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.18,
+      "floodRiskScore": 0.234,
+      "floodRisk": "moderate"
+    },
+    {
+      "zoneId": "z042",
+      "name": "Banbury-Don Mills",
+      "floodStudyAreas": 3,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z043",
+      "name": "Victoria Village",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.395,
+      "floodRiskScore": 0.514,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z044",
+      "name": "Flemingdon Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z045",
+      "name": "Parkwoods-Donalda",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.338,
+      "floodRiskScore": 0.439,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z046",
+      "name": "Pleasant View",
       "floodStudyAreas": 1,
       "studyAreaFraction": 1.0,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
     },
     {
-      "zoneId": "z042",
+      "zoneId": "z047",
+      "name": "Don Valley Village",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z048",
+      "name": "Hillcrest Village",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z049",
+      "name": "Bayview Woods-Steeles",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z050",
+      "name": "Newtonbrook East",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z051",
+      "name": "Willowdale East",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z052",
+      "name": "Bayview Village",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.551,
+      "floodRiskScore": 0.716,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z053",
+      "name": "Henry Farm",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z054",
+      "name": "O'Connor-Parkview",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.272,
+      "floodRiskScore": 0.354,
+      "floodRisk": "moderate"
+    },
+    {
+      "zoneId": "z055",
+      "name": "Thorncliffe Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z056",
+      "name": "Leaside-Bennington",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.963,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z057",
+      "name": "Broadview North",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z058",
+      "name": "Old East York",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z059",
+      "name": "Danforth East York",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z060",
+      "name": "Woodbine-Lumsden",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z061",
+      "name": "Taylor-Massey",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z062",
+      "name": "East End-Danforth",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z063",
+      "name": "The Beaches",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z064",
+      "name": "Woodbine Corridor",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z065",
+      "name": "Greenwood-Coxwell",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z066",
+      "name": "Danforth",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z067",
+      "name": "Playter Estates-Danforth",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z068",
+      "name": "North Riverdale",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z069",
+      "name": "Blake-Jones",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z070",
+      "name": "South Riverdale",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z071",
+      "name": "Cabbagetown-South St.James Town",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z072",
+      "name": "Regent Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z073",
+      "name": "Moss Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z074",
+      "name": "North St.James Town",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z075",
+      "name": "Church-Yonge Corridor",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z076",
+      "name": "Bay Street Corridor",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z077",
+      "name": "Waterfront Communities-The Island",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z078",
+      "name": "Kensington-Chinatown",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z079",
+      "name": "University",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z080",
+      "name": "Palmerston-Little Italy",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z081",
+      "name": "Trinity-Bellwoods",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z082",
+      "name": "Niagara",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z083",
+      "name": "Dufferin Grove",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z084",
+      "name": "Little Portugal",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z085",
+      "name": "South Parkdale",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z086",
+      "name": "Roncesvalles",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z087",
+      "name": "High Park-Swansea",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z088",
+      "name": "High Park North",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z089",
+      "name": "Runnymede-Bloor West Village",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z090",
+      "name": "Junction Area",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z091",
+      "name": "Weston-Pelham Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z092",
+      "name": "Corso Italia-Davenport",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z093",
+      "name": "Dovercourt-Wallace Emerson-Junction",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z094",
+      "name": "Wychwood",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z095",
+      "name": "Annex",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z096",
+      "name": "Casa Loma",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z097",
+      "name": "Yonge-St.Clair",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z098",
+      "name": "Rosedale-Moore Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z099",
+      "name": "Mount Pleasant East",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z100",
+      "name": "Yonge-Eglinton",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z101",
+      "name": "Forest Hill South",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z102",
+      "name": "Forest Hill North",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z103",
+      "name": "Lawrence Park South",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z104",
+      "name": "Mount Pleasant West",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z105",
+      "name": "Lawrence Park North",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z106",
+      "name": "Humewood-Cedarvale",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z107",
+      "name": "Oakwood Village",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z108",
+      "name": "Briar Hill-Belgravia",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z109",
+      "name": "Caledonia-Fairbank",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z110",
+      "name": "Keelesdale-Eglinton West",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z111",
+      "name": "Rockcliffe-Smythe",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.667,
+      "floodRiskScore": 0.867,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z112",
+      "name": "Beechborough-Greenbrook",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z113",
+      "name": "Weston",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z114",
+      "name": "Lambton Baby Point",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.137,
+      "floodRiskScore": 0.178,
+      "floodRisk": "moderate"
+    },
+    {
+      "zoneId": "z115",
+      "name": "Mount Dennis",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z116",
+      "name": "Steeles",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z117",
+      "name": "L'Amoreaux",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z118",
+      "name": "Tam O'Shanter-Sullivan",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z119",
+      "name": "Wexford/Maryvale",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 0.527,
+      "floodRiskScore": 0.685,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z120",
+      "name": "Clairlea-Birchmount",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z121",
+      "name": "Oakridge",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z122",
+      "name": "Birchcliffe-Cliffside",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z123",
+      "name": "Cliffcrest",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z124",
+      "name": "Kennedy Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z125",
+      "name": "Ionview",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z126",
+      "name": "Dorset Park",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z127",
+      "name": "Bendale",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z128",
+      "name": "Agincourt South-Malvern West",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z129",
+      "name": "Agincourt North",
+      "floodStudyAreas": 2,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z130",
+      "name": "Milliken",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z131",
       "name": "Rouge",
       "floodStudyAreas": 2,
       "studyAreaFraction": 1.0,
@@ -348,12 +1052,76 @@
       "floodRisk": "high"
     },
     {
-      "zoneId": "z043",
-      "name": "Birchcliffe-Cliffside",
+      "zoneId": "z132",
+      "name": "Malvern",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z133",
+      "name": "Centennial Scarborough",
       "floodStudyAreas": 1,
       "studyAreaFraction": 1.0,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
+    },
+    {
+      "zoneId": "z134",
+      "name": "Highland Creek",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z135",
+      "name": "Morningside",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z136",
+      "name": "West Hill",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z137",
+      "name": "Woburn",
+      "floodStudyAreas": 1,
+      "studyAreaFraction": 1.0,
+      "floodRiskScore": 1.0,
+      "floodRisk": "high"
+    },
+    {
+      "zoneId": "z138",
+      "name": "Eglinton East",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z139",
+      "name": "Scarborough Village",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
+    },
+    {
+      "zoneId": "z140",
+      "name": "Guildwood",
+      "floodStudyAreas": 0,
+      "studyAreaFraction": 0.0,
+      "floodRiskScore": 0.0,
+      "floodRisk": "low"
     }
   ]
 }

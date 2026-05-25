@@ -10,7 +10,7 @@
     "cooling_centre": 12,
     "library": 102
   },
-  "matchedToZone": 233,
+  "matchedToZone": 581,
   "facilities": [
     {
       "id": "fc0000",
@@ -22,7 +22,7 @@
         43.706938
       ],
       "address": "2800 St. Clair Ave",
-      "zoneId": null,
+      "zoneId": "z054",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -35,7 +35,7 @@
         43.676593
       ],
       "address": "1757 Gerrard  St ",
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -48,7 +48,7 @@
         43.803059
       ],
       "address": "150 Tapscott  Rd ",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -61,7 +61,7 @@
         43.775738
       ],
       "address": "350 Morningside  Ave ",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -74,7 +74,7 @@
         43.788648
       ],
       "address": "31 Glen Watford  Dr ",
-      "zoneId": "z039",
+      "zoneId": "z128",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -87,7 +87,7 @@
         43.663156
       ],
       "address": "569 Jane  St ",
-      "zoneId": null,
+      "zoneId": "z089",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -100,7 +100,7 @@
         43.634316
       ],
       "address": "105 Norseman  St ",
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -113,7 +113,7 @@
         43.694565
       ],
       "address": "271 Gledhill Ave",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -126,7 +126,7 @@
         43.783248
       ],
       "address": "3000 Don Mills  Rd ",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -139,7 +139,7 @@
         43.668005
       ],
       "address": "495 Sherbourne St",
-      "zoneId": "z008",
+      "zoneId": "z074",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -152,7 +152,7 @@
         43.789444
       ],
       "address": "875 Morningside  Ave ",
-      "zoneId": null,
+      "zoneId": "z134",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -165,7 +165,7 @@
         43.751097
       ],
       "address": "490 York Mills  Rd ",
-      "zoneId": null,
+      "zoneId": "z040",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -178,7 +178,7 @@
         43.690589
       ],
       "address": "529 Vaughan Rd",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -191,7 +191,7 @@
         43.801504
       ],
       "address": "2501 Bridletowne  Cir ",
-      "zoneId": null,
+      "zoneId": "z117",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -204,7 +204,7 @@
         43.75568
       ],
       "address": "15 Wallingford  Rd.",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -217,7 +217,7 @@
         43.746001
       ],
       "address": "1176 Pharmacy  Ave ",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -230,7 +230,7 @@
         43.666622
       ],
       "address": "519 CHURCH ST",
-      "zoneId": "z002",
+      "zoneId": "z075",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -243,7 +243,7 @@
         43.644123
       ],
       "address": "15 Waller Avenue",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -256,7 +256,7 @@
         43.672591
       ],
       "address": "20 VIELLA ST",
-      "zoneId": null,
+      "zoneId": "z090",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -269,7 +269,7 @@
         43.691572
       ],
       "address": "91 Barrington Avenue",
-      "zoneId": null,
+      "zoneId": "z061",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -282,7 +282,7 @@
         43.680014
       ],
       "address": "69 CASSELS AVE",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -295,7 +295,7 @@
         43.651794
       ],
       "address": "707 Dundas Street West",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -308,7 +308,7 @@
         43.64364
       ],
       "address": "75 Lansdowne Avenue",
-      "zoneId": "z020",
+      "zoneId": "z086",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -321,7 +321,7 @@
         43.643209
       ],
       "address": "11 DOCKSIDE DR",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -334,7 +334,7 @@
         43.696039
       ],
       "address": "1745 Eglinton Ave W",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -347,7 +347,7 @@
         43.792091
       ],
       "address": "270 Rouge Hills Dr",
-      "zoneId": "z042",
+      "zoneId": "z131",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -360,7 +360,7 @@
         43.808576
       ],
       "address": "30 Sewells Rd",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -373,7 +373,7 @@
         43.667797
       ],
       "address": "495 Sherbourne St",
-      "zoneId": "z008",
+      "zoneId": "z074",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -386,7 +386,7 @@
         43.683372
       ],
       "address": "137 Main St",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -399,7 +399,7 @@
         43.714903
       ],
       "address": "25 Mendelssohn St",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -412,7 +412,7 @@
         43.595314
       ],
       "address": "3500 Lake Shore Blvd W",
-      "zoneId": null,
+      "zoneId": "z019",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -425,7 +425,7 @@
         43.646029
       ],
       "address": "55 John Street",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -438,7 +438,7 @@
         43.614802
       ],
       "address": "47 Station Rd",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -451,7 +451,7 @@
         43.747911
       ],
       "address": "2219 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -464,7 +464,7 @@
         43.643502
       ],
       "address": "399 The West Mall",
-      "zoneId": "z035",
+      "zoneId": "z013",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -477,7 +477,7 @@
         43.691227
       ],
       "address": "850 Coxwell Avenue",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -490,7 +490,7 @@
         43.643443
       ],
       "address": "75 Lansdowne Ave",
-      "zoneId": "z020",
+      "zoneId": "z086",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -503,7 +503,7 @@
         43.757096
       ],
       "address": "Parkway Mall, 85 Ellesmere Rd",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -516,7 +516,7 @@
         43.687837
       ],
       "address": "115 Black Creek Dr",
-      "zoneId": null,
+      "zoneId": "z110",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -529,7 +529,7 @@
         43.599245
       ],
       "address": "110 Eleventh St",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -542,7 +542,7 @@
         43.703967
       ],
       "address": "599 Mt. Pleasant Rd",
-      "zoneId": null,
+      "zoneId": "z099",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -555,7 +555,7 @@
         43.7729
       ],
       "address": "150 Borough Dr",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -568,7 +568,7 @@
         43.68664
       ],
       "address": "1123 Won Rd",
-      "zoneId": null,
+      "zoneId": "z115",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -581,7 +581,7 @@
         43.767328
       ],
       "address": "5100 Yonge Street",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -594,7 +594,7 @@
         43.769862
       ],
       "address": "4279 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -607,7 +607,7 @@
         43.686584
       ],
       "address": "341 Oakwood Ave",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -620,7 +620,7 @@
         43.711384
       ],
       "address": "123B Rexdale Blvd",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -633,7 +633,7 @@
         43.67881
       ],
       "address": "115 Felstead Ave",
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -646,7 +646,7 @@
         43.708278
       ],
       "address": "40 Orchard View Blvd",
-      "zoneId": null,
+      "zoneId": "z100",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -659,7 +659,7 @@
         43.747629
       ],
       "address": "2231 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -672,7 +672,7 @@
         43.768204
       ],
       "address": "5120 Yonge St",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -685,7 +685,7 @@
         43.675653
       ],
       "address": "1369 St Clair Ave W",
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -698,7 +698,7 @@
         43.641151
       ],
       "address": "1303 Queen St W",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -711,7 +711,7 @@
         43.6544
       ],
       "address": "220 Yonge Street",
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -724,7 +724,7 @@
         43.637709
       ],
       "address": "1755 Lakeshore Blvd W",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -737,7 +737,7 @@
         43.646444
       ],
       "address": "155 CRAWFORD ST",
-      "zoneId": "z016",
+      "zoneId": "z081",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -750,7 +750,7 @@
         43.678641
       ],
       "address": "701 Pape Ave",
-      "zoneId": null,
+      "zoneId": "z069",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -763,7 +763,7 @@
         43.643866
       ],
       "address": "15 Waller Ave",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -776,7 +776,7 @@
         43.665102
       ],
       "address": "560 Palmerston Ave",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -789,7 +789,7 @@
         43.747769
       ],
       "address": "175 Mount Olive Drive",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -802,7 +802,7 @@
         43.771704
       ],
       "address": "59 Forest Manor Rd",
-      "zoneId": null,
+      "zoneId": "z053",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -815,7 +815,7 @@
         43.779665
       ],
       "address": "5450 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z133",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -828,7 +828,7 @@
         43.667441
       ],
       "address": "1260 DUFFERIN ST",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -841,7 +841,7 @@
         43.661838
       ],
       "address": "269 Gerrard St E",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -854,7 +854,7 @@
         43.778
       ],
       "address": "1800 Sheppard Ave. East",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -867,7 +867,7 @@
         43.7656
       ],
       "address": "567 Sheppard Avenue East",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -880,7 +880,7 @@
         43.665815
       ],
       "address": "370 Broadview Ave",
-      "zoneId": null,
+      "zoneId": "z068",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -893,7 +893,7 @@
         43.6633
       ],
       "address": "20 Grosvenor Street",
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -906,7 +906,7 @@
         43.683433
       ],
       "address": "1806 Islington Ave",
-      "zoneId": null,
+      "zoneId": "z007",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -919,7 +919,7 @@
         43.726161
       ],
       "address": "2243 Kipling Ave",
-      "zoneId": "z034",
+      "zoneId": "z004",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -932,7 +932,7 @@
         43.659196
       ],
       "address": "765 Queen St E",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -945,7 +945,7 @@
         43.7072
       ],
       "address": "2300 Yonge Street",
-      "zoneId": null,
+      "zoneId": "z100",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -958,7 +958,7 @@
         43.7746
       ],
       "address": "230 Town Centre Court",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -971,7 +971,7 @@
         43.674347
       ],
       "address": "1748 St. Clair Ave W",
-      "zoneId": null,
+      "zoneId": "z091",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -984,7 +984,7 @@
         43.667678
       ],
       "address": "10 Spadina Rd",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -997,7 +997,7 @@
         43.772485
       ],
       "address": "156 Borough Dr",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1010,7 +1010,7 @@
         43.6534
       ],
       "address": "931 College Street",
-      "zoneId": null,
+      "zoneId": "z083",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1023,7 +1023,7 @@
         43.651904
       ],
       "address": "327 Bathurst St",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1036,7 +1036,7 @@
         43.692138
       ],
       "address": "170 Memorial Park Ave",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1049,7 +1049,7 @@
         43.65191
       ],
       "address": "2178 Bloor St W",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1062,7 +1062,7 @@
         43.667797
       ],
       "address": "495 Sherbourne St",
-      "zoneId": "z008",
+      "zoneId": "z074",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1075,7 +1075,7 @@
         43.687839
       ],
       "address": "1440 Kingston Rd",
-      "zoneId": "z043",
+      "zoneId": "z122",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1088,7 +1088,7 @@
         43.647658
       ],
       "address": "95 Lavinia Ave",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1101,7 +1101,7 @@
         43.815762
       ],
       "address": "Bamburgh Gardens Shopping Plaza, 375 Bamburgh Circle",
-      "zoneId": null,
+      "zoneId": "z116",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1114,7 +1114,7 @@
         43.649975
       ],
       "address": "171 Front St E",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1127,7 +1127,7 @@
         43.641971
       ],
       "address": "355 The East Mall",
-      "zoneId": "z036",
+      "zoneId": "z014",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1140,7 +1140,7 @@
         43.667556
       ],
       "address": "1260 Dufferin Street",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1153,7 +1153,7 @@
         43.702902
       ],
       "address": "48 Thorncliffe Park Dr",
-      "zoneId": null,
+      "zoneId": "z055",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1166,7 +1166,7 @@
         43.753026
       ],
       "address": "5 TRESTLESIDE GRV",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1179,7 +1179,7 @@
         43.751753
       ],
       "address": "23 Grandravine Dr",
-      "zoneId": "z030",
+      "zoneId": "z027",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1192,7 +1192,7 @@
         43.723711
       ],
       "address": "2230 JANE ST",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1205,7 +1205,7 @@
         43.722739
       ],
       "address": "45 Golfdown Rd",
-      "zoneId": null,
+      "zoneId": "z005",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1218,7 +1218,7 @@
         43.647477
       ],
       "address": "66 Sheridan Ave",
-      "zoneId": "z015",
+      "zoneId": "z084",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1231,7 +1231,7 @@
         43.766218
       ],
       "address": "1625 PHARMACY AVE",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1244,7 +1244,7 @@
         43.768856
       ],
       "address": "292 Manse Rd",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1257,7 +1257,7 @@
         43.728886
       ],
       "address": "850 Humberwood Blvd",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1270,7 +1270,7 @@
         43.751888
       ],
       "address": "176 GRACEDALE BLVD",
-      "zoneId": null,
+      "zoneId": "z021",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1283,7 +1283,7 @@
         43.652822
       ],
       "address": "Nathan Phillips Square, 100 Queen St W",
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1296,7 +1296,7 @@
         43.761473
       ],
       "address": "201 GLENDORA AVE",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1309,7 +1309,7 @@
         43.725273
       ],
       "address": "3017 Kingston Rd",
-      "zoneId": null,
+      "zoneId": "z123",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1322,7 +1322,7 @@
         43.675331
       ],
       "address": "1369 St Clair Ave W",
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1335,7 +1335,7 @@
         43.781586
       ],
       "address": "170 TORRESDALE AVE",
-      "zoneId": null,
+      "zoneId": "z035",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1348,7 +1348,7 @@
         43.65521
       ],
       "address": "766 College St",
-      "zoneId": null,
+      "zoneId": "z080",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1361,7 +1361,7 @@
         43.761351
       ],
       "address": "205 Wilmington Ave",
-      "zoneId": null,
+      "zoneId": "z034",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1374,7 +1374,7 @@
         43.762812
       ],
       "address": "215 GRAYDON HALL DR",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1387,7 +1387,7 @@
         43.724424
       ],
       "address": "69 HEATHROW DR",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1400,7 +1400,7 @@
         43.659196
       ],
       "address": "290 CLENDENAN AVE",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1413,7 +1413,7 @@
         43.637009
       ],
       "address": "330 PARK LAWN RD",
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1426,7 +1426,7 @@
         43.661011
       ],
       "address": "600 DUNDAS ST",
-      "zoneId": "z006",
+      "zoneId": "z072",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1439,7 +1439,7 @@
         43.689344
       ],
       "address": "19 COLEMAN AVE",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1452,7 +1452,7 @@
         43.717997
       ],
       "address": "5 Replin Rd",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1465,7 +1465,7 @@
         43.781421
       ],
       "address": "50 HENDON AVE",
-      "zoneId": null,
+      "zoneId": "z036",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1478,7 +1478,7 @@
         43.655012
       ],
       "address": "150 SHERBOURNE ST",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1491,7 +1491,7 @@
         43.674579
       ],
       "address": "1246 Shaw St",
-      "zoneId": "z013",
+      "zoneId": "z094",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1504,7 +1504,7 @@
         43.732359
       ],
       "address": "65 MARY CHAPMAN BLVD",
-      "zoneId": null,
+      "zoneId": "z023",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1517,7 +1517,7 @@
         43.812656
       ],
       "address": "2000 McNicoll Ave",
-      "zoneId": null,
+      "zoneId": "z116",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1530,7 +1530,7 @@
         43.798496
       ],
       "address": "64 RYLANDER BLVD",
-      "zoneId": "z042",
+      "zoneId": "z131",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1543,7 +1543,7 @@
         43.808576
       ],
       "address": "30 Sewell's Rd",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1556,7 +1556,7 @@
         43.680429
       ],
       "address": "80 COTTINGHAM ST",
-      "zoneId": "z010",
+      "zoneId": "z097",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1569,7 +1569,7 @@
         43.653973
       ],
       "address": "155 BAYVIEW AVE",
-      "zoneId": "z000",
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1582,7 +1582,7 @@
         43.647504
       ],
       "address": "66 Sheridan Ave\u00c2\u00a0",
-      "zoneId": "z015",
+      "zoneId": "z084",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1595,7 +1595,7 @@
         43.697191
       ],
       "address": "201 ORIOLE PKWY",
-      "zoneId": null,
+      "zoneId": "z100",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1608,7 +1608,7 @@
         43.653351
       ],
       "address": "475 FRONT ST",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1621,7 +1621,7 @@
         43.648883
       ],
       "address": "7 Vanauley St Toronto  ON M5T 2V9",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1634,7 +1634,7 @@
         43.728942
       ],
       "address": "2793 Keele St",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1647,7 +1647,7 @@
         43.669547
       ],
       "address": "500 WELLESLEY ST",
-      "zoneId": "z007",
+      "zoneId": "z071",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1660,7 +1660,7 @@
         43.659482
       ],
       "address": "10 THOMPSON ST",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1673,7 +1673,7 @@
         43.699453
       ],
       "address": "601 MERTON ST",
-      "zoneId": null,
+      "zoneId": "z099",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1686,7 +1686,7 @@
         43.687242
       ],
       "address": "22 ARCADE DR",
-      "zoneId": null,
+      "zoneId": "z008",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1699,7 +1699,7 @@
         43.77259
       ],
       "address": "50 ANTRIM CRES",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1712,7 +1712,7 @@
         43.701771
       ],
       "address": "100 GOLFWOOD HTS",
-      "zoneId": null,
+      "zoneId": "z006",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1725,7 +1725,7 @@
         43.663914
       ],
       "address": "350 PERTH AVE",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1738,7 +1738,7 @@
         43.761722
       ],
       "address": "205 WILMINGTON AVE",
-      "zoneId": null,
+      "zoneId": "z034",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1751,7 +1751,7 @@
         43.747629
       ],
       "address": "2231 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1764,7 +1764,7 @@
         43.810726
       ],
       "address": "145 HORSELEY HILL DR",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1777,7 +1777,7 @@
         43.771215
       ],
       "address": "80 PARKWAY FOREST DR",
-      "zoneId": null,
+      "zoneId": "z053",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1790,7 +1790,7 @@
         43.64614
       ],
       "address": "430 Burnhamthorpe Rd",
-      "zoneId": "z036",
+      "zoneId": "z014",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1803,7 +1803,7 @@
         43.829648
       ],
       "address": "4325 McCowan Rd",
-      "zoneId": null,
+      "zoneId": "z130",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1816,7 +1816,7 @@
         43.691962
       ],
       "address": "455 COSBURN AVE",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1829,7 +1829,7 @@
         43.798555
       ],
       "address": "215 MCNICOLL AVE",
-      "zoneId": null,
+      "zoneId": "z048",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1842,7 +1842,7 @@
         43.681851
       ],
       "address": "44 STRATHDEE DR",
-      "zoneId": null,
+      "zoneId": "z007",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1855,7 +1855,7 @@
         43.774644
       ],
       "address": "89 Church Ave",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1868,7 +1868,7 @@
         43.754474
       ],
       "address": "75 GIHON SPRING DR",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1881,7 +1881,7 @@
         43.675288
       ],
       "address": "1369 ST CLAIR AVE",
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1894,7 +1894,7 @@
         43.69789
       ],
       "address": "2125 LAWRENCE AVE",
-      "zoneId": null,
+      "zoneId": "z113",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1907,7 +1907,7 @@
         43.653109
       ],
       "address": "346 LANSDOWNE AVE",
-      "zoneId": null,
+      "zoneId": "z083",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1920,7 +1920,7 @@
         43.717811
       ],
       "address": "99 PARMA CRT",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1933,7 +1933,7 @@
         43.751762
       ],
       "address": "2 Rowntree Rd",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1946,7 +1946,7 @@
         43.723013
       ],
       "address": "Eglinton Square Shopping Centre 1 Eglinton Square",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1959,7 +1959,7 @@
         43.744339
       ],
       "address": "130 SPENVALLEY DR",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1972,7 +1972,7 @@
         43.739325
       ],
       "address": "1485 ALBION RD",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1985,7 +1985,7 @@
         43.706106
       ],
       "address": "200 Eglinton Ave W",
-      "zoneId": null,
+      "zoneId": "z100",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -1998,7 +1998,7 @@
         43.710216
       ],
       "address": "635 EGLINTON AVE",
-      "zoneId": "z025",
+      "zoneId": "z056",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2011,7 +2011,7 @@
         43.698312
       ],
       "address": "888 COSBURN AVE",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2024,7 +2024,7 @@
         43.703742
       ],
       "address": "46 THORNCLIFFE PARK DR",
-      "zoneId": null,
+      "zoneId": "z055",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2037,7 +2037,7 @@
         43.661273
       ],
       "address": "333 Annette St",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2050,7 +2050,7 @@
         43.745989
       ],
       "address": "19 CASTLEGROVE BLVD",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2063,7 +2063,7 @@
         43.774614
       ],
       "address": "1967 ELLESMERE RD",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2076,7 +2076,7 @@
         43.663879
       ],
       "address": "1695 QUEEN ST",
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2089,7 +2089,7 @@
         43.641385
       ],
       "address": "945 KING ST",
-      "zoneId": "z017",
+      "zoneId": "z082",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2102,7 +2102,7 @@
         43.765384
       ],
       "address": "4401 JANE ST",
-      "zoneId": "z031",
+      "zoneId": "z024",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2115,7 +2115,7 @@
         43.805555
       ],
       "address": "8450 SHEPPARD AVE",
-      "zoneId": "z042",
+      "zoneId": "z131",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2128,7 +2128,7 @@
         43.767245
       ],
       "address": "5100 Yonge Street",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2141,7 +2141,7 @@
         43.728173
       ],
       "address": "81 RANLEIGH AVE",
-      "zoneId": null,
+      "zoneId": "z105",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2154,7 +2154,7 @@
         43.679485
       ],
       "address": "76 WYCHWOOD AVE",
-      "zoneId": "z013",
+      "zoneId": "z094",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2167,7 +2167,7 @@
         43.683009
       ],
       "address": "180 FALLINGBROOK RD",
-      "zoneId": "z043",
+      "zoneId": "z122",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2180,7 +2180,7 @@
         43.701891
       ],
       "address": "1073 MILLWOOD RD",
-      "zoneId": "z025",
+      "zoneId": "z056",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2193,7 +2193,7 @@
         43.691053
       ],
       "address": "150 GAMBLE AVE",
-      "zoneId": null,
+      "zoneId": "z058",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2206,7 +2206,7 @@
         43.677428
       ],
       "address": "816 Logan Ave",
-      "zoneId": null,
+      "zoneId": "z068",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2219,7 +2219,7 @@
         43.708761
       ],
       "address": "35 GLEN LONG AVE",
-      "zoneId": null,
+      "zoneId": "z031",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2232,7 +2232,7 @@
         43.768835
       ],
       "address": "292 MANSE RD",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2245,7 +2245,7 @@
         43.733371
       ],
       "address": "43 ANCASTER RD",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2258,7 +2258,7 @@
         43.613291
       ],
       "address": "2441 LAKE SHORE BLVD",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2271,7 +2271,7 @@
         43.781436
       ],
       "address": "2955 DON MILLS RD",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2284,7 +2284,7 @@
         43.724915
       ],
       "address": "655 HUMBERWOOD BLVD",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2297,7 +2297,7 @@
         43.59389
       ],
       "address": "25 ELEVENTH ST",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2310,7 +2310,7 @@
         43.766024
       ],
       "address": "75 HOLLYWOOD AVE",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2323,7 +2323,7 @@
         43.723676
       ],
       "address": "6 DRUMHELLER RD",
-      "zoneId": "z034",
+      "zoneId": "z004",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2336,7 +2336,7 @@
         43.734459
       ],
       "address": "80 KENDLETON DR",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2349,7 +2349,7 @@
         43.689111
       ],
       "address": "31 LAVINGTON DR",
-      "zoneId": null,
+      "zoneId": "z007",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2362,7 +2362,7 @@
         43.809229
       ],
       "address": "Woodside Square Mall, 1571 Sandhurst Circle",
-      "zoneId": null,
+      "zoneId": "z129",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2375,7 +2375,7 @@
         43.735971
       ],
       "address": "184 Sloane Ave",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2388,7 +2388,7 @@
         43.757362
       ],
       "address": "2851 KIPLING AVE",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2401,7 +2401,7 @@
         43.671888
       ],
       "address": "789 Yonge St",
-      "zoneId": "z011",
+      "zoneId": "z098",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2414,7 +2414,7 @@
         43.731979
       ],
       "address": "70 MONCLOVA RD",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2427,7 +2427,7 @@
         43.600844
       ],
       "address": "45 GARNETT JANES RD",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2440,7 +2440,7 @@
         43.691784
       ],
       "address": "1081 \u00c2\u00bd Pape Ave (at Torrens)",
-      "zoneId": null,
+      "zoneId": "z058",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2453,7 +2453,7 @@
         43.726069
       ],
       "address": "845 DANFORTH RD",
-      "zoneId": null,
+      "zoneId": "z124",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2466,7 +2466,7 @@
         43.699113
       ],
       "address": "46 KINGSVIEW BLVD",
-      "zoneId": null,
+      "zoneId": "z006",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2479,7 +2479,7 @@
         43.702947
       ],
       "address": "48 Thorncliffe Park Dr",
-      "zoneId": null,
+      "zoneId": "z055",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2492,7 +2492,7 @@
         43.70182
       ],
       "address": "2 King St",
-      "zoneId": null,
+      "zoneId": "z113",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2505,7 +2505,7 @@
         43.739446
       ],
       "address": "2140 Avenue Rd",
-      "zoneId": null,
+      "zoneId": "z039",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2518,7 +2518,7 @@
         43.732526
       ],
       "address": "41 Ancaster Rd",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2531,7 +2531,7 @@
         43.707166
       ],
       "address": "1507 Lawrence Ave W",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2544,7 +2544,7 @@
         43.671953
       ],
       "address": "22 Yorkville Ave",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2557,7 +2557,7 @@
         43.758965
       ],
       "address": "1785 Finch Ave W",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2570,7 +2570,7 @@
         43.68209
       ],
       "address": "1431 Bathurst St",
-      "zoneId": "z012",
+      "zoneId": "z096",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2583,7 +2583,7 @@
         43.739487
       ],
       "address": "16 Bradstock Rd",
-      "zoneId": null,
+      "zoneId": "z022",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2596,7 +2596,7 @@
         43.661204
       ],
       "address": "333 Annette St",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2609,7 +2609,7 @@
         43.690058
       ],
       "address": "2694 Eglinton Ave W\u00c2\u00a0",
-      "zoneId": null,
+      "zoneId": "z112",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2622,7 +2622,7 @@
         43.755654
       ],
       "address": "91 Eastpark Blvd",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2635,7 +2635,7 @@
         43.794056
       ],
       "address": "1081 Progress Ave",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2648,7 +2648,7 @@
         43.768232
       ],
       "address": "1299 Ellesmere Rd",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2661,7 +2661,7 @@
         43.673931
       ],
       "address": "6 Williamson Rd",
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2674,7 +2674,7 @@
         43.720794
       ],
       "address": "20 Covington Rd",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2687,7 +2687,7 @@
         43.742827
       ],
       "address": "120 Banbury Rd",
-      "zoneId": null,
+      "zoneId": "z042",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2700,7 +2700,7 @@
         43.670091
       ],
       "address": "2161 Queen St E",
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2713,7 +2713,7 @@
         43.739446
       ],
       "address": "2140 Avenue Rd",
-      "zoneId": null,
+      "zoneId": "z039",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2726,7 +2726,7 @@
         43.663313
       ],
       "address": "145 Annette St",
-      "zoneId": null,
+      "zoneId": "z090",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2739,7 +2739,7 @@
         43.706446
       ],
       "address": "1565 Lawrence Ave W",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2752,7 +2752,7 @@
         43.601905
       ],
       "address": "2 Orianna Dr",
-      "zoneId": null,
+      "zoneId": "z020",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2765,7 +2765,7 @@
         43.739861
       ],
       "address": "1515 Albion Rd",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2778,7 +2778,7 @@
         43.774837
       ],
       "address": "1967 Ellesmere Rd",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2791,7 +2791,7 @@
         43.709947
       ],
       "address": "50 NATAL AVE",
-      "zoneId": "z043",
+      "zoneId": "z122",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2804,7 +2804,7 @@
         43.786502
       ],
       "address": "561 VAN HORNE AVE",
-      "zoneId": null,
+      "zoneId": "z046",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2817,7 +2817,7 @@
         43.717668
       ],
       "address": "1386 Victoria Park Ave",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2830,7 +2830,7 @@
         43.770792
       ],
       "address": "2 SHOREHAM CRT",
-      "zoneId": "z031",
+      "zoneId": "z024",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2843,7 +2843,7 @@
         43.794056
       ],
       "address": "1081 Progress Ave",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2856,7 +2856,7 @@
         43.798555
       ],
       "address": "Bridlewood Mall, lower level, 2900 Warden Ave",
-      "zoneId": null,
+      "zoneId": "z117",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2869,7 +2869,7 @@
         43.745526
       ],
       "address": "15 Clubhouse Crt",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2882,7 +2882,7 @@
         43.647433
       ],
       "address": "36 Brentwood Rd N",
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2895,7 +2895,7 @@
         43.686332
       ],
       "address": "120 Trowell Ave",
-      "zoneId": null,
+      "zoneId": "z110",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2908,7 +2908,7 @@
         43.720971
       ],
       "address": "North York Sheridan Mall 1700 Wilson Ave",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2921,7 +2921,7 @@
         43.751082
       ],
       "address": "1515 Danforth Rd",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2934,7 +2934,7 @@
         43.800399
       ],
       "address": "205 GENERATION BLVD",
-      "zoneId": "z042",
+      "zoneId": "z131",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2947,7 +2947,7 @@
         43.660828
       ],
       "address": "640 DUNDAS ST",
-      "zoneId": "z006",
+      "zoneId": "z072",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2960,7 +2960,7 @@
         43.67249
       ],
       "address": "1432 Gerrard St E",
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2973,7 +2973,7 @@
         43.646444
       ],
       "address": "155 CRAWFORD ST",
-      "zoneId": "z016",
+      "zoneId": "z081",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2986,7 +2986,7 @@
         43.78181
       ],
       "address": "2975 Don Mills Rd W",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -2999,7 +2999,7 @@
         43.667797
       ],
       "address": "495 Sherbourne St",
-      "zoneId": "z008",
+      "zoneId": "z074",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3012,7 +3012,7 @@
         43.639312
       ],
       "address": "190 Fort York Blvd",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3025,7 +3025,7 @@
         43.601905
       ],
       "address": "2 Orianna Dr",
-      "zoneId": null,
+      "zoneId": "z020",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3038,7 +3038,7 @@
         43.687164
       ],
       "address": "245 MAIN ST",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3051,7 +3051,7 @@
         43.694441
       ],
       "address": "63 Pharmacy Ave",
-      "zoneId": null,
+      "zoneId": "z121",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3064,7 +3064,7 @@
         43.70223
       ],
       "address": "700 Eglinton Ave W",
-      "zoneId": null,
+      "zoneId": "z102",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3077,7 +3077,7 @@
         43.74431
       ],
       "address": "68 STEVENSON RD",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3090,7 +3090,7 @@
         43.748051
       ],
       "address": "350 Grandravine Dr",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3103,7 +3103,7 @@
         43.699685
       ],
       "address": "440 HOPEWELL AVE",
-      "zoneId": null,
+      "zoneId": "z108",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3116,7 +3116,7 @@
         43.717941
       ],
       "address": "29 St. Dennis Dr",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3129,7 +3129,7 @@
         43.813487
       ],
       "address": "1555 NEILSON RD",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3142,7 +3142,7 @@
         43.673552
       ],
       "address": "1200 Lansdowne Avenue",
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3155,7 +3155,7 @@
         43.665686
       ],
       "address": "50 St. Joseph St",
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3168,7 +3168,7 @@
         43.639965
       ],
       "address": "95 Fort York Blvd",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3181,7 +3181,7 @@
         43.772167
       ],
       "address": "150 Borough Drive",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3194,7 +3194,7 @@
         43.658284
       ],
       "address": "239 College Street, 4th Floor",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3207,7 +3207,7 @@
         43.658284
       ],
       "address": "239 College Street, 3rd Floor",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3220,7 +3220,7 @@
         43.760371
       ],
       "address": "100 Greenbrae Circt.",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3233,7 +3233,7 @@
         43.65557
       ],
       "address": "150 Sherbourne St",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3246,7 +3246,7 @@
         43.648428
       ],
       "address": "44 Montgomery Rd",
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3259,7 +3259,7 @@
         43.706186
       ],
       "address": "200 EGLINTON AVE",
-      "zoneId": null,
+      "zoneId": "z100",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3272,7 +3272,7 @@
         43.704694
       ],
       "address": "110 Rumsey Road",
-      "zoneId": "z025",
+      "zoneId": "z056",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3285,7 +3285,7 @@
         43.657528
       ],
       "address": "37 MARQUIS AVE",
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3298,7 +3298,7 @@
         43.641143
       ],
       "address": "9 Queens Quay West",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3311,7 +3311,7 @@
         43.746852
       ],
       "address": "Guildwood Plaza, 123 Guildwood Parkway",
-      "zoneId": null,
+      "zoneId": "z140",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3324,7 +3324,7 @@
         43.655722
       ],
       "address": "120 King Street East",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3337,7 +3337,7 @@
         43.643448
       ],
       "address": "405 Dufferin Street",
-      "zoneId": "z015",
+      "zoneId": "z084",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3350,7 +3350,7 @@
         43.772537
       ],
       "address": "55 Forest Manor Rd",
-      "zoneId": null,
+      "zoneId": "z053",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3363,7 +3363,7 @@
         43.656322
       ],
       "address": "76 Morse Street",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3376,7 +3376,7 @@
         43.824089
       ],
       "address": "295 Alton Towers Circle",
-      "zoneId": null,
+      "zoneId": "z130",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3389,7 +3389,7 @@
         43.734073
       ],
       "address": "150 McCowan Road",
-      "zoneId": null,
+      "zoneId": "z123",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3402,7 +3402,7 @@
         43.658306
       ],
       "address": "80 McGee Street",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3415,7 +3415,7 @@
         43.662572
       ],
       "address": "121 WELLESWORTH DR",
-      "zoneId": null,
+      "zoneId": "z011",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3428,7 +3428,7 @@
         43.681766
       ],
       "address": "15 REDGRAVE DR",
-      "zoneId": null,
+      "zoneId": "z007",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3441,7 +3441,7 @@
         43.806652
       ],
       "address": "240 John Tabor Trail",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3454,7 +3454,7 @@
         43.713359
       ],
       "address": "150 Grenoble Drive",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3467,7 +3467,7 @@
         43.615097
       ],
       "address": "18 Ourland Ave",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3480,7 +3480,7 @@
         43.700382
       ],
       "address": "30 Chapman Avenue",
-      "zoneId": null,
+      "zoneId": "z054",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3493,7 +3493,7 @@
         43.659977
       ],
       "address": "870 Queen Street East",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3506,7 +3506,7 @@
         43.637642
       ],
       "address": "141 Close Avenue",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3519,7 +3519,7 @@
         43.797117
       ],
       "address": "5801 Leslie St",
-      "zoneId": null,
+      "zoneId": "z048",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3532,7 +3532,7 @@
         43.68655
       ],
       "address": "455 Glebeholme Blvd",
-      "zoneId": "z022",
+      "zoneId": "z066",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3545,7 +3545,7 @@
         43.660649
       ],
       "address": "19 SEDGEBROOK CRES",
-      "zoneId": null,
+      "zoneId": "z011",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3558,7 +3558,7 @@
         43.657994
       ],
       "address": "402 Shuter St",
-      "zoneId": "z006",
+      "zoneId": "z072",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3571,7 +3571,7 @@
         43.790069
       ],
       "address": "3550 Ellesmere Rd",
-      "zoneId": null,
+      "zoneId": "z134",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3584,7 +3584,7 @@
         43.670456
       ],
       "address": "33 Pritchard Avenue",
-      "zoneId": null,
+      "zoneId": "z111",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3597,7 +3597,7 @@
         43.644415
       ],
       "address": "15 SWAN AVE",
-      "zoneId": "z036",
+      "zoneId": "z014",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3610,7 +3610,7 @@
         43.779665
       ],
       "address": "5450 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z133",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3623,7 +3623,7 @@
         43.645135
       ],
       "address": "228 Roncesvalles Ave",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3636,7 +3636,7 @@
         43.787003
       ],
       "address": "545 Van Horne Ave",
-      "zoneId": null,
+      "zoneId": "z046",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3649,7 +3649,7 @@
         43.615497
       ],
       "address": "36 OURLAND AVE",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3662,7 +3662,7 @@
         43.739991
       ],
       "address": "3600 Kingston Rd",
-      "zoneId": "z038",
+      "zoneId": "z139",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3675,7 +3675,7 @@
         43.759038
       ],
       "address": "2990 Islington Ave",
-      "zoneId": null,
+      "zoneId": "z021",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3688,7 +3688,7 @@
         43.729092
       ],
       "address": "600 Roding St",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3701,7 +3701,7 @@
         43.630324
       ],
       "address": "200 Park Lawn Rd",
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3714,7 +3714,7 @@
         43.613291
       ],
       "address": "2441 LAKE SHORE BLVD",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3727,7 +3727,7 @@
         43.642492
       ],
       "address": "380 THE WEST MALL",
-      "zoneId": "z035",
+      "zoneId": "z013",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3740,7 +3740,7 @@
         43.66789
       ],
       "address": "953 Gerrard Street East",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3753,7 +3753,7 @@
         43.661286
       ],
       "address": "640 Dundas St E",
-      "zoneId": "z006",
+      "zoneId": "z072",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3766,7 +3766,7 @@
         43.59389
       ],
       "address": "25 ELEVENTH ST",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3779,7 +3779,7 @@
         43.73996
       ],
       "address": "1906 Sheppard Ave W",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3792,7 +3792,7 @@
         43.66595
       ],
       "address": "56 Woodfield Rd",
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3805,7 +3805,7 @@
         43.793884
       ],
       "address": "1700 Finch Ave E",
-      "zoneId": null,
+      "zoneId": "z048",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3818,7 +3818,7 @@
         43.728886
       ],
       "address": "850 Humberwood Blvd",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3831,7 +3831,7 @@
         43.665955
       ],
       "address": "118 Jones Ave",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3844,7 +3844,7 @@
         43.706461
       ],
       "address": "165 McRae Dr",
-      "zoneId": "z025",
+      "zoneId": "z056",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3857,7 +3857,7 @@
         43.786528
       ],
       "address": "2500 Birchmount Rd",
-      "zoneId": null,
+      "zoneId": "z118",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3870,7 +3870,7 @@
         43.732263
       ],
       "address": "Liberty Square Plaza, 2380 Eglinton Ave E",
-      "zoneId": null,
+      "zoneId": "z125",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3883,7 +3883,7 @@
         43.698148
       ],
       "address": "373 Cedarvale Ave",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3896,7 +3896,7 @@
         43.657926
       ],
       "address": "239 College St",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3909,7 +3909,7 @@
         43.705726
       ],
       "address": "110 Rumsey Rd",
-      "zoneId": "z025",
+      "zoneId": "z056",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3922,7 +3922,7 @@
         43.707493
       ],
       "address": "169 Viewmount Ave",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3935,7 +3935,7 @@
         43.667886
       ],
       "address": "953 Gerrard St",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3948,7 +3948,7 @@
         43.724895
       ],
       "address": "3083 Yonge St",
-      "zoneId": null,
+      "zoneId": "z103",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3961,7 +3961,7 @@
         43.72309
       ],
       "address": "190 Bermondsey Road",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3974,7 +3974,7 @@
         43.781211
       ],
       "address": "140 Antibes Dr",
-      "zoneId": null,
+      "zoneId": "z035",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -3987,7 +3987,7 @@
         43.744809
       ],
       "address": "170 FAYWOOD BLVD",
-      "zoneId": null,
+      "zoneId": "z033",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4000,7 +4000,7 @@
         43.675065
       ],
       "address": "61 BLACK CREEK BLVD",
-      "zoneId": null,
+      "zoneId": "z111",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4013,7 +4013,7 @@
         43.790626
       ],
       "address": "45 GOULDING AVE",
-      "zoneId": null,
+      "zoneId": "z036",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4026,7 +4026,7 @@
         43.800104
       ],
       "address": "6000 Leslie St",
-      "zoneId": null,
+      "zoneId": "z049",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4039,7 +4039,7 @@
         43.783705
       ],
       "address": "55 VAN HORNE AVE",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4052,7 +4052,7 @@
         43.751803
       ],
       "address": "23 GRANDRAVINE DR",
-      "zoneId": "z030",
+      "zoneId": "z027",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4065,7 +4065,7 @@
         43.651081
       ],
       "address": "15 STEPHANIE ST",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4078,7 +4078,7 @@
         43.69789
       ],
       "address": "2125 LAWRENCE AVE",
-      "zoneId": null,
+      "zoneId": "z113",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4091,7 +4091,7 @@
         43.761588
       ],
       "address": "205 WILMINGTON AVE",
-      "zoneId": null,
+      "zoneId": "z034",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4104,7 +4104,7 @@
         43.717941
       ],
       "address": "29 St Dennis Dr",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4117,7 +4117,7 @@
         43.801256
       ],
       "address": "45 NAHANNI TER",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4130,7 +4130,7 @@
         43.679051
       ],
       "address": "1339 Bathurst Street",
-      "zoneId": "z012",
+      "zoneId": "z096",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4143,7 +4143,7 @@
         43.71847
       ],
       "address": "5 REPLIN RD",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4156,7 +4156,7 @@
         43.777425
       ],
       "address": "277 Orton Park Rd",
-      "zoneId": null,
+      "zoneId": "z135",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4169,7 +4169,7 @@
         43.726787
       ],
       "address": "160 LEDBURY ST",
-      "zoneId": null,
+      "zoneId": "z039",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4182,7 +4182,7 @@
         43.713204
       ],
       "address": "1 GRADWELL DR",
-      "zoneId": null,
+      "zoneId": "z123",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4195,7 +4195,7 @@
         43.732663
       ],
       "address": "2467 Eglinton Ave E",
-      "zoneId": null,
+      "zoneId": "z124",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4208,7 +4208,7 @@
         43.75792
       ],
       "address": "1005 BRIMLEY RD",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4221,7 +4221,7 @@
         43.660041
       ],
       "address": "870 Queen St",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4234,7 +4234,7 @@
         43.65557
       ],
       "address": "150 SHERBOURNE ST",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4247,7 +4247,7 @@
         43.769832
       ],
       "address": "230 GOSFORD BLVD",
-      "zoneId": "z031",
+      "zoneId": "z024",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4260,7 +4260,7 @@
         43.767268
       ],
       "address": "5100 Yonge St",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4273,7 +4273,7 @@
         43.658677
       ],
       "address": "155 OAKMOUNT RD",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4299,7 +4299,7 @@
         43.716415
       ],
       "address": "30 BERGAMOT AVE",
-      "zoneId": "z034",
+      "zoneId": "z004",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4312,7 +4312,7 @@
         43.654496
       ],
       "address": "420 KING ST E",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4325,7 +4325,7 @@
         43.687788
       ],
       "address": "400 CALEDONIA RD",
-      "zoneId": null,
+      "zoneId": "z109",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4338,7 +4338,7 @@
         43.774539
       ],
       "address": "89 CHURCH AVE",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4351,7 +4351,7 @@
         43.639764
       ],
       "address": "45 Fort York Blvd",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4364,7 +4364,7 @@
         43.693628
       ],
       "address": "80 THYRA AVE",
-      "zoneId": null,
+      "zoneId": "z061",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4377,7 +4377,7 @@
         43.760681
       ],
       "address": "33 CORONATION DR",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4390,7 +4390,7 @@
         43.645228
       ],
       "address": "5055 DUNDAS ST",
-      "zoneId": "z036",
+      "zoneId": "z014",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4403,7 +4403,7 @@
         43.7273
       ],
       "address": "111 ANTHONY RD",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4416,7 +4416,7 @@
         43.775692
       ],
       "address": "105 BRIDGEND ST",
-      "zoneId": null,
+      "zoneId": "z133",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4429,7 +4429,7 @@
         43.745563
       ],
       "address": "15 CLUBHOUSE CRT",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4442,7 +4442,7 @@
         43.745593
       ],
       "address": "78 FENNIMORE CRES",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4455,7 +4455,7 @@
         43.651665
       ],
       "address": "707 DUNDAS ST",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4468,7 +4468,7 @@
         43.829425
       ],
       "address": "5555 STEELES AVE",
-      "zoneId": null,
+      "zoneId": "z130",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4481,7 +4481,7 @@
         43.77479
       ],
       "address": "40 VRADENBERG DR",
-      "zoneId": null,
+      "zoneId": "z118",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4494,7 +4494,7 @@
         43.717663
       ],
       "address": "1386 VICTORIA PARK AVE",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4507,7 +4507,7 @@
         43.779444
       ],
       "address": "390 MORNINGSIDE AVE",
-      "zoneId": null,
+      "zoneId": "z135",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4520,7 +4520,7 @@
         43.78187
       ],
       "address": "2975 DON MILLS RD",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4533,7 +4533,7 @@
         43.652495
       ],
       "address": "26 Grange Rd",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4546,7 +4546,7 @@
         43.786413
       ],
       "address": "63 INVERGORDON AVE",
-      "zoneId": "z039",
+      "zoneId": "z128",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4559,7 +4559,7 @@
         43.704348
       ],
       "address": "10 OATES DR",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4572,7 +4572,7 @@
         43.78271
       ],
       "address": "445 HUNTINGWOOD DR",
-      "zoneId": null,
+      "zoneId": "z118",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4585,7 +4585,7 @@
         43.729276
       ],
       "address": "600 RODING ST",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4598,7 +4598,7 @@
         43.780958
       ],
       "address": "112 CORPORATE DR",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4611,7 +4611,7 @@
         43.721254
       ],
       "address": "2 FLEMINGTON RD",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4624,7 +4624,7 @@
         43.703204
       ],
       "address": "61 UNDERCLIFF DR",
-      "zoneId": null,
+      "zoneId": "z123",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4637,7 +4637,7 @@
         43.7348
       ],
       "address": "10 Rampart Rd",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4650,7 +4650,7 @@
         43.692351
       ],
       "address": "3459 DANFORTH AVE",
-      "zoneId": null,
+      "zoneId": "z121",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4663,7 +4663,7 @@
         43.786962
       ],
       "address": "545 VAN HORNE AVE",
-      "zoneId": null,
+      "zoneId": "z046",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4676,7 +4676,7 @@
         43.760978
       ],
       "address": "20 Canadian Rd",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4689,7 +4689,7 @@
         43.638826
       ],
       "address": "90 LOTHIAN AVE",
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4702,7 +4702,7 @@
         43.714559
       ],
       "address": "25 MENDELSSOHN ST",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4715,7 +4715,7 @@
         43.691282
       ],
       "address": "2213 Dufferin St",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4728,7 +4728,7 @@
         43.64654
       ],
       "address": "1873 BLOOR ST",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4741,7 +4741,7 @@
         43.644414
       ],
       "address": "5 LOWER SHERBOURNE ST",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4754,7 +4754,7 @@
         43.812021
       ],
       "address": "30 EMPRINGHAM DR",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4767,7 +4767,7 @@
         43.728773
       ],
       "address": "24 ROCKWOOD DR",
-      "zoneId": null,
+      "zoneId": "z123",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4780,7 +4780,7 @@
         43.639574
       ],
       "address": "10 VIKING LANE",
-      "zoneId": "z036",
+      "zoneId": "z014",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4793,7 +4793,7 @@
         43.798595
       ],
       "address": "89 BEVERLY GLEN BLVD",
-      "zoneId": null,
+      "zoneId": "z117",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4806,7 +4806,7 @@
         43.739387
       ],
       "address": "180 SYLVAN AVE",
-      "zoneId": null,
+      "zoneId": "z140",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4819,7 +4819,7 @@
         43.676646
       ],
       "address": "1757 Gerrard St E",
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4832,7 +4832,7 @@
         43.661891
       ],
       "address": "85 VARSITY RD",
-      "zoneId": null,
+      "zoneId": "z114",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4845,7 +4845,7 @@
         43.788195
       ],
       "address": "372 MILITARY TRL",
-      "zoneId": null,
+      "zoneId": "z135",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4858,7 +4858,7 @@
         43.640078
       ],
       "address": "14 MACHELLS AVE",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4871,7 +4871,7 @@
         43.690795
       ],
       "address": "125 GLEDHILL AVE",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4884,7 +4884,7 @@
         43.638069
       ],
       "address": "256 DUFFERIN ST",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4897,7 +4897,7 @@
         43.747318
       ],
       "address": "2650 Finch Ave W\u00c2\u00a0",
-      "zoneId": null,
+      "zoneId": "z021",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4910,7 +4910,7 @@
         43.769227
       ],
       "address": "292  MANSE RD",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4923,7 +4923,7 @@
         43.747788
       ],
       "address": "350 GRANDRAVINE DR",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4936,7 +4936,7 @@
         43.708626
       ],
       "address": "35 Glen Long Ave",
-      "zoneId": null,
+      "zoneId": "z031",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4949,7 +4949,7 @@
         43.687164
       ],
       "address": "245 Main St",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4962,7 +4962,7 @@
         43.622246
       ],
       "address": "9 QUEENS QUAY",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4975,7 +4975,7 @@
         43.713531
       ],
       "address": "150 Grenoble Dr",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -4988,7 +4988,7 @@
         43.641854
       ],
       "address": "700 WELLINGTON ST",
-      "zoneId": "z017",
+      "zoneId": "z082",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5001,7 +5001,7 @@
         43.787162
       ],
       "address": "2530 BIRCHMOUNT RD",
-      "zoneId": null,
+      "zoneId": "z118",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5014,7 +5014,7 @@
         43.585643
       ],
       "address": "2 FORTY SECOND ST",
-      "zoneId": null,
+      "zoneId": "z019",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5027,7 +5027,7 @@
         43.714559
       ],
       "address": "171 Pellatt Avenue",
-      "zoneId": null,
+      "zoneId": "z023",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5040,7 +5040,7 @@
         43.781429
       ],
       "address": "50 DORMINGTON DR",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5053,7 +5053,7 @@
         43.686618
       ],
       "address": "115 Black Creek Dr",
-      "zoneId": null,
+      "zoneId": "z110",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5066,7 +5066,7 @@
         43.691732
       ],
       "address": "1081 Pape Avenue",
-      "zoneId": null,
+      "zoneId": "z058",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5079,7 +5079,7 @@
         43.600757
       ],
       "address": "1 Faustina Drive",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5092,7 +5092,7 @@
         43.689916
       ],
       "address": "2700 Eglinton Ave West",
-      "zoneId": null,
+      "zoneId": "z112",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5118,7 +5118,7 @@
         43.818517
       ],
       "address": "90 Littles Rd",
-      "zoneId": "z042",
+      "zoneId": "z131",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5131,7 +5131,7 @@
         43.747247
       ],
       "address": "2231 LAWRENCE AVE",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5144,7 +5144,7 @@
         43.668669
       ],
       "address": "1987 DUNDAS ST",
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5157,7 +5157,7 @@
         43.730849
       ],
       "address": "205 Humber College Blvd",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5170,7 +5170,7 @@
         43.741475
       ],
       "address": "36 TRUDELLE ST",
-      "zoneId": null,
+      "zoneId": "z138",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5183,7 +5183,7 @@
         43.698312
       ],
       "address": "375 CEDARVALE AVE",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5196,7 +5196,7 @@
         43.700639
       ],
       "address": "220 DAVISVILLE AVE",
-      "zoneId": null,
+      "zoneId": "z104",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5209,7 +5209,7 @@
         43.64654
       ],
       "address": "1873 BLOOR ST",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5222,7 +5222,7 @@
         43.742393
       ],
       "address": "929 KENNEDY RD",
-      "zoneId": null,
+      "zoneId": "z125",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5235,7 +5235,7 @@
         43.734554
       ],
       "address": "55 Stanley Greene Blvd",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5248,7 +5248,7 @@
         43.719967
       ],
       "address": "63 Flemington Rd",
-      "zoneId": null,
+      "zoneId": "z031",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5261,7 +5261,7 @@
         43.656915
       ],
       "address": "5 Bellevue Avenue",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5274,7 +5274,7 @@
         43.638516
       ],
       "address": "70 East Liberty Street",
-      "zoneId": "z017",
+      "zoneId": "z082",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5287,7 +5287,7 @@
         43.640726
       ],
       "address": "220 Cowan Ave",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5300,7 +5300,7 @@
         43.768709
       ],
       "address": "100 Ethennonnhawahstihnen' Ln.",
-      "zoneId": "z029",
+      "zoneId": "z052",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5313,7 +5313,7 @@
         43.768692
       ],
       "address": "100 Ethennonnhawahstihnen' Ln.",
-      "zoneId": "z029",
+      "zoneId": "z052",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5326,7 +5326,7 @@
         43.74816
       ],
       "address": "191 Guildwood Pkwy, Scarborough, ON, M1E 1P5",
-      "zoneId": null,
+      "zoneId": "z140",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5339,7 +5339,7 @@
         43.763618
       ],
       "address": "1820 Midland Avenue",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5352,7 +5352,7 @@
         43.680332
       ],
       "address": "907 Kingston Road",
-      "zoneId": "z021",
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5365,7 +5365,7 @@
         43.785219
       ],
       "address": "155 Bonis Ave",
-      "zoneId": null,
+      "zoneId": "z118",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5378,7 +5378,7 @@
         43.792113
       ],
       "address": "2 ROZELL RD",
-      "zoneId": null,
+      "zoneId": "z133",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5391,7 +5391,7 @@
         43.68286
       ],
       "address": "79 Lawlor Avenue",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5404,7 +5404,7 @@
         43.788414
       ],
       "address": "31 Glen Watford Dr",
-      "zoneId": "z039",
+      "zoneId": "z128",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5417,7 +5417,7 @@
         43.708065
       ],
       "address": "496 Birchmount Rd",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5430,7 +5430,7 @@
         43.788648
       ],
       "address": "31 Glen Watford Drive",
-      "zoneId": "z039",
+      "zoneId": "z128",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5443,7 +5443,7 @@
         43.739325
       ],
       "address": "1485 Albion Rd",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5456,7 +5456,7 @@
         43.706132
       ],
       "address": "151 CULFORD RD",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5469,7 +5469,7 @@
         43.664912
       ],
       "address": "779 Crawford St",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5482,7 +5482,7 @@
         43.684909
       ],
       "address": "134 ALDWYCH AVE",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5495,7 +5495,7 @@
         43.651152
       ],
       "address": "275 BATHURST ST",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5508,7 +5508,7 @@
         43.781155
       ],
       "address": "140 Antibes Dr",
-      "zoneId": null,
+      "zoneId": "z035",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5521,7 +5521,7 @@
         43.706033
       ],
       "address": "155 CULFORD RD",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5534,7 +5534,7 @@
         43.720794
       ],
       "address": "20 Covington Rd",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5547,7 +5547,7 @@
         43.597711
       ],
       "address": "1 Colonel Samuel Smith Park Drive, Etobicoke, ON M8V 4B6",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5560,7 +5560,7 @@
         43.773215
       ],
       "address": "2945 BAYVIEW AVE",
-      "zoneId": "z029",
+      "zoneId": "z052",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5573,7 +5573,7 @@
         43.757927
       ],
       "address": "125 HARRISON GARDEN BLVD",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5586,7 +5586,7 @@
         43.66232
       ],
       "address": "485 Montrose Avenue",
-      "zoneId": null,
+      "zoneId": "z080",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5599,7 +5599,7 @@
         43.695633
       ],
       "address": "93 Birchmount Rd",
-      "zoneId": "z043",
+      "zoneId": "z122",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5612,7 +5612,7 @@
         43.745671
       ],
       "address": "19 Castlegrove Blvd",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5625,7 +5625,7 @@
         43.659922
       ],
       "address": "1101 Bloor St W",
-      "zoneId": null,
+      "zoneId": "z083",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5638,7 +5638,7 @@
         43.822678
       ],
       "address": "31 DRAGONFLY CRES",
-      "zoneId": "z042",
+      "zoneId": "z131",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5651,7 +5651,7 @@
         43.69531
       ],
       "address": "93 Birchmont Road",
-      "zoneId": "z043",
+      "zoneId": "z122",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5664,7 +5664,7 @@
         43.75955
       ],
       "address": "210 Brookbanks Dr",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5677,7 +5677,7 @@
         43.756212
       ],
       "address": "75 BROOKBANKS DR",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5690,7 +5690,7 @@
         43.647743
       ],
       "address": "75 Wabash Avenue",
-      "zoneId": "z020",
+      "zoneId": "z086",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5703,7 +5703,7 @@
         43.75842
       ],
       "address": "225 Confederation Dr, Scarborough, ON, M1G1B2",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5716,7 +5716,7 @@
         43.757557
       ],
       "address": "545 Markham Rd",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5729,7 +5729,7 @@
         43.724048
       ],
       "address": "180 Chalkfarm Dr",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5742,7 +5742,7 @@
         43.692299
       ],
       "address": "443 ARLINGTON AVE",
-      "zoneId": null,
+      "zoneId": "z106",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5755,7 +5755,7 @@
         43.688282
       ],
       "address": "348 Nairn AVE",
-      "zoneId": null,
+      "zoneId": "z109",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5768,7 +5768,7 @@
         43.6532
       ],
       "address": "461 Cherry Street",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5781,7 +5781,7 @@
         43.793891
       ],
       "address": "140 Commander Blvd",
-      "zoneId": null,
+      "zoneId": "z129",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5794,7 +5794,7 @@
         43.683645
       ],
       "address": "1675 Danforth Ave",
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5807,7 +5807,7 @@
         43.688668
       ],
       "address": "40 St. Clair Ave E",
-      "zoneId": "z011",
+      "zoneId": "z098",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5820,7 +5820,7 @@
         43.727123
       ],
       "address": "40 CORVETTE AVE",
-      "zoneId": null,
+      "zoneId": "z124",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5833,7 +5833,7 @@
         43.665473
       ],
       "address": "620 Jane St",
-      "zoneId": null,
+      "zoneId": "z089",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5846,7 +5846,7 @@
         43.690937
       ],
       "address": "2700 EGLINTON AVE",
-      "zoneId": null,
+      "zoneId": "z112",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5859,7 +5859,7 @@
         43.800122
       ],
       "address": "6000 Leslie Street",
-      "zoneId": null,
+      "zoneId": "z049",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5872,7 +5872,7 @@
         43.718018
       ],
       "address": "29 St. Dennis Dr.",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5885,7 +5885,7 @@
         43.742445
       ],
       "address": "25 Stanley Rd",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5898,7 +5898,7 @@
         43.73662
       ],
       "address": "888 Lawrence Ave E",
-      "zoneId": null,
+      "zoneId": "z042",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5911,7 +5911,7 @@
         43.742429
       ],
       "address": "25 STANLEY RD",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5924,7 +5924,7 @@
         43.752582
       ],
       "address": "4169 Bathurst St",
-      "zoneId": null,
+      "zoneId": "z038",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5937,7 +5937,7 @@
         43.691784
       ],
       "address": "1081 1/2 Pape Ave",
-      "zoneId": null,
+      "zoneId": "z058",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5950,7 +5950,7 @@
         43.765456
       ],
       "address": "4401 Jane St",
-      "zoneId": "z031",
+      "zoneId": "z024",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5963,7 +5963,7 @@
         43.686461
       ],
       "address": "455 Glebeholme Blvd",
-      "zoneId": "z022",
+      "zoneId": "z066",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5976,7 +5976,7 @@
         43.776994
       ],
       "address": "131 Finch Ave W",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -5989,7 +5989,7 @@
         43.712558
       ],
       "address": "19 DUNLOP AVE",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6002,7 +6002,7 @@
         43.659933
       ],
       "address": "2 Elmbrook Crescent",
-      "zoneId": null,
+      "zoneId": "z011",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6015,7 +6015,7 @@
         43.677005
       ],
       "address": "1625 Dufferin St",
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6028,7 +6028,7 @@
         43.752594
       ],
       "address": "4169 BATHURST ST",
-      "zoneId": null,
+      "zoneId": "z038",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6041,7 +6041,7 @@
         43.748271
       ],
       "address": "3395 WESTON RD",
-      "zoneId": null,
+      "zoneId": "z022",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6054,7 +6054,7 @@
         43.767344
       ],
       "address": "80 McMahon Dr. E",
-      "zoneId": "z029",
+      "zoneId": "z052",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6067,7 +6067,7 @@
         43.650236
       ],
       "address": "590 Rathburn Rd.",
-      "zoneId": null,
+      "zoneId": "z011",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6080,7 +6080,7 @@
         43.72112
       ],
       "address": "42 MERCURY RD",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6093,7 +6093,7 @@
         43.77911
       ],
       "address": "35 Fairview Mall Dr",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6106,7 +6106,7 @@
         43.764841
       ],
       "address": "30 SLIDELL CRES",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6119,7 +6119,7 @@
         43.683993
       ],
       "address": "1652 Keele Street",
-      "zoneId": null,
+      "zoneId": "z110",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6132,7 +6132,7 @@
         43.676855
       ],
       "address": "255 Spadina Rd",
-      "zoneId": "z012",
+      "zoneId": "z096",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6145,7 +6145,7 @@
         43.647611
       ],
       "address": "95 Lavinia Avenue",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6158,7 +6158,7 @@
         43.665668
       ],
       "address": "305 Campbell Avenue",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6171,7 +6171,7 @@
         43.647168
       ],
       "address": "501 Richmond St W",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6184,7 +6184,7 @@
         43.769659
       ],
       "address": "5172 Yonge Street",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6197,7 +6197,7 @@
         43.68684
       ],
       "address": "67 Pottery Road",
-      "zoneId": "z024",
+      "zoneId": "z057",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6210,7 +6210,7 @@
         43.65167
       ],
       "address": "4709 Dundas Street West",
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6223,7 +6223,7 @@
         43.679214
       ],
       "address": "285 Spadina Road",
-      "zoneId": "z012",
+      "zoneId": "z096",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6236,7 +6236,7 @@
         43.647819
       ],
       "address": "401 Richmond Street West Suite 120",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6249,7 +6249,7 @@
         43.636039
       ],
       "address": "627 Queens Quay W",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6262,7 +6262,7 @@
         43.656452
       ],
       "address": "58 Cecil Street",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Heat Relief Network"
     },
     {
@@ -6275,7 +6275,7 @@
         43.739826
       ],
       "address": "1515 Albion Road, Toronto, ON, M9V 1B2",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Public Library"
     },
     {
@@ -6288,7 +6288,7 @@
         43.708019
       ],
       "address": "496 Birchmount Road, Toronto, ON, M1K 1N8",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Public Library"
     },
     {
@@ -6301,7 +6301,7 @@
         43.601944
       ],
       "address": "2 Orianna Drive, Toronto, ON, M8W 4Y1",
-      "zoneId": null,
+      "zoneId": "z020",
       "source": "Toronto Public Library"
     },
     {
@@ -6314,7 +6314,7 @@
         43.785167
       ],
       "address": "155 Bonis Avenue, Toronto, ON, M1T 3W6",
-      "zoneId": null,
+      "zoneId": "z118",
       "source": "Toronto Public Library"
     },
     {
@@ -6327,7 +6327,7 @@
         43.739337
       ],
       "address": "2140 Avenue Road, Toronto, ON, M5M 4M7",
-      "zoneId": null,
+      "zoneId": "z039",
       "source": "Toronto Public Library"
     },
     {
@@ -6340,7 +6340,7 @@
         43.663359
       ],
       "address": "145 Annette Street, Toronto, ON, M6P 1P3",
-      "zoneId": null,
+      "zoneId": "z090",
       "source": "Toronto Public Library"
     },
     {
@@ -6353,7 +6353,7 @@
         43.706456
       ],
       "address": "1565 Lawrence Avenue West, Toronto, ON, M6L 1A8",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Public Library"
     },
     {
@@ -6366,7 +6366,7 @@
         43.759507
       ],
       "address": "210 Brookbanks Drive, Toronto, ON, M3A 2T8",
-      "zoneId": null,
+      "zoneId": "z045",
       "source": "Toronto Public Library"
     },
     {
@@ -6379,7 +6379,7 @@
         43.721219
       ],
       "address": "North York Sheridan Mall, 1700 Wilson Avenue, Toronto, ON, M3L 1B2",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Public Library"
     },
     {
@@ -6392,7 +6392,7 @@
         43.751063
       ],
       "address": "1515 Danforth Road, Toronto, ON, M1J 1H5",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Public Library"
     },
     {
@@ -6405,7 +6405,7 @@
         43.67013
       ],
       "address": "2161 Queen Street East, Toronto, ON, M4L 1J1",
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "Toronto Public Library"
     },
     {
@@ -6418,7 +6418,7 @@
         43.720752
       ],
       "address": "20 Covington Road, Toronto, ON, M6A 3C1",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Public Library"
     },
     {
@@ -6431,7 +6431,7 @@
         43.659878
       ],
       "address": "1101 Bloor Street West, Toronto, ON, M6H 1M7",
-      "zoneId": null,
+      "zoneId": "z083",
       "source": "Toronto Public Library"
     },
     {
@@ -6444,7 +6444,7 @@
         43.647448
       ],
       "address": "36 Brentwood Road North, Toronto, ON, M8X 2B5",
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "Toronto Public Library"
     },
     {
@@ -6457,7 +6457,7 @@
         43.797144
       ],
       "address": "Bridlewood Mall, 157A-2900 Warden Avenue, Toronto, ON, M1W 2S8",
-      "zoneId": null,
+      "zoneId": "z117",
       "source": "Toronto Public Library"
     },
     {
@@ -6470,7 +6470,7 @@
         43.793885
       ],
       "address": "1081 Progress Avenue, Toronto, ON, M1B 5Z6",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Public Library"
     },
     {
@@ -6483,7 +6483,7 @@
         43.72517
       ],
       "address": "3017 Kingston Road, Toronto, ON, M1M 1P1",
-      "zoneId": null,
+      "zoneId": "z123",
       "source": "Toronto Public Library"
     },
     {
@@ -6496,7 +6496,7 @@
         43.772989
       ],
       "address": "578 Finch Avenue West, Toronto, ON, M2R 1N7",
-      "zoneId": null,
+      "zoneId": "z035",
       "source": "Toronto Public Library"
     },
     {
@@ -6509,7 +6509,7 @@
         43.75753
       ],
       "address": "545 Markham Road, Toronto, ON, M1H 2A1",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Public Library"
     },
     {
@@ -6522,7 +6522,7 @@
         43.653367
       ],
       "address": "Nathan Phillips Square, 100 Queen Street West, Toronto, ON, M5H 2N3",
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "Toronto Public Library"
     },
     {
@@ -6535,7 +6535,7 @@
         43.768078
       ],
       "address": "5120 Yonge Street, Toronto, ON, M2N 5N9",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Public Library"
     },
     {
@@ -6548,7 +6548,7 @@
         43.655159
       ],
       "address": "766 College Street, Toronto, ON, M6G 1C4",
-      "zoneId": null,
+      "zoneId": "z080",
       "source": "Toronto Public Library"
     },
     {
@@ -6561,7 +6561,7 @@
         43.683574
       ],
       "address": "1675 Danforth Avenue, Toronto, ON, M4C 5P2",
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "Toronto Public Library"
     },
     {
@@ -6574,7 +6574,7 @@
         43.736641
       ],
       "address": "888 Lawrence Avenue East, Toronto, ON, M3C 1P6",
-      "zoneId": null,
+      "zoneId": "z042",
       "source": "Toronto Public Library"
     },
     {
@@ -6587,7 +6587,7 @@
         43.72887
       ],
       "address": "2793 Keele Street, Toronto, ON, M3M 2G3",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Public Library"
     },
     {
@@ -6600,7 +6600,7 @@
         43.688581
       ],
       "address": "40 St. Clair Avenue East, Toronto, ON, M4T 1M9",
-      "zoneId": "z011",
+      "zoneId": "z098",
       "source": "Toronto Public Library"
     },
     {
@@ -6613,7 +6613,7 @@
         43.701174
       ],
       "address": "416 Dawes Road, Toronto, ON, M4B 2E8",
-      "zoneId": null,
+      "zoneId": "z054",
       "source": "Toronto Public Library"
     },
     {
@@ -6626,7 +6626,7 @@
         43.67453
       ],
       "address": "1246 Shaw Street, Toronto, ON, M6G 3P1",
-      "zoneId": "z013",
+      "zoneId": "z094",
       "source": "Toronto Public Library"
     },
     {
@@ -6639,7 +6639,7 @@
         43.67693
       ],
       "address": "1625 Dufferin Street, Toronto, ON, M6H 3L9",
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "Toronto Public Library"
     },
     {
@@ -6652,7 +6652,7 @@
         43.646122
       ],
       "address": "430 Burnhamthorpe Road, Toronto, ON, M9B 2B1",
-      "zoneId": "z036",
+      "zoneId": "z014",
       "source": "Toronto Public Library"
     },
     {
@@ -6665,7 +6665,7 @@
         43.660122
       ],
       "address": "2 Elmbrook Crescent, Toronto, ON, M9C 5B4",
-      "zoneId": null,
+      "zoneId": "z011",
       "source": "Toronto Public Library"
     },
     {
@@ -6678,7 +6678,7 @@
         43.686189
       ],
       "address": "120 Trowell Avenue, Toronto, ON, M6M 1L7",
-      "zoneId": null,
+      "zoneId": "z110",
       "source": "Toronto Public Library"
     },
     {
@@ -6691,7 +6691,7 @@
         43.76875
       ],
       "address": "100 Ethennonnhawahstihnen' Lane, Toronto, ON  M2K 3C9",
-      "zoneId": "z029",
+      "zoneId": "z052",
       "source": "Toronto Public Library"
     },
     {
@@ -6704,7 +6704,7 @@
         43.723685
       ],
       "address": "Eglinton Square Shopping Centre, 1 Eglinton Square, Unit 126, Toronto, ON, M1L 2K1",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Public Library"
     },
     {
@@ -6717,7 +6717,7 @@
         43.702367
       ],
       "address": "700 Eglinton Avenue West, Toronto, ON, M5N 1B9",
-      "zoneId": null,
+      "zoneId": "z102",
       "source": "Toronto Public Library"
     },
     {
@@ -6730,7 +6730,7 @@
         43.63932
       ],
       "address": "190 Fort York Boulevard, Toronto, ON M5V 0E7",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Public Library"
     },
     {
@@ -6743,7 +6743,7 @@
         43.717811
       ],
       "address": "29 St. Dennis Drive, Toronto, ON, M3C 3J3",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Public Library"
     },
     {
@@ -6756,7 +6756,7 @@
         43.779026
       ],
       "address": "35 Fairview Mall Drive, Toronto, ON, M2J 4S4",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Public Library"
     },
     {
@@ -6769,7 +6769,7 @@
         43.672463
       ],
       "address": "1432 Gerrard Street East, Toronto, ON, M4L 1Z6",
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "Toronto Public Library"
     },
     {
@@ -6782,7 +6782,7 @@
         43.823974
       ],
       "address": "295 Alton Towers Circle, Toronto, ON, M1V 4P1",
-      "zoneId": null,
+      "zoneId": "z130",
       "source": "Toronto Public Library"
     },
     {
@@ -6795,7 +6795,7 @@
         43.74667
       ],
       "address": "Guildwood Plaza, 123 Guildwood Parkway, Toronto, ON, M1E 4V2",
-      "zoneId": null,
+      "zoneId": "z140",
       "source": "Toronto Public Library"
     },
     {
@@ -6808,7 +6808,7 @@
         43.629959
       ],
       "address": "200 Park Lawn Road, Toronto, ON, M8Y 3J1",
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "Toronto Public Library"
     },
     {
@@ -6821,7 +6821,7 @@
         43.789959
       ],
       "address": "3550 Ellesmere Road, Toronto, ON, M1C 3Z2",
-      "zoneId": null,
+      "zoneId": "z134",
       "source": "Toronto Public Library"
     },
     {
@@ -6834,7 +6834,7 @@
         43.797026
       ],
       "address": "5801 Leslie Street, Toronto, ON, M2H 1J8",
-      "zoneId": null,
+      "zoneId": "z048",
       "source": "Toronto Public Library"
     },
     {
@@ -6847,7 +6847,7 @@
         43.645204
       ],
       "address": "228 Roncesvalles Avenue, Toronto, ON, M6R 2L7",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Public Library"
     },
     {
@@ -6860,7 +6860,7 @@
         43.758981
       ],
       "address": "2990 Islington Avenue, Toronto, ON, M9L 2K6",
-      "zoneId": null,
+      "zoneId": "z021",
       "source": "Toronto Public Library"
     },
     {
@@ -6873,7 +6873,7 @@
         43.728996
       ],
       "address": "850 Humberwood Boulevard, Toronto, ON, M9W 7A6",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Public Library"
     },
     {
@@ -6886,7 +6886,7 @@
         43.66547
       ],
       "address": "620 Jane Street, Toronto, ON, M6S 4A6",
-      "zoneId": null,
+      "zoneId": "z089",
       "source": "Toronto Public Library"
     },
     {
@@ -6899,7 +6899,7 @@
         43.665952
       ],
       "address": "118 Jones Avenue, Toronto, ON, M4M 2Z9",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Public Library"
     },
     {
@@ -6912,7 +6912,7 @@
         43.73988
       ],
       "address": "1906 Sheppard Avenue West, Toronto, ON, M3L 1Y7",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Public Library"
     },
     {
@@ -6925,7 +6925,7 @@
         43.732159
       ],
       "address": "Liberty Square Plaza, 2380 Eglinton Avenue East, Toronto, ON, M1K 2P3",
-      "zoneId": null,
+      "zoneId": "z125",
       "source": "Toronto Public Library"
     },
     {
@@ -6938,7 +6938,7 @@
         43.595263
       ],
       "address": "3500 Lake Shore Boulevard West, Toronto, ON, M8W 1N6",
-      "zoneId": null,
+      "zoneId": "z019",
       "source": "Toronto Public Library"
     },
     {
@@ -6951,7 +6951,7 @@
         43.706493
       ],
       "address": "165 McRae Drive, Toronto, ON, M4G 1S8",
-      "zoneId": "z025",
+      "zoneId": "z056",
       "source": "Toronto Public Library"
     },
     {
@@ -6964,7 +6964,7 @@
         43.724878
       ],
       "address": "3083 Yonge Street, Toronto, ON, M4N 2K7",
-      "zoneId": null,
+      "zoneId": "z103",
       "source": "Toronto Public Library"
     },
     {
@@ -6977,7 +6977,7 @@
         43.6581
       ],
       "address": "239 College Street, Toronto, ON, M5T 1R5",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Public Library"
     },
     {
@@ -6990,7 +6990,7 @@
         43.683359
       ],
       "address": "137 Main Street, Toronto, ON, M4E 2V9",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Public Library"
     },
     {
@@ -7003,7 +7003,7 @@
         43.808315
       ],
       "address": "30 Sewells Road, Toronto, ON, M1B 3G5",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Public Library"
     },
     {
@@ -7016,7 +7016,7 @@
         43.69613
       ],
       "address": "1745 Eglinton Avenue W, Toronto, ON, M6E 2H4",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Public Library"
     },
     {
@@ -7029,7 +7029,7 @@
         43.747707
       ],
       "address": "2219 Lawrence Avenue East, Toronto, ON, M1P 2P5",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Public Library"
     },
     {
@@ -7042,7 +7042,7 @@
         43.686581
       ],
       "address": "1123 Weston Road, Toronto, ON, M6N 3S3",
-      "zoneId": null,
+      "zoneId": "z115",
       "source": "Toronto Public Library"
     },
     {
@@ -7055,7 +7055,7 @@
         43.657222
       ],
       "address": "239 College Street, 3rd floor, Toronto, ON, M5T 1R5",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Public Library"
     },
     {
@@ -7068,7 +7068,7 @@
         43.614907
       ],
       "address": "47 Station Road, Toronto, ON, M8V 2R1",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Public Library"
     },
     {
@@ -7081,7 +7081,7 @@
         43.7039
       ],
       "address": "599 Mt. Pleasant Road, Toronto, ON, M4S 2M5",
-      "zoneId": null,
+      "zoneId": "z099",
       "source": "Toronto Public Library"
     },
     {
@@ -7094,7 +7094,7 @@
         43.757263
       ],
       "address": "Parkway Mall, 85 Ellesmere Road, Unit 22, Toronto, ON, M1R 4B9",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Public Library"
     },
     {
@@ -7107,7 +7107,7 @@
         43.769885
       ],
       "address": "4279 Lawrence Avenue East, Toronto, ON, M1E 2S8",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Public Library"
     },
     {
@@ -7120,7 +7120,7 @@
         43.708241
       ],
       "address": "40 Orchard View Boulevard, Toronto, ON, M4R 1B9",
-      "zoneId": null,
+      "zoneId": "z100",
       "source": "Toronto Public Library"
     },
     {
@@ -7133,7 +7133,7 @@
         43.71133
       ],
       "address": "123B Rexdale Boulevard, Unit 5, Toronto, ON, M9W 1P1",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Public Library"
     },
     {
@@ -7146,7 +7146,7 @@
         43.599085
       ],
       "address": "110 Eleventh Street, Toronto, ON, M8V 3G5",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Public Library"
     },
     {
@@ -7159,7 +7159,7 @@
         43.65785
       ],
       "address": "239 College Street, 4th floor, Toronto, ON, M5T 1R5",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Public Library"
     },
     {
@@ -7172,7 +7172,7 @@
         43.686544
       ],
       "address": "341 Oakwood Avenue, Toronto, ON, M6E 2W1",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Public Library"
     },
     {
@@ -7185,7 +7185,7 @@
         43.678559
       ],
       "address": "701 Pape Avenue, Toronto, ON, M4K 3S6",
-      "zoneId": null,
+      "zoneId": "z069",
       "source": "Toronto Public Library"
     },
     {
@@ -7198,7 +7198,7 @@
         43.665033
       ],
       "address": "1589 Dupont Street, Toronto, ON, M6P 3S5",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Public Library"
     },
     {
@@ -7211,7 +7211,7 @@
         43.641174
       ],
       "address": "1303 Queen Street West, Toronto, ON, M6K 1L6",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Public Library"
     },
     {
@@ -7224,7 +7224,7 @@
         43.661804
       ],
       "address": "269 Gerrard Street East, Toronto, ON, M5A 2G3",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Public Library"
     },
     {
@@ -7237,7 +7237,7 @@
         43.665093
       ],
       "address": "560 Palmerston Avenue, Toronto, ON, M6G 2P7",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Public Library"
     },
     {
@@ -7250,7 +7250,7 @@
         43.779478
       ],
       "address": "5450 Lawrence Avenue East, Toronto, ON, M1C 3B2",
-      "zoneId": null,
+      "zoneId": "z133",
       "source": "Toronto Public Library"
     },
     {
@@ -7263,7 +7263,7 @@
         43.787559
       ],
       "address": "575 Van Horne Avenue, Toronto, ON, M2J 4S8",
-      "zoneId": null,
+      "zoneId": "z046",
       "source": "Toronto Public Library"
     },
     {
@@ -7276,7 +7276,7 @@
         43.659144
       ],
       "address": "765 Queen Street East, Toronto, ON, M4M 1H3",
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "Toronto Public Library"
     },
     {
@@ -7289,7 +7289,7 @@
         43.665759
       ],
       "address": "370 Broadview Avenue, Toronto, ON, M4K 2M8",
-      "zoneId": null,
+      "zoneId": "z068",
       "source": "Toronto Public Library"
     },
     {
@@ -7302,7 +7302,7 @@
         43.683404
       ],
       "address": "1806 Islington Avenue, Toronto, ON, M9P 3N3",
-      "zoneId": null,
+      "zoneId": "z007",
       "source": "Toronto Public Library"
     },
     {
@@ -7315,7 +7315,7 @@
         43.651856
       ],
       "address": "2178 Bloor Street West, Toronto, ON, M6S 1M8",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Public Library"
     },
     {
@@ -7328,7 +7328,7 @@
         43.72613
       ],
       "address": "2243 Kipling Avenue, Toronto, ON, M9W 4L5",
-      "zoneId": "z034",
+      "zoneId": "z004",
       "source": "Toronto Public Library"
     },
     {
@@ -7341,7 +7341,7 @@
         43.652085
       ],
       "address": "327 Bathurst Street, Toronto, ON, M5T 1J1",
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "Toronto Public Library"
     },
     {
@@ -7354,7 +7354,7 @@
         43.772096
       ],
       "address": "156 Borough Drive, Toronto, ON, M1P 4N7",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Public Library"
     },
     {
@@ -7367,7 +7367,7 @@
         43.674263
       ],
       "address": "1748 St. Clair Avenue West, Toronto, ON, M6N 1J3",
-      "zoneId": null,
+      "zoneId": "z091",
       "source": "Toronto Public Library"
     },
     {
@@ -7380,7 +7380,7 @@
         43.667263
       ],
       "address": "495 Sherbourne Street, Toronto, ON, M4X 1K7",
-      "zoneId": "z008",
+      "zoneId": "z074",
       "source": "Toronto Public Library"
     },
     {
@@ -7393,7 +7393,7 @@
         43.649981
       ],
       "address": "171 Front Street East, Toronto, ON, M5A 4H3",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Public Library"
     },
     {
@@ -7406,7 +7406,7 @@
         43.667159
       ],
       "address": "10 Spadina Road, Toronto, ON, M5R 2S7",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Public Library"
     },
     {
@@ -7419,7 +7419,7 @@
         43.815381
       ],
       "address": "Bamburgh Gardens Shopping Plaza, C107-375 Bamburgh Circle, Toronto, ON, M1W 3Y1",
-      "zoneId": null,
+      "zoneId": "z116",
       "source": "Toronto Public Library"
     },
     {
@@ -7432,7 +7432,7 @@
         43.64793
       ],
       "address": "95 Lavinia Avenue, Toronto, ON, M6S 3H9",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Public Library"
     },
     {
@@ -7445,7 +7445,7 @@
         43.692115
       ],
       "address": "170 Memorial Park Avenue, Toronto, ON, M4J 2K5",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Public Library"
     },
     {
@@ -7458,7 +7458,7 @@
         43.687781
       ],
       "address": "1440 Kingston Road, Toronto, ON, M1N 1R3",
-      "zoneId": "z043",
+      "zoneId": "z122",
       "source": "Toronto Public Library"
     },
     {
@@ -7471,7 +7471,7 @@
         43.702907
       ],
       "address": "48 Thorncliffe Park Drive, Toronto, ON, M4H 1J7",
-      "zoneId": null,
+      "zoneId": "z055",
       "source": "Toronto Public Library"
     },
     {
@@ -7484,7 +7484,7 @@
         43.691626
       ],
       "address": "1081 1/2 Pape Ave (at Torrens), Toronto, ON, M4K 3W6",
-      "zoneId": null,
+      "zoneId": "z058",
       "source": "Toronto Public Library"
     },
     {
@@ -7497,7 +7497,7 @@
         43.671737
       ],
       "address": "789 Yonge Street, Toronto, ON, M4W 2G8",
-      "zoneId": "z011",
+      "zoneId": "z098",
       "source": "Toronto Public Library"
     },
     {
@@ -7510,7 +7510,7 @@
         43.736011
       ],
       "address": "184 Sloane Avenue, Toronto, ON, M4A 2C4",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Public Library"
     },
     {
@@ -7523,7 +7523,7 @@
         43.701796
       ],
       "address": "2 King Street, Toronto, ON, M9N 1K9",
-      "zoneId": null,
+      "zoneId": "z113",
       "source": "Toronto Public Library"
     },
     {
@@ -7536,7 +7536,7 @@
         43.739722
       ],
       "address": "16 Bradstock Road, Toronto, ON, M9M 1M8",
-      "zoneId": null,
+      "zoneId": "z022",
       "source": "Toronto Public Library"
     },
     {
@@ -7549,7 +7549,7 @@
         43.809463
       ],
       "address": "Woodside Square Mall, 1571 Sandhurst Circle, Toronto, ON, M1V 1V2",
-      "zoneId": null,
+      "zoneId": "z129",
       "source": "Toronto Public Library"
     },
     {
@@ -7562,7 +7562,7 @@
         43.682181
       ],
       "address": "1431 Bathurst Street, Toronto, ON, M5R 3J2",
-      "zoneId": "z012",
+      "zoneId": "z096",
       "source": "Toronto Public Library"
     },
     {
@@ -7575,7 +7575,7 @@
         43.671826
       ],
       "address": "22 Yorkville Avenue, Toronto, ON, M4W 1L4",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Public Library"
     },
     {
@@ -7588,7 +7588,7 @@
         43.758893
       ],
       "address": "1785 Finch Avenue West, Toronto, ON, M3N 1M6",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Public Library"
     }
   ]

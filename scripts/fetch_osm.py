@@ -82,7 +82,11 @@ def main() -> int:
     todo = [z for z in zones if z["id"] not in cache]
     print(f"OSM building stats: {len(cache)} cached, {len(todo)} to fetch", file=sys.stderr)
     for i, z in enumerate(todo, 1):
-        ring = z["polygon"]["coordinates"][0]
+        geom = z["polygon"]
+        if geom.get("type") == "MultiPolygon":
+            ring = max((poly[0] for poly in geom["coordinates"]), key=len)  # largest outer ring
+        else:
+            ring = geom["coordinates"][0]
         try:
             rec = fetch_zone(ring)
         except Exception as exc:  # noqa: BLE001

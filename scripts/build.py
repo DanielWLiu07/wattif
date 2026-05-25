@@ -233,8 +233,13 @@ def _decimate(ring: list[list[float]], target: int = 140) -> list[list[float]]:
     return out
 
 
+def _clean_name(s: str) -> str:
+    """Drop the trailing ' (NN)' area-code from an official AREA_NAME."""
+    return re.sub(r"\s*\(\d+\)\s*$", "", str(s)).strip()
+
+
 def load_real_boundaries() -> dict[str, dict]:
-    """normkey -> {polygon: [ring], centroid: [lng,lat]} from the real 140-model GeoJSON."""
+    """normkey -> {polygon:[ring], centroid, name, code} for ALL 140 official neighbourhoods."""
     gj = load_json_source(BOUNDARIES_FILE, BOUNDARIES_URL)
     out: dict[str, dict] = {}
     if not isinstance(gj, dict) or "features" not in gj:
@@ -242,11 +247,12 @@ def load_real_boundaries() -> dict[str, dict]:
         return out
     for feat in gj["features"]:
         geom = feat.get("geometry") or {}
-        name = (feat.get("properties") or {}).get("AREA_NAME")
+        props = feat.get("properties") or {}
+        name = props.get("AREA_NAME")
         coords = geom.get("coordinates")
         if not name or not coords:
             continue
-        # Largest outer ring of a (Multi)Polygon.
+        # Largest outer ring of a (Multi)Polygon (input to the land clip in build_zones).
         if geom.get("type") == "MultiPolygon":
             ring = max((poly[0] for poly in coords), key=len)
         elif geom.get("type") == "Polygon":
@@ -255,9 +261,15 @@ def load_real_boundaries() -> dict[str, dict]:
             continue
         ring = [[round(float(p[0]), 6), round(float(p[1]), 6)] for p in ring]
         cx, cy = _ring_centroid(ring)
+        try:
+            code = int(props.get("AREA_SHORT_CODE"))
+        except (TypeError, ValueError):
+            code = len(out) + 1
         out[normkey(name)] = {
             "polygon": [_decimate(ring)],
             "centroid": [round(cx, 6), round(cy, 6)],
+            "name": _clean_name(name),
+            "code": code,
         }
     print(f"  ✓ {len(out)} real neighbourhood boundaries (140-model)", file=sys.stderr)
     return out
@@ -1385,20 +1397,17 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     irr_lo, irr_hi = (min(irr_vals), max(irr_vals)) if irr_vals else (0.0, 0.0)
 
     # Income normalization range comes from the *final* incomes (computed in a first pass).
-    resolved: list[dict] = []
-    for name, lng, lat, syn_pop, syn_income, syn_renter in NEIGHBOURHOODS:
-        canon = ALIASES.get(name, name)
-        key = normkey(canon)
-        bnd = _match(key, boundaries)
-        prof = _match(key, profiles) or {}
+    island_owner_key = normkey(ISLAND_OWNER_ZONE)
+    # City-wide fallbacks (used only if a neighbourhood lacks profile data — none do for the 140 set).
+    DEF_POP, DEF_INCOME, DEF_RENTER = 8000, 65000, 0.45
 
-        if bnd:
-            polygon_coords, centroid = bnd["polygon"], bnd["centroid"]
-            prov["polygon"]["real"] += 1
-        else:
-            centroid = [lng, lat]
-            polygon_coords = hex_polygon(lng, lat, radius_km=rng.uniform(0.9, 1.8), rng=rng)
-            prov["polygon"]["synthetic"] += 1
+    resolved: list[dict] = []
+    # Drive over ALL official neighbourhoods (full city coverage), in stable short-code order.
+    for nk, bnd in sorted(boundaries.items(), key=lambda kv: kv[1]["code"]):
+        name = bnd["name"]
+        prof = profiles.get(nk) or _match(nk, profiles) or {}
+        polygon_coords, centroid = bnd["polygon"], bnd["centroid"]
+        prov["polygon"]["real"] += 1
 
         # Clip the polygon to land (subtract Lake Ontario / harbour); recompute centroid from land.
         # Multi-part land (mainland + Toronto Islands) is emitted as a GeoJSON MultiPolygon.
@@ -1406,32 +1415,27 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
         if water is not None:
             polys, changed = clip_ring_to_land(polygon_coords[0], water)
             if changed:
-                # The island-owning zone: its water-subtraction "island" parts are a filled blob —
-                # keep the mainland (largest clip part) and attach the REAL OSM island land. If real
-                # islands aren't available, fall back to MAINLAND-ONLY (largest part) over the blob.
-                if name == ISLAND_OWNER_ZONE:
+                # Island-owning zone: replace the water-subtraction island blob with REAL OSM island
+                # land (mainland kept). Fall back to mainland-only if islands unavailable.
+                if nk == island_owner_key:
+                    parts = ([polys[0]] + island_polys) if island_polys else [polys[0]]
                     if island_polys:
-                        parts = [polys[0]] + island_polys
                         islands_applied += 1
-                    else:
-                        parts = [polys[0]]  # mainland-only fallback (no blob)
                 else:
                     parts = polys
-                if len(parts) == 1:
-                    geom = {"type": "Polygon", "coordinates": parts[0]}
-                else:
-                    geom = {"type": "MultiPolygon", "coordinates": parts}
+                geom = ({"type": "Polygon", "coordinates": parts[0]} if len(parts) == 1
+                        else {"type": "MultiPolygon", "coordinates": parts})
                 geom, centroid = clean_geom(geom)  # OGC-valid + centroid on largest part
                 clipped_count += 1
 
-        pop = prof.get("population", syn_pop)
+        pop = int(prof.get("population", DEF_POP)) or DEF_POP
         prov["population"]["real" if "population" in prof else "synthetic"] += 1
-        income = prof.get("medianIncome", syn_income)
+        income = prof.get("medianIncome", DEF_INCOME)
         prov["medianIncome"]["real" if "medianIncome" in prof else "synthetic"] += 1
-        renter = prof.get("renterPct", syn_renter)
+        renter = prof.get("renterPct", DEF_RENTER)
         prov["renterPct"]["real" if "renterPct" in prof else "synthetic"] += 1
 
-        resolved.append({"name": name, "centroid": centroid, "geom": geom,
+        resolved.append({"name": name, "code": bnd["code"], "centroid": centroid, "geom": geom,
                          "pop": pop, "income": income, "renter": renter})
 
     incomes = [r["income"] for r in resolved]
@@ -1440,6 +1444,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     zones: list[dict] = []
     for idx, r in enumerate(resolved):
         name = r["name"]
+        zid = f"z{r['code']:03d}"  # stable official neighbourhood number
         centroid, geom = r["centroid"], r["geom"]
         pop, income, renter = r["pop"], r["income"], r["renter"]
 
@@ -1450,7 +1455,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
         # Solar potential: irradiance (≈uniform in southern Ontario) × usable roof availability.
         # Roof availability is HIGH for low-rise (lots of roof per occupant) and LOW for high-rise.
         # Prefer REAL OSM building heights (avg storeys); fall back to the renter/high-rise proxy.
-        osm_rec = osm.get(f"z{idx:03d}")
+        osm_rec = osm.get(zid)
         avg_levels = (osm_rec or {}).get("avgLevels")
         if avg_levels:
             # ~0.88 for detached (1–2 storeys) → ~0.06 floor for towers (12+ storeys).
@@ -1461,7 +1466,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
             prov["roofAvailability"]["synthetic"] += 1
         # Irradiance term: REAL PVGIS in-plane irradiation, normalized to a tight band (southern
         # Ontario is fairly uniform); falls back to ~0.80 when PVGIS is missing.
-        pv_rec = pvgis.get(f"z{idx:03d}") or {}
+        pv_rec = pvgis.get(zid) or {}
         irr = pv_rec.get("irradiationKwhM2Yr")
         if irr and irr_hi > irr_lo:
             irradiance = 0.76 + 0.10 * (irr - irr_lo) / (irr_hi - irr_lo)
@@ -1496,7 +1501,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
 
         zones.append(
             {
-                "id": f"z{idx:03d}",
+                "id": zid,
                 "name": name,
                 "polygon": geom,
                 "centroid": [round(centroid[0], 6), round(centroid[1], 6)],

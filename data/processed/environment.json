@@ -1,446 +1,1406 @@
 {
   "source": "Wellbeing Toronto \u2014 Environment (City of Toronto, 2011 reference period)",
   "note": "Per-zone environment indicators joined by name. greenScore/pollutionBurden are 0..1 normalized across matched zones (pollution log-scaled). Augments equity overlay.",
-  "matchedZones": 44,
+  "matchedZones": 140,
   "zones": [
     {
-      "zoneId": "z000",
-      "name": "Waterfront Communities\u2013The Island",
-      "matched": true,
-      "greenSpaces": 2.57,
-      "treeCover": 1379860.88,
-      "pollutantsToAir": 92338.0,
-      "greenScore": 0.966,
-      "pollutionBurden": 0.834
-    },
-    {
       "zoneId": "z001",
-      "name": "Bay Street Corridor",
+      "name": "West Humber-Clairville",
       "matched": true,
-      "greenSpaces": 0.14,
-      "treeCover": 139974.86,
-      "pollutantsToAir": 135026.0,
-      "greenScore": 0.307,
-      "pollutionBurden": 0.862
+      "greenSpaces": 2.08,
+      "treeCover": 2895860.85,
+      "pollutantsToAir": 1585690.0,
+      "greenScore": 0.968,
+      "pollutionBurden": 1.0
     },
     {
       "zoneId": "z002",
-      "name": "Church-Yonge Corridor",
-      "matched": true,
-      "greenSpaces": 0.06,
-      "treeCover": 118541.42,
-      "pollutantsToAir": 1092.0,
-      "greenScore": 0.193,
-      "pollutionBurden": 0.511
-    },
-    {
-      "zoneId": "z003",
-      "name": "Kensington-Chinatown",
-      "matched": true,
-      "greenSpaces": 0.07,
-      "treeCover": 186615.16,
-      "pollutantsToAir": 1156.0,
-      "greenScore": 0.239,
-      "pollutionBurden": 0.515
-    },
-    {
-      "zoneId": "z004",
-      "name": "University",
-      "matched": true,
-      "greenSpaces": 0.01,
-      "treeCover": 237726.3,
-      "pollutantsToAir": 27906.0,
-      "greenScore": 0.045,
-      "pollutionBurden": 0.747
-    },
-    {
-      "zoneId": "z005",
-      "name": "Moss Park",
-      "matched": true,
-      "greenSpaces": 0.1,
-      "treeCover": 212564.14,
-      "pollutantsToAir": 3692.0,
-      "greenScore": 0.261,
-      "pollutionBurden": 0.599
-    },
-    {
-      "zoneId": "z006",
-      "name": "Regent Park",
-      "matched": true,
-      "greenSpaces": 0.01,
-      "treeCover": 122445.11,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.045,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z007",
-      "name": "Cabbagetown-South St.James Town",
-      "matched": true,
-      "greenSpaces": 0.25,
-      "treeCover": 627970.24,
-      "pollutantsToAir": 241.0,
-      "greenScore": 0.534,
-      "pollutionBurden": 0.4
-    },
-    {
-      "zoneId": "z008",
-      "name": "North St.James Town",
-      "matched": true,
-      "greenSpaces": 0.03,
-      "treeCover": 61616.24,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.125,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z009",
-      "name": "Annex",
-      "matched": true,
-      "greenSpaces": 0.11,
-      "treeCover": 789795.15,
-      "pollutantsToAir": 188.0,
-      "greenScore": 0.284,
-      "pollutionBurden": 0.382
-    },
-    {
-      "zoneId": "z010",
-      "name": "Yonge-St.Clair",
-      "matched": true,
-      "greenSpaces": 0.02,
-      "treeCover": 428626.44,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.091,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z011",
-      "name": "Rosedale-Moore Park",
-      "matched": true,
-      "greenSpaces": 0.79,
-      "treeCover": 2557866.41,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.784,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z012",
-      "name": "Casa Loma",
-      "matched": true,
-      "greenSpaces": 0.17,
-      "treeCover": 893260.92,
-      "pollutantsToAir": 575.0,
-      "greenScore": 0.398,
-      "pollutionBurden": 0.464
-    },
-    {
-      "zoneId": "z013",
-      "name": "Wychwood",
-      "matched": true,
-      "greenSpaces": 0.06,
-      "treeCover": 455742.72,
-      "pollutantsToAir": 4502.0,
-      "greenScore": 0.193,
-      "pollutionBurden": 0.614
-    },
-    {
-      "zoneId": "z014",
-      "name": "Dovercourt-Wallace Emerson-Junction",
-      "matched": true,
-      "greenSpaces": 0.24,
-      "treeCover": 409561.3,
-      "pollutantsToAir": 10190.0,
-      "greenScore": 0.477,
-      "pollutionBurden": 0.673
-    },
-    {
-      "zoneId": "z015",
-      "name": "Little Portugal",
-      "matched": true,
-      "greenSpaces": 0.02,
-      "treeCover": 115638.82,
-      "pollutantsToAir": 4259.0,
-      "greenScore": 0.091,
-      "pollutionBurden": 0.61
-    },
-    {
-      "zoneId": "z016",
-      "name": "Trinity-Bellwoods",
-      "matched": true,
-      "greenSpaces": 0.18,
-      "treeCover": 239145.53,
-      "pollutantsToAir": 558.0,
-      "greenScore": 0.42,
-      "pollutionBurden": 0.462
-    },
-    {
-      "zoneId": "z017",
-      "name": "Niagara",
-      "matched": true,
-      "greenSpaces": 0.36,
-      "treeCover": 282844.0,
-      "pollutantsToAir": 4819.0,
-      "greenScore": 0.58,
-      "pollutionBurden": 0.619
-    },
-    {
-      "zoneId": "z018",
-      "name": "South Parkdale",
-      "matched": true,
-      "greenSpaces": 0.46,
-      "treeCover": 364045.76,
-      "pollutantsToAir": 43033.0,
-      "greenScore": 0.648,
-      "pollutionBurden": 0.779
-    },
-    {
-      "zoneId": "z019",
-      "name": "High Park-Swansea",
-      "matched": true,
-      "greenSpaces": 1.83,
-      "treeCover": 2750624.56,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.943,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z020",
-      "name": "Roncesvalles",
-      "matched": true,
-      "greenSpaces": 0.04,
-      "treeCover": 317461.89,
-      "pollutantsToAir": 156.0,
-      "greenScore": 0.148,
-      "pollutionBurden": 0.369
-    },
-    {
-      "zoneId": "z021",
-      "name": "The Beaches",
-      "matched": true,
-      "greenSpaces": 0.61,
-      "treeCover": 1416720.31,
-      "pollutantsToAir": 58703.0,
-      "greenScore": 0.693,
-      "pollutionBurden": 0.801
-    },
-    {
-      "zoneId": "z022",
-      "name": "Danforth",
-      "matched": true,
-      "greenSpaces": 0.0,
-      "treeCover": 282212.74,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.011,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z023",
-      "name": "Greektown (Playter Estates-Danforth)",
-      "matched": true,
-      "greenSpaces": 0.06,
-      "treeCover": 313433.73,
-      "pollutantsToAir": 508.0,
-      "greenScore": 0.193,
-      "pollutionBurden": 0.455
-    },
-    {
-      "zoneId": "z024",
-      "name": "East York (Broadview North)",
-      "matched": true,
-      "greenSpaces": 0.4,
-      "treeCover": 664464.24,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.602,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z025",
-      "name": "Leaside-Bennington",
-      "matched": true,
-      "greenSpaces": 0.8,
-      "treeCover": 2166689.57,
-      "pollutantsToAir": 282.0,
-      "greenScore": 0.807,
-      "pollutionBurden": 0.412
-    },
-    {
-      "zoneId": "z026",
-      "name": "Don Valley Village",
-      "matched": true,
-      "greenSpaces": 0.24,
-      "treeCover": 1379175.08,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.477,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z027",
-      "name": "Willowdale East",
-      "matched": true,
-      "greenSpaces": 0.16,
-      "treeCover": 1884788.95,
-      "pollutantsToAir": 542.0,
-      "greenScore": 0.375,
-      "pollutionBurden": 0.459
-    },
-    {
-      "zoneId": "z028",
-      "name": "Willowdale West",
-      "matched": true,
-      "greenSpaces": 0.15,
-      "treeCover": 1169622.48,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.341,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z029",
-      "name": "Bayview Village",
-      "matched": true,
-      "greenSpaces": 1.12,
-      "treeCover": 2397850.77,
-      "pollutantsToAir": 0.0,
-      "greenScore": 0.898,
-      "pollutionBurden": 0.0
-    },
-    {
-      "zoneId": "z030",
-      "name": "York University Heights",
-      "matched": true,
-      "greenSpaces": 0.89,
-      "treeCover": 2067412.31,
-      "pollutantsToAir": 203624.0,
-      "greenScore": 0.852,
-      "pollutionBurden": 0.892
-    },
-    {
-      "zoneId": "z031",
-      "name": "Black Creek",
-      "matched": true,
-      "greenSpaces": 0.41,
-      "treeCover": 742477.31,
-      "pollutantsToAir": 6055.0,
-      "greenScore": 0.625,
-      "pollutionBurden": 0.635
-    },
-    {
-      "zoneId": "z032",
-      "name": "Glenfield-Jane Heights",
-      "matched": true,
-      "greenSpaces": 0.81,
-      "treeCover": 1209851.2,
-      "pollutantsToAir": 860.0,
-      "greenScore": 0.83,
-      "pollutionBurden": 0.493
-    },
-    {
-      "zoneId": "z033",
       "name": "Mount Olive-Silverstone-Jamestown",
       "matched": true,
       "greenSpaces": 1.05,
       "treeCover": 1303945.16,
       "pollutantsToAir": 31.0,
-      "greenScore": 0.875,
-      "pollutionBurden": 0.253
+      "greenScore": 0.889,
+      "pollutionBurden": 0.243
     },
     {
-      "zoneId": "z034",
+      "zoneId": "z003",
+      "name": "Thistletown-Beaumond Heights",
+      "matched": true,
+      "greenSpaces": 0.94,
+      "treeCover": 1499129.97,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.861,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z004",
       "name": "Rexdale-Kipling",
       "matched": true,
       "greenSpaces": 0.24,
       "treeCover": 756382.28,
       "pollutantsToAir": 35920.0,
-      "greenScore": 0.477,
-      "pollutionBurden": 0.765
+      "greenScore": 0.464,
+      "pollutionBurden": 0.735
     },
     {
-      "zoneId": "z035",
+      "zoneId": "z005",
+      "name": "Elms-Old Rexdale",
+      "matched": true,
+      "greenSpaces": 0.73,
+      "treeCover": 997510.81,
+      "pollutantsToAir": 309.0,
+      "greenScore": 0.775,
+      "pollutionBurden": 0.402
+    },
+    {
+      "zoneId": "z006",
+      "name": "Kingsview Village-The Westway",
+      "matched": true,
+      "greenSpaces": 0.31,
+      "treeCover": 1642485.29,
+      "pollutantsToAir": 332.0,
+      "greenScore": 0.539,
+      "pollutionBurden": 0.407
+    },
+    {
+      "zoneId": "z007",
+      "name": "Willowridge-Martingrove-Richview",
+      "matched": true,
+      "greenSpaces": 0.35,
+      "treeCover": 1701247.39,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.564,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z008",
+      "name": "Humber Heights-Westmount",
+      "matched": true,
+      "greenSpaces": 0.43,
+      "treeCover": 1242746.67,
+      "pollutantsToAir": 72.0,
+      "greenScore": 0.618,
+      "pollutionBurden": 0.301
+    },
+    {
+      "zoneId": "z009",
+      "name": "Edenbridge-Humber Valley",
+      "matched": true,
+      "greenSpaces": 0.54,
+      "treeCover": 2788998.76,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.671,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z010",
+      "name": "Princess-Rosethorn",
+      "matched": true,
+      "greenSpaces": 0.22,
+      "treeCover": 2013219.19,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.425,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z011",
+      "name": "Eringate-Centennial-West Deane",
+      "matched": true,
+      "greenSpaces": 2.89,
+      "treeCover": 2351731.69,
+      "pollutantsToAir": 48397.0,
+      "greenScore": 0.989,
+      "pollutionBurden": 0.756
+    },
+    {
+      "zoneId": "z012",
+      "name": "Markland Wood",
+      "matched": true,
+      "greenSpaces": 0.22,
+      "treeCover": 1046837.58,
+      "pollutantsToAir": 441.0,
+      "greenScore": 0.425,
+      "pollutionBurden": 0.427
+    },
+    {
+      "zoneId": "z013",
       "name": "Etobicoke West Mall",
       "matched": true,
       "greenSpaces": 0.15,
       "treeCover": 444920.61,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.341,
+      "greenScore": 0.3,
       "pollutionBurden": 0.0
     },
     {
-      "zoneId": "z036",
+      "zoneId": "z014",
       "name": "Islington-City Centre West",
       "matched": true,
       "greenSpaces": 0.51,
       "treeCover": 2980850.37,
       "pollutantsToAir": 895785.0,
-      "greenScore": 0.67,
-      "pollutionBurden": 1.0
+      "greenScore": 0.657,
+      "pollutionBurden": 0.96
     },
     {
-      "zoneId": "z037",
-      "name": "Mimico (Lakeshore)",
+      "zoneId": "z015",
+      "name": "Kingsway South",
+      "matched": true,
+      "greenSpaces": 0.3,
+      "treeCover": 1384810.86,
+      "pollutantsToAir": 470.0,
+      "greenScore": 0.532,
+      "pollutionBurden": 0.431
+    },
+    {
+      "zoneId": "z016",
+      "name": "Stonegate-Queensway",
+      "matched": true,
+      "greenSpaces": 0.76,
+      "treeCover": 2514072.75,
+      "pollutantsToAir": 17931.0,
+      "greenScore": 0.786,
+      "pollutionBurden": 0.686
+    },
+    {
+      "zoneId": "z017",
+      "name": "Mimico (includes Humber Bay Shores)",
       "matched": true,
       "greenSpaces": 0.72,
       "treeCover": 1058931.43,
       "pollutantsToAir": 96927.0,
-      "greenScore": 0.761,
-      "pollutionBurden": 0.838
+      "greenScore": 0.768,
+      "pollutionBurden": 0.804
     },
     {
-      "zoneId": "z038",
-      "name": "Scarborough Village",
+      "zoneId": "z018",
+      "name": "New Toronto",
+      "matched": true,
+      "greenSpaces": 0.59,
+      "treeCover": 522508.43,
+      "pollutantsToAir": 34919.0,
+      "greenScore": 0.689,
+      "pollutionBurden": 0.733
+    },
+    {
+      "zoneId": "z019",
+      "name": "Long Branch",
+      "matched": true,
+      "greenSpaces": 0.32,
+      "treeCover": 750363.41,
+      "pollutantsToAir": 2405.0,
+      "greenScore": 0.55,
+      "pollutionBurden": 0.545
+    },
+    {
+      "zoneId": "z020",
+      "name": "Alderwood",
       "matched": true,
       "greenSpaces": 0.29,
-      "treeCover": 1127497.01,
+      "treeCover": 1086909.78,
+      "pollutantsToAir": 64042.0,
+      "greenScore": 0.518,
+      "pollutionBurden": 0.775
+    },
+    {
+      "zoneId": "z021",
+      "name": "Humber Summit",
+      "matched": true,
+      "greenSpaces": 0.69,
+      "treeCover": 1017894.54,
+      "pollutantsToAir": 521916.0,
+      "greenScore": 0.75,
+      "pollutionBurden": 0.922
+    },
+    {
+      "zoneId": "z022",
+      "name": "Humbermede",
+      "matched": true,
+      "greenSpaces": 0.92,
+      "treeCover": 1018657.52,
+      "pollutantsToAir": 699603.0,
+      "greenScore": 0.854,
+      "pollutionBurden": 0.943
+    },
+    {
+      "zoneId": "z023",
+      "name": "Pelmo Park-Humberlea",
+      "matched": true,
+      "greenSpaces": 0.64,
+      "treeCover": 1068349.3,
+      "pollutantsToAir": 2735.0,
+      "greenScore": 0.725,
+      "pollutionBurden": 0.554
+    },
+    {
+      "zoneId": "z024",
+      "name": "Black Creek",
+      "matched": true,
+      "greenSpaces": 0.41,
+      "treeCover": 742477.31,
+      "pollutantsToAir": 6055.0,
+      "greenScore": 0.6,
+      "pollutionBurden": 0.61
+    },
+    {
+      "zoneId": "z025",
+      "name": "Glenfield-Jane Heights",
+      "matched": true,
+      "greenSpaces": 0.81,
+      "treeCover": 1209851.2,
+      "pollutantsToAir": 860.0,
+      "greenScore": 0.811,
+      "pollutionBurden": 0.473
+    },
+    {
+      "zoneId": "z026",
+      "name": "Downsview-Roding-CFB",
+      "matched": true,
+      "greenSpaces": 0.85,
+      "treeCover": 2455776.67,
+      "pollutantsToAir": 256337.0,
+      "greenScore": 0.829,
+      "pollutionBurden": 0.872
+    },
+    {
+      "zoneId": "z027",
+      "name": "York University Heights",
+      "matched": true,
+      "greenSpaces": 0.89,
+      "treeCover": 2067412.31,
+      "pollutantsToAir": 203624.0,
+      "greenScore": 0.839,
+      "pollutionBurden": 0.856
+    },
+    {
+      "zoneId": "z028",
+      "name": "Rustic",
+      "matched": true,
+      "greenSpaces": 0.2,
+      "treeCover": 550083.89,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.557,
+      "greenScore": 0.386,
       "pollutionBurden": 0.0
     },
     {
-      "zoneId": "z039",
-      "name": "Agincourt South-Malvern West",
+      "zoneId": "z029",
+      "name": "Maple Leaf",
+      "matched": true,
+      "greenSpaces": 0.17,
+      "treeCover": 803509.83,
+      "pollutantsToAir": 1011.0,
+      "greenScore": 0.336,
+      "pollutionBurden": 0.485
+    },
+    {
+      "zoneId": "z030",
+      "name": "Brookhaven-Amesbury",
+      "matched": true,
+      "greenSpaces": 0.41,
+      "treeCover": 834834.7,
+      "pollutantsToAir": 4409.0,
+      "greenScore": 0.6,
+      "pollutionBurden": 0.588
+    },
+    {
+      "zoneId": "z031",
+      "name": "Yorkdale-Glen Park",
       "matched": true,
       "greenSpaces": 0.24,
-      "treeCover": 1400164.91,
-      "pollutantsToAir": 236731.0,
-      "greenScore": 0.477,
-      "pollutionBurden": 0.903
+      "treeCover": 692811.66,
+      "pollutantsToAir": 82979.0,
+      "greenScore": 0.464,
+      "pollutionBurden": 0.793
+    },
+    {
+      "zoneId": "z032",
+      "name": "Englemount-Lawrence",
+      "matched": true,
+      "greenSpaces": 0.21,
+      "treeCover": 924958.53,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.404,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z033",
+      "name": "Clanton Park",
+      "matched": true,
+      "greenSpaces": 0.1,
+      "treeCover": 1017592.79,
+      "pollutantsToAir": 332.0,
+      "greenScore": 0.204,
+      "pollutionBurden": 0.407
+    },
+    {
+      "zoneId": "z034",
+      "name": "Bathurst Manor",
+      "matched": true,
+      "greenSpaces": 1.31,
+      "treeCover": 1807970.57,
+      "pollutantsToAir": 54508.0,
+      "greenScore": 0.918,
+      "pollutionBurden": 0.764
+    },
+    {
+      "zoneId": "z035",
+      "name": "Westminster-Branson",
+      "matched": true,
+      "greenSpaces": 0.96,
+      "treeCover": 1381709.35,
+      "pollutantsToAir": 168.0,
+      "greenScore": 0.868,
+      "pollutionBurden": 0.359
+    },
+    {
+      "zoneId": "z036",
+      "name": "Newtonbrook West",
+      "matched": true,
+      "greenSpaces": 0.17,
+      "treeCover": 1473787.51,
+      "pollutantsToAir": 20.0,
+      "greenScore": 0.336,
+      "pollutionBurden": 0.213
+    },
+    {
+      "zoneId": "z037",
+      "name": "Willowdale West",
+      "matched": true,
+      "greenSpaces": 0.15,
+      "treeCover": 1169622.48,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.3,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z038",
+      "name": "Lansing-Westgate",
+      "matched": true,
+      "greenSpaces": 0.98,
+      "treeCover": 2818530.25,
+      "pollutantsToAir": 86.0,
+      "greenScore": 0.879,
+      "pollutionBurden": 0.313
+    },
+    {
+      "zoneId": "z039",
+      "name": "Bedford Park-Nortown",
+      "matched": true,
+      "greenSpaces": 0.09,
+      "treeCover": 2323264.95,
+      "pollutantsToAir": 314.0,
+      "greenScore": 0.175,
+      "pollutionBurden": 0.403
     },
     {
       "zoneId": "z040",
-      "name": "Malvern",
+      "name": "St.Andrew-Windfields",
       "matched": true,
-      "greenSpaces": 0.69,
-      "treeCover": 1249250.53,
-      "pollutantsToAir": 66889.0,
-      "greenScore": 0.739,
-      "pollutionBurden": 0.811
+      "greenSpaces": 0.54,
+      "treeCover": 3122841.34,
+      "pollutantsToAir": 1599.0,
+      "greenScore": 0.671,
+      "pollutionBurden": 0.517
     },
     {
       "zoneId": "z041",
-      "name": "Woburn",
+      "name": "Bridle Path-Sunnybrook-York Mills",
       "matched": true,
-      "greenSpaces": 1.35,
-      "treeCover": 2746208.23,
-      "pollutantsToAir": 2357.0,
-      "greenScore": 0.92,
-      "pollutionBurden": 0.567
+      "greenSpaces": 1.73,
+      "treeCover": 5509235.05,
+      "pollutantsToAir": 7653.0,
+      "greenScore": 0.939,
+      "pollutionBurden": 0.626
     },
     {
       "zoneId": "z042",
-      "name": "Rouge",
+      "name": "Banbury-Don Mills",
       "matched": true,
-      "greenSpaces": 14.27,
-      "treeCover": 12888043.88,
-      "pollutantsToAir": 56778.0,
-      "greenScore": 0.989,
-      "pollutionBurden": 0.799
+      "greenSpaces": 1.28,
+      "treeCover": 4258009.81,
+      "pollutantsToAir": 36229.0,
+      "greenScore": 0.911,
+      "pollutionBurden": 0.735
     },
     {
       "zoneId": "z043",
+      "name": "Victoria Village",
+      "matched": true,
+      "greenSpaces": 0.68,
+      "treeCover": 1541958.56,
+      "pollutantsToAir": 38841.0,
+      "greenScore": 0.739,
+      "pollutionBurden": 0.74
+    },
+    {
+      "zoneId": "z044",
+      "name": "Flemingdon Park",
+      "matched": true,
+      "greenSpaces": 0.76,
+      "treeCover": 1007142.64,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.786,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z045",
+      "name": "Parkwoods-Donalda",
+      "matched": true,
+      "greenSpaces": 0.85,
+      "treeCover": 3066863.37,
+      "pollutantsToAir": 1964.0,
+      "greenScore": 0.829,
+      "pollutionBurden": 0.531
+    },
+    {
+      "zoneId": "z046",
+      "name": "Pleasant View",
+      "matched": true,
+      "greenSpaces": 0.16,
+      "treeCover": 840921.4,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.314,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z047",
+      "name": "Don Valley Village",
+      "matched": true,
+      "greenSpaces": 0.24,
+      "treeCover": 1379175.08,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.464,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z048",
+      "name": "Hillcrest Village",
+      "matched": true,
+      "greenSpaces": 0.39,
+      "treeCover": 1554513.43,
+      "pollutantsToAir": 246384.0,
+      "greenScore": 0.582,
+      "pollutionBurden": 0.87
+    },
+    {
+      "zoneId": "z049",
+      "name": "Bayview Woods-Steeles",
+      "matched": true,
+      "greenSpaces": 0.91,
+      "treeCover": 1873417.78,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.846,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z050",
+      "name": "Newtonbrook East",
+      "matched": true,
+      "greenSpaces": 0.18,
+      "treeCover": 1563158.5,
+      "pollutantsToAir": 6461.0,
+      "greenScore": 0.357,
+      "pollutionBurden": 0.615
+    },
+    {
+      "zoneId": "z051",
+      "name": "Willowdale East",
+      "matched": true,
+      "greenSpaces": 0.16,
+      "treeCover": 1884788.95,
+      "pollutantsToAir": 542.0,
+      "greenScore": 0.314,
+      "pollutionBurden": 0.441
+    },
+    {
+      "zoneId": "z052",
+      "name": "Bayview Village",
+      "matched": true,
+      "greenSpaces": 1.12,
+      "treeCover": 2397850.77,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.904,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z053",
+      "name": "Henry Farm",
+      "matched": true,
+      "greenSpaces": 0.21,
+      "treeCover": 685339.23,
+      "pollutantsToAir": 931.0,
+      "greenScore": 0.404,
+      "pollutionBurden": 0.479
+    },
+    {
+      "zoneId": "z054",
+      "name": "O'Connor-Parkview",
+      "matched": true,
+      "greenSpaces": 1.07,
+      "treeCover": 2038276.86,
+      "pollutantsToAir": 18416.0,
+      "greenScore": 0.896,
+      "pollutionBurden": 0.688
+    },
+    {
+      "zoneId": "z055",
+      "name": "Thorncliffe Park",
+      "matched": true,
+      "greenSpaces": 0.6,
+      "treeCover": 745856.35,
+      "pollutantsToAir": 139415.0,
+      "greenScore": 0.7,
+      "pollutionBurden": 0.83
+    },
+    {
+      "zoneId": "z056",
+      "name": "Leaside-Bennington",
+      "matched": true,
+      "greenSpaces": 0.8,
+      "treeCover": 2166689.57,
+      "pollutantsToAir": 282.0,
+      "greenScore": 0.804,
+      "pollutionBurden": 0.395
+    },
+    {
+      "zoneId": "z057",
+      "name": "Broadview North",
+      "matched": true,
+      "greenSpaces": 0.4,
+      "treeCover": 664464.24,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.589,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z058",
+      "name": "Old East York",
+      "matched": true,
+      "greenSpaces": 0.29,
+      "treeCover": 719730.38,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.518,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z059",
+      "name": "Danforth East York",
+      "matched": true,
+      "greenSpaces": 0.07,
+      "treeCover": 409082.51,
+      "pollutantsToAir": 143.0,
+      "greenScore": 0.143,
+      "pollutionBurden": 0.348
+    },
+    {
+      "zoneId": "z060",
+      "name": "Woodbine-Lumsden",
+      "matched": true,
+      "greenSpaces": 0.1,
+      "treeCover": 320284.04,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.204,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z061",
+      "name": "Taylor-Massey",
+      "matched": true,
+      "greenSpaces": 0.2,
+      "treeCover": 328675.36,
+      "pollutantsToAir": 22.0,
+      "greenScore": 0.386,
+      "pollutionBurden": 0.22
+    },
+    {
+      "zoneId": "z062",
+      "name": "East End-Danforth",
+      "matched": true,
+      "greenSpaces": 0.13,
+      "treeCover": 782726.84,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.264,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z063",
+      "name": "The Beaches",
+      "matched": true,
+      "greenSpaces": 0.61,
+      "treeCover": 1416720.31,
+      "pollutantsToAir": 58703.0,
+      "greenScore": 0.711,
+      "pollutionBurden": 0.769
+    },
+    {
+      "zoneId": "z064",
+      "name": "Woodbine Corridor",
+      "matched": true,
+      "greenSpaces": 0.1,
+      "treeCover": 669942.29,
+      "pollutantsToAir": 1.0,
+      "greenScore": 0.204,
+      "pollutionBurden": 0.049
+    },
+    {
+      "zoneId": "z065",
+      "name": "Greenwood-Coxwell",
+      "matched": true,
+      "greenSpaces": 0.09,
+      "treeCover": 530193.11,
+      "pollutantsToAir": 1358.0,
+      "greenScore": 0.175,
+      "pollutionBurden": 0.505
+    },
+    {
+      "zoneId": "z066",
+      "name": "Danforth",
+      "matched": true,
+      "greenSpaces": 0.0,
+      "treeCover": 282212.74,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.004,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z067",
+      "name": "Playter Estates-Danforth",
+      "matched": true,
+      "greenSpaces": 0.06,
+      "treeCover": 313433.73,
+      "pollutantsToAir": 508.0,
+      "greenScore": 0.121,
+      "pollutionBurden": 0.437
+    },
+    {
+      "zoneId": "z068",
+      "name": "North Riverdale",
+      "matched": true,
+      "greenSpaces": 0.32,
+      "treeCover": 596433.94,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.55,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z069",
+      "name": "Blake-Jones",
+      "matched": true,
+      "greenSpaces": 0.02,
+      "treeCover": 244636.69,
+      "pollutantsToAir": 850.0,
+      "greenScore": 0.039,
+      "pollutionBurden": 0.473
+    },
+    {
+      "zoneId": "z070",
+      "name": "South Riverdale",
+      "matched": true,
+      "greenSpaces": 2.78,
+      "treeCover": 1556802.28,
+      "pollutantsToAir": 347833.0,
+      "greenScore": 0.982,
+      "pollutionBurden": 0.894
+    },
+    {
+      "zoneId": "z071",
+      "name": "Cabbagetown-South St.James Town",
+      "matched": true,
+      "greenSpaces": 0.25,
+      "treeCover": 627970.24,
+      "pollutantsToAir": 241.0,
+      "greenScore": 0.496,
+      "pollutionBurden": 0.384
+    },
+    {
+      "zoneId": "z072",
+      "name": "Regent Park",
+      "matched": true,
+      "greenSpaces": 0.01,
+      "treeCover": 122445.11,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.018,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z073",
+      "name": "Moss Park",
+      "matched": true,
+      "greenSpaces": 0.1,
+      "treeCover": 212564.14,
+      "pollutantsToAir": 3692.0,
+      "greenScore": 0.204,
+      "pollutionBurden": 0.575
+    },
+    {
+      "zoneId": "z074",
+      "name": "North St.James Town",
+      "matched": true,
+      "greenSpaces": 0.03,
+      "treeCover": 61616.24,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.057,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z075",
+      "name": "Church-Yonge Corridor",
+      "matched": true,
+      "greenSpaces": 0.06,
+      "treeCover": 118541.42,
+      "pollutantsToAir": 1092.0,
+      "greenScore": 0.121,
+      "pollutionBurden": 0.49
+    },
+    {
+      "zoneId": "z076",
+      "name": "Bay Street Corridor",
+      "matched": true,
+      "greenSpaces": 0.14,
+      "treeCover": 139974.86,
+      "pollutantsToAir": 135026.0,
+      "greenScore": 0.286,
+      "pollutionBurden": 0.827
+    },
+    {
+      "zoneId": "z077",
+      "name": "Waterfront Communities-The Island",
+      "matched": true,
+      "greenSpaces": 2.57,
+      "treeCover": 1379860.88,
+      "pollutantsToAir": 92338.0,
+      "greenScore": 0.975,
+      "pollutionBurden": 0.801
+    },
+    {
+      "zoneId": "z078",
+      "name": "Kensington-Chinatown",
+      "matched": true,
+      "greenSpaces": 0.07,
+      "treeCover": 186615.16,
+      "pollutantsToAir": 1156.0,
+      "greenScore": 0.143,
+      "pollutionBurden": 0.494
+    },
+    {
+      "zoneId": "z079",
+      "name": "University",
+      "matched": true,
+      "greenSpaces": 0.01,
+      "treeCover": 237726.3,
+      "pollutantsToAir": 27906.0,
+      "greenScore": 0.018,
+      "pollutionBurden": 0.717
+    },
+    {
+      "zoneId": "z080",
+      "name": "Palmerston-Little Italy",
+      "matched": true,
+      "greenSpaces": 0.04,
+      "treeCover": 291292.53,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.079,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z081",
+      "name": "Trinity-Bellwoods",
+      "matched": true,
+      "greenSpaces": 0.18,
+      "treeCover": 239145.53,
+      "pollutantsToAir": 558.0,
+      "greenScore": 0.357,
+      "pollutionBurden": 0.443
+    },
+    {
+      "zoneId": "z082",
+      "name": "Niagara",
+      "matched": true,
+      "greenSpaces": 0.36,
+      "treeCover": 282844.0,
+      "pollutantsToAir": 4819.0,
+      "greenScore": 0.575,
+      "pollutionBurden": 0.594
+    },
+    {
+      "zoneId": "z083",
+      "name": "Dufferin Grove",
+      "matched": true,
+      "greenSpaces": 0.08,
+      "treeCover": 250633.62,
+      "pollutantsToAir": 6067.0,
+      "greenScore": 0.157,
+      "pollutionBurden": 0.61
+    },
+    {
+      "zoneId": "z084",
+      "name": "Little Portugal",
+      "matched": true,
+      "greenSpaces": 0.02,
+      "treeCover": 115638.82,
+      "pollutantsToAir": 4259.0,
+      "greenScore": 0.039,
+      "pollutionBurden": 0.585
+    },
+    {
+      "zoneId": "z085",
+      "name": "South Parkdale",
+      "matched": true,
+      "greenSpaces": 0.46,
+      "treeCover": 364045.76,
+      "pollutantsToAir": 43033.0,
+      "greenScore": 0.639,
+      "pollutionBurden": 0.747
+    },
+    {
+      "zoneId": "z086",
+      "name": "Roncesvalles",
+      "matched": true,
+      "greenSpaces": 0.04,
+      "treeCover": 317461.89,
+      "pollutantsToAir": 156.0,
+      "greenScore": 0.079,
+      "pollutionBurden": 0.354
+    },
+    {
+      "zoneId": "z087",
+      "name": "High Park-Swansea",
+      "matched": true,
+      "greenSpaces": 1.83,
+      "treeCover": 2750624.56,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.946,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z088",
+      "name": "High Park North",
+      "matched": true,
+      "greenSpaces": 0.06,
+      "treeCover": 716638.99,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.121,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z089",
+      "name": "Runnymede-Bloor West Village",
+      "matched": true,
+      "greenSpaces": 0.01,
+      "treeCover": 530461.19,
+      "pollutantsToAir": 1363.0,
+      "greenScore": 0.018,
+      "pollutionBurden": 0.506
+    },
+    {
+      "zoneId": "z090",
+      "name": "Junction Area",
+      "matched": true,
+      "greenSpaces": 0.1,
+      "treeCover": 477509.29,
+      "pollutantsToAir": 109791.0,
+      "greenScore": 0.204,
+      "pollutionBurden": 0.813
+    },
+    {
+      "zoneId": "z091",
+      "name": "Weston-Pelham Park",
+      "matched": true,
+      "greenSpaces": 0.04,
+      "treeCover": 160318.64,
+      "pollutantsToAir": 123.0,
+      "greenScore": 0.079,
+      "pollutionBurden": 0.338
+    },
+    {
+      "zoneId": "z092",
+      "name": "Corso Italia-Davenport",
+      "matched": true,
+      "greenSpaces": 0.13,
+      "treeCover": 336321.81,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.264,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z093",
+      "name": "Dovercourt-Wallace Emerson-Junction",
+      "matched": true,
+      "greenSpaces": 0.24,
+      "treeCover": 409561.3,
+      "pollutantsToAir": 10190.0,
+      "greenScore": 0.464,
+      "pollutionBurden": 0.646
+    },
+    {
+      "zoneId": "z094",
+      "name": "Wychwood",
+      "matched": true,
+      "greenSpaces": 0.06,
+      "treeCover": 455742.72,
+      "pollutantsToAir": 4502.0,
+      "greenScore": 0.121,
+      "pollutionBurden": 0.589
+    },
+    {
+      "zoneId": "z095",
+      "name": "Annex",
+      "matched": true,
+      "greenSpaces": 0.11,
+      "treeCover": 789795.15,
+      "pollutantsToAir": 188.0,
+      "greenScore": 0.229,
+      "pollutionBurden": 0.367
+    },
+    {
+      "zoneId": "z096",
+      "name": "Casa Loma",
+      "matched": true,
+      "greenSpaces": 0.17,
+      "treeCover": 893260.92,
+      "pollutantsToAir": 575.0,
+      "greenScore": 0.336,
+      "pollutionBurden": 0.445
+    },
+    {
+      "zoneId": "z097",
+      "name": "Yonge-St.Clair",
+      "matched": true,
+      "greenSpaces": 0.02,
+      "treeCover": 428626.44,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.039,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z098",
+      "name": "Rosedale-Moore Park",
+      "matched": true,
+      "greenSpaces": 0.79,
+      "treeCover": 2557866.41,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.796,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z099",
+      "name": "Mount Pleasant East",
+      "matched": true,
+      "greenSpaces": 0.09,
+      "treeCover": 1407432.3,
+      "pollutantsToAir": 446.0,
+      "greenScore": 0.175,
+      "pollutionBurden": 0.427
+    },
+    {
+      "zoneId": "z100",
+      "name": "Yonge-Eglinton",
+      "matched": true,
+      "greenSpaces": 0.13,
+      "treeCover": 581770.25,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.264,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z101",
+      "name": "Forest Hill South",
+      "matched": true,
+      "greenSpaces": 0.12,
+      "treeCover": 1122215.13,
+      "pollutantsToAir": 691.0,
+      "greenScore": 0.243,
+      "pollutionBurden": 0.458
+    },
+    {
+      "zoneId": "z102",
+      "name": "Forest Hill North",
+      "matched": true,
+      "greenSpaces": 0.11,
+      "treeCover": 601604.53,
+      "pollutantsToAir": 73.0,
+      "greenScore": 0.229,
+      "pollutionBurden": 0.301
+    },
+    {
+      "zoneId": "z103",
+      "name": "Lawrence Park South",
+      "matched": true,
+      "greenSpaces": 0.19,
+      "treeCover": 1808680.34,
+      "pollutantsToAir": 1.0,
+      "greenScore": 0.371,
+      "pollutionBurden": 0.049
+    },
+    {
+      "zoneId": "z104",
+      "name": "Mount Pleasant West",
+      "matched": true,
+      "greenSpaces": 0.05,
+      "treeCover": 327893.46,
+      "pollutantsToAir": 248.0,
+      "greenScore": 0.1,
+      "pollutionBurden": 0.386
+    },
+    {
+      "zoneId": "z105",
+      "name": "Lawrence Park North",
+      "matched": true,
+      "greenSpaces": 0.04,
+      "treeCover": 1126524.6,
+      "pollutantsToAir": 202.0,
+      "greenScore": 0.079,
+      "pollutionBurden": 0.372
+    },
+    {
+      "zoneId": "z106",
+      "name": "Humewood-Cedarvale",
+      "matched": true,
+      "greenSpaces": 0.22,
+      "treeCover": 689493.74,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.425,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z107",
+      "name": "Oakwood Village",
+      "matched": true,
+      "greenSpaces": 0.05,
+      "treeCover": 332628.15,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.1,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z108",
+      "name": "Briar Hill-Belgravia",
+      "matched": true,
+      "greenSpaces": 0.08,
+      "treeCover": 169474.25,
+      "pollutantsToAir": 2611.0,
+      "greenScore": 0.157,
+      "pollutionBurden": 0.551
+    },
+    {
+      "zoneId": "z109",
+      "name": "Caledonia-Fairbank",
+      "matched": true,
+      "greenSpaces": 0.03,
+      "treeCover": 325125.2,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.057,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z110",
+      "name": "Keelesdale-Eglinton West",
+      "matched": true,
+      "greenSpaces": 0.14,
+      "treeCover": 348052.2,
+      "pollutantsToAir": 2750.0,
+      "greenScore": 0.286,
+      "pollutionBurden": 0.555
+    },
+    {
+      "zoneId": "z111",
+      "name": "Rockcliffe-Smythe",
+      "matched": true,
+      "greenSpaces": 0.55,
+      "treeCover": 1538308.17,
+      "pollutantsToAir": 653.0,
+      "greenScore": 0.682,
+      "pollutionBurden": 0.454
+    },
+    {
+      "zoneId": "z112",
+      "name": "Beechborough-Greenbrook",
+      "matched": true,
+      "greenSpaces": 0.21,
+      "treeCover": 471027.15,
+      "pollutantsToAir": 3911.0,
+      "greenScore": 0.404,
+      "pollutionBurden": 0.579
+    },
+    {
+      "zoneId": "z113",
+      "name": "Weston",
+      "matched": true,
+      "greenSpaces": 0.24,
+      "treeCover": 804471.04,
+      "pollutantsToAir": 96336.0,
+      "greenScore": 0.464,
+      "pollutionBurden": 0.804
+    },
+    {
+      "zoneId": "z114",
+      "name": "Lambton Baby Point",
+      "matched": true,
+      "greenSpaces": 0.44,
+      "treeCover": 800289.8,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.625,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z115",
+      "name": "Mount Dennis",
+      "matched": true,
+      "greenSpaces": 0.67,
+      "treeCover": 705790.8,
+      "pollutantsToAir": 156.0,
+      "greenScore": 0.732,
+      "pollutionBurden": 0.354
+    },
+    {
+      "zoneId": "z116",
+      "name": "Steeles",
+      "matched": true,
+      "greenSpaces": 0.45,
+      "treeCover": 1022877.24,
+      "pollutantsToAir": 2596.0,
+      "greenScore": 0.632,
+      "pollutionBurden": 0.551
+    },
+    {
+      "zoneId": "z117",
+      "name": "L'Amoreaux",
+      "matched": true,
+      "greenSpaces": 0.6,
+      "treeCover": 2262946.56,
+      "pollutantsToAir": 251.0,
+      "greenScore": 0.7,
+      "pollutionBurden": 0.387
+    },
+    {
+      "zoneId": "z118",
+      "name": "Tam O'Shanter-Sullivan",
+      "matched": true,
+      "greenSpaces": 0.35,
+      "treeCover": 1710828.5,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.564,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z119",
+      "name": "Wexford/Maryvale",
+      "matched": true,
+      "greenSpaces": 0.47,
+      "treeCover": 2010846.17,
+      "pollutantsToAir": 50349.0,
+      "greenScore": 0.646,
+      "pollutionBurden": 0.758
+    },
+    {
+      "zoneId": "z120",
+      "name": "Clairlea-Birchmount",
+      "matched": true,
+      "greenSpaces": 0.42,
+      "treeCover": 1282846.09,
+      "pollutantsToAir": 445019.0,
+      "greenScore": 0.611,
+      "pollutionBurden": 0.911
+    },
+    {
+      "zoneId": "z121",
+      "name": "Oakridge",
+      "matched": true,
+      "greenSpaces": 0.25,
+      "treeCover": 523379.95,
+      "pollutantsToAir": 416.0,
+      "greenScore": 0.496,
+      "pollutionBurden": 0.423
+    },
+    {
+      "zoneId": "z122",
       "name": "Birchcliffe-Cliffside",
       "matched": true,
       "greenSpaces": 0.62,
       "treeCover": 2019988.26,
       "pollutantsToAir": 0.0,
-      "greenScore": 0.716,
+      "greenScore": 0.718,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z123",
+      "name": "Cliffcrest",
+      "matched": true,
+      "greenSpaces": 1.43,
+      "treeCover": 2461970.64,
+      "pollutantsToAir": 131557.0,
+      "greenScore": 0.932,
+      "pollutionBurden": 0.826
+    },
+    {
+      "zoneId": "z124",
+      "name": "Kennedy Park",
+      "matched": true,
+      "greenSpaces": 0.12,
+      "treeCover": 826781.07,
+      "pollutantsToAir": 36.0,
+      "greenScore": 0.243,
+      "pollutionBurden": 0.253
+    },
+    {
+      "zoneId": "z125",
+      "name": "Ionview",
+      "matched": true,
+      "greenSpaces": 0.13,
+      "treeCover": 409684.1,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.264,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z126",
+      "name": "Dorset Park",
+      "matched": true,
+      "greenSpaces": 0.17,
+      "treeCover": 631875.46,
+      "pollutantsToAir": 496649.0,
+      "greenScore": 0.336,
+      "pollutionBurden": 0.919
+    },
+    {
+      "zoneId": "z127",
+      "name": "Bendale",
+      "matched": true,
+      "greenSpaces": 0.98,
+      "treeCover": 1772970.42,
+      "pollutantsToAir": 55313.0,
+      "greenScore": 0.879,
+      "pollutionBurden": 0.765
+    },
+    {
+      "zoneId": "z128",
+      "name": "Agincourt South-Malvern West",
+      "matched": true,
+      "greenSpaces": 0.24,
+      "treeCover": 1400164.91,
+      "pollutantsToAir": 236731.0,
+      "greenScore": 0.464,
+      "pollutionBurden": 0.867
+    },
+    {
+      "zoneId": "z129",
+      "name": "Agincourt North",
+      "matched": true,
+      "greenSpaces": 0.25,
+      "treeCover": 1254144.35,
+      "pollutantsToAir": 16092.0,
+      "greenScore": 0.496,
+      "pollutionBurden": 0.678
+    },
+    {
+      "zoneId": "z130",
+      "name": "Milliken",
+      "matched": true,
+      "greenSpaces": 0.51,
+      "treeCover": 1043903.04,
+      "pollutantsToAir": 222837.0,
+      "greenScore": 0.657,
+      "pollutionBurden": 0.863
+    },
+    {
+      "zoneId": "z131",
+      "name": "Rouge",
+      "matched": true,
+      "greenSpaces": 14.27,
+      "treeCover": 12888043.88,
+      "pollutantsToAir": 56778.0,
+      "greenScore": 0.996,
+      "pollutionBurden": 0.767
+    },
+    {
+      "zoneId": "z132",
+      "name": "Malvern",
+      "matched": true,
+      "greenSpaces": 0.69,
+      "treeCover": 1249250.53,
+      "pollutantsToAir": 66889.0,
+      "greenScore": 0.75,
+      "pollutionBurden": 0.778
+    },
+    {
+      "zoneId": "z133",
+      "name": "Centennial Scarborough",
+      "matched": true,
+      "greenSpaces": 0.83,
+      "treeCover": 1802189.83,
+      "pollutantsToAir": 311.0,
+      "greenScore": 0.818,
+      "pollutionBurden": 0.402
+    },
+    {
+      "zoneId": "z134",
+      "name": "Highland Creek",
+      "matched": true,
+      "greenSpaces": 0.19,
+      "treeCover": 1444565.21,
+      "pollutantsToAir": 10030.0,
+      "greenScore": 0.371,
+      "pollutionBurden": 0.645
+    },
+    {
+      "zoneId": "z135",
+      "name": "Morningside",
+      "matched": true,
+      "greenSpaces": 1.85,
+      "treeCover": 2317635.58,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.954,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z136",
+      "name": "West Hill",
+      "matched": true,
+      "greenSpaces": 1.99,
+      "treeCover": 3403338.25,
+      "pollutantsToAir": 371626.0,
+      "greenScore": 0.961,
+      "pollutionBurden": 0.898
+    },
+    {
+      "zoneId": "z137",
+      "name": "Woburn",
+      "matched": true,
+      "greenSpaces": 1.35,
+      "treeCover": 2746208.23,
+      "pollutantsToAir": 2357.0,
+      "greenScore": 0.925,
+      "pollutionBurden": 0.544
+    },
+    {
+      "zoneId": "z138",
+      "name": "Eglinton East",
+      "matched": true,
+      "greenSpaces": 0.23,
+      "treeCover": 656321.18,
+      "pollutantsToAir": 4410.0,
+      "greenScore": 0.439,
+      "pollutionBurden": 0.588
+    },
+    {
+      "zoneId": "z139",
+      "name": "Scarborough Village",
+      "matched": true,
+      "greenSpaces": 0.29,
+      "treeCover": 1127497.01,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.518,
+      "pollutionBurden": 0.0
+    },
+    {
+      "zoneId": "z140",
+      "name": "Guildwood",
+      "matched": true,
+      "greenSpaces": 0.7,
+      "treeCover": 1681205.08,
+      "pollutantsToAir": 0.0,
+      "greenScore": 0.761,
       "pollutionBurden": 0.0
     }
   ]

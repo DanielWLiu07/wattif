@@ -8,7 +8,7 @@
     "renewable_install": 100,
     "ev_charger": 82
   },
-  "matchedToZone": 88,
+  "matchedToZone": 181,
   "infra": [
     {
       "id": "ei0000",
@@ -22,7 +22,7 @@
       "sizeInstall": 50.0,
       "energyOutput": null,
       "yearInstall": "Mar 31, 2010",
-      "zoneId": "z017",
+      "zoneId": "z082",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -37,7 +37,7 @@
       "sizeInstall": 30.0,
       "energyOutput": null,
       "yearInstall": "Feb 8, 2012",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -52,7 +52,7 @@
       "sizeInstall": 1.2,
       "energyOutput": null,
       "yearInstall": "Dec 23, 2010",
-      "zoneId": null,
+      "zoneId": "z089",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -67,7 +67,7 @@
       "sizeInstall": 3.2,
       "energyOutput": null,
       "yearInstall": "Jul 12, 2010",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -82,7 +82,7 @@
       "sizeInstall": 62.0,
       "energyOutput": null,
       "yearInstall": "Feb 27, 2013",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -97,7 +97,7 @@
       "sizeInstall": 216.0,
       "energyOutput": null,
       "yearInstall": "Mar 26, 2013",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -112,7 +112,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Aug 1, 2017",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -127,7 +127,7 @@
       "sizeInstall": 90.0,
       "energyOutput": null,
       "yearInstall": "Mar 27, 2013",
-      "zoneId": "z030",
+      "zoneId": "z027",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -142,7 +142,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "June 19, 2017",
-      "zoneId": "z030",
+      "zoneId": "z027",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -157,7 +157,7 @@
       "sizeInstall": 75.0,
       "energyOutput": null,
       "yearInstall": "Mar 22, 2013",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -172,7 +172,7 @@
       "sizeInstall": 75.0,
       "energyOutput": null,
       "yearInstall": "Mar 3, 2013",
-      "zoneId": null,
+      "zoneId": "z036",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -187,7 +187,7 @@
       "sizeInstall": 75.0,
       "energyOutput": null,
       "yearInstall": "Feb 27, 2013",
-      "zoneId": null,
+      "zoneId": "z041",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -202,7 +202,7 @@
       "sizeInstall": 90.0,
       "energyOutput": null,
       "yearInstall": "Mar 1, 2013",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -217,7 +217,7 @@
       "sizeInstall": 94.0,
       "energyOutput": null,
       "yearInstall": "Feb 27, 2013",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -232,7 +232,7 @@
       "sizeInstall": 48.0,
       "energyOutput": null,
       "yearInstall": "Feb 20, 2013",
-      "zoneId": "z039",
+      "zoneId": "z128",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -247,7 +247,7 @@
       "sizeInstall": 210.0,
       "energyOutput": null,
       "yearInstall": "Jun 14, 2011",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -262,7 +262,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Mar 3, 2016",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -277,7 +277,7 @@
       "sizeInstall": 300.0,
       "energyOutput": null,
       "yearInstall": "Feb 11, 2016",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -292,7 +292,7 @@
       "sizeInstall": 150.0,
       "energyOutput": null,
       "yearInstall": "Feb 19, 2016",
-      "zoneId": "z034",
+      "zoneId": "z004",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -307,7 +307,7 @@
       "sizeInstall": 75.0,
       "energyOutput": null,
       "yearInstall": "Aug 2017",
-      "zoneId": "z034",
+      "zoneId": "z004",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -322,7 +322,7 @@
       "sizeInstall": 150.0,
       "energyOutput": null,
       "yearInstall": "Mar 3, 2016",
-      "zoneId": null,
+      "zoneId": "z011",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -337,7 +337,7 @@
       "sizeInstall": 150.0,
       "energyOutput": null,
       "yearInstall": "Feb 19, 2016",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -352,7 +352,7 @@
       "sizeInstall": 130.0,
       "energyOutput": null,
       "yearInstall": "Feb 4, 2016",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -367,7 +367,7 @@
       "sizeInstall": 175.0,
       "energyOutput": null,
       "yearInstall": "Dec 15, 2015",
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -382,7 +382,7 @@
       "sizeInstall": 175.0,
       "energyOutput": null,
       "yearInstall": "Feb 11, 2016",
-      "zoneId": "z015",
+      "zoneId": "z084",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -397,7 +397,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Feb 19, 2016",
-      "zoneId": null,
+      "zoneId": "z049",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -412,7 +412,7 @@
       "sizeInstall": 140.0,
       "energyOutput": null,
       "yearInstall": "Jan 31, 2018",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -427,7 +427,7 @@
       "sizeInstall": 49.9,
       "energyOutput": null,
       "yearInstall": "Nov 27, 2017",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -442,7 +442,7 @@
       "sizeInstall": 40.0,
       "energyOutput": null,
       "yearInstall": "June 6, 2018",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -457,7 +457,7 @@
       "sizeInstall": 500.0,
       "energyOutput": null,
       "yearInstall": "Mar 9, 2018",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -472,7 +472,7 @@
       "sizeInstall": 200.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z018",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -487,7 +487,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Mar 9, 2018",
-      "zoneId": null,
+      "zoneId": "z021",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -502,7 +502,7 @@
       "sizeInstall": 120.0,
       "energyOutput": null,
       "yearInstall": "Mar 21, 2018",
-      "zoneId": null,
+      "zoneId": "z022",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -517,7 +517,7 @@
       "sizeInstall": 500.0,
       "energyOutput": null,
       "yearInstall": "Jan 31, 2018",
-      "zoneId": "z030",
+      "zoneId": "z027",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -532,7 +532,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "April 21, 2017",
-      "zoneId": null,
+      "zoneId": "z026",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -547,7 +547,7 @@
       "sizeInstall": 49.9,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -562,7 +562,7 @@
       "sizeInstall": 46.0,
       "energyOutput": null,
       "yearInstall": "Nov 15, 2017",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -577,7 +577,7 @@
       "sizeInstall": 240.0,
       "energyOutput": null,
       "yearInstall": "Feb 15, 2018",
-      "zoneId": null,
+      "zoneId": "z035",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -592,7 +592,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z030",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -607,7 +607,7 @@
       "sizeInstall": 140.0,
       "energyOutput": null,
       "yearInstall": "Mar 21, 2018",
-      "zoneId": null,
+      "zoneId": "z032",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -622,7 +622,7 @@
       "sizeInstall": 80.0,
       "energyOutput": null,
       "yearInstall": "Jan 26, 2018",
-      "zoneId": null,
+      "zoneId": "z031",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -637,7 +637,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Feb 12, 2018",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -652,7 +652,7 @@
       "sizeInstall": 120.0,
       "energyOutput": null,
       "yearInstall": "Jan 31, 2018",
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -667,7 +667,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Mar 1, 2018",
-      "zoneId": null,
+      "zoneId": "z050",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -682,7 +682,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Mar 1, 2018",
-      "zoneId": null,
+      "zoneId": "z044",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -697,7 +697,7 @@
       "sizeInstall": 150.0,
       "energyOutput": null,
       "yearInstall": "Aug 1, 2017",
-      "zoneId": null,
+      "zoneId": "z054",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -712,7 +712,7 @@
       "sizeInstall": 130.0,
       "energyOutput": null,
       "yearInstall": "Jan 29, 2018",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -727,7 +727,7 @@
       "sizeInstall": 140.0,
       "energyOutput": null,
       "yearInstall": "Jan 26, 2018",
-      "zoneId": null,
+      "zoneId": "z054",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -742,7 +742,7 @@
       "sizeInstall": 130.0,
       "energyOutput": null,
       "yearInstall": "Jan 31, 2018",
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -757,7 +757,7 @@
       "sizeInstall": 220.0,
       "energyOutput": null,
       "yearInstall": "Jan 29, 2018",
-      "zoneId": "z026",
+      "zoneId": "z047",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -772,7 +772,7 @@
       "sizeInstall": 80.0,
       "energyOutput": null,
       "yearInstall": "Jan 19, 2018",
-      "zoneId": null,
+      "zoneId": "z053",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -787,7 +787,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z042",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -802,7 +802,7 @@
       "sizeInstall": 50.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z043",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -817,7 +817,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -832,7 +832,7 @@
       "sizeInstall": 240.0,
       "energyOutput": null,
       "yearInstall": "Mar 1, 2018",
-      "zoneId": null,
+      "zoneId": "z124",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -847,7 +847,7 @@
       "sizeInstall": 40.0,
       "energyOutput": null,
       "yearInstall": "Aug 28, 2017",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -862,7 +862,7 @@
       "sizeInstall": 130.0,
       "energyOutput": null,
       "yearInstall": "Nov 27, 2017",
-      "zoneId": "z038",
+      "zoneId": "z139",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -877,7 +877,7 @@
       "sizeInstall": 120.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -892,7 +892,7 @@
       "sizeInstall": 130.0,
       "energyOutput": null,
       "yearInstall": "Aug 28, 2017",
-      "zoneId": "z041",
+      "zoneId": "z137",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -907,7 +907,7 @@
       "sizeInstall": 100.0,
       "energyOutput": null,
       "yearInstall": "Mar 20, 2018",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -922,7 +922,7 @@
       "sizeInstall": 240.0,
       "energyOutput": null,
       "yearInstall": "Feb 2, 2018",
-      "zoneId": null,
+      "zoneId": "z129",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -937,7 +937,7 @@
       "sizeInstall": 300.0,
       "energyOutput": null,
       "yearInstall": "Feb 23, 2018",
-      "zoneId": "z039",
+      "zoneId": "z128",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -952,7 +952,7 @@
       "sizeInstall": 500.0,
       "energyOutput": null,
       "yearInstall": "Mar 13, 2018",
-      "zoneId": "z040",
+      "zoneId": "z132",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -967,7 +967,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Feb 19, 2014",
-      "zoneId": null,
+      "zoneId": "z012",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -982,7 +982,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Feb 20, 2014",
-      "zoneId": null,
+      "zoneId": "z112",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -997,7 +997,7 @@
       "sizeInstall": 4.0,
       "energyOutput": null,
       "yearInstall": "Feb 10, 2014",
-      "zoneId": "z014",
+      "zoneId": "z093",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1012,7 +1012,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Feb 12, 2014",
-      "zoneId": "z028",
+      "zoneId": "z037",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1027,7 +1027,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Feb 12, 2014",
-      "zoneId": null,
+      "zoneId": "z120",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1042,7 +1042,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 27, 2015",
-      "zoneId": "z015",
+      "zoneId": "z084",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1057,7 +1057,7 @@
       "sizeInstall": 4.0,
       "energyOutput": null,
       "yearInstall": "Dec 21, 2014",
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1072,7 +1072,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Dec 4, 2015",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1087,7 +1087,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 25, 2015",
-      "zoneId": null,
+      "zoneId": "z001",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1102,7 +1102,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Aug 27, 2015",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1117,7 +1117,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Dec 1, 2015",
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1132,7 +1132,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Dec 17, 2015",
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1147,7 +1147,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 17, 2015",
-      "zoneId": null,
+      "zoneId": "z107",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1162,7 +1162,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 26, 2015",
-      "zoneId": null,
+      "zoneId": "z091",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1177,7 +1177,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 9, 2015",
-      "zoneId": null,
+      "zoneId": "z101",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1192,7 +1192,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Jan 13, 2016",
-      "zoneId": null,
+      "zoneId": "z038",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1207,7 +1207,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 23, 2015",
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1222,7 +1222,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 16, 2015",
-      "zoneId": null,
+      "zoneId": "z119",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1237,7 +1237,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 16, 2015",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1252,7 +1252,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 16, 2015",
-      "zoneId": null,
+      "zoneId": "z126",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1267,7 +1267,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "June 2, 2017",
-      "zoneId": "z033",
+      "zoneId": "z002",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1282,7 +1282,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 9, 2017",
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1297,7 +1297,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "May 15, 2017",
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1312,7 +1312,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Oct 23, 2017",
-      "zoneId": "z032",
+      "zoneId": "z025",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1327,7 +1327,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 29, 2017",
-      "zoneId": null,
+      "zoneId": "z115",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1342,7 +1342,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 8, 2017",
-      "zoneId": null,
+      "zoneId": "z110",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1357,7 +1357,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "June 13, 2017",
-      "zoneId": "z020",
+      "zoneId": "z086",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1372,7 +1372,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Oct 26, 2017",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1387,7 +1387,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "May 17, 2017",
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1402,7 +1402,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Aug 2, 2017",
-      "zoneId": "z005",
+      "zoneId": "z073",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1417,7 +1417,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Nov 16, 2017",
-      "zoneId": null,
+      "zoneId": "z059",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1432,7 +1432,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Sept 6, 2017",
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1447,7 +1447,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "Sept 29, 2017",
-      "zoneId": null,
+      "zoneId": "z127",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1462,7 +1462,7 @@
       "sizeInstall": 21.0,
       "energyOutput": null,
       "yearInstall": "Jun 18, 2012",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1477,7 +1477,7 @@
       "sizeInstall": 86.4,
       "energyOutput": null,
       "yearInstall": "Jul 11, 2012",
-      "zoneId": null,
+      "zoneId": "z136",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1492,7 +1492,7 @@
       "sizeInstall": 10.0,
       "energyOutput": null,
       "yearInstall": "2019",
-      "zoneId": null,
+      "zoneId": "z060",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1507,7 +1507,7 @@
       "sizeInstall": 94.0,
       "energyOutput": null,
       "yearInstall": "2018",
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "Toronto Renewable Energy Installations"
     },
     {
@@ -1521,7 +1521,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 3,
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1535,7 +1535,7 @@
       ],
       "level2Ports": 5,
       "level3Ports": 0,
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1549,7 +1549,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 0,
-      "zoneId": "z003",
+      "zoneId": "z078",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1563,7 +1563,7 @@
       ],
       "level2Ports": 24,
       "level3Ports": 4,
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1577,7 +1577,7 @@
       ],
       "level2Ports": 10,
       "level3Ports": 0,
-      "zoneId": "z004",
+      "zoneId": "z079",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1591,7 +1591,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 0,
-      "zoneId": "z010",
+      "zoneId": "z097",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1605,7 +1605,7 @@
       ],
       "level2Ports": 28,
       "level3Ports": 1,
-      "zoneId": null,
+      "zoneId": "z104",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1619,7 +1619,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 0,
-      "zoneId": "z002",
+      "zoneId": "z075",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1633,7 +1633,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 0,
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1647,7 +1647,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 0,
-      "zoneId": "z023",
+      "zoneId": "z067",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1661,7 +1661,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z022",
+      "zoneId": "z066",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1675,7 +1675,7 @@
       ],
       "level2Ports": 10,
       "level3Ports": 0,
-      "zoneId": "z029",
+      "zoneId": "z052",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1689,7 +1689,7 @@
       ],
       "level2Ports": 6,
       "level3Ports": 0,
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1703,7 +1703,7 @@
       ],
       "level2Ports": 12,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z092",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1717,7 +1717,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 0,
-      "zoneId": "z010",
+      "zoneId": "z097",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1731,7 +1731,7 @@
       ],
       "level2Ports": 22,
       "level3Ports": 1,
-      "zoneId": "z002",
+      "zoneId": "z075",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1745,7 +1745,7 @@
       ],
       "level2Ports": 40,
       "level3Ports": 0,
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1759,7 +1759,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 0,
-      "zoneId": "z000",
+      "zoneId": "z077",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1773,7 +1773,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z080",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1787,7 +1787,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z106",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1801,7 +1801,7 @@
       ],
       "level2Ports": 12,
       "level3Ports": 4,
-      "zoneId": "z015",
+      "zoneId": "z084",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1815,7 +1815,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 6,
-      "zoneId": "z023",
+      "zoneId": "z067",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1829,7 +1829,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 1,
-      "zoneId": null,
+      "zoneId": "z089",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1843,7 +1843,7 @@
       ],
       "level2Ports": 6,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1857,7 +1857,7 @@
       ],
       "level2Ports": 6,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1871,7 +1871,7 @@
       ],
       "level2Ports": 4,
       "level3Ports": 1,
-      "zoneId": null,
+      "zoneId": "z003",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1885,7 +1885,7 @@
       ],
       "level2Ports": 6,
       "level3Ports": 1,
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1899,7 +1899,7 @@
       ],
       "level2Ports": 6,
       "level3Ports": 0,
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1913,7 +1913,7 @@
       ],
       "level2Ports": 8,
       "level3Ports": 1,
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1927,7 +1927,7 @@
       ],
       "level2Ports": 12,
       "level3Ports": 0,
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1941,7 +1941,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z001",
+      "zoneId": "z076",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1955,7 +1955,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z016",
+      "zoneId": "z081",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1969,7 +1969,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -1983,7 +1983,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z016",
+      "zoneId": "z081",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2011,7 +2011,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2025,7 +2025,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2039,7 +2039,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2053,7 +2053,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z090",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2067,7 +2067,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z090",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2081,7 +2081,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z088",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2095,7 +2095,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z080",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2109,7 +2109,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z080",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2123,7 +2123,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z011",
+      "zoneId": "z098",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2137,7 +2137,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z013",
+      "zoneId": "z094",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2151,7 +2151,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": "z007",
+      "zoneId": "z071",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2165,7 +2165,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": "z007",
+      "zoneId": "z071",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2179,7 +2179,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z069",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2193,7 +2193,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z069",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2207,7 +2207,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z069",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2221,7 +2221,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z064",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2235,7 +2235,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z022",
+      "zoneId": "z066",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2249,7 +2249,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2263,7 +2263,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2277,7 +2277,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z015",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2291,7 +2291,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": "z037",
+      "zoneId": "z017",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2305,7 +2305,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z113",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2319,7 +2319,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z113",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2333,7 +2333,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2347,7 +2347,7 @@
       ],
       "level2Ports": 1,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2361,7 +2361,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z016",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2375,7 +2375,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2389,7 +2389,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2403,7 +2403,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z019",
+      "zoneId": "z087",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2417,7 +2417,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z018",
+      "zoneId": "z085",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2431,7 +2431,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z017",
+      "zoneId": "z082",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2445,7 +2445,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z009",
+      "zoneId": "z095",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2459,7 +2459,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z016",
+      "zoneId": "z081",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2473,7 +2473,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2487,7 +2487,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2501,7 +2501,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2515,7 +2515,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z070",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2529,7 +2529,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z065",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2543,7 +2543,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z023",
+      "zoneId": "z067",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2557,7 +2557,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2571,7 +2571,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z027",
+      "zoneId": "z051",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2585,7 +2585,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z038",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2599,7 +2599,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2613,7 +2613,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2627,7 +2627,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z021",
+      "zoneId": "z063",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2641,7 +2641,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": null,
+      "zoneId": "z062",
       "source": "City of Toronto EV Charging (Green P)"
     },
     {
@@ -2655,7 +2655,7 @@
       ],
       "level2Ports": 2,
       "level3Ports": 0,
-      "zoneId": "z031",
+      "zoneId": "z024",
       "source": "City of Toronto EV Charging (Green P)"
     }
   ]
