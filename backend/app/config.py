@@ -54,6 +54,20 @@ CORS_ORIGINS: list[str] = os.getenv(
     "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173",
 ).split(",")
 
+# --- Supabase persistence (Phase 2 — optional) -----------------------------
+SUPABASE_URL: str | None = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_ROLE_KEY: str | None = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+
+
+def supabase_enabled() -> bool:
+    """True when both Supabase URL and service role key are set."""
+    return bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
+
+
+def persistence_provider() -> str:
+    """Active persistence backend: 'supabase' or 'memory' (in-process demo)."""
+    return "supabase" if supabase_enabled() else "memory"
+
 
 def llm_provider() -> str | None:
     """Active provider: real key wins; else the scripted 'demo' provider (if enabled); else None."""

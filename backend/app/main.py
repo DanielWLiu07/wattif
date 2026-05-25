@@ -38,11 +38,12 @@ log = logging.getLogger("wattif")
 async def lifespan(app: FastAPI):
     world = get_world()
     log.info(
-        "WattIf backend ready: %d zones, %d agents (data source=%s), LLM=%s",
+        "WattIf backend ready: %d zones, %d agents (data source=%s), LLM=%s, persistence=%s",
         len(world.zones),
         len(world.agents),
         world.source,
         "on" if config.llm_enabled() else "off (rule-based fallback)",
+        config.persistence_provider(),
     )
     yield
 
@@ -76,6 +77,8 @@ def health() -> dict:
         "realLlm": config.real_llm_provider(),  # None when running on the scripted demo provider
         "mlAvailable": ml_bridge.ml_available(),
         "mlModels": ml_bridge.models_available(),
+        "persistenceProvider": config.persistence_provider(),
+        "supabaseConfigured": config.supabase_enabled(),
     }
 
 
