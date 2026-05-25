@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "trained_at": "2026-05-25T11:40:41",
+  "trained_at": "2026-05-25T13:53:42",
   "seed": 42,
   "sklearn_only": true,
   "data_source": "real+synthetic",
@@ -8,37 +8,37 @@
   "n_real_agents": 8001,
   "models": {
     "demand_zone": {
-      "mae": 176662.72285961334,
-      "r2": 0.9919398271855908,
-      "mae_pct_of_mean": 0.033907096160102804,
+      "mae": 175924.96241061704,
+      "r2": 0.9920365030221868,
+      "mae_pct_of_mean": 0.03376549687938122,
       "n_rows": 7680,
       "n_real_rows": 1680,
       "source": "real+synthetic"
     },
     "demand_agent": {
-      "mae": 127.73281626231197,
-      "r2": 0.7378484879724901,
-      "mae_pct_of_mean": 0.15714805452384706,
+      "mae": 133.1620875568987,
+      "r2": 0.7246224776801874,
+      "mae_pct_of_mean": 0.16342207179166537,
       "n_rows": 25002,
       "n_real_rows": 16002,
       "source": "real+synthetic"
     },
     "adoption": {
-      "auc": 0.7381458466727547,
-      "base_rate": 0.49337533123343835,
+      "auc": 0.7405093339133434,
+      "base_rate": 0.48862556872156393,
       "n_rows": 20001,
       "n_real_rows": 8001,
       "source": "real+synthetic",
       "incentive_monotonic": true
     },
     "cluster": {
-      "silhouette": 0.30663025248259945,
+      "silhouette": 0.2724632115359377,
       "k": 4,
       "labels": {
         "2": "affluent-owner",
         "1": "stable-mixed",
-        "0": "urban-renter",
-        "3": "burdened-renter"
+        "3": "urban-renter",
+        "0": "burdened-renter"
       },
       "source": "data/processed/zones.json (140 zones)",
       "n_rows": 140

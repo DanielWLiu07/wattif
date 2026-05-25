@@ -240,6 +240,76 @@ def scenario_adoption(agent: Any, context: dict | None = None) -> dict[str, floa
 
 
 # ===========================================================================
+# 2c. Siting priority (demand-matching + equity) — the challenge's core ask
+# ===========================================================================
+def siting_priority(zone: Any, context: dict | None = None) -> dict[str, Any]:
+    """Per-zone siting priority fusing UNMET clean-energy demand with energy burden.
+
+    Higher score = better place to build next: more unserved demand AND higher
+    equity burden. This is the renewable-siting + demand-matching + equity ask, as a
+    single rankable index the optimizer/UI can sort zones by.
+
+    context (all optional):
+        renewable_supply_kwh: clean supply already serving the zone (kWh/month)
+        coverage_pct:         fraction of demand already met by clean supply (0..1)
+                              (used if renewable_supply_kwh absent)
+        equity_weight:        0..1 blend toward equity vs raw demand-matching (default 0.4)
+        month:                seasonality for the demand estimate (default 1)
+
+    Returns {score, unmet_demand_kwh, unmet_ratio, energy_burden, equity_weight,
+    demand_signal, rationale}. Deterministic heuristic, data-calibrated; never raises
+    and needs no trained artifact (purely additive — existing signatures unchanged).
+    """
+    z = F.normalize_zone(zone)
+    ctx = dict(context or {})
+    month = int(ctx.get("month", 1))
+
+    # Monthly demand: prefer the zone's own baseline, else the demand model/fallback.
+    demand = z.get("demand_kwh_monthly")
+    if not demand or demand <= 0:
+        demand = _predict_zone_demand(zone, month)
+    demand = float(max(demand, 1.0))
+
+    # Clean supply already serving the zone -> unmet demand.
+    if "renewable_supply_kwh" in ctx and ctx["renewable_supply_kwh"] is not None:
+        clean = float(ctx["renewable_supply_kwh"])
+    elif "coverage_pct" in ctx and ctx["coverage_pct"] is not None:
+        clean = demand * float(np.clip(ctx["coverage_pct"], 0.0, 1.0))
+    else:
+        clean = 0.0  # greenfield baseline: nothing clean yet
+    unmet = float(max(demand - clean, 0.0))
+    unmet_ratio = float(np.clip(unmet / demand, 0.0, 1.0))
+
+    # Demand-matching signal blends absolute magnitude (saturating against the city
+    # scale) with the share unserved, so both "big" and "badly-served" zones rank up.
+    scale = F.zone_demand_scale()
+    unmet_mag = unmet / (unmet + scale)  # 0..1, magnitude
+    demand_signal = float(np.clip(0.5 * unmet_mag + 0.5 * unmet_ratio, 0.0, 1.0))
+
+    burden = float(np.clip(z["energy_burden_index"], 0.0, 1.0))
+    ew = float(np.clip(ctx.get("equity_weight", 0.4), 0.0, 1.0))
+    score = float(np.clip((1.0 - ew) * demand_signal + ew * burden, 0.0, 1.0))
+
+    pct = round(unmet_ratio * 100)
+    gwh = unmet / 1e6
+    burden_word = "high" if burden >= 0.6 else "moderate" if burden >= 0.4 else "low"
+    rationale = (
+        f"{pct}% of demand unserved (~{gwh:.1f} GWh/mo) in a {burden_word}-burden zone "
+        f"({burden:.2f}) → {'strong' if score >= 0.6 else 'moderate' if score >= 0.4 else 'low'} "
+        f"demand+equity siting candidate"
+    )
+    return {
+        "score": score,
+        "unmet_demand_kwh": unmet,
+        "unmet_ratio": unmet_ratio,
+        "energy_burden": burden,
+        "equity_weight": ew,
+        "demand_signal": demand_signal,
+        "rationale": rationale,
+    }
+
+
+# ===========================================================================
 # 3. Equity clustering
 # ===========================================================================
 def zone_cluster(zone: Any) -> dict[str, Any]:
@@ -340,6 +410,15 @@ def _self_test() -> None:
         compact = {k: round(v, 2) for k, v in sig.items()}
         print(f"  {scen:>14}: {compact}")
 
+    print("\nsiting_priority (demand-matching + equity; greenfield = no clean supply yet):")
+    for z in (zone, rich):
+        sp = siting_priority(z, {"equity_weight": 0.4})
+        print(f"  {z['name']:>14}: score={sp['score']:.2f}  unmet={sp['unmet_ratio']*100:.0f}%  burden={sp['energy_burden']:.2f}")
+        print(f"                  {sp['rationale']}")
+    # effect of partial existing coverage on the high-burden zone
+    covered = siting_priority(zone, {"coverage_pct": 0.8})
+    print(f"  Regent Park @80% covered: score={covered['score']:.2f} (unmet {covered['unmet_ratio']*100:.0f}%) — drops as it gets served")
+
     print("\nzone_cluster (equity archetype):")
     for z in (zone, rich):
         print(f"  {z['name']:>14}: {zone_cluster(z)}")
@@ -362,6 +441,20 @@ def _self_test() -> None:
     assert set(scenario_adoption(agent_lo, {"scenario": "nonexistent"})) == set(
         ("solar", "battery", "microgrid", "wind", "ev")
     ), "unknown scenario must still return full tech dict (safe fallback)"
+    # siting_priority: in [0,1]; serving a zone (higher coverage) must not raise priority
+    sp_full = siting_priority(zone, {"coverage_pct": 0.0})
+    sp_served = siting_priority(zone, {"coverage_pct": 0.9})
+    assert 0.0 <= sp_full["score"] <= 1.0
+    assert sp_served["score"] <= sp_full["score"], "more coverage should not increase siting priority"
+    # higher equity weight must lift a high-burden zone's score (use a small high-burden
+    # zone so burden clearly dominates the demand signal)
+    hb = {"demographics": {"population": 2000, "medianIncome": 30000, "renterPct": 0.9,
+                           "energyBurdenIndex": 0.95}, "demandKwhMonthly": 200000.0,
+          "solarPotential": 0.3}
+    assert (
+        siting_priority(hb, {"equity_weight": 0.8})["score"]
+        > siting_priority(hb, {"equity_weight": 0.0})["score"]
+    ), "higher equity weight should raise a high-burden zone's priority"
     print("\nAll self-test assertions passed.")
 
 
