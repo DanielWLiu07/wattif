@@ -146,6 +146,8 @@ type State = {
   wsConnected: boolean;
   wsReconnecting: boolean;
   loaded: boolean;
+  /** From GET /api/health when live; drives honesty labels in TopBar. */
+  backendHealth: api.HealthMeta | null;
 
   // actions
   init: () => Promise<void>;
@@ -456,6 +458,7 @@ export const useStore = create<State>((set, get) => ({
   wsConnected: false,
   wsReconnecting: false,
   loaded: false,
+  backendHealth: null,
 
   init: async () => {
     // Retry the REST fetch a few times before settling for mock — a page opened
@@ -486,6 +489,7 @@ export const useStore = create<State>((set, get) => ({
       approvalPct: sentiment.cityApprovalPct,
     };
     const { data: voices } = await api.getVoices(8, infra, sentiment);
+    const backendHealth = zLive ? await api.getHealthMeta() : null;
     set({
       zones,
       agents,
@@ -497,6 +501,7 @@ export const useStore = create<State>((set, get) => ({
       flows,
       voices: tagVoices(voices),
       live: zLive,
+      backendHealth,
       loaded: true,
       approvalHistory: Object.fromEntries(
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
@@ -602,6 +607,7 @@ export const useStore = create<State>((set, get) => ({
       api.getSentiment(infra),
       api.getFlows(infra),
     ]);
+    const backendHealth = await api.getHealthMeta();
     set((s) => ({
       zones,
       agents,
@@ -609,6 +615,7 @@ export const useStore = create<State>((set, get) => ({
       sentiment,
       flows,
       live: true,
+      backendHealth,
       approvalHistory: Object.fromEntries(
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
