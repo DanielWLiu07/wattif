@@ -243,6 +243,24 @@ const subjectSplit = (base: number) => {
   const oppose = Math.round(Math.max(4, (1 - base) * 55));
   return { support, oppose, neutral: Math.max(0, 100 - support - oppose) };
 };
+// Normalize a backend response (counts at any scale, or just an approval 0..1)
+// into support/oppose/neutral percentages summing ~100.
+const toSplit = (
+  approval?: number,
+  s?: number,
+  o?: number,
+  n?: number
+): { support: number; oppose: number; neutral: number } => {
+  if (s != null && o != null && n != null) {
+    const tot = s + o + n || 1;
+    return {
+      support: Math.round((s / tot) * 100),
+      oppose: Math.round((o / tot) * 100),
+      neutral: Math.round((n / tot) * 100),
+    };
+  }
+  return subjectSplit(approval ?? 0.5);
+};
 const PROGRAM_LABEL: Record<string, string> = {
   rooftop_solar_rebate: "Rooftop solar rebate",
   ev_incentive: "EV charging incentive",
@@ -718,17 +736,27 @@ export const useStore = create<State>((set, get) => ({
   selectInfra: (id) => {
     set({ selectedInfraId: id });
     const inf = id && get().infra.find((i) => i.id === id);
-    if (inf) {
-      const base = (get().sentiment?.perZone[inf.zoneId ?? ""] ?? 0.5) + KIND_BIAS[inf.kind];
-      set({
-        subjectApproval: {
-          label: `this ${inf.kind}`,
-          ...subjectSplit(Math.max(0, Math.min(1, base))),
-        },
-      });
-    } else {
+    if (!inf) {
       set({ subjectApproval: null });
+      return;
     }
+    // instant mock readout, then refine from the live subject route if available
+    const base = (get().sentiment?.perZone[inf.zoneId ?? ""] ?? 0.5) + KIND_BIAS[inf.kind];
+    set({
+      subjectApproval: {
+        label: `this ${inf.kind}`,
+        ...subjectSplit(Math.max(0, Math.min(1, base))),
+      },
+    });
+    void api.getSubjectApproval(`infra:${inf.id}`).then((r) => {
+      if (r && get().selectedInfraId === id)
+        set({
+          subjectApproval: {
+            label: `this ${inf.kind}`,
+            ...toSplit(r.approval, r.support, r.oppose, r.neutral),
+          },
+        });
+    });
   },
   flyToInfra: (id) => {
     const inf = get().infra.find((i) => i.id === id);
@@ -775,16 +803,23 @@ export const useStore = create<State>((set, get) => ({
       `Placed ${optimistic.kind} in ${z?.name ?? "the city"}`,
       "good"
     );
-    // subject-tied sentiment: "X% support this <kind> here"
+    // subject-tied sentiment: "X% support this <kind> here".
+    // Prefer the backend's proposalApproval + vote counts; else fall back to mock.
     {
-      const base =
-        (get().sentiment?.perZone[z?.id ?? ""] ?? 0.5) + KIND_BIAS[placeKind];
-      set({
-        subjectApproval: {
-          label: `this ${placeKind}`,
-          ...subjectSplit(Math.max(0, Math.min(1, base))),
-        },
-      });
+      const sp = saved as api.PlacedInfra;
+      const hasLive =
+        sp.proposalApproval != null || sp.supportCount != null;
+      const split = hasLive
+        ? toSplit(
+            sp.proposalApproval,
+            sp.supportCount,
+            sp.opposeCount,
+            sp.neutralCount
+          )
+        : subjectSplit(
+            Math.max(0, Math.min(1, (get().sentiment?.perZone[z?.id ?? ""] ?? 0.5) + KIND_BIAS[placeKind]))
+          );
+      set({ subjectApproval: { label: `this ${placeKind}`, ...split } });
     }
     // nearby people orient toward the new installation (gentle cluster)
     {
@@ -1257,6 +1292,15 @@ export const useStore = create<State>((set, get) => ({
       adoptionByZone: adopt,
       subjectApproval: { label, ...subjectSplit(Math.min(1, base + 0.12)) },
     }));
+    void api.getSubjectApproval(`program:${type}`).then((r) => {
+      if (r)
+        set({
+          subjectApproval: {
+            label,
+            ...toSplit(r.approval, r.support, r.oppose, r.neutral),
+          },
+        });
+    });
     get().pushToast(`${label} launched in ${targets.length} neighbourhoods`, "good");
     logActivity(
       set,
