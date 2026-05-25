@@ -52,6 +52,19 @@ def _load_zone_env() -> dict | None:
 # but are wind-NIMBY; businesses value storage/reliability.
 #                                        solar,  wind,  battery, microgrid
 _ARCHETYPE_DELTA: dict[str, list[float]] = {
+    # data-2 archetypes
+    "owner-detached": [0.13, -0.12, 0.03, -0.06],  # rooftop solar yes, wind-NIMBY
+    "condo-owner": [0.08, -0.04, 0.04, 0.00],  # urban owner
+    "renter-low": [-0.12, -0.05, 0.03, 0.14],  # can't install -> community options
+    "renter-mid": [-0.05, -0.02, 0.02, 0.08],
+    "senior": [
+        0.02,
+        -0.06,
+        0.08,
+        0.06,
+    ],  # reliability / heat-safety -> storage + microgrid
+    "student": [0.10, 0.04, 0.03, 0.10],  # climate-urgency -> pro everything clean
+    # legacy archetypes (kept for back-compat / synthetic seed)
     "renter-lowincome": [-0.12, -0.05, 0.03, 0.14],
     "renter-midincome": [-0.05, -0.02, 0.02, 0.08],
     "highrise-tenant": [-0.15, -0.08, 0.05, 0.16],

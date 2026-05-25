@@ -24,6 +24,9 @@ class World:
     def __init__(self) -> None:
         self.zones, self.agents, self.source = load_world()
         self.zones_by_id = {z.id: z for z in self.zones}
+        # Re-assign agent archetypes from the real per-zone mix (archetypes.json) when present,
+        # so the agents mirror real Toronto tenure/dwelling/business mix per neighbourhood.
+        _apply_archetype_mix(self.agents, self.zones_by_id)
         self.agents_by_zone: dict[str, list] = {}
         for a in self.agents:
             self.agents_by_zone.setdefault(a.zone_id, []).append(a)
@@ -165,6 +168,56 @@ class World:
 
     def remove_infra(self, infra_id: str) -> bool:
         return self.engine.remove_infra(infra_id)
+
+
+def _apply_archetype_mix(agents: list, zones_by_id: dict) -> None:
+    """Re-sample each zone's agents' archetype from real proportions (archetypes.json).
+
+    Defensive + deterministic; no-op (keeps current archetypes) if the file is absent/empty.
+    """
+    try:
+        from .data.loader import load_archetypes
+
+        mix = load_archetypes()
+        if not mix:
+            return
+        rng = np.random.default_rng(config.RANDOM_SEED + 7)
+        by_zone: dict[str, list] = {}
+        for a in agents:
+            by_zone.setdefault(a.zone_id, []).append(a)
+        for zid, zone_agents in by_zone.items():
+            props = mix.get(zid)
+            if not props:
+                continue
+            kinds = list(props.keys())
+            weights = np.array([max(0.0, props[k]) for k in kinds], dtype=float)
+            total = weights.sum()
+            if total <= 0:
+                continue
+            weights /= total
+            picks = rng.choice(kinds, size=len(zone_agents), p=weights)
+            for a, k in zip(zone_agents, picks):
+                a.archetype = str(k)
+    except Exception:  # noqa: BLE001 — archetype mix is optional, never break boot
+        pass
+
+
+def archetype_mix(agents: list, zones: list) -> dict[str, dict]:
+    """Actual per-zone archetype proportions from the current agents (for a FE breakdown)."""
+    by_zone: dict[str, dict] = {}
+    counts: dict[str, int] = {}
+    for a in agents:
+        d = by_zone.setdefault(a.zone_id, {})
+        d[a.archetype] = d.get(a.archetype, 0) + 1
+        counts[a.zone_id] = counts.get(a.zone_id, 0) + 1
+    out = {}
+    for z in zones:
+        d = by_zone.get(z.id, {})
+        n = counts.get(z.id, 0) or 1
+        out[z.id] = {
+            k: round(v / n, 3) for k, v in sorted(d.items(), key=lambda kv: -kv[1])
+        }
+    return out
 
 
 def _default_capacity(kind: str) -> float:

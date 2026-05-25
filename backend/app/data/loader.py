@@ -160,6 +160,36 @@ def load_sbei() -> dict | None:
     return _load_full_doc("sbei.json")
 
 
+def load_archetypes() -> dict[str, dict] | None:
+    """Per-zone archetype proportions -> {zoneId: {archetype: fraction}}, or None.
+
+    Flexible to data-2's shape: accepts a top-level {zoneId: {archetype: p}} OR a
+    {zones:[{zoneId, mix|proportions|archetypes: {archetype: p}}]} document.
+    """
+    doc = _load_full_doc("archetypes.json")
+    if not doc:
+        # Maybe it's a bare list of zone objects.
+        items = _load_dict_doc("archetypes.json", "zones")
+        if not items:
+            return None
+        doc = {"zones": items}
+
+    out: dict[str, dict] = {}
+    if "zones" in doc and isinstance(doc["zones"], list):
+        for z in doc["zones"]:
+            zid = z.get("zoneId")
+            mix = z.get("mix") or z.get("proportions") or z.get("archetypes")
+            if zid and isinstance(mix, dict):
+                out[zid] = {str(k): float(v) for k, v in mix.items()}
+    else:
+        for zid, mix in doc.items():
+            if isinstance(mix, dict):
+                out[zid] = {str(k): float(v) for k, v in mix.items()}
+    if out:
+        log.info("loaded archetypes.json: %d zone mixes", len(out))
+    return out or None
+
+
 def load_generation_mix() -> dict | None:
     """IESO generation mix doc (avg grid intensity + fuel mix) for context/display, or None."""
     path = config.DATA_PROCESSED_DIR / "generation_mix.json"

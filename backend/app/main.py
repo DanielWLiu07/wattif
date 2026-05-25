@@ -353,6 +353,24 @@ def get_district_energy() -> dict:
     }
 
 
+@app.get("/api/archetypes")
+def get_archetypes() -> dict:
+    """Per-zone agent archetype proportions (actual mix from the loaded agents), for a FE breakdown.
+
+    `source` is "data" when archetypes.json calibrated the mix, else "model".
+    """
+    from .data.loader import load_archetypes
+    from .state import archetype_mix
+
+    world = get_world()
+    mix = archetype_mix(world.agents, world.zones)
+    return {
+        "available": True,
+        "source": "data" if load_archetypes() else "model",
+        "zones": [{"zoneId": zid, "mix": m} for zid, m in mix.items()],
+    }
+
+
 @app.get("/api/sbei")
 def get_sbei() -> dict:
     """City-wide sector-based GHG inventory (display/context: 16 Mt, buildings 57%, net-zero 2040)."""

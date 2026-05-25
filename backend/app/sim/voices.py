@@ -251,28 +251,176 @@ _CONTEXT_OPENER = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Personas — opinionated, distinct voices. Each agent gets a persona (from archetype +
+# a deterministic personality overlay); lines are pointed and specific, not fence-sitting.
+# ---------------------------------------------------------------------------
+_PERSONA_LINES = {
+    "advocate": {
+        "support": [
+            "We can't wait — {zone} needs {topic} now. The climate clock is ticking.",
+            "Bring {topic} to {zone} and don't stop there — every rooftop, every block.",
+            "Yes to {topic} in {zone}, full stop. This is the fight of our time.",
+        ],
+        "oppose": [
+            "Even I think this {topic} rollout in {zone} is half-baked — do it properly.",
+        ],
+        "neutral": [
+            "I want {topic} in {zone} — show me it's done right and I'm all in, loudly.",
+        ],
+    },
+    "skeptic": {
+        "support": [
+            "Fine — if {topic} actually lowers bills in {zone}, I'll stop complaining.",
+        ],
+        "oppose": [
+            "Who's paying for {topic} in {zone}? Because it's always us.",
+            "{topic} in {zone} is a feel-good money pit. Hard no.",
+            "Not in {zone}. Fix what's already broken before chasing {topic}.",
+        ],
+        "neutral": [
+            "I'll believe {topic} helps {zone} when it shows up on my bill — not before.",
+        ],
+    },
+    "pragmatist": {
+        "support": [
+            "The math works: {topic} in {zone} pays back fast. Approve it.",
+            "{topic} in {zone} pencils out — solid ROI, let's go.",
+        ],
+        "oppose": [
+            "Numbers don't add up for {topic} in {zone} yet — wait for costs to drop.",
+        ],
+        "neutral": [
+            "Show me the payback on {topic} in {zone}. Under eight years and I'm in.",
+        ],
+    },
+    "business": {
+        "support": [
+            "Reliable power keeps my {zone} shop open — {topic} that cuts outages and bills? Sold.",
+            "{topic} in {zone} means steadier overhead. Good for business.",
+        ],
+        "oppose": [
+            "Construction for {topic} in {zone} kills my foot traffic — time it right or skip it.",
+        ],
+        "neutral": [
+            "If {topic} keeps {zone} powered through peak, my business is interested.",
+        ],
+    },
+    "renter": {
+        "support": [
+            "Finally — {topic} in {zone} that could cut MY hydro bill, not just owners'.",
+            "As a renter in {zone}, community {topic} is how people like me actually benefit.",
+        ],
+        "oppose": [
+            "If {topic} in {zone} lands on tenants' bills, that's a hard no.",
+            "Will {topic} reach renters in {zone}, or just dress up the landlords' towers?",
+        ],
+        "neutral": [
+            "{topic} in {zone} only matters to me if it lowers what I pay — rent and hydro.",
+        ],
+    },
+    "owner": {
+        "support": [
+            "Put {topic} on my street in {zone} — happy to lead the block.",
+            "Bought into {topic} here in {zone} for resilience. Worth every cent.",
+        ],
+        "oppose": [
+            "Keep {topic} off quiet streets in {zone} — noise and property values matter.",
+            "Not by my home in {zone}. Site {topic} somewhere with room.",
+        ],
+        "neutral": [
+            "I'll weigh {topic} for {zone} against the payback — and the view.",
+        ],
+    },
+    "senior": {
+        "support": [
+            "At my age in {zone}, reliable power and cool air aren't luxuries — {topic}, please.",
+            "{topic} in {zone} means I'm not sweating through the next heatwave. Yes.",
+        ],
+        "oppose": [
+            "I'm on a fixed income in {zone} — {topic} had better not raise my bills.",
+        ],
+        "neutral": [
+            "As long as {topic} keeps {zone}'s heat and power steady, I'll back it.",
+        ],
+    },
+    "student": {
+        "support": [
+            "{zone} needs {topic} yesterday — my generation inherits this mess.",
+            "Climate won't wait. Put {topic} all over {zone}.",
+        ],
+        "oppose": [
+            "Honestly {topic} in {zone} smells like greenwashing — go bigger or go home.",
+        ],
+        "neutral": [
+            "{topic} in {zone} is a start, but it's nowhere near fast enough.",
+        ],
+    },
+}
+
+
 def _stance_for(mean_opinion: float) -> str:
-    if mean_opinion >= 0.6:
+    # Narrow neutral band -> fewer fence-sitters, more clear stances.
+    if mean_opinion >= 0.55:
         return "support"
     if mean_opinion < 0.45:
         return "oppose"
     return "neutral"
 
 
+def _persona(archetype: str, mean_opinion: float, agent_id: str) -> str:
+    """Deterministic persona from archetype + opinion + a stable per-agent personality bucket.
+
+    Handles both the data-2 archetype names (owner-detached, condo-owner, renter-low/mid, senior,
+    student, small-business) and the legacy ones (owner-suburban/urban, renter-*income, highrise-tenant).
+    """
+    # senior/student are real archetypes -> keep their identity (don't override with advocate/skeptic).
+    if archetype == "senior":
+        return "senior"
+    if archetype == "student":
+        return "student"
+    if archetype == "small-business":
+        base = "business"
+    elif archetype.startswith("renter") or archetype == "highrise-tenant":
+        base = "renter"
+    elif archetype in ("owner-detached", "owner-suburban"):
+        base = "owner"
+    else:  # condo-owner, owner-urban, or unknown
+        base = "pragmatist"
+    # Strong opinions become passionate advocates / blunt skeptics (keeps a vivid spread).
+    if mean_opinion >= 0.66:
+        return "advocate"
+    if mean_opinion < 0.38:
+        return "skeptic"
+    # A little personality variety for the moderate middle.
+    if base == "pragmatist":
+        h = (sum(ord(c) for c in agent_id) % 100) / 100.0
+        if h < 0.12:
+            return "senior"
+        if h < 0.24:
+            return "student"
+    return base
+
+
 def _pick_template(
-    rng, archetype: str, stance: str, context: str | None
+    rng, archetype: str, stance: str, context: str | None, persona: str | None = None
 ) -> tuple[str, bool]:
-    """Return (template, used_scenario_line). Prefers scenario- then archetype-specific."""
-    # 1) scenario-specific (55%)
+    """Return (template, used_scenario_line). Priority: scenario -> persona -> archetype -> generic."""
+    # 1) scenario-specific (on an event, 55%)
     if context and context in _SCENARIO_LINES:
         pool = _SCENARIO_LINES[context].get(stance) or []
         if pool and rng.random() < 0.55:
             return str(rng.choice(pool)), True
-    # 2) archetype-specific (45%)
+    # 2) persona-specific (opinionated; 70%)
+    if persona:
+        pp = _PERSONA_LINES.get(persona, {}).get(stance) or []
+        if pp and rng.random() < 0.70:
+            return str(rng.choice(pp)), False
+    # 3) archetype-specific
     arche = _ARCHETYPE_LINES.get(archetype, {}).get(stance) or []
-    if arche and rng.random() < 0.45:
+    if arche and rng.random() < 0.5:
         return str(rng.choice(arche)), False
-    # 3) generic
+    # 4) generic
     return str(rng.choice(_GENERIC[stance])), False
 
 
@@ -301,7 +449,10 @@ def generate_voices(
         zone = zones_by_id.get(agent.zone_id)
         zone_name = zone.name if zone else "my area"
 
-        template, used_scenario = _pick_template(rng, agent.archetype, stance, context)
+        persona = _persona(agent.archetype, mean_op, agent.id)
+        template, used_scenario = _pick_template(
+            rng, agent.archetype, stance, context, persona
+        )
         text = template.format(topic=_KIND_NOUN[kind], zone=zone_name)
 
         # If we didn't use a scenario-specific line, optionally prepend a natural opener.
@@ -388,10 +539,12 @@ def reaction_voices(
             stance, topic = "support", kind
         else:
             op = sentiment.opinion[int(i)]
-            stance = _stance_for(float(op.mean()))
+            mean_op = float(op.mean())
+            stance = _stance_for(mean_op)
             ki = int(np.argmax(op)) if stance != "oppose" else int(np.argmin(op))
             topic = KINDS[ki]
-            template, _ = _pick_template(rng, agent.archetype, stance, trigger)
+            persona = _persona(agent.archetype, mean_op, agent.id)
+            template, _ = _pick_template(rng, agent.archetype, stance, trigger, persona)
             text = template.format(topic=_KIND_NOUN[topic], zone=zone_name)
 
         out.append(

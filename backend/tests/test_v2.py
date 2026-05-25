@@ -398,6 +398,55 @@ def test_voices_endpoint_event_placement():
     assert all("position" in v for v in r)
 
 
+def test_archetypes_endpoint_and_mix():
+    from fastapi.testclient import TestClient
+
+    import app.state as state
+    from app.main import app
+
+    state.reset_world()
+    r = TestClient(app).get("/api/archetypes").json()
+    assert r["available"] and r["source"] in ("data", "model")
+    assert r["zones"]
+    z0 = r["zones"][0]["mix"]
+    assert z0 and abs(sum(z0.values()) - 1.0) < 0.05  # proportions sum to ~1
+
+
+def test_population_mirrors_archetype_mix():
+    """When archetypes.json is present, each zone's agents mirror its real mix (plurality match)."""
+    from app.data.loader import load_archetypes
+    from app.state import archetype_mix
+
+    mix = load_archetypes()
+    if not mix:
+        return  # absent -> falls back to data/seed archetypes
+    w = fresh_world()
+    actual = archetype_mix(w.agents, w.zones)
+    checked = 0
+    for zid, props in mix.items():
+        if zid not in actual or not actual[zid]:
+            continue
+        target_top = max(props, key=props.get)
+        actual_top = max(actual[zid], key=actual[zid].get)
+        # plurality archetype should match (multinomial sampling, so allow occasional ties)
+        if props[target_top] >= 0.35:  # only assert when there's a clear dominant
+            assert actual_top == target_top, (zid, target_top, actual_top)
+            checked += 1
+    assert checked > 0  # we actually exercised some dominant-mix zones
+
+
+def test_voices_are_opinionated_with_spread():
+    """Fewer fence-sitters, more clear stances + persona personality."""
+    w = fresh_world()
+    voices = w.voices(n=50, rng=np.random.default_rng(5))
+    stances = {v.stance for v in voices}
+    assert {"support", "oppose"} <= stances  # a real spread of clear stances
+    # bland fence-sitting generic line should be rare (personas dominate)
+    bland = sum(1 for v in voices if "could go either way" in v.text.lower())
+    assert bland <= 3
+    assert len({v.text for v in voices}) >= 40  # varied
+
+
 def test_voices_are_varied_not_repetitive():
     """The no-key library must read diverse — most of a large sample should be distinct lines."""
     w = fresh_world()
