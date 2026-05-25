@@ -703,3 +703,78 @@ def test_reaction_voices_name_the_program_subject():
     assert rxn
     for v in rxn:
         assert v.trigger == "program:rooftop_solar_rebate"
+
+
+# --- scaling to the full ~140-neighbourhood city --------------------------
+def _synth_zones(n: int):
+    """n jittered zones with fresh ids, derived from the seed generator."""
+    from app.data.seed import generate_zones
+    from app.models import Zone
+
+    rng = np.random.default_rng(42)
+    base = generate_zones(rng)
+    zones = []
+    i = 0
+    while len(zones) < n:
+        for z in base:
+            if len(zones) >= n:
+                break
+            d = z.model_dump()
+            d["id"] = f"z{i:03d}"
+            lng, lat = d["centroid"]
+            d["centroid"] = [
+                lng + rng.uniform(-0.02, 0.02),
+                lat + rng.uniform(-0.02, 0.02),
+            ]
+            zones.append(Zone.model_validate(d))
+            i += 1
+    return zones
+
+
+def test_sim_and_optimizer_scale_to_140_zones():
+    from app.data.seed import generate_agents
+    from app.optimizer import optimize
+    from app.sim.engine import SimEngine
+
+    zones = _synth_zones(140)
+    agents = generate_agents(zones, np.random.default_rng(7), 8000)
+    assert len(zones) == 140
+    assert len(agents) >= 140  # populated city
+    eng = SimEngine(zones, agents)
+    eng.step_many(12)
+    tk = eng.current_tick()
+    assert len(tk.zone_deltas) == 140  # every zone reported
+    recs = optimize(eng, n=8)
+    assert recs  # optimizer produces candidates across the bigger city
+    appr = eng.sentiment.mean_opinion_by_zone()
+    assert len(appr) == 140
+    # launch_program resolves zone ids within the bigger set
+    hb = [j for j, z in enumerate(zones) if z.demographics.energy_burden_index >= 0.55]
+    if hb:
+        res = eng.launch_program("rooftop_solar_rebate", hb, 1.0)
+        assert set(res["zones"]) == {zones[j].id for j in hb}
+
+
+def test_loader_synthesizes_agents_for_loaded_zones_when_agents_absent(tmp_path):
+    """zones.json present but no agents.json -> agents synthesized & BOUND to loaded zones."""
+    import json
+
+    import app.config as config
+    from app.data.loader import load_world
+
+    zones = _synth_zones(60)
+    (tmp_path / "zones.json").write_text(
+        json.dumps([z.model_dump(by_alias=True) for z in zones])
+    )
+    old_dir = config.DATA_PROCESSED_DIR
+    config.DATA_PROCESSED_DIR = tmp_path
+    try:
+        loaded_zones, agents, source = load_world()
+    finally:
+        config.DATA_PROCESSED_DIR = old_dir
+    assert source == "processed"
+    assert len(loaded_zones) == 60
+    assert agents  # synthesized
+    zone_ids = {z.id for z in loaded_zones}
+    # every synthesized agent is bound to a REAL loaded zone (not stale seed zones)
+    assert all(a.zone_id in zone_ids for a in agents)
