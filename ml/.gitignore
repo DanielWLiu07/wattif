@@ -1,0 +1,4 @@
+# Trained binary artifacts — regenerate with `python -m ml.train`.
+# inference.py falls back to deterministic heuristics if these are absent,
+# so the demo never depends on committed binaries.
+models/*.joblib
