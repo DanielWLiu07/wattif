@@ -136,6 +136,8 @@ export type AgentVoice = {
   text: string;
   stance: "support" | "oppose" | "neutral";
   topic: string;
+  position?: LngLat; // exact agent location (pop the bubble here)
+  trigger?: string | null; // "placement" | scenario-type | null
 };
 
 export type Sentiment = {

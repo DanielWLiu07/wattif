@@ -94,6 +94,7 @@ export type LayerInputs = {
   flashZones: string[]; // briefly highlighted zones (what changed this step)
   approvalDeltas: { zoneId: string; delta: number }[]; // transient "+x%" labels
   spawnTimes: Record<string, number>; // infraId -> ms placed (scale-in + ripple)
+  removalTimes: Record<string, number>; // infraId -> ms removed (shrink-out)
   sampledAgents: Agent[]; // sampled "living" people
   agentTargets: Record<string, [number, number]>; // agentId -> stream target
   agentMobilizedAt: number; // ms when mobilization began
@@ -127,6 +128,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     flashZones,
     approvalDeltas,
     spawnTimes,
+    removalTimes,
     sampledAgents,
     agentTargets,
     agentMobilizedAt,
@@ -151,6 +153,12 @@ export function buildLayers(input: LayerInputs): Layer[] {
     if (!sp) return 1;
     const a = (Date.now() - sp) / SPAWN_MS;
     return a >= 1 ? 1 : Math.max(0.01, easeOutBack(a));
+  };
+  // grow on spawn, shrink on removal
+  const infraScale = (id: string) => {
+    const rt = removalTimes[id];
+    if (rt) return Math.max(0.01, 1 - Math.min(1, (Date.now() - rt) / 480));
+    return placeScale(id);
   };
   const outageSet = new Set(outageZones);
   const gatheringSet = new Set(gatheringZones);
@@ -608,8 +616,9 @@ export function buildLayers(input: LayerInputs): Layer[] {
         data: infra,
         getPosition: (i: Infra) => i.position,
         getFillColor: (i: Infra) => {
-          if (i.status === "damaged") return [120, 40, 40, 200] as any;
-          const a = i.status === "active" ? 200 : 110;
+          const fade = removalTimes[i.id] ? infraScale(i.id) : 1;
+          if (i.status === "damaged") return [120, 40, 40, 200 * fade] as any;
+          const a = (i.status === "active" ? 200 : 110) * fade;
           return [...INFRA_COLOR[i.kind], a] as any;
         },
         getElevation: (i: Infra) => {
@@ -630,6 +639,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
         highlightColor: [255, 255, 255, 60],
         updateTriggers: {
           getElevation: [time],
+          getFillColor: [time, removalTimes],
           getLineColor: [selectedInfraId],
         },
         onClick: (info: any) => info.object && onInfraClick(info.object),
@@ -648,13 +658,16 @@ export function buildLayers(input: LayerInputs): Layer[] {
           data: items,
           scenegraph: items[0].modelUrl,
           getPosition: (i: Infra) => i.position,
+          // If the upgraded glTF bakes a rotor clip on blade_0/1/2, play it; the
+          // gentle whole-model yaw is a fallback so wind always reads as moving.
           getOrientation: (i: Infra) =>
             spin
-              ? [0, (time / 12 + hashSeed(i.id) % 360) % 360, 90]
+              ? [0, (time / 26 + hashSeed(i.id) % 360) % 360, 90]
               : [0, 0, 90],
-          // animate IN: scale from ~0 with an overshoot when freshly placed
+          ...(spin ? { _animations: { "*": { speed: 1.5 } } } : {}),
+          // animate IN (overshoot) on place, OUT (shrink) on remove
           getScale: (i: Infra) => {
-            const s = placeScale(i.id);
+            const s = infraScale(i.id);
             return [s, s, s];
           },
           sizeScale: SIZE_SCALE[kind],
@@ -664,7 +677,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
           highlightColor: [255, 255, 255, 90],
           updateTriggers: {
             getOrientation: spin ? [time] : [],
-            getScale: [time],
+            getScale: [time, removalTimes],
           },
           onClick: (info: any) => info.object && onInfraClick(info.object),
         })
@@ -800,13 +813,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
       const selected = v.id === selectedVoiceId;
       const cap = selected ? 200 : 120;
       const text = v.text.length > cap ? v.text.slice(0, cap - 2) + "…" : v.text;
-      return {
-        id: v.id,
-        position: z ? z.centroid : ([-79.38, 43.65] as [number, number]),
-        text,
-        stance: v.stance,
-        selected,
-      };
+      // pop the bubble on the EXACT agent when the backend gives a position
+      const position = (v.position ??
+        (z ? z.centroid : [-79.38, 43.65])) as [number, number];
+      return { id: v.id, position, text, stance: v.stance, selected };
     });
     out.push(
       new TextLayer({

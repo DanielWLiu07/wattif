@@ -15,7 +15,8 @@ import {
   Users,
 } from "lucide-react";
 import { useStore } from "@/store";
-import { fmtCad, fmtCompact, pct } from "@/lib/utils";
+import { fmtCad, fmtCompact } from "@/lib/utils";
+import { useCountUp } from "@/lib/useCountUp";
 import type { SimMetrics } from "@/types";
 import {
   Tooltip,
@@ -27,7 +28,8 @@ type Metric = {
   key: keyof SimMetrics;
   label: string;
   icon: React.ElementType;
-  value: (m: SimMetrics) => string;
+  raw: (m: SimMetrics) => number; // tweened value
+  format: (n: number) => string; // display
   tint: string;
   help: string;
 };
@@ -37,7 +39,8 @@ const METRICS: Metric[] = [
     key: "coveragePct",
     label: "Coverage",
     icon: Leaf,
-    value: (m) => pct(m.coveragePct, 1),
+    raw: (m) => m.coveragePct * 100,
+    format: (n) => `${n.toFixed(1)}%`,
     tint: "text-primary",
     help: "Renewable coverage: share of the city's monthly electricity demand met by clean generation.",
   },
@@ -45,7 +48,8 @@ const METRICS: Metric[] = [
     key: "approvalPct",
     label: "Approval",
     icon: Users,
-    value: (m) => pct(m.approvalPct ?? 0, 0),
+    raw: (m) => (m.approvalPct ?? 0) * 100,
+    format: (n) => `${n.toFixed(0)}%`,
     tint: "text-sky-300",
     help: "Public approval: how residents feel about the energy plan, aggregated across all zones.",
   },
@@ -53,7 +57,8 @@ const METRICS: Metric[] = [
     key: "equityScore",
     label: "Equity",
     icon: Scale,
-    value: (m) => pct(m.equityScore, 0),
+    raw: (m) => m.equityScore * 100,
+    format: (n) => `${n.toFixed(0)}%`,
     tint: "text-emerald-400",
     help: "Equity score: how well clean infrastructure serves high energy-burden (lower-income) zones, not just wealthy ones.",
   },
@@ -61,7 +66,8 @@ const METRICS: Metric[] = [
     key: "renewableSupplyKwh",
     label: "Clean kWh/mo",
     icon: Zap,
-    value: (m) => fmtCompact(m.renewableSupplyKwh),
+    raw: (m) => m.renewableSupplyKwh,
+    format: (n) => fmtCompact(n),
     tint: "text-accent",
     help: "Clean energy generated per month by all active renewable infrastructure.",
   },
@@ -69,7 +75,8 @@ const METRICS: Metric[] = [
     key: "gridLoadPct",
     label: "Grid load",
     icon: Gauge,
-    value: (m) => pct(m.gridLoadPct, 0),
+    raw: (m) => m.gridLoadPct * 100,
+    format: (n) => `${n.toFixed(0)}%`,
     tint: "text-yellow-400",
     help: "Peak grid load vs capacity — lower is healthier; renewables + storage reduce strain.",
   },
@@ -77,7 +84,8 @@ const METRICS: Metric[] = [
     key: "emissionsTonnes",
     label: "Emissions/mo",
     icon: TrendingUp,
-    value: (m) => `${fmtCompact(m.emissionsTonnes)}t`,
+    raw: (m) => m.emissionsTonnes,
+    format: (n) => `${fmtCompact(n)}t`,
     tint: "text-orange-400",
     help: "Tonnes of CO₂ per month from the non-renewable portion of demand.",
   },
@@ -85,11 +93,24 @@ const METRICS: Metric[] = [
     key: "costCumulativeCad",
     label: "Capital",
     icon: CircleDollarSign,
-    value: (m) => fmtCad(m.costCumulativeCad),
+    raw: (m) => m.costCumulativeCad,
+    format: (n) => fmtCad(n),
     tint: "text-sky-400",
     help: "Cumulative capital cost (CAD) of all placed infrastructure.",
   },
 ];
+
+// Tweened metric value (count-up).
+function MetricValue({
+  raw,
+  format,
+}: {
+  raw: number;
+  format: (n: number) => string;
+}) {
+  const v = useCountUp(raw);
+  return <>{format(v)}</>;
+}
 
 export function Hud() {
   const metrics = useStore((s) => s.metrics);
@@ -130,7 +151,7 @@ export function Hud() {
                       </span>
                     </div>
                     <div className="mt-0.5 text-sm font-semibold tabular-nums leading-tight">
-                      {m.value(metrics)}
+                      <MetricValue raw={m.raw(metrics)} format={m.format} />
                     </div>
                   </div>
                 </TooltipTrigger>

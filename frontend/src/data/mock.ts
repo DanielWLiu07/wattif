@@ -509,6 +509,11 @@ export function mockVoices(
       ];
     const arch = ARCH_LABELS[Math.floor(mockRng() * ARCH_LABELS.length)];
     const seed = `${z.id}-${i}-${Math.floor(mockRng() * 1e4)}`;
+    // exact-ish agent location: jittered around the zone centroid
+    const position: LngLat = [
+      z.centroid[0] + (mockRng() - 0.5) * 0.012,
+      z.centroid[1] + (mockRng() - 0.5) * 0.012,
+    ];
     out.push({
       agentId: rid("ag"),
       zoneId: z.id,
@@ -517,6 +522,8 @@ export function mockVoices(
       text: tmpl(near?.kind, z.name),
       stance,
       topic: context ?? near?.kind ?? "grid",
+      position,
+      trigger: context ?? null,
     });
   }
   return out;

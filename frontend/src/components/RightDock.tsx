@@ -8,33 +8,7 @@ import { ActivityLog } from "@/components/ActivityLog";
 import { InfrastructureInspector } from "@/components/InfrastructureInspector";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-
-// Tween a number toward its target (count-up) instead of snapping.
-function useCountUp(target: number, duration = 550) {
-  const [val, setVal] = useState(target);
-  const ref = useRef(target);
-  useEffect(() => {
-    const from = ref.current;
-    const to = target;
-    if (from === to) return;
-    const start = performance.now();
-    let raf = 0;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const v = from + (to - from) * (1 - (1 - t) ** 3);
-      ref.current = v;
-      setVal(v);
-      if (t < 1) raf = requestAnimationFrame(tick);
-      else {
-        ref.current = to;
-        setVal(to);
-      }
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
-  return val;
-}
+import { useCountUp } from "@/lib/useCountUp";
 
 // Tiny delta chip that briefly highlights the change after a step.
 function Delta({ d, unit = "%" }: { d: number; unit?: string }) {

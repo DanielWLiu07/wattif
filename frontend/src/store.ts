@@ -96,6 +96,7 @@ type State = {
 
   // juice: placement animations + toasts
   spawnTimes: Record<string, number>; // infraId -> ms when placed (scale-in anim)
+  removalTimes: Record<string, number>; // infraId -> ms when removed (shrink-out anim)
   toasts: { id: string; text: string; kind: "info" | "good" | "warn" | "bad" }[];
 
   // living world: a sampled set of agents that move + act
@@ -396,6 +397,7 @@ export const useStore = create<State>((set, get) => ({
   approvalHistory: {},
   approvalDeltas: [],
   spawnTimes: {},
+  removalTimes: {},
   toasts: [],
   sampledAgents: [],
   agentTargets: {},
@@ -679,13 +681,21 @@ export const useStore = create<State>((set, get) => ({
   },
 
   removeInfra: async (id) => {
+    // mark for shrink-out; keep it on the map ~480ms, then actually remove
     set((s) => ({
-      infra: s.infra.filter((i) => i.id !== id),
+      removalTimes: { ...s.removalTimes, [id]: Date.now() },
       selectedInfraId: s.selectedInfraId === id ? null : s.selectedInfraId,
     }));
     await api.deleteInfra(id);
-    await get().reset();
-    await get().refreshFlows();
+    setTimeout(() => {
+      set((s) => {
+        const rt = { ...s.removalTimes };
+        delete rt[id];
+        return { infra: s.infra.filter((i) => i.id !== id), removalTimes: rt };
+      });
+      void get().reset();
+      void get().refreshFlows();
+    }, 480);
   },
 
   step: async () => {
@@ -1068,8 +1078,11 @@ export const useStore = create<State>((set, get) => ({
   selectVoiceFromLog: (id) => {
     const v = get().voices.find((x) => x.id === id);
     set({ selectedVoiceId: id });
-    const z = v && get().zones.find((zz) => zz.id === v.zoneId);
-    if (z) set({ flyTo: { target: z.centroid, zoom: 14, pitch: 50, nonce: Date.now() } });
+    if (!v) return;
+    const target =
+      v.position ?? get().zones.find((zz) => zz.id === v.zoneId)?.centroid;
+    if (target)
+      set({ flyTo: { target, zoom: 14.5, pitch: 50, nonce: Date.now() } });
   },
   clearSelectedVoice: () => set({ selectedVoiceId: null }),
 

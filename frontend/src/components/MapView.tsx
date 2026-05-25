@@ -112,6 +112,7 @@ export function MapView() {
   const approvalDeltas = useStore((s) => s.approvalDeltas);
   const approvalHistory = useStore((s) => s.approvalHistory);
   const spawnTimes = useStore((s) => s.spawnTimes);
+  const removalTimes = useStore((s) => s.removalTimes);
   const sampledAgents = useStore((s) => s.sampledAgents);
   const agentTargets = useStore((s) => s.agentTargets);
   const agentMobilizedAt = useStore((s) => s.agentMobilizedAt);
@@ -194,6 +195,7 @@ export function MapView() {
       flashZones,
       approvalDeltas,
       spawnTimes,
+      removalTimes,
       sampledAgents,
       agentTargets,
       agentMobilizedAt,
@@ -238,6 +240,7 @@ export function MapView() {
     flashZones,
     approvalDeltas,
     spawnTimes,
+    removalTimes,
     sampledAgents,
     agentTargets,
     agentMobilizedAt,
