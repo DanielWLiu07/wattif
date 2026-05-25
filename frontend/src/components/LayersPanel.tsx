@@ -27,6 +27,7 @@ const GROUPS: { title: string; items: { key: LayerKey; label: string }[] }[] = [
       { key: "buildings", label: "3D buildings" },
       { key: "facilities", label: "Facilities (shelters / hospitals)" },
       { key: "constraints", label: "No-build constraints" },
+      { key: "flood", label: "Flood-risk overlay" },
     ],
   },
 ];

@@ -11,6 +11,7 @@ import {
 export function TopBar() {
   const live = useStore((s) => s.live);
   const wsConnected = useStore((s) => s.wsConnected);
+  const wsReconnecting = useStore((s) => s.wsReconnecting);
   const loaded = useStore((s) => s.loaded);
   const zones = useStore((s) => s.zones);
   const demo = useStore((s) => s.demo);
@@ -69,6 +70,18 @@ export function TopBar() {
             <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
             Connecting…
           </Badge>
+        ) : wsReconnecting ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Badge variant="secondary" className="gap-1">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
+                Reconnecting…
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              Lost the live stream — retrying. The app keeps running.
+            </TooltipContent>
+          </Tooltip>
         ) : live ? (
           <Tooltip>
             <TooltipTrigger asChild>

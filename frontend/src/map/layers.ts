@@ -87,6 +87,7 @@ export type LayerInputs = {
   facilities: Facility[];
   existingInfra: ExistingInfra[];
   constraints: ConstraintZone[];
+  floodRisk: Record<string, number>;
   scenarioTargeting: boolean;
   gatheringZones: string[];
   targetZoneId: string | null;
@@ -114,6 +115,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     facilities,
     existingInfra,
     constraints,
+    floodRisk,
     gatheringZones,
     targetZoneId,
     flashZones,
@@ -159,6 +161,32 @@ export function buildLayers(input: LayerInputs): Layer[] {
           getLineColor: (f: any) =>
             f.properties.noBuild ? [248, 113, 113, 200] : [251, 191, 36, 150],
           lineWidthMinPixels: 1,
+          pickable: false,
+        })
+      );
+    }
+  }
+
+  // ---- Flood-risk overlay (data-2; per-zone 0..1, blue tint) ----
+  if (layers.flood && Object.keys(floodRisk).length && zones.length) {
+    const feats = zones
+      .filter((z) => (floodRisk[z.id] ?? 0) > 0.05)
+      .map((z) => ({
+        type: "Feature" as const,
+        geometry: z.polygon,
+        properties: { risk: floodRisk[z.id] ?? 0 },
+      }));
+    if (feats.length) {
+      out.push(
+        new GeoJsonLayer({
+          id: "flood",
+          data: { type: "FeatureCollection", features: feats } as FeatureCollection,
+          filled: true,
+          stroked: true,
+          getFillColor: (f: any) =>
+            [56, 132, 255, Math.round(30 + f.properties.risk * 120)] as any,
+          getLineColor: [96, 165, 250, 160],
+          lineWidthMinPixels: 0.5,
           pickable: false,
         })
       );
@@ -492,7 +520,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
     }[];
     out.push(
       new TripsLayer({
-        id: "flows",
+        // id keyed to data size: when the flow set changes the layer remounts
+        // cleanly instead of diffing buffers mid-animation (avoids deck.gl
+        // "offset is out of bounds" when length changes between rAF frames).
+        id: `flows-${trips.length}`,
         data: trips,
         getPath: (d: any) => d.path,
         getTimestamps: () => [0, 100],

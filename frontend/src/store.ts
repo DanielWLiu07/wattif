@@ -36,7 +36,8 @@ export type LayerKey =
   | "sentiment"
   | "facilities"
   | "existing"
-  | "constraints";
+  | "constraints"
+  | "flood";
 
 export type ToolMode = "select" | "place";
 
@@ -79,6 +80,8 @@ type State = {
   constraints: ConstraintZone[];
   environment: Record<string, api.ZoneEnviro>;
   generationMix: api.GenerationMix | null;
+  floodRisk: Record<string, number>; // per-zone 0..1 (data-2)
+  heatVuln: Record<string, number>; // per-zone 0..1 (data-2)
   gatheringZones: string[]; // zones showing crowds (target + neighbours)
   lastTargetZoneId: string | null; // zone the last scenario hit
 
@@ -123,6 +126,7 @@ type State = {
   // connectivity
   live: boolean;
   wsConnected: boolean;
+  wsReconnecting: boolean;
   loaded: boolean;
 
   // actions
@@ -346,6 +350,8 @@ export const useStore = create<State>((set, get) => ({
   constraints: [],
   environment: {},
   generationMix: null,
+  floodRisk: {},
+  heatVuln: {},
   gatheringZones: [],
   lastTargetZoneId: null,
 
@@ -375,6 +381,7 @@ export const useStore = create<State>((set, get) => ({
     facilities: false, // off by default — too many (583); shown contextually on events
     existing: true,
     constraints: true,
+    flood: true, // flood-risk overlay (lights up when data-2 ships it)
   },
   mode: "select",
   placementMode: "manual",
@@ -394,6 +401,7 @@ export const useStore = create<State>((set, get) => ({
 
   live: false,
   wsConnected: false,
+  wsReconnecting: false,
   loaded: false,
 
   init: async () => {
@@ -437,15 +445,29 @@ export const useStore = create<State>((set, get) => ({
       api.getEnvironment(),
       api.getGenerationMix(),
       api.getActivity(),
-    ]).then(([facilities, existingInfra, constraints, environment, generationMix, activity]) =>
-      set({
+      api.getFloodRisk(),
+      api.getHeatVulnerability(),
+    ]).then(
+      ([
         facilities,
         existingInfra,
         constraints,
         environment,
         generationMix,
-        activity: activity.length ? activity.slice(0, 80) : get().activity,
-      })
+        activity,
+        floodRisk,
+        heatVuln,
+      ]) =>
+        set({
+          facilities,
+          existingInfra,
+          constraints,
+          environment,
+          generationMix,
+          floodRisk,
+          heatVuln,
+          activity: activity.length ? activity.slice(0, 80) : get().activity,
+        })
     );
 
     api.openSimSocket(
@@ -483,7 +505,11 @@ export const useStore = create<State>((set, get) => ({
           }
         }
       },
-      (open) => set({ wsConnected: open })
+      (status) =>
+        set({
+          wsConnected: status === "open",
+          wsReconnecting: status === "reconnecting",
+        })
     );
   },
 

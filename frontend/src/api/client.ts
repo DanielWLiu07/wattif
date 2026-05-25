@@ -276,6 +276,27 @@ export async function getActivity(): Promise<ActivityItem[]> {
   return Array.isArray(r) ? r : r.activity ?? [];
 }
 
+// Per-zone risk layers from data-2 (flood risk, heat vulnerability). Both follow
+// the established { available, zones:[{ zoneId, <value> }] } pattern; degrade to
+// {} until the endpoints exist so they light up automatically when they land.
+function perZoneNumber(r: any, key: string): Record<string, number> {
+  if (!r || r.available === false) return {};
+  const list: any[] = Array.isArray(r) ? r : r.zones ?? [];
+  const out: Record<string, number> = {};
+  for (const z of list) if (z.zoneId != null && z[key] != null) out[z.zoneId] = z[key];
+  return out;
+}
+export async function getFloodRisk(): Promise<Record<string, number>> {
+  // GET /api/flood → { available, zones:[{ zoneId, floodRiskScore 0..1, floodRisk }] }
+  const r = await firstOk<any>(["/api/flood", "/api/flood-risk"]);
+  return perZoneNumber(r, "floodRiskScore");
+}
+export async function getHeatVulnerability(): Promise<Record<string, number>> {
+  // GET /api/heat-vulnerability → { available, zones:[{ zoneId, hvi 0..1, level }] }
+  const r = await firstOk<any>(["/api/heat-vulnerability"]);
+  return perZoneNumber(r, "hvi");
+}
+
 export type GenerationMix = {
   mix: Record<string, number>;
   marginalGco2PerKwh: number | null;
@@ -585,20 +606,37 @@ export type SimMessage =
     }
   | { type: "metrics"; metrics: SimMetrics }; // legacy single-frame
 
+export type WsStatus = "open" | "closed" | "reconnecting";
+
 /**
- * Open the sim WebSocket. Returns a disposer. If the socket cannot be opened
- * the caller should fall back to local stepping (the store does this).
+ * Open the sim WebSocket with automatic reconnect + backoff. Reports status
+ * (open / reconnecting / closed) so the UI can show a "reconnecting…" state and
+ * recover cleanly. If it can never connect, the app stays on local stepping.
  */
 export function openSimSocket(
   onMessage: (m: SimMessage) => void,
-  onStatus: (open: boolean) => void
+  onStatus: (status: WsStatus) => void
 ): () => void {
   let ws: WebSocket | null = null;
   let closed = false;
-  try {
-    const url = API_URL.replace(/^http/, "ws") + "/ws/sim";
-    ws = new WebSocket(url);
-    ws.onopen = () => onStatus(true);
+  let everConnected = false;
+  let attempts = 0;
+  let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  const url = API_URL.replace(/^http/, "ws") + "/ws/sim";
+
+  const connect = () => {
+    if (closed) return;
+    try {
+      ws = new WebSocket(url);
+    } catch {
+      scheduleReconnect();
+      return;
+    }
+    ws.onopen = () => {
+      everConnected = true;
+      attempts = 0;
+      onStatus("open");
+    };
     ws.onmessage = (ev) => {
       try {
         const msg = JSON.parse(ev.data);
@@ -611,13 +649,34 @@ export function openSimSocket(
         /* ignore malformed frame */
       }
     };
-    ws.onerror = () => onStatus(false);
-    ws.onclose = () => !closed && onStatus(false);
-  } catch {
-    onStatus(false);
-  }
+    ws.onerror = () => {
+      /* close handler drives reconnect */
+    };
+    ws.onclose = () => {
+      if (closed) return;
+      // Only show "reconnecting" if we'd previously connected (a real drop);
+      // otherwise the backend simply isn't up → stay on mock silently.
+      if (everConnected && attempts < 6) {
+        onStatus("reconnecting");
+        scheduleReconnect();
+      } else {
+        onStatus("closed");
+      }
+    };
+  };
+
+  const scheduleReconnect = () => {
+    if (closed) return;
+    attempts++;
+    const delay = Math.min(1000 * 2 ** attempts, 15000); // 2s,4s,8s…cap 15s
+    reconnectTimer = setTimeout(connect, delay);
+  };
+
+  connect();
+
   return () => {
     closed = true;
+    if (reconnectTimer) clearTimeout(reconnectTimer);
     ws?.close();
   };
 }

@@ -111,6 +111,8 @@ export function MapView() {
   const approvalHistory = useStore((s) => s.approvalHistory);
   const extrude = useStore((s) => s.extrude);
   const environment = useStore((s) => s.environment);
+  const floodRisk = useStore((s) => s.floodRisk);
+  const heatVuln = useStore((s) => s.heatVuln);
   const flyTo = useStore((s) => s.flyTo);
   const addInfraAt = useStore((s) => s.addInfraAt);
   const selectInfra = useStore((s) => s.selectInfra);
@@ -177,6 +179,7 @@ export function MapView() {
       facilities,
       existingInfra,
       constraints,
+      floodRisk,
       scenarioTargeting,
       gatheringZones,
       targetZoneId,
@@ -214,6 +217,7 @@ export function MapView() {
     facilities,
     existingInfra,
     constraints,
+    floodRisk,
     scenarioTargeting,
     gatheringZones,
     targetZoneId,
@@ -291,11 +295,19 @@ export function MapView() {
         env?.pollutionBurden != null
           ? `<br/>Pollution burden: ${(env.pollutionBurden * 100).toFixed(0)}%`
           : ""
+      }${
+        heatVuln[o.properties.id] != null
+          ? `<br/>Heat vulnerability: ${(heatVuln[o.properties.id] * 100).toFixed(0)}%`
+          : ""
+      }${
+        floodRisk[o.properties.id] != null
+          ? `<br/>Flood risk: ${(floodRisk[o.properties.id] * 100).toFixed(0)}%`
+          : ""
       }`;
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, scenarioTargeting, setTargetZone]);
+  }, [environment, approvalHistory, heatVuln, floodRisk, scenarioTargeting, setTargetZone]);
 
   const addBuildingExtrusions = useCallback(() => {
     if (USE_MAPBOX) return; // Mapbox Standard already has 3D buildings

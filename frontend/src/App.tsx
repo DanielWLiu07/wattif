@@ -59,6 +59,24 @@ function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [setMode, setScenarioTargeting]);
 
+  // Auto-collapse side panels on narrow screens so they never overflow/overlap.
+  // Only collapses when crossing below the threshold — doesn't fight manual reopen.
+  useEffect(() => {
+    let wasNarrow = window.innerWidth < 1024;
+    if (wasNarrow) {
+      useStore.setState({ leftOpen: false, rightOpen: false });
+    }
+    const onResize = () => {
+      const narrow = window.innerWidth < 1024;
+      if (narrow && !wasNarrow) {
+        useStore.setState({ leftOpen: false, rightOpen: false });
+      }
+      wasNarrow = narrow;
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <TooltipProvider delayDuration={150}>
       <div className="relative h-full w-full overflow-hidden bg-background">
