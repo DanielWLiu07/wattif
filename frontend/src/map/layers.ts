@@ -574,6 +574,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
         stroked: true,
         getLineColor: [255, 255, 255, 110],
         lineWidthMinPixels: 0.5,
+        // billboard + no depth test → people dots always read ON TOP of the
+        // 3D city and never get clipped by building extrusions as they move.
+        billboard: true,
+        parameters: { depthTest: false } as any,
         pickable: false,
         updateTriggers: {
           getPosition: [time, agentTargets, agentMobilizedAt],
