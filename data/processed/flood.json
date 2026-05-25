@@ -207,7 +207,7 @@
       "zoneId": "z025",
       "name": "Leaside-Bennington",
       "floodStudyAreas": 1,
-      "studyAreaFraction": 0.973,
+      "studyAreaFraction": 0.963,
       "floodRiskScore": 1.0,
       "floodRisk": "high"
     },
@@ -295,8 +295,8 @@
       "zoneId": "z036",
       "name": "Islington-City Centre West",
       "floodStudyAreas": 2,
-      "studyAreaFraction": 0.629,
-      "floodRiskScore": 0.818,
+      "studyAreaFraction": 0.63,
+      "floodRiskScore": 0.819,
       "floodRisk": "high"
     },
     {

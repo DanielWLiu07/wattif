@@ -30,7 +30,7 @@
         "apartmentDwellingFrac": 0.978,
         "seniorPct65plus": 0.07,
         "youngAdultPct": 0.341,
-        "biaCount": 2
+        "biaCount": 4
       }
     },
     {
@@ -60,12 +60,12 @@
       "name": "Church-Yonge Corridor",
       "mix": {
         "owner-detached": 0.0027,
-        "condo-owner": 0.203,
-        "renter-low": 0.2458,
-        "renter-mid": 0.2458,
+        "condo-owner": 0.2029,
+        "renter-low": 0.2456,
+        "renter-mid": 0.2456,
         "senior": 0.0657,
         "student": 0.1678,
-        "small-business": 0.0693
+        "small-business": 0.0698
       },
       "drivers": {
         "renterPct": 0.705,
@@ -109,7 +109,7 @@
         "renter-mid": 0.2158,
         "senior": 0.0879,
         "student": 0.1659,
-        "small-business": 0.0555
+        "small-business": 0.0556
       },
       "drivers": {
         "renterPct": 0.625,
@@ -149,11 +149,11 @@
       "mix": {
         "owner-detached": 0.0231,
         "condo-owner": 0.1801,
-        "renter-low": 0.4176,
+        "renter-low": 0.4177,
         "renter-mid": 0.179,
         "senior": 0.0463,
         "student": 0.1143,
-        "small-business": 0.0396
+        "small-business": 0.0395
       },
       "drivers": {
         "renterPct": 0.746,
@@ -175,7 +175,7 @@
         "renter-mid": 0.2098,
         "senior": 0.1188,
         "student": 0.0839,
-        "small-business": 0.0439
+        "small-business": 0.044
       },
       "drivers": {
         "renterPct": 0.557,
@@ -263,7 +263,7 @@
         "renter-mid": 0.2187,
         "senior": 0.1663,
         "student": 0.0653,
-        "small-business": 0.0474
+        "small-business": 0.0473
       },
       "drivers": {
         "renterPct": 0.446,
@@ -285,7 +285,7 @@
         "renter-mid": 0.2484,
         "senior": 0.1637,
         "student": 0.0797,
-        "small-business": 0.1467
+        "small-business": 0.1466
       },
       "drivers": {
         "renterPct": 0.599,
@@ -301,13 +301,13 @@
       "zoneId": "z013",
       "name": "Wychwood",
       "mix": {
-        "owner-detached": 0.1211,
-        "condo-owner": 0.2184,
-        "renter-low": 0.1809,
-        "renter-mid": 0.1809,
+        "owner-detached": 0.121,
+        "condo-owner": 0.2182,
+        "renter-low": 0.1808,
+        "renter-mid": 0.1808,
         "senior": 0.1059,
         "student": 0.0799,
-        "small-business": 0.1129
+        "small-business": 0.1135
       },
       "drivers": {
         "renterPct": 0.516,
@@ -404,7 +404,7 @@
         "apartmentDwellingFrac": 0.945,
         "seniorPct65plus": 0.046,
         "youngAdultPct": 0.286,
-        "biaCount": 3
+        "biaCount": 2
       }
     },
     {
@@ -412,12 +412,12 @@
       "name": "South Parkdale",
       "mix": {
         "owner-detached": 0.0058,
-        "condo-owner": 0.0872,
-        "renter-low": 0.4206,
-        "renter-mid": 0.1803,
+        "condo-owner": 0.087,
+        "renter-low": 0.4194,
+        "renter-mid": 0.1797,
         "senior": 0.0673,
         "student": 0.1135,
-        "small-business": 0.1253
+        "small-business": 0.1274
       },
       "drivers": {
         "renterPct": 0.866,
@@ -549,7 +549,7 @@
         "renter-mid": 0.2581,
         "senior": 0.1108,
         "student": 0.0717,
-        "small-business": 0.0593
+        "small-business": 0.0594
       },
       "drivers": {
         "renterPct": 0.681,
@@ -565,13 +565,13 @@
       "zoneId": "z025",
       "name": "Leaside-Bennington",
       "mix": {
-        "owner-detached": 0.3937,
+        "owner-detached": 0.3938,
         "condo-owner": 0.1767,
         "renter-low": 0.071,
-        "renter-mid": 0.1508,
+        "renter-mid": 0.1509,
         "senior": 0.0986,
         "student": 0.0521,
-        "small-business": 0.057
+        "small-business": 0.0568
       },
       "drivers": {
         "renterPct": 0.28,
@@ -829,13 +829,13 @@
       "zoneId": "z037",
       "name": "Mimico (Lakeshore)",
       "mix": {
-        "owner-detached": 0.0737,
-        "condo-owner": 0.3052,
-        "renter-low": 0.1791,
-        "renter-mid": 0.1791,
+        "owner-detached": 0.0646,
+        "condo-owner": 0.2674,
+        "renter-low": 0.1569,
+        "renter-mid": 0.1569,
         "senior": 0.1049,
         "student": 0.0893,
-        "small-business": 0.0687
+        "small-business": 0.16
       },
       "drivers": {
         "renterPct": 0.486,
@@ -844,7 +844,7 @@
         "apartmentDwellingFrac": 0.805,
         "seniorPct65plus": 0.15,
         "youngAdultPct": 0.162,
-        "biaCount": 2
+        "biaCount": 3
       }
     },
     {
@@ -961,13 +961,13 @@
       "zoneId": "z043",
       "name": "Birchcliffe-Cliffside",
       "mix": {
-        "owner-detached": 0.3067,
-        "condo-owner": 0.2164,
-        "renter-low": 0.13,
-        "renter-mid": 0.13,
+        "owner-detached": 0.3069,
+        "condo-owner": 0.2165,
+        "renter-low": 0.1301,
+        "renter-mid": 0.1301,
         "senior": 0.1063,
         "student": 0.0585,
-        "small-business": 0.0521
+        "small-business": 0.0516
       },
       "drivers": {
         "renterPct": 0.332,

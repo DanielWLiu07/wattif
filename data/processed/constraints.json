@@ -1,16 +1,20 @@
 {
   "note": "Per-zone siting constraints. protectedAreaFraction from Environmentally Significant Areas; floodRisk from chronic basement-flooding study areas. sitingPenalty 0..1 (= ESA penalty + 0.6\u00b7floodRisk; optimizer should down-weight); noBuild=True when >=50% of the zone is ESA-protected.",
   "source": "Toronto Environmentally Significant Areas + Basement Flooding Study Areas",
-  "flaggedZones": 20,
+  "flaggedZones": 21,
   "zones": [
     {
       "zoneId": "z000",
       "name": "Waterfront Communities\u2013The Island",
-      "esaCount": 0,
-      "esaNames": [],
-      "protectedAreaFraction": 0.0,
+      "esaCount": 3,
+      "esaNames": [
+        "Centre Island Meadow/Wildlife Sanctuary",
+        "Hanlans Beach",
+        "Wards Island"
+      ],
+      "protectedAreaFraction": 0.085,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.0,
+      "sitingPenalty": 0.128,
       "noBuild": false
     },
     {
@@ -76,13 +80,11 @@
     {
       "zoneId": "z007",
       "name": "Cabbagetown-South St.James Town",
-      "esaCount": 1,
-      "esaNames": [
-        "Don Valley (Central Section)"
-      ],
-      "protectedAreaFraction": 0.111,
+      "esaCount": 0,
+      "esaNames": [],
+      "protectedAreaFraction": 0.0,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.167,
+      "sitingPenalty": 0.0,
       "noBuild": false
     },
     {
@@ -282,9 +284,9 @@
         "Don Valley Brickworks",
         "Crothers Woods"
       ],
-      "protectedAreaFraction": 0.035,
+      "protectedAreaFraction": 0.034,
       "floodRisk": 1.0,
-      "sitingPenalty": 0.652,
+      "sitingPenalty": 0.651,
       "noBuild": false
     },
     {
@@ -398,18 +400,20 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "floodRisk": 0.818,
+      "floodRisk": 0.819,
       "sitingPenalty": 0.491,
       "noBuild": false
     },
     {
       "zoneId": "z037",
       "name": "Mimico (Lakeshore)",
-      "esaCount": 0,
-      "esaNames": [],
-      "protectedAreaFraction": 0.0,
+      "esaCount": 1,
+      "esaNames": [
+        "Humber Bay Park East"
+      ],
+      "protectedAreaFraction": 0.011,
       "floodRisk": 0.0,
-      "sitingPenalty": 0.0,
+      "sitingPenalty": 0.017,
       "noBuild": false
     },
     {
@@ -478,9 +482,9 @@
       "esaNames": [
         "Toronto Hunt Club Forest"
       ],
-      "protectedAreaFraction": 0.016,
+      "protectedAreaFraction": 0.015,
       "floodRisk": 1.0,
-      "sitingPenalty": 0.624,
+      "sitingPenalty": 0.622,
       "noBuild": false
     }
   ]

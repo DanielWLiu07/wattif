@@ -383,23 +383,41 @@ def load_water_mask():
         return None
 
 
-def clip_ring_to_land(ring: list[list[float]], water):
-    """Subtract water from a zone ring; return (largest-land-ring decimated, changed?)."""
+def clip_ring_to_land(ring: list[list[float]], water, min_area_frac: float = 0.04):
+    """Subtract water from a zone ring. Returns (list-of-land-rings, changed?).
+
+    Keeps every land part whose area is >= min_area_frac of the largest part (drops slivers), so a
+    waterfront zone like "Waterfront Communities–The Island" keeps both the mainland AND the
+    Toronto Islands. Rings are ordered largest-first and decimated. changed=False => fully inland.
+    """
     from shapely.geometry import Polygon
     poly = Polygon(ring)
     if not poly.is_valid:
         poly = poly.buffer(0)
     if not poly.intersects(water):
-        return ring, False  # fully inland — unchanged
+        return [ring], False  # fully inland — unchanged
     land = poly.difference(water)
     if land.is_empty:
-        return ring, False
-    if land.geom_type == "MultiPolygon":
-        land = max(land.geoms, key=lambda g: g.area)
-    coords = [[round(x, 6), round(y, 6)] for x, y in land.exterior.coords]
-    if len(coords) < 4:
-        return ring, False
-    return _decimate(coords), True
+        return [ring], False
+    geoms = list(land.geoms) if land.geom_type == "MultiPolygon" else [land]
+    geoms = sorted((g for g in geoms if g.area > 0), key=lambda g: g.area, reverse=True)
+    if not geoms:
+        return [ring], False
+    cutoff = geoms[0].area * min_area_frac
+    rings = []
+    for g in geoms:
+        if g.area < cutoff:
+            break
+        # Topology-preserving simplify (keeps geometry valid; ~22 m tolerance) instead of striding.
+        s = g.simplify(0.0002, preserve_topology=True)
+        if s.is_empty:
+            s = g
+        if s.geom_type == "MultiPolygon":
+            s = max(s.geoms, key=lambda p: p.area)
+        coords = [[round(x, 6), round(y, 6)] for x, y in s.exterior.coords]
+        if len(coords) >= 4:
+            rings.append(coords)
+    return (rings or [ring]), bool(rings)
 
 
 # Former-municipality overrides where a simple centroid rule is wrong (north zones east of the
@@ -454,10 +472,19 @@ def point_in_ring(lng: float, lat: float, ring: list[list[float]]) -> bool:
     return inside
 
 
+def outer_rings(zone: dict) -> list[list[list[float]]]:
+    """Outer ring(s) of a zone — handles both Polygon and MultiPolygon geometries."""
+    geom = zone["polygon"]
+    coords = geom["coordinates"]
+    if geom.get("type") == "MultiPolygon":
+        return [poly[0] for poly in coords]
+    return [coords[0]]
+
+
 def assign_zone(lng: float, lat: float, zones: list[dict]) -> str | None:
-    """Return the id of the zone whose polygon contains the point, else None."""
+    """Return the id of the zone whose polygon (any part) contains the point, else None."""
     for z in zones:
-        if point_in_ring(lng, lat, z["polygon"]["coordinates"][0]):
+        if any(point_in_ring(lng, lat, ring) for ring in outer_rings(z)):
             return z["id"]
     return None
 
@@ -652,13 +679,19 @@ def _load_overlap_polygons(filename: str, name_prop: str | None = None) -> list[
     return polys
 
 
-def zone_protected_fraction(zone_ring: list[list[float]], polys: list[dict]) -> tuple[float, list]:
-    """Sum area of polygons whose centroid falls in the zone; return (fraction, names)."""
-    zarea = zone_area_km2(zone_ring)
+def zone_total_area_km2(zone: dict) -> float:
+    """Total land area (km²) across all parts of a zone polygon."""
+    return sum(zone_area_km2(r) for r in outer_rings(zone))
+
+
+def zone_protected_fraction(zone: dict, polys: list[dict]) -> tuple[float, list]:
+    """Sum area of polygons whose centroid falls in any zone part; return (fraction, names)."""
+    rings = outer_rings(zone)
+    zarea = sum(zone_area_km2(r) for r in rings)
     area = 0.0
     names = []
     for p in polys:
-        if point_in_ring(p["centroid"][0], p["centroid"][1], zone_ring):
+        if any(point_in_ring(p["centroid"][0], p["centroid"][1], r) for r in rings):
             area += p["areaKm2"]
             if p.get("name"):
                 names.append(p["name"])
@@ -678,7 +711,7 @@ def build_flood(zones: list[dict]) -> tuple[dict | None, dict]:
     risk_map: dict[str, float] = {}
     flagged = 0
     for z in zones:
-        frac, names = zone_protected_fraction(z["polygon"]["coordinates"][0], polys)
+        frac, names = zone_protected_fraction(z, polys)
         # Flood-risk score: chronic-flooding study-area coverage, mildly amplified.
         risk = round(min(1.0, frac * 1.3), 3)
         risk_map[z["id"]] = risk
@@ -761,7 +794,7 @@ def build_constraints(zones: list[dict], flood_risk: dict | None = None) -> dict
     per_zone = []
     flagged = 0
     for z in zones:
-        protected, names = zone_protected_fraction(z["polygon"]["coordinates"][0], esas)
+        protected, names = zone_protected_fraction(z, esas)
         # ESA siting penalty (0..1) plus flood-risk contribution.
         esa_pen = min(0.9, protected * 1.5)
         froisk = flood_risk.get(z["id"], 0.0)
@@ -1030,7 +1063,7 @@ def build_archetypes(zones: list[dict], buildings: dict) -> dict | None:
         young = young if young is not None else 0.14
 
         # BIA commercial overlap (real) -> small-business intensity.
-        bia_frac, bia_names = zone_protected_fraction(z["polygon"]["coordinates"][0], bias)
+        bia_frac, bia_names = zone_protected_fraction(z, bias)
         dens_norm = dens.get(z["id"], 0) / d_hi
 
         # --- compose the mix (modeled mapping of real signals) ---
@@ -1278,11 +1311,16 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
             prov["polygon"]["synthetic"] += 1
 
         # Clip the polygon to land (subtract Lake Ontario / harbour); recompute centroid from land.
+        # Multi-part land (mainland + Toronto Islands) is emitted as a GeoJSON MultiPolygon.
+        geom = {"type": "Polygon", "coordinates": polygon_coords}
         if water is not None:
-            clipped, changed = clip_ring_to_land(polygon_coords[0], water)
+            rings, changed = clip_ring_to_land(polygon_coords[0], water)
             if changed:
-                polygon_coords = [clipped]
-                cx, cy = _ring_centroid(clipped)
+                if len(rings) == 1:
+                    geom = {"type": "Polygon", "coordinates": [rings[0]]}
+                else:
+                    geom = {"type": "MultiPolygon", "coordinates": [[r] for r in rings]}
+                cx, cy = _ring_centroid(rings[0])  # centroid on the largest land part
                 centroid = [round(cx, 6), round(cy, 6)]
                 clipped_count += 1
 
@@ -1293,7 +1331,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
         renter = prof.get("renterPct", syn_renter)
         prov["renterPct"]["real" if "renterPct" in prof else "synthetic"] += 1
 
-        resolved.append({"name": name, "centroid": centroid, "polygon": polygon_coords,
+        resolved.append({"name": name, "centroid": centroid, "geom": geom,
                          "pop": pop, "income": income, "renter": renter})
 
     incomes = [r["income"] for r in resolved]
@@ -1302,7 +1340,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
     zones: list[dict] = []
     for idx, r in enumerate(resolved):
         name = r["name"]
-        centroid, polygon_coords = r["centroid"], r["polygon"]
+        centroid, geom = r["centroid"], r["geom"]
         pop, income, renter = r["pop"], r["income"], r["renter"]
 
         # Energy burden index: higher for low income + high renter share (from REAL inputs).
@@ -1360,7 +1398,7 @@ def build_zones(rng: random.Random, osm: dict, pvgis: dict) -> tuple[list[dict],
             {
                 "id": f"z{idx:03d}",
                 "name": name,
-                "polygon": {"type": "Polygon", "coordinates": polygon_coords},
+                "polygon": geom,
                 "centroid": [round(centroid[0], 6), round(centroid[1], 6)],
                 "demographics": {
                     "population": int(pop),
@@ -1425,7 +1463,7 @@ def build_agents(zones: list[dict], rng: random.Random) -> list[dict]:
         n = max(8, round(N_AGENTS * share))
         bracket = income_bracket(demo["medianIncome"])
         renter = demo["renterPct"]
-        ring = z["polygon"]["coordinates"][0]
+        ring = outer_rings(z)[0]  # largest land part (handles MultiPolygon zones)
         for _ in range(n):
             arch = rng.choice(ARCHETYPES[bracket])
             is_renter = "renter" in arch or "social-housing" in arch or rng.random() < renter * 0.4
@@ -1481,8 +1519,7 @@ def build_buildings(zones: list[dict], osm: dict) -> dict:
     real = 0
     for z in zones:
         rec = osm.get(z["id"]) or {}
-        ring = z["polygon"]["coordinates"][0]
-        area = zone_area_km2(ring)
+        area = zone_total_area_km2(z)
         count = rec.get("buildingCount")
         levels = rec.get("avgLevels")
         source = "osm"
