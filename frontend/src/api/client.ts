@@ -67,6 +67,8 @@ export type HealthMeta = {
   llmProvider?: string | null;
   realLlm?: string | null;
   mlAvailable?: boolean;
+  persistenceProvider?: "memory" | "supabase";
+  supabaseConfigured?: boolean;
 };
 
 export async function getHealthMeta(): Promise<HealthMeta | null> {

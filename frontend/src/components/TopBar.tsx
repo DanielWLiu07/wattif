@@ -45,6 +45,21 @@ function voicesTooltip(live: boolean, health: HealthMeta | null): string {
   return "Resident quotes are template-based, not autonomous LLM agents.";
 }
 
+function persistenceLabel(live: boolean, health: HealthMeta | null): string {
+  if (live && health?.persistenceProvider === "supabase") return "Supabase";
+  return "In-memory";
+}
+
+function persistenceTooltip(live: boolean, health: HealthMeta | null): string {
+  if (live && health?.persistenceProvider === "supabase") {
+    return "Projects and proposals can persist in Supabase Postgres (backend writer only). Live sim state is still in-memory.";
+  }
+  if (live) {
+    return "No Supabase configured — sessions and sim state are in-memory only.";
+  }
+  return "Offline mock — no backend persistence.";
+}
+
 export function TopBar() {
   const live = useStore((s) => s.live);
   const wsConnected = useStore((s) => s.wsConnected);
@@ -61,7 +76,9 @@ export function TopBar() {
 
   const plannerText = plannerLabel(live, backendHealth);
   const voicesText = voicesLabel(live, backendHealth);
+  const sessionText = persistenceLabel(live, backendHealth);
   const realLlmActive = live && !!backendHealth?.realLlm;
+  const supabaseActive = live && backendHealth?.persistenceProvider === "supabase";
 
   return (
     <div className="pointer-events-auto flex items-center justify-between px-4 py-3">
@@ -196,12 +213,11 @@ export function TopBar() {
                   className="hidden gap-1 font-normal xl:inline-flex"
                 >
                   <HardDrive className="h-3 w-3" />
-                  In-memory
+                  {sessionText}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                Sessions are not saved — proposals are lost when the backend
-                restarts. Supabase persistence is planned (Phase 2).
+                {persistenceTooltip(live, backendHealth)}
               </TooltipContent>
             </Tooltip>
 
@@ -212,12 +228,13 @@ export function TopBar() {
                   variant="outline"
                   className="font-normal lg:hidden"
                 >
-                  {realLlmActive ? "LLM" : "Demo"} · Template · RAM
+                  {realLlmActive ? "LLM" : "Demo"} · Template ·{" "}
+                  {supabaseActive ? "Supabase" : "RAM"}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
                 {plannerTooltip(live, backendHealth)} {voicesTooltip(live, backendHealth)}{" "}
-                Session: in-memory only (Phase 2: Supabase).
+                {persistenceTooltip(live, backendHealth)}
               </TooltipContent>
             </Tooltip>
           </>
