@@ -7,6 +7,7 @@ const GROUPS: { title: string; items: { key: LayerKey; label: string }[] }[] = [
     title: "Overlays",
     items: [
       { key: "equity", label: "Energy-equity choropleth" },
+      { key: "priority", label: "Build priority (where to build)" },
       { key: "sentiment", label: "Sentiment + voices" },
       { key: "demand", label: "Demand heatmap" },
       { key: "agents", label: "People (live agents)" },
