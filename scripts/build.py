@@ -829,6 +829,94 @@ def build_environment(zones: list[dict], wb: dict) -> dict | None:
     }
 
 
+# Existing district-energy service (downtown). No open dataset exists, so this is approximated
+# from public information (Enwave Deep Lake Water Cooling + downtown district energy; Regent Park
+# Community Energy System). servedFraction 0..1 by neighbourhood. FLAGGED modeled-from-public-info.
+_DISTRICT_ENERGY_SERVED = {
+    "Bay Street Corridor": (0.85, "Enwave (Deep Lake Water Cooling / downtown district energy)"),
+    "University": (0.70, "Enwave (University Ave health district / Discovery District)"),
+    "Church-Yonge Corridor": (0.55, "Enwave downtown district energy"),
+    "Waterfront Communities–The Island": (0.45, "Enwave (Deep Lake Water Cooling, waterfront)"),
+    "Moss Park": (0.30, "Enwave downtown district energy (edge)"),
+    "Kensington-Chinatown": (0.25, "Enwave downtown district energy (edge)"),
+    "Regent Park": (0.80, "Regent Park Community Energy System"),
+}
+# Rough downtown service-area polygon (display only); [lng,lat] closed ring.
+_DISTRICT_ENERGY_POLYGON = [
+    [-79.399, 43.639], [-79.355, 43.643], [-79.366, 43.667],
+    [-79.390, 43.667], [-79.402, 43.656], [-79.399, 43.639],
+]
+
+
+def build_district_energy(zones: list[dict]) -> dict:
+    """data/processed/district_energy.json — existing low-carbon district energy (downtown).
+
+    Modeled from public information (no open dataset): Enwave Deep Lake Water Cooling + downtown
+    district-energy network, plus the Regent Park Community Energy System. Per-zone servedFraction
+    lets the planner credit zones already served by low-carbon thermal energy.
+    """
+    served = 0
+    out = []
+    for z in zones:
+        frac, system = _DISTRICT_ENERGY_SERVED.get(z["name"], (0.0, None))
+        if frac > 0:
+            served += 1
+        out.append({
+            "zoneId": z["id"],
+            "name": z["name"],
+            "districtEnergy": frac > 0,
+            "servedFraction": frac,
+            "system": system,
+        })
+    return {
+        "note": "Existing district-energy service area (downtown). MODELED FROM PUBLIC INFORMATION "
+                "— no precise open dataset exists. servedFraction 0..1 per zone; the planner can "
+                "credit served zones as already having low-carbon thermal energy.",
+        "source": "Modeled from public info: Enwave Deep Lake Water Cooling / downtown district "
+                  "energy + Regent Park Community Energy System",
+        "modeled": True,
+        "servedZones": served,
+        "servicePolygon": {"type": "Polygon", "coordinates": [_DISTRICT_ENERGY_POLYGON]},
+        "zones": out,
+    }
+
+
+def build_sbei() -> dict:
+    """data/processed/sbei.json — Toronto Sector-Based Emissions Inventory headline (city-wide).
+
+    Transcribed from the City's published SBEI / TransformTO figures (aggregate dashboard, not
+    per-zone). Context/display + sanity-check for our emissions baseline: buildings dominate
+    (mostly natural-gas heating), so electrification + district energy is the big lever (Ontario's
+    grid electricity is already low-carbon, ~38 gCO2/kWh — see generation_mix.json).
+    """
+    return {
+        "source": "City of Toronto Sector-Based GHG Emissions Inventory / TransformTO "
+                  "(public headline figures, 2019 community-wide baseline)",
+        "note": "City-wide aggregate (not per-zone). Buildings ≈ half of emissions and are mostly "
+                "fossil-gas heating — the main decarbonization lever, complementing the clean grid.",
+        "modeled": True,
+        "baselineYear": 2019,
+        "communityWideMtCO2e": 16.0,
+        "sectorSharePct": {
+            "buildings": 57,
+            "transportation": 36,
+            "waste": 7,
+        },
+        "sectorMtCO2e": {
+            "buildings": 9.1,
+            "transportation": 5.8,
+            "waste": 1.1,
+        },
+        "targets": {
+            "netZeroBy": 2040,
+            "reductionVs1990Pct_2030": 65,
+        },
+        "context": "Ontario grid electricity is ~38 gCO2/kWh (see generation_mix.json), so building "
+                   "emissions are dominated by on-site natural gas — electrification + district "
+                   "energy + efficiency are the highest-impact actions.",
+    }
+
+
 def build_generation_mix() -> dict:
     """data/processed/generation_mix.json — Ontario grid generation mix + emission intensity.
 
@@ -1339,6 +1427,8 @@ def main() -> int:
     constraints = build_constraints(zones, flood_risk)
     environment = build_environment(zones, load_wellbeing_env())
     heat_vulnerability = build_heat_vulnerability(zones, buildings, environment)
+    district_energy = build_district_energy(zones)
+    sbei = build_sbei()
     generation_mix = build_generation_mix()
 
     (OUT_DIR / "zones.json").write_text(json.dumps(zones, indent=2))
@@ -1359,6 +1449,8 @@ def main() -> int:
     if flood:
         (OUT_DIR / "flood.json").write_text(json.dumps(flood, indent=2))
     (OUT_DIR / "heat_vulnerability.json").write_text(json.dumps(heat_vulnerability, indent=2))
+    (OUT_DIR / "district_energy.json").write_text(json.dumps(district_energy, indent=2))
+    (OUT_DIR / "sbei.json").write_text(json.dumps(sbei, indent=2))
     (OUT_DIR / "generation_mix.json").write_text(json.dumps(generation_mix, indent=2))
 
     n = len(zones)

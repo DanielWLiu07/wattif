@@ -1,0 +1,22 @@
+{
+  "source": "City of Toronto Sector-Based GHG Emissions Inventory / TransformTO (public headline figures, 2019 community-wide baseline)",
+  "note": "City-wide aggregate (not per-zone). Buildings \u2248 half of emissions and are mostly fossil-gas heating \u2014 the main decarbonization lever, complementing the clean grid.",
+  "modeled": true,
+  "baselineYear": 2019,
+  "communityWideMtCO2e": 16.0,
+  "sectorSharePct": {
+    "buildings": 57,
+    "transportation": 36,
+    "waste": 7
+  },
+  "sectorMtCO2e": {
+    "buildings": 9.1,
+    "transportation": 5.8,
+    "waste": 1.1
+  },
+  "targets": {
+    "netZeroBy": 2040,
+    "reductionVs1990Pct_2030": 65
+  },
+  "context": "Ontario grid electricity is ~38 gCO2/kWh (see generation_mix.json), so building emissions are dominated by on-site natural gas \u2014 electrification + district energy + efficiency are the highest-impact actions."
+}
