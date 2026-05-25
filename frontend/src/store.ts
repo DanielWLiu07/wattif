@@ -70,6 +70,22 @@ type State = {
   history: SimMetrics[];
   recommendations: Recommendation[];
 
+  // Master copies for region-based filtering
+  allZones: Zone[];
+  allAgents: Agent[];
+  allSampledAgents: Agent[];
+  allFacilities: Facility[];
+  allExistingInfra: ExistingInfra[];
+  allInfra: Infra[];
+
+  selectedRegion: string;
+  showRegionSelector: boolean;
+  regionCursorMode: boolean;
+  hoveredRegion: string | null;
+  setSelectedRegion: (region: string) => void;
+  setRegionCursorMode: (on: boolean) => void;
+  setHoveredRegion: (region: string | null) => void;
+
   // v2 data
   scenarios: Scenario[];
   sentiment: Sentiment | null;
@@ -283,6 +299,29 @@ const KIND_BIAS: Record<InfraKind, number> = {
   battery: 0.08,
   microgrid: 0.12,
 };
+
+export const getZoneRegion = (zoneName: string, centroid?: [number, number]): string => {
+  if (centroid) {
+    const [lng, lat] = centroid;
+    if (lng > -79.30) return "Scarborough";
+    if (lng < -79.49) return "Etobicoke";
+    if (lat > 43.72) return "North York";
+    if (lng > -79.358) return "East Toronto";
+    if (lng < -79.425) return "West Toronto";
+    if (lat > 43.672) return "Midtown";
+    return "Downtown";
+  }
+
+  const name = zoneName.toLowerCase();
+  if (name.includes("scarborough") || name.includes("agincourt") || name.includes("malvern")) return "Scarborough";
+  if (name.includes("north york") || name.includes("willowdale") || name.includes("don mills") || name.includes("thorncliffe")) return "North York";
+  if (name.includes("etobicoke") || name.includes("rexdale") || name.includes("mimico")) return "Etobicoke";
+  if (name.includes("weston") || name.includes("junction") || name.includes("high park") || name.includes("roncesvalles") || name.includes("bloor west")) return "West Toronto";
+  if (name.includes("riverdale") || name.includes("leslieville") || name.includes("beaches") || name.includes("east york")) return "East Toronto";
+  if (name.includes("rosedale") || name.includes("forest hill") || name.includes("davisville") || name.includes("leaside") || name.includes("st. clair")) return "Midtown";
+  return "Downtown";
+};
+
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -443,6 +482,18 @@ export const useStore = create<State>((set, get) => ({
   history: [],
   recommendations: [],
 
+  allZones: [],
+  allAgents: [],
+  allSampledAgents: [],
+  allFacilities: [],
+  allExistingInfra: [],
+  allInfra: [],
+
+  selectedRegion: "All",
+  showRegionSelector: true,
+  regionCursorMode: false,
+  hoveredRegion: null,
+
   scenarios: [],
   sentiment: null,
   voices: [],
@@ -567,6 +618,10 @@ export const useStore = create<State>((set, get) => ({
       zones,
       agents,
       sampledAgents,
+      allZones: zones,
+      allAgents: agents,
+      allSampledAgents: sampledAgents,
+      allInfra: infra,
       rooftopPoints,
       infra,
       metrics: metricsWithApproval,
@@ -610,10 +665,14 @@ export const useStore = create<State>((set, get) => ({
         heatVuln,
         districtEnergy,
         sbei,
-      ]) =>
+      ]) => {
+        const facs = facilities.filter((f) => onLand(f.position));
+        const exInf = existingInfra.filter((e) => onLand(e.position));
         set({
-          facilities: facilities.filter((f) => onLand(f.position)),
-          existingInfra: existingInfra.filter((e) => onLand(e.position)),
+          facilities: facs,
+          existingInfra: exInf,
+          allFacilities: facs,
+          allExistingInfra: exInf,
           constraints,
           environment,
           generationMix,
@@ -622,7 +681,8 @@ export const useStore = create<State>((set, get) => ({
           districtEnergy,
           sbei,
           activity: activity.length ? activity.slice(0, 80) : get().activity,
-        })
+        });
+      }
     );
 
     api.openSimSocket(
@@ -689,6 +749,10 @@ export const useStore = create<State>((set, get) => ({
       zones,
       agents,
       sampledAgents,
+      allZones: zones,
+      allAgents: agents,
+      allSampledAgents: sampledAgents,
+      allInfra: s.allInfra,
       sentiment,
       flows,
       live: true,
@@ -706,15 +770,21 @@ export const useStore = create<State>((set, get) => ({
       api.getConstraints(),
       api.getEnvironment(),
       api.getDistrictEnergy(),
-    ]).then(([facilities, existingInfra, constraints, environment, districtEnergy]) =>
+    ]).then(([facilities, existingInfra, constraints, environment, districtEnergy]) => {
+      const facs = facilities.filter((f) => onLand(f.position));
+      const exInf = existingInfra.filter((e) => onLand(e.position));
       set({
-        facilities: facilities.filter((f) => onLand(f.position)),
-        existingInfra: existingInfra.filter((e) => onLand(e.position)),
+        facilities: facs,
+        existingInfra: exInf,
+        allFacilities: facs,
+        allExistingInfra: exInf,
         constraints,
         environment,
         districtEnergy,
-      })
-    );
+      });
+      // Re-apply the active filter on the new master lists
+      get().setSelectedRegion(get().selectedRegion);
+    });
     get().pushToast("Reconnected — live data restored", "good");
   },
 
@@ -799,10 +869,58 @@ export const useStore = create<State>((set, get) => ({
       },
     }),
 
+  setSelectedRegion: (region) => {
+    const { allZones, allAgents, allSampledAgents, allFacilities, allExistingInfra, allInfra } = get();
+    set({ selectedRegion: region });
+    if (region === "All") {
+      set({
+        zones: allZones,
+        agents: allAgents,
+        sampledAgents: allSampledAgents,
+        facilities: allFacilities,
+        existingInfra: allExistingInfra,
+        infra: allInfra,
+      });
+      get().resetView();
+    } else {
+      const filteredZones = allZones.filter(z => getZoneRegion(z.name, z.centroid) === region);
+      const zIds = new Set(filteredZones.map(z => z.id));
+      const onRegionLand = makeLandTest(filteredZones);
+      
+      set({
+        zones: filteredZones,
+        agents: allAgents.filter(a => zIds.has(a.zoneId)),
+        sampledAgents: allSampledAgents.filter(a => zIds.has(a.zoneId)),
+        facilities: allFacilities.filter(f => onRegionLand(f.position)),
+        existingInfra: allExistingInfra.filter(e => onRegionLand(e.position)),
+        infra: allInfra.filter(i => (i.zoneId && zIds.has(i.zoneId)) || onRegionLand(i.position)),
+      });
+
+      if (filteredZones.length > 0) {
+        const avgLng = filteredZones.reduce((sum, z) => sum + z.centroid[0], 0) / filteredZones.length;
+        const avgLat = filteredZones.reduce((sum, z) => sum + z.centroid[1], 0) / filteredZones.length;
+        set({
+          flyTo: { target: [avgLng, avgLat], zoom: 12.5, nonce: Date.now() }
+        });
+      }
+    }
+  },
+
+  setRegionCursorMode: (on) => set({ regionCursorMode: on }),
+  setHoveredRegion: (region) => set({ hoveredRegion: region }),
+
   addInfraAt: async (pos) => {
-    const { placeKind, infra } = get();
+    const { placeKind, infra, allInfra, selectedRegion, zones } = get();
     const preset = INFRA_PRESETS[placeKind];
     const z = nearestZone(pos);
+
+    // Enforce region-locked placement: reject placing outside active filtered zones
+    const activeZoneIds = new Set(zones.map(zone => zone.id));
+    if (selectedRegion !== "All" && z && !activeZoneIds.has(z.id)) {
+      get().pushToast(`Cannot place infrastructure outside the active region (${selectedRegion})`, "warn");
+      return;
+    }
+
     const optimistic: Infra = {
       id: `infra-${placeKind}-${Date.now()}`,
       kind: placeKind,
@@ -814,10 +932,15 @@ export const useStore = create<State>((set, get) => ({
       placedBy: "you",
       zoneId: z?.id,
     };
-    set({ infra: [...infra, optimistic] });
+    set((s) => ({ 
+      infra: [...s.infra, optimistic], 
+      allInfra: [...s.allInfra, optimistic] 
+    }));
+    
     const saved = await api.placeInfra(optimistic);
     set((s) => ({
       infra: s.infra.map((i) => (i.id === optimistic.id ? saved : i)),
+      allInfra: s.allInfra.map((i) => (i.id === optimistic.id ? saved : i)),
       spawnTimes: { ...s.spawnTimes, [saved.id]: Date.now(), [optimistic.id]: Date.now() },
     }));
     get().pushToast(
@@ -888,7 +1011,11 @@ export const useStore = create<State>((set, get) => ({
       set((s) => {
         const rt = { ...s.removalTimes };
         delete rt[id];
-        return { infra: s.infra.filter((i) => i.id !== id), removalTimes: rt };
+        return { 
+          infra: s.infra.filter((i) => i.id !== id), 
+          allInfra: s.allInfra.filter((i) => i.id !== id), 
+          removalTimes: rt 
+        };
       });
       void get().reset();
       void get().refreshFlows();

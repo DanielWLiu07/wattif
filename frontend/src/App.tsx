@@ -8,6 +8,7 @@ import { RightDock } from "@/components/RightDock";
 import { Timeline } from "@/components/Timeline";
 import { ScenarioBanner } from "@/components/ScenarioBanner";
 import { Welcome } from "@/components/Welcome";
+import { RegionSelector } from "@/components/RegionSelector";
 import { DemoCaption } from "@/components/DemoCaption";
 import { OverlayLegend } from "@/components/OverlayLegend";
 import { Toasts } from "@/components/Toasts";
@@ -45,6 +46,8 @@ function App() {
   const rightOpen = useStore((s) => s.rightOpen);
   const toggleLeft = useStore((s) => s.toggleLeft);
   const toggleRight = useStore((s) => s.toggleRight);
+  const setRegionCursorMode = useStore((s) => s.setRegionCursorMode);
+  const setHoveredRegion = useStore((s) => s.setHoveredRegion);
 
   useEffect(() => {
     void init();
@@ -55,11 +58,13 @@ function App() {
       if (e.key === "Escape") {
         setMode("select");
         setScenarioTargeting(false);
+        setRegionCursorMode(false);
+        setHoveredRegion(null);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [setMode, setScenarioTargeting]);
+  }, [setMode, setScenarioTargeting, setRegionCursorMode, setHoveredRegion]);
 
   // Auto-collapse side panels on narrow screens so they never overflow/overlap.
   // Only collapses when crossing below the threshold — doesn't fight manual reopen.
@@ -135,6 +140,7 @@ function App() {
         <Toasts />
         <DemoCaption />
         <Welcome />
+        <RegionSelector />
 
         {!loaded && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-background">

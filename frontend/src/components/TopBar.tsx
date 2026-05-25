@@ -19,6 +19,7 @@ export function TopBar() {
   const stopDemo = useStore((s) => s.stopDemo);
   const voicesCount = useStore((s) => s.voices.length);
   const focusVoices = useStore((s) => s.selectVoiceFromMap);
+  const selectedRegion = useStore((s) => s.selectedRegion);
   const openWelcome = () => useStore.setState({ showWelcome: true });
 
   return (
@@ -74,6 +75,17 @@ export function TopBar() {
         </Tooltip>
 
         <span className="mx-0.5 h-5 w-px bg-border" />
+
+        <Button
+          size="sm"
+          variant="secondary"
+          className="h-7 gap-1 font-normal text-xs border border-border/80 bg-secondary/55 hover:bg-secondary/80 transition-all active:scale-95"
+          onClick={() => useStore.setState({ showRegionSelector: true })}
+          title="Change active simulation region"
+        >
+          <span>📍</span>
+          <span className="font-semibold text-primary">{selectedRegion === "All" ? "All Toronto" : selectedRegion}</span>
+        </Button>
 
         <Badge variant="secondary" className="hidden font-normal sm:inline-flex">
           {zones.length} zones

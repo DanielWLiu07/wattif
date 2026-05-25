@@ -23,7 +23,7 @@ import maplibregl from "maplibre-gl";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Compass } from "lucide-react";
-import { useStore } from "@/store";
+import { useStore, getZoneRegion } from "@/store";
 import { buildLayers } from "@/map/layers";
 import { RecommendationImpact } from "@/components/RecommendationImpact";
 import type { Infra, LngLat, Recommendation } from "@/types";
@@ -130,6 +130,11 @@ export function MapView() {
   const addInfraAt = useStore((s) => s.addInfraAt);
   const selectInfra = useStore((s) => s.selectInfra);
   const selectZone = useStore((s) => s.selectZone);
+  const regionCursorMode = useStore((s) => s.regionCursorMode);
+  const hoveredRegion = useStore((s) => s.hoveredRegion);
+  const setHoveredRegion = useStore((s) => s.setHoveredRegion);
+  const setSelectedRegion = useStore((s) => s.setSelectedRegion);
+  const setRegionCursorMode = useStore((s) => s.setRegionCursorMode);
 
   const [hover, setHover] = useState<Hover>(null);
   const [recCard, setRecCard] = useState<{
@@ -148,8 +153,8 @@ export function MapView() {
     let last = 0;
     const loop = () => {
       const now = performance.now() - start;
-      if (now - last >= 33) {
-        // ~30fps — enough for smooth flows/spin without 60fps React churn
+      if (now - last >= 60) {
+        // ~16fps — enough for smooth flows/spin, drastically cuts React render churn
         last = now;
         setTime(now);
       }
@@ -217,6 +222,8 @@ export function MapView() {
       time,
       onInfraClick,
       onVoiceClick: selectVoiceFromMap,
+      regionCursorMode,
+      hoveredRegion,
     });
     if (GOOGLE_KEY && layerToggles.buildings) {
       base.unshift(
@@ -265,11 +272,27 @@ export function MapView() {
     time,
     onInfraClick,
     selectVoiceFromMap,
+    regionCursorMode,
+    hoveredRegion,
   ]);
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
       const obj: any = info.object;
+      
+      // Interactive region selection cursor: click a zone to simulate just its region.
+      if (regionCursorMode) {
+        const zoneName = obj?.properties?.name;
+        if (zoneName) {
+          const zoneObj = zones.find(z => z.id === obj?.properties?.id || z.name === zoneName);
+          const region = getZoneRegion(zoneName, zoneObj?.centroid);
+          setSelectedRegion(region);
+          setRegionCursorMode(false);
+          setHoveredRegion(null);
+        }
+        return;
+      }
+
       // Scenario targeting (point-and-click): click a zone to FIRE there immediately.
       if (scenarioTargeting) {
         const zoneId = obj?.properties?.id;
@@ -295,11 +318,39 @@ export function MapView() {
         setRecCard((c) => (c?.pinned ? null : c)); // click empty → unpin card
       }
     },
-    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra]
+    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion]
   );
 
   const handleHover = useCallback((info: PickingInfo) => {
     const o: any = info.object;
+
+    // Interactive region selection cursor: highlight hovered region and show popup stats
+    if (regionCursorMode) {
+      const zoneName = o?.properties?.name;
+      if (zoneName) {
+        const zoneObj = zones.find(z => z.id === o?.properties?.id || z.name === zoneName);
+        const region = getZoneRegion(zoneName, zoneObj?.centroid);
+        setHoveredRegion(region);
+        
+        const filtered = zones.filter(z => getZoneRegion(z.name, z.centroid) === region);
+        const pop = filtered.reduce((sum, z) => sum + z.demographics.population, 0);
+        
+        const html = `<div class="p-1">
+          <div class="font-bold text-emerald-400 text-sm mb-0.5">Select ${region}</div>
+          <div class="text-[11px] text-muted-foreground mb-1.5">Click to simulate this region only</div>
+          <div class="text-[11px] text-foreground/90 leading-tight">
+            <b>${filtered.length}</b> neighborhoods<br/>
+            <b>${pop.toLocaleString()}</b> residents
+          </div>
+        </div>`;
+        setHover({ x: info.x ?? 0, y: info.y ?? 0, html });
+      } else {
+        setHoveredRegion(null);
+        setHover(null);
+      }
+      return;
+    }
+
     // While targeting, preview the hovered zone (glow) so you SEE before you click.
     if (scenarioTargeting) {
       const id = o?.properties?.id ?? null;
@@ -371,7 +422,7 @@ export function MapView() {
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone]);
+  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;
@@ -554,6 +605,12 @@ export function MapView() {
           ) : (
             <>🎯 Click a neighbourhood to target the scenario · Esc to cancel</>
           )}
+        </div>
+      )}
+
+      {regionCursorMode && (
+        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-emerald-400/50 bg-emerald-400/15 px-4 py-1.5 text-xs font-semibold text-emerald-200 backdrop-blur shadow-lg">
+          📍 Hover and click any neighborhood to simulate its region only · Esc to cancel
         </div>
       )}
     </div>
