@@ -1,7 +1,7 @@
 {
-  "note": "Per-zone siting constraints from Environmentally Significant Areas (ESA centroids joined to zones). sitingPenalty 0..1 (optimizer should down-weight); noBuild=True when >=50% of the zone is protected. Flood layer not yet ingested (TODO).",
-  "source": "Toronto Environmentally Significant Areas",
-  "flaggedZones": 14,
+  "note": "Per-zone siting constraints. protectedAreaFraction from Environmentally Significant Areas; floodRisk from chronic basement-flooding study areas. sitingPenalty 0..1 (= ESA penalty + 0.6\u00b7floodRisk; optimizer should down-weight); noBuild=True when >=50% of the zone is ESA-protected.",
+  "source": "Toronto Environmentally Significant Areas + Basement Flooding Study Areas",
+  "flaggedZones": 22,
   "zones": [
     {
       "zoneId": "z000",
@@ -16,7 +16,8 @@
         "Wards Island"
       ],
       "protectedAreaFraction": 0.062,
-      "sitingPenalty": 0.093,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.693,
       "noBuild": false
     },
     {
@@ -25,6 +26,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -34,6 +36,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -43,6 +46,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -52,6 +56,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -61,6 +66,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -70,6 +76,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -81,6 +88,7 @@
         "Don Valley (Central Section)"
       ],
       "protectedAreaFraction": 0.111,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.167,
       "noBuild": false
     },
@@ -90,6 +98,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -99,7 +108,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.6,
       "noBuild": false
     },
     {
@@ -108,6 +118,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -123,6 +134,7 @@
         "Rosedale Valley"
       ],
       "protectedAreaFraction": 0.15,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.225,
       "noBuild": false
     },
@@ -134,6 +146,7 @@
         "Nordheimer Ravine"
       ],
       "protectedAreaFraction": 0.051,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.076,
       "noBuild": false
     },
@@ -143,6 +156,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -152,6 +166,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -161,6 +176,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -170,7 +186,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.6,
       "noBuild": false
     },
     {
@@ -179,6 +196,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -188,6 +206,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -204,6 +223,7 @@
         "Humber Valley"
       ],
       "protectedAreaFraction": 0.146,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.219,
       "noBuild": false
     },
@@ -213,6 +233,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -224,6 +245,7 @@
         "Glen Stewart Ravine"
       ],
       "protectedAreaFraction": 0.02,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.03,
       "noBuild": false
     },
@@ -233,6 +255,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -242,6 +265,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -253,6 +277,7 @@
         "Todmorden Mills"
       ],
       "protectedAreaFraction": 0.042,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.063,
       "noBuild": false
     },
@@ -265,7 +290,8 @@
         "Crothers Woods"
       ],
       "protectedAreaFraction": 0.034,
-      "sitingPenalty": 0.051,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.651,
       "noBuild": false
     },
     {
@@ -274,6 +300,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -283,6 +310,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -292,7 +320,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.6,
       "noBuild": false
     },
     {
@@ -303,7 +332,8 @@
         "East Don Valley Swamp"
       ],
       "protectedAreaFraction": 0.162,
-      "sitingPenalty": 0.243,
+      "floodRisk": 0.716,
+      "sitingPenalty": 0.673,
       "noBuild": false
     },
     {
@@ -312,7 +342,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 0.455,
+      "sitingPenalty": 0.273,
       "noBuild": false
     },
     {
@@ -321,7 +352,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.6,
       "noBuild": false
     },
     {
@@ -330,7 +362,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 0.819,
+      "sitingPenalty": 0.491,
       "noBuild": false
     },
     {
@@ -342,7 +375,8 @@
         "Rowntree Mill Swamp"
       ],
       "protectedAreaFraction": 0.088,
-      "sitingPenalty": 0.132,
+      "floodRisk": 0.976,
+      "sitingPenalty": 0.718,
       "noBuild": false
     },
     {
@@ -351,6 +385,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -360,6 +395,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -369,7 +405,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 0.796,
+      "sitingPenalty": 0.478,
       "noBuild": false
     },
     {
@@ -380,6 +417,7 @@
         "Humber Bay Park East"
       ],
       "protectedAreaFraction": 0.011,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.017,
       "noBuild": false
     },
@@ -391,6 +429,7 @@
         "Bellamy Ravine/Sylvan Park"
       ],
       "protectedAreaFraction": 0.09,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.135,
       "noBuild": false
     },
@@ -400,6 +439,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -409,6 +449,7 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
+      "floodRisk": 0.0,
       "sitingPenalty": 0.0,
       "noBuild": false
     },
@@ -418,7 +459,8 @@
       "esaCount": 0,
       "esaNames": [],
       "protectedAreaFraction": 0.0,
-      "sitingPenalty": 0.0,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.6,
       "noBuild": false
     },
     {
@@ -434,7 +476,8 @@
         "Finch Ave. Meander/Sewells Forest/Reesor Woods"
       ],
       "protectedAreaFraction": 0.196,
-      "sitingPenalty": 0.294,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.894,
       "noBuild": false
     },
     {
@@ -445,7 +488,8 @@
         "Toronto Hunt Club Forest"
       ],
       "protectedAreaFraction": 0.015,
-      "sitingPenalty": 0.022,
+      "floodRisk": 1.0,
+      "sitingPenalty": 0.622,
       "noBuild": false
     }
   ]

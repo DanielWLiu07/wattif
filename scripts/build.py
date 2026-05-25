@@ -582,20 +582,17 @@ def build_existing_infra(zones: list[dict]) -> dict | None:
     }
 
 
-def build_constraints(zones: list[dict]) -> dict | None:
-    """data/processed/constraints.json — per-zone siting constraints from Environmentally
-    Significant Areas (ESAs). A zone's protected fraction → optimizer no-build/penalty flag."""
-    esa_path = RAW_DIR / "esa-4326.geojson"
-    if not esa_path.exists():
+def _load_overlap_polygons(filename: str, name_prop: str | None = None) -> list[dict] | None:
+    """Load a (Multi)Polygon GeoJSON as [{name, centroid, areaKm2}] (largest ring each)."""
+    path = RAW_DIR / filename
+    if not path.exists():
         return None
     try:
-        gj = json.loads(esa_path.read_text())
+        gj = json.loads(path.read_text())
     except Exception as exc:  # noqa: BLE001
-        print(f"  ESA unreadable ({exc})", file=sys.stderr)
+        print(f"  {filename} unreadable ({exc})", file=sys.stderr)
         return None
-
-    # ESA polygons: largest ring -> centroid + area (km²).
-    esas = []
+    polys = []
     for f in gj.get("features", []):
         geom = f.get("geometry") or {}
         coords = geom.get("coordinates")
@@ -609,26 +606,127 @@ def build_constraints(zones: list[dict]) -> dict | None:
             continue
         ring = [[float(p[0]), float(p[1])] for p in ring]
         cx, cy = _ring_centroid(ring)
-        esas.append({"name": (f.get("properties") or {}).get("ESA_NAME"),
-                     "centroid": [cx, cy], "areaKm2": zone_area_km2(ring)})
+        nm = (f.get("properties") or {}).get(name_prop) if name_prop else None
+        polys.append({"name": nm, "centroid": [cx, cy], "areaKm2": zone_area_km2(ring)})
+    return polys
+
+
+def zone_protected_fraction(zone_ring: list[list[float]], polys: list[dict]) -> tuple[float, list]:
+    """Sum area of polygons whose centroid falls in the zone; return (fraction, names)."""
+    zarea = zone_area_km2(zone_ring)
+    area = 0.0
+    names = []
+    for p in polys:
+        if point_in_ring(p["centroid"][0], p["centroid"][1], zone_ring):
+            area += p["areaKm2"]
+            if p.get("name"):
+                names.append(p["name"])
+    frac = round(min(1.0, area / zarea), 3) if zarea else 0.0
+    return frac, names
+
+
+def build_flood(zones: list[dict]) -> tuple[dict | None, dict]:
+    """data/processed/flood.json — per-zone flood-risk from chronic basement-flooding study areas.
+
+    Returns (flood_layer, floodRiskByZoneId). Real Toronto Open Data; zoneId via centroid overlap.
+    """
+    polys = _load_overlap_polygons("basement-flooding-4326.geojson", "Asset Identification")
+    if polys is None:
+        return None, {}
+    per_zone = []
+    risk_map: dict[str, float] = {}
+    flagged = 0
+    for z in zones:
+        frac, names = zone_protected_fraction(z["polygon"]["coordinates"][0], polys)
+        # Flood-risk score: chronic-flooding study-area coverage, mildly amplified.
+        risk = round(min(1.0, frac * 1.3), 3)
+        risk_map[z["id"]] = risk
+        if risk > 0:
+            flagged += 1
+        per_zone.append({
+            "zoneId": z["id"],
+            "name": z["name"],
+            "floodStudyAreas": len(names),
+            "studyAreaFraction": frac,
+            "floodRiskScore": risk,
+            "floodRisk": "high" if risk >= 0.4 else "moderate" if risk >= 0.1 else "low",
+        })
+    print(f"  ✓ flood: {flagged}/{len(zones)} zones intersect a chronic-flooding study area",
+          file=sys.stderr)
+    layer = {
+        "note": "Per-zone flood risk from Toronto chronic basement-flooding study areas (centroid "
+                "overlap with our zones). floodRiskScore 0..1. Enables flood scenario + siting penalty.",
+        "source": "Toronto Basement Flooding Study Areas (Open Data)",
+        "flaggedZones": flagged,
+        "zones": per_zone,
+    }
+    return layer, risk_map
+
+
+def build_heat_vulnerability(zones: list[dict], buildings: dict, environment: dict | None) -> dict:
+    """data/processed/heat_vulnerability.json — per-zone Heat Vulnerability Index (HVI).
+
+    No single official HVI dataset is on Toronto Open Data, so we compute the standard HVI
+    composite from REAL indicators we already derive (documented as modeled-from-real):
+      exposure   = urban heat island proxy: building density (OSM) + LOW green space (Wellbeing)
+      sensitivity= social vulnerability: energyBurdenIndex (real income + renter share)
+    HVI = 0.40·exposureDensity + 0.30·(1−greenScore) + 0.30·energyBurden  (each 0..1), normalized.
+    """
+    dens = {b["zoneId"]: b.get("buildingDensityPerKm2") or 0 for b in buildings["zones"]}
+    d_lo, d_hi = min(dens.values()), max(dens.values())
+    green = {}
+    if environment:
+        green = {z["zoneId"]: z.get("greenScore") for z in environment["zones"] if z.get("matched")}
+
+    out = []
+    for z in zones:
+        d = dens.get(z["id"], 0)
+        dens_norm = (d - d_lo) / (d_hi - d_lo) if d_hi > d_lo else 0.0
+        g = green.get(z["id"])
+        low_green = (1.0 - g) if g is not None else 0.5
+        burden = z["demographics"]["energyBurdenIndex"]
+        hvi = clamp01(0.40 * dens_norm + 0.30 * low_green + 0.30 * burden)
+        out.append({
+            "zoneId": z["id"],
+            "name": z["name"],
+            "heatVulnerabilityIndex": round(hvi, 3),
+            "level": "high" if hvi >= 0.6 else "moderate" if hvi >= 0.4 else "low",
+            "buildingDensityPerKm2": d,
+            "greenScore": g,
+            "energyBurdenIndex": burden,
+        })
+    out.sort(key=lambda x: -x["heatVulnerabilityIndex"])
+    print(f"  ✓ heat vulnerability: HVI computed for {len(out)} zones "
+          f"(top: {out[0]['name'][:24]} {out[0]['heatVulnerabilityIndex']})", file=sys.stderr)
+    return {
+        "note": "Heat Vulnerability Index per zone — modeled composite of REAL indicators (standard "
+                "HVI method): exposure = building density (OSM) + low green space (Wellbeing TO); "
+                "sensitivity = energyBurdenIndex (Census income+renter). HVI = 0.40·densityNorm + "
+                "0.30·(1-greenScore) + 0.30·energyBurden, 0..1. Enables equity-driven heatwave "
+                "targeting. No single official HVI dataset on Open Data — hence modeled-from-real.",
+        "method": "modeled composite of real indicators",
+        "zones": out,
+    }
+
+
+def build_constraints(zones: list[dict], flood_risk: dict | None = None) -> dict | None:
+    """data/processed/constraints.json — per-zone siting constraints from Environmentally
+    Significant Areas (ESAs). A zone's protected fraction → optimizer no-build/penalty flag."""
+    esas = _load_overlap_polygons("esa-4326.geojson", "ESA_NAME")
+    if esas is None:
+        return None
+    flood_risk = flood_risk or {}
 
     per_zone = []
     flagged = 0
     for z in zones:
-        ring = z["polygon"]["coordinates"][0]
-        zarea = zone_area_km2(ring)
-        esa_area = 0.0
-        names = []
-        for e in esas:
-            if point_in_ring(e["centroid"][0], e["centroid"][1], ring):
-                esa_area += e["areaKm2"]
-                if e["name"]:
-                    names.append(e["name"])
-        protected = round(min(1.0, esa_area / zarea), 3) if zarea else 0.0
-        # Build penalty: higher protected fraction => stronger siting penalty (0..1).
-        penalty = round(min(0.9, protected * 1.5), 3)
+        protected, names = zone_protected_fraction(z["polygon"]["coordinates"][0], esas)
+        # ESA siting penalty (0..1) plus flood-risk contribution.
+        esa_pen = min(0.9, protected * 1.5)
+        froisk = flood_risk.get(z["id"], 0.0)
+        penalty = round(min(0.95, esa_pen + 0.6 * froisk), 3)
         no_build = protected >= 0.5
-        if names:
+        if names or froisk > 0:
             flagged += 1
         per_zone.append({
             "zoneId": z["id"],
@@ -636,15 +734,18 @@ def build_constraints(zones: list[dict]) -> dict | None:
             "esaCount": len(names),
             "esaNames": names[:6],
             "protectedAreaFraction": protected,
+            "floodRisk": round(froisk, 3),
             "sitingPenalty": penalty,
             "noBuild": no_build,
         })
-    print(f"  ✓ constraints: {flagged}/{len(zones)} zones overlap an ESA", file=sys.stderr)
+    print(f"  ✓ constraints: {flagged}/{len(zones)} zones have an ESA and/or flood constraint",
+          file=sys.stderr)
     return {
-        "note": "Per-zone siting constraints from Environmentally Significant Areas (ESA centroids "
-                "joined to zones). sitingPenalty 0..1 (optimizer should down-weight); noBuild=True "
-                "when >=50% of the zone is protected. Flood layer not yet ingested (TODO).",
-        "source": "Toronto Environmentally Significant Areas",
+        "note": "Per-zone siting constraints. protectedAreaFraction from Environmentally Significant "
+                "Areas; floodRisk from chronic basement-flooding study areas. sitingPenalty 0..1 "
+                "(= ESA penalty + 0.6·floodRisk; optimizer should down-weight); noBuild=True when "
+                ">=50% of the zone is ESA-protected.",
+        "source": "Toronto Environmentally Significant Areas + Basement Flooding Study Areas",
         "flaggedZones": flagged,
         "zones": per_zone,
     }
@@ -1224,8 +1325,10 @@ def main() -> int:
     attitudes = build_attitudes(zones, attitudes_extract)
     facilities = build_facilities(zones)
     existing_infra = build_existing_infra(zones)
-    constraints = build_constraints(zones)
+    flood, flood_risk = build_flood(zones)
+    constraints = build_constraints(zones, flood_risk)
     environment = build_environment(zones, load_wellbeing_env())
+    heat_vulnerability = build_heat_vulnerability(zones, buildings, environment)
     generation_mix = build_generation_mix()
 
     (OUT_DIR / "zones.json").write_text(json.dumps(zones, indent=2))
@@ -1243,6 +1346,9 @@ def main() -> int:
         (OUT_DIR / "constraints.json").write_text(json.dumps(constraints, indent=2))
     if environment:
         (OUT_DIR / "environment.json").write_text(json.dumps(environment, indent=2))
+    if flood:
+        (OUT_DIR / "flood.json").write_text(json.dumps(flood, indent=2))
+    (OUT_DIR / "heat_vulnerability.json").write_text(json.dumps(heat_vulnerability, indent=2))
     (OUT_DIR / "generation_mix.json").write_text(json.dumps(generation_mix, indent=2))
 
     n = len(zones)
