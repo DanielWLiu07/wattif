@@ -1,0 +1,983 @@
+{
+  "source": "Derived: Census 2016 profile (tenure, income, dwelling type, one-person households, seniors 65+, young adults 20-29) + OSM building density + Business Improvement Areas (commercial density).",
+  "method": "REAL drivers (tenure/income/dwelling/age/BIA/density) \u2192 MODELED archetype mapping: tenure splits owner/renter; dwelling type splits owner-detached vs condo-owner; income splits renter-low vs renter-mid; senior65+ and young-adult shares carve out senior/student; small-business from BIA overlap + density. Proportions sum to 1.",
+  "archetypes": [
+    "owner-detached",
+    "condo-owner",
+    "renter-low",
+    "renter-mid",
+    "senior",
+    "student",
+    "small-business"
+  ],
+  "zones": [
+    {
+      "zoneId": "z000",
+      "name": "Waterfront Communities\u2013The Island",
+      "mix": {
+        "owner-detached": 0.0052,
+        "condo-owner": 0.2441,
+        "renter-low": 0.1772,
+        "renter-mid": 0.1772,
+        "senior": 0.0489,
+        "student": 0.1873,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.587,
+        "medianIncome": 80928,
+        "detachedDwellingFrac": 0.021,
+        "apartmentDwellingFrac": 0.978,
+        "seniorPct65plus": 0.07,
+        "youngAdultPct": 0.341,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z001",
+      "name": "Bay Street Corridor",
+      "mix": {
+        "owner-detached": 0.0002,
+        "condo-owner": 0.1846,
+        "renter-low": 0.1954,
+        "renter-mid": 0.1954,
+        "senior": 0.0643,
+        "student": 0.2,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.679,
+        "medianIncome": 52352,
+        "detachedDwellingFrac": 0.001,
+        "apartmentDwellingFrac": 0.998,
+        "seniorPct65plus": 0.092,
+        "youngAdultPct": 0.389,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z002",
+      "name": "Church-Yonge Corridor",
+      "mix": {
+        "owner-detached": 0.0027,
+        "condo-owner": 0.203,
+        "renter-low": 0.2458,
+        "renter-mid": 0.2458,
+        "senior": 0.0657,
+        "student": 0.1678,
+        "small-business": 0.0693
+      },
+      "drivers": {
+        "renterPct": 0.705,
+        "medianIncome": 60362,
+        "detachedDwellingFrac": 0.013,
+        "apartmentDwellingFrac": 0.985,
+        "seniorPct65plus": 0.094,
+        "youngAdultPct": 0.305,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z003",
+      "name": "Kensington-Chinatown",
+      "mix": {
+        "owner-detached": 0.0171,
+        "condo-owner": 0.151,
+        "renter-low": 0.2048,
+        "renter-mid": 0.2048,
+        "senior": 0.0987,
+        "student": 0.1637,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.709,
+        "medianIncome": 50846,
+        "detachedDwellingFrac": 0.101,
+        "apartmentDwellingFrac": 0.893,
+        "seniorPct65plus": 0.141,
+        "youngAdultPct": 0.298,
+        "biaCount": 3
+      }
+    },
+    {
+      "zoneId": "z004",
+      "name": "University",
+      "mix": {
+        "owner-detached": 0.0484,
+        "condo-owner": 0.2106,
+        "renter-low": 0.2158,
+        "renter-mid": 0.2158,
+        "senior": 0.0879,
+        "student": 0.1659,
+        "small-business": 0.0555
+      },
+      "drivers": {
+        "renterPct": 0.625,
+        "medianIncome": 62125,
+        "detachedDwellingFrac": 0.184,
+        "apartmentDwellingFrac": 0.8,
+        "seniorPct65plus": 0.126,
+        "youngAdultPct": 0.302,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z005",
+      "name": "Moss Park",
+      "mix": {
+        "owner-detached": 0.0163,
+        "condo-owner": 0.2104,
+        "renter-low": 0.221,
+        "renter-mid": 0.221,
+        "senior": 0.0553,
+        "student": 0.1159,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.661,
+        "medianIncome": 58372,
+        "detachedDwellingFrac": 0.072,
+        "apartmentDwellingFrac": 0.926,
+        "seniorPct65plus": 0.079,
+        "youngAdultPct": 0.211,
+        "biaCount": 3
+      }
+    },
+    {
+      "zoneId": "z006",
+      "name": "Regent Park",
+      "mix": {
+        "owner-detached": 0.0231,
+        "condo-owner": 0.1801,
+        "renter-low": 0.4176,
+        "renter-mid": 0.179,
+        "senior": 0.0463,
+        "student": 0.1143,
+        "small-business": 0.0396
+      },
+      "drivers": {
+        "renterPct": 0.746,
+        "medianIncome": 46845,
+        "detachedDwellingFrac": 0.113,
+        "apartmentDwellingFrac": 0.882,
+        "seniorPct65plus": 0.066,
+        "youngAdultPct": 0.208,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z007",
+      "name": "Cabbagetown-South St.James Town",
+      "mix": {
+        "owner-detached": 0.0649,
+        "condo-owner": 0.2688,
+        "renter-low": 0.2098,
+        "renter-mid": 0.2098,
+        "senior": 0.1188,
+        "student": 0.0839,
+        "small-business": 0.0439
+      },
+      "drivers": {
+        "renterPct": 0.557,
+        "medianIncome": 67142,
+        "detachedDwellingFrac": 0.194,
+        "apartmentDwellingFrac": 0.804,
+        "seniorPct65plus": 0.17,
+        "youngAdultPct": 0.153,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z008",
+      "name": "North St.James Town",
+      "mix": {
+        "owner-detached": 0.0009,
+        "condo-owner": 0.078,
+        "renter-low": 0.4967,
+        "renter-mid": 0.2129,
+        "senior": 0.0598,
+        "student": 0.1124,
+        "small-business": 0.0394
+      },
+      "drivers": {
+        "renterPct": 0.9,
+        "medianIncome": 45153,
+        "detachedDwellingFrac": 0.011,
+        "apartmentDwellingFrac": 0.988,
+        "seniorPct65plus": 0.085,
+        "youngAdultPct": 0.204,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z009",
+      "name": "Annex",
+      "mix": {
+        "owner-detached": 0.0349,
+        "condo-owner": 0.193,
+        "renter-low": 0.1859,
+        "renter-mid": 0.1859,
+        "senior": 0.1128,
+        "student": 0.1276,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.62,
+        "medianIncome": 75314,
+        "detachedDwellingFrac": 0.152,
+        "apartmentDwellingFrac": 0.842,
+        "seniorPct65plus": 0.161,
+        "youngAdultPct": 0.232,
+        "biaCount": 3
+      }
+    },
+    {
+      "zoneId": "z010",
+      "name": "Yonge-St.Clair",
+      "mix": {
+        "owner-detached": 0.0401,
+        "condo-owner": 0.1961,
+        "renter-low": 0.1895,
+        "renter-mid": 0.1895,
+        "senior": 0.1551,
+        "student": 0.0874,
+        "small-business": 0.1425
+      },
+      "drivers": {
+        "renterPct": 0.616,
+        "medianIncome": 83382,
+        "detachedDwellingFrac": 0.17,
+        "apartmentDwellingFrac": 0.829,
+        "seniorPct65plus": 0.222,
+        "youngAdultPct": 0.159,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z011",
+      "name": "Rosedale-Moore Park",
+      "mix": {
+        "owner-detached": 0.1272,
+        "condo-owner": 0.2723,
+        "renter-low": 0.1029,
+        "renter-mid": 0.2187,
+        "senior": 0.1663,
+        "student": 0.0653,
+        "small-business": 0.0474
+      },
+      "drivers": {
+        "renterPct": 0.446,
+        "medianIncome": 116968,
+        "detachedDwellingFrac": 0.318,
+        "apartmentDwellingFrac": 0.681,
+        "seniorPct65plus": 0.238,
+        "youngAdultPct": 0.119,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z012",
+      "name": "Casa Loma",
+      "mix": {
+        "owner-detached": 0.0607,
+        "condo-owner": 0.1839,
+        "renter-low": 0.1169,
+        "renter-mid": 0.2484,
+        "senior": 0.1637,
+        "student": 0.0797,
+        "small-business": 0.1467
+      },
+      "drivers": {
+        "renterPct": 0.599,
+        "medianIncome": 96634,
+        "detachedDwellingFrac": 0.248,
+        "apartmentDwellingFrac": 0.75,
+        "seniorPct65plus": 0.234,
+        "youngAdultPct": 0.145,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z013",
+      "name": "Wychwood",
+      "mix": {
+        "owner-detached": 0.1211,
+        "condo-owner": 0.2184,
+        "renter-low": 0.1809,
+        "renter-mid": 0.1809,
+        "senior": 0.1059,
+        "student": 0.0799,
+        "small-business": 0.1129
+      },
+      "drivers": {
+        "renterPct": 0.516,
+        "medianIncome": 71190,
+        "detachedDwellingFrac": 0.355,
+        "apartmentDwellingFrac": 0.641,
+        "seniorPct65plus": 0.151,
+        "youngAdultPct": 0.145,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z014",
+      "name": "Dovercourt-Wallace Emerson-Junction",
+      "mix": {
+        "owner-detached": 0.1133,
+        "condo-owner": 0.2413,
+        "renter-low": 0.178,
+        "renter-mid": 0.178,
+        "senior": 0.0836,
+        "student": 0.1038,
+        "small-business": 0.1018
+      },
+      "drivers": {
+        "renterPct": 0.501,
+        "medianIncome": 68429,
+        "detachedDwellingFrac": 0.315,
+        "apartmentDwellingFrac": 0.671,
+        "seniorPct65plus": 0.119,
+        "youngAdultPct": 0.189,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z015",
+      "name": "Little Portugal",
+      "mix": {
+        "owner-detached": 0.0509,
+        "condo-owner": 0.23,
+        "renter-low": 0.1774,
+        "renter-mid": 0.1774,
+        "senior": 0.0659,
+        "student": 0.1384,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.558,
+        "medianIncome": 69454,
+        "detachedDwellingFrac": 0.18,
+        "apartmentDwellingFrac": 0.812,
+        "seniorPct65plus": 0.094,
+        "youngAdultPct": 0.252,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z016",
+      "name": "Trinity-Bellwoods",
+      "mix": {
+        "owner-detached": 0.1083,
+        "condo-owner": 0.248,
+        "renter-low": 0.1638,
+        "renter-mid": 0.1638,
+        "senior": 0.0941,
+        "student": 0.1154,
+        "small-business": 0.1066
+      },
+      "drivers": {
+        "renterPct": 0.479,
+        "medianIncome": 75810,
+        "detachedDwellingFrac": 0.288,
+        "apartmentDwellingFrac": 0.66,
+        "seniorPct65plus": 0.134,
+        "youngAdultPct": 0.21,
+        "biaCount": 3
+      }
+    },
+    {
+      "zoneId": "z017",
+      "name": "Niagara",
+      "mix": {
+        "owner-detached": 0.0175,
+        "condo-owner": 0.308,
+        "renter-low": 0.1627,
+        "renter-mid": 0.1627,
+        "senior": 0.0319,
+        "student": 0.1572,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.5,
+        "medianIncome": 81509,
+        "detachedDwellingFrac": 0.054,
+        "apartmentDwellingFrac": 0.945,
+        "seniorPct65plus": 0.046,
+        "youngAdultPct": 0.286,
+        "biaCount": 3
+      }
+    },
+    {
+      "zoneId": "z018",
+      "name": "South Parkdale",
+      "mix": {
+        "owner-detached": 0.0058,
+        "condo-owner": 0.0872,
+        "renter-low": 0.4206,
+        "renter-mid": 0.1803,
+        "senior": 0.0673,
+        "student": 0.1135,
+        "small-business": 0.1253
+      },
+      "drivers": {
+        "renterPct": 0.866,
+        "medianIncome": 45905,
+        "detachedDwellingFrac": 0.062,
+        "apartmentDwellingFrac": 0.936,
+        "seniorPct65plus": 0.096,
+        "youngAdultPct": 0.206,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z019",
+      "name": "High Park-Swansea",
+      "mix": {
+        "owner-detached": 0.138,
+        "condo-owner": 0.2946,
+        "renter-low": 0.1672,
+        "renter-mid": 0.1672,
+        "senior": 0.0963,
+        "student": 0.0732,
+        "small-business": 0.0635
+      },
+      "drivers": {
+        "renterPct": 0.436,
+        "medianIncome": 85932,
+        "detachedDwellingFrac": 0.318,
+        "apartmentDwellingFrac": 0.68,
+        "seniorPct65plus": 0.138,
+        "youngAdultPct": 0.133,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z020",
+      "name": "Roncesvalles",
+      "mix": {
+        "owner-detached": 0.0914,
+        "condo-owner": 0.2235,
+        "renter-low": 0.2037,
+        "renter-mid": 0.2037,
+        "senior": 0.0778,
+        "student": 0.0768,
+        "small-business": 0.1232
+      },
+      "drivers": {
+        "renterPct": 0.564,
+        "medianIncome": 68470,
+        "detachedDwellingFrac": 0.289,
+        "apartmentDwellingFrac": 0.706,
+        "seniorPct65plus": 0.111,
+        "youngAdultPct": 0.14,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z021",
+      "name": "The Beaches",
+      "mix": {
+        "owner-detached": 0.2162,
+        "condo-owner": 0.2483,
+        "renter-low": 0.0896,
+        "renter-mid": 0.1903,
+        "senior": 0.0935,
+        "student": 0.0533,
+        "small-business": 0.1089
+      },
+      "drivers": {
+        "renterPct": 0.376,
+        "medianIncome": 106464,
+        "detachedDwellingFrac": 0.465,
+        "apartmentDwellingFrac": 0.534,
+        "seniorPct65plus": 0.134,
+        "youngAdultPct": 0.097,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z022",
+      "name": "Danforth",
+      "mix": {
+        "owner-detached": 0.2445,
+        "condo-owner": 0.2445,
+        "renter-low": 0.1357,
+        "renter-mid": 0.1357,
+        "senior": 0.1086,
+        "student": 0.0643,
+        "small-business": 0.0667
+      },
+      "drivers": {
+        "renterPct": 0.357,
+        "medianIncome": 84838,
+        "detachedDwellingFrac": 0.498,
+        "apartmentDwellingFrac": 0.498,
+        "seniorPct65plus": 0.155,
+        "youngAdultPct": 0.117,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z023",
+      "name": "Greektown (Playter Estates-Danforth)",
+      "mix": {
+        "owner-detached": 0.1101,
+        "condo-owner": 0.199,
+        "renter-low": 0.1793,
+        "renter-mid": 0.1793,
+        "senior": 0.1,
+        "student": 0.0722,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.537,
+        "medianIncome": 79358,
+        "detachedDwellingFrac": 0.355,
+        "apartmentDwellingFrac": 0.642,
+        "seniorPct65plus": 0.143,
+        "youngAdultPct": 0.131,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z024",
+      "name": "East York (Broadview North)",
+      "mix": {
+        "owner-detached": 0.0585,
+        "condo-owner": 0.1833,
+        "renter-low": 0.2581,
+        "renter-mid": 0.2581,
+        "senior": 0.1108,
+        "student": 0.0717,
+        "small-business": 0.0593
+      },
+      "drivers": {
+        "renterPct": 0.681,
+        "medianIncome": 56342,
+        "detachedDwellingFrac": 0.242,
+        "apartmentDwellingFrac": 0.757,
+        "seniorPct65plus": 0.158,
+        "youngAdultPct": 0.13,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z025",
+      "name": "Leaside-Bennington",
+      "mix": {
+        "owner-detached": 0.3937,
+        "condo-owner": 0.1767,
+        "renter-low": 0.071,
+        "renter-mid": 0.1508,
+        "senior": 0.0986,
+        "student": 0.0521,
+        "small-business": 0.057
+      },
+      "drivers": {
+        "renterPct": 0.28,
+        "medianIncome": 141254,
+        "detachedDwellingFrac": 0.689,
+        "apartmentDwellingFrac": 0.309,
+        "seniorPct65plus": 0.141,
+        "youngAdultPct": 0.095,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z026",
+      "name": "Don Valley Village",
+      "mix": {
+        "owner-detached": 0.1521,
+        "condo-owner": 0.2374,
+        "renter-low": 0.1856,
+        "renter-mid": 0.1856,
+        "senior": 0.1168,
+        "student": 0.0788,
+        "small-business": 0.0435
+      },
+      "drivers": {
+        "renterPct": 0.488,
+        "medianIncome": 66788,
+        "detachedDwellingFrac": 0.39,
+        "apartmentDwellingFrac": 0.61,
+        "seniorPct65plus": 0.167,
+        "youngAdultPct": 0.143,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z027",
+      "name": "Willowdale East",
+      "mix": {
+        "owner-detached": 0.0769,
+        "condo-owner": 0.3223,
+        "renter-low": 0.1229,
+        "renter-mid": 0.1229,
+        "senior": 0.0855,
+        "student": 0.1095,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.381,
+        "medianIncome": 65563,
+        "detachedDwellingFrac": 0.193,
+        "apartmentDwellingFrac": 0.807,
+        "seniorPct65plus": 0.122,
+        "youngAdultPct": 0.199,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z028",
+      "name": "Willowdale West",
+      "mix": {
+        "owner-detached": 0.1471,
+        "condo-owner": 0.3114,
+        "renter-low": 0.1312,
+        "renter-mid": 0.1312,
+        "senior": 0.1325,
+        "student": 0.0981,
+        "small-business": 0.0485
+      },
+      "drivers": {
+        "renterPct": 0.364,
+        "medianIncome": 68269,
+        "detachedDwellingFrac": 0.321,
+        "apartmentDwellingFrac": 0.679,
+        "seniorPct65plus": 0.189,
+        "youngAdultPct": 0.178,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z029",
+      "name": "Bayview Village",
+      "mix": {
+        "owner-detached": 0.1406,
+        "condo-owner": 0.3019,
+        "renter-low": 0.155,
+        "renter-mid": 0.155,
+        "senior": 0.1107,
+        "student": 0.0969,
+        "small-business": 0.0399
+      },
+      "drivers": {
+        "renterPct": 0.412,
+        "medianIncome": 70731,
+        "detachedDwellingFrac": 0.317,
+        "apartmentDwellingFrac": 0.681,
+        "seniorPct65plus": 0.158,
+        "youngAdultPct": 0.176,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z030",
+      "name": "York University Heights",
+      "mix": {
+        "owner-detached": 0.0953,
+        "condo-owner": 0.1918,
+        "renter-low": 0.1734,
+        "renter-mid": 0.1734,
+        "senior": 0.0898,
+        "student": 0.1163,
+        "small-business": 0.16
+      },
+      "drivers": {
+        "renterPct": 0.547,
+        "medianIncome": 56842,
+        "detachedDwellingFrac": 0.331,
+        "apartmentDwellingFrac": 0.666,
+        "seniorPct65plus": 0.128,
+        "youngAdultPct": 0.211,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z031",
+      "name": "Black Creek",
+      "mix": {
+        "owner-detached": 0.089,
+        "condo-owner": 0.1741,
+        "renter-low": 0.3689,
+        "renter-mid": 0.1581,
+        "senior": 0.0876,
+        "student": 0.0827,
+        "small-business": 0.0396
+      },
+      "drivers": {
+        "renterPct": 0.667,
+        "medianIncome": 49941,
+        "detachedDwellingFrac": 0.339,
+        "apartmentDwellingFrac": 0.663,
+        "seniorPct65plus": 0.125,
+        "youngAdultPct": 0.15,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z032",
+      "name": "Glenfield-Jane Heights",
+      "mix": {
+        "owner-detached": 0.2024,
+        "condo-owner": 0.1958,
+        "renter-low": 0.1875,
+        "renter-mid": 0.1875,
+        "senior": 0.1104,
+        "student": 0.0749,
+        "small-business": 0.0413
+      },
+      "drivers": {
+        "renterPct": 0.485,
+        "medianIncome": 55243,
+        "detachedDwellingFrac": 0.51,
+        "apartmentDwellingFrac": 0.493,
+        "seniorPct65plus": 0.158,
+        "youngAdultPct": 0.136,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z033",
+      "name": "Mount Olive-Silverstone-Jamestown",
+      "mix": {
+        "owner-detached": 0.1036,
+        "condo-owner": 0.2544,
+        "renter-low": 0.2206,
+        "renter-mid": 0.2206,
+        "senior": 0.0755,
+        "student": 0.0845,
+        "small-business": 0.0407
+      },
+      "drivers": {
+        "renterPct": 0.552,
+        "medianIncome": 57441,
+        "detachedDwellingFrac": 0.289,
+        "apartmentDwellingFrac": 0.71,
+        "seniorPct65plus": 0.108,
+        "youngAdultPct": 0.154,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z034",
+      "name": "Rexdale-Kipling",
+      "mix": {
+        "owner-detached": 0.2509,
+        "condo-owner": 0.1807,
+        "renter-low": 0.1689,
+        "renter-mid": 0.1689,
+        "senior": 0.1064,
+        "student": 0.075,
+        "small-business": 0.0494
+      },
+      "drivers": {
+        "renterPct": 0.439,
+        "medianIncome": 66090,
+        "detachedDwellingFrac": 0.581,
+        "apartmentDwellingFrac": 0.418,
+        "seniorPct65plus": 0.152,
+        "youngAdultPct": 0.136,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z035",
+      "name": "Etobicoke West Mall",
+      "mix": {
+        "owner-detached": 0.1149,
+        "condo-owner": 0.2917,
+        "renter-low": 0.1832,
+        "renter-mid": 0.1832,
+        "senior": 0.1007,
+        "student": 0.0826,
+        "small-business": 0.0436
+      },
+      "drivers": {
+        "renterPct": 0.474,
+        "medianIncome": 65933,
+        "detachedDwellingFrac": 0.281,
+        "apartmentDwellingFrac": 0.714,
+        "seniorPct65plus": 0.144,
+        "youngAdultPct": 0.15,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z036",
+      "name": "Islington-City Centre West",
+      "mix": {
+        "owner-detached": 0.1358,
+        "condo-owner": 0.3045,
+        "renter-low": 0.1594,
+        "renter-mid": 0.1594,
+        "senior": 0.107,
+        "student": 0.0848,
+        "small-business": 0.0491
+      },
+      "drivers": {
+        "renterPct": 0.42,
+        "medianIncome": 75641,
+        "detachedDwellingFrac": 0.308,
+        "apartmentDwellingFrac": 0.691,
+        "seniorPct65plus": 0.153,
+        "youngAdultPct": 0.154,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z037",
+      "name": "Mimico (Lakeshore)",
+      "mix": {
+        "owner-detached": 0.0737,
+        "condo-owner": 0.3052,
+        "renter-low": 0.1791,
+        "renter-mid": 0.1791,
+        "senior": 0.1049,
+        "student": 0.0893,
+        "small-business": 0.0687
+      },
+      "drivers": {
+        "renterPct": 0.486,
+        "medianIncome": 71785,
+        "detachedDwellingFrac": 0.194,
+        "apartmentDwellingFrac": 0.805,
+        "seniorPct65plus": 0.15,
+        "youngAdultPct": 0.162,
+        "biaCount": 2
+      }
+    },
+    {
+      "zoneId": "z038",
+      "name": "Scarborough Village",
+      "mix": {
+        "owner-detached": 0.0868,
+        "condo-owner": 0.2783,
+        "renter-low": 0.2195,
+        "renter-mid": 0.2195,
+        "senior": 0.0818,
+        "student": 0.0748,
+        "small-business": 0.0392
+      },
+      "drivers": {
+        "renterPct": 0.546,
+        "medianIncome": 52543,
+        "detachedDwellingFrac": 0.237,
+        "apartmentDwellingFrac": 0.761,
+        "seniorPct65plus": 0.117,
+        "youngAdultPct": 0.136,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z039",
+      "name": "Agincourt South-Malvern West",
+      "mix": {
+        "owner-detached": 0.23,
+        "condo-owner": 0.2815,
+        "renter-low": 0.0975,
+        "renter-mid": 0.0975,
+        "senior": 0.1136,
+        "student": 0.0906,
+        "small-business": 0.0893
+      },
+      "drivers": {
+        "renterPct": 0.276,
+        "medianIncome": 63953,
+        "detachedDwellingFrac": 0.447,
+        "apartmentDwellingFrac": 0.547,
+        "seniorPct65plus": 0.162,
+        "youngAdultPct": 0.165,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z040",
+      "name": "Malvern",
+      "mix": {
+        "owner-detached": 0.3389,
+        "condo-owner": 0.2064,
+        "renter-low": 0.1169,
+        "renter-mid": 0.1169,
+        "senior": 0.0941,
+        "student": 0.0836,
+        "small-business": 0.0433
+      },
+      "drivers": {
+        "renterPct": 0.3,
+        "medianIncome": 66145,
+        "detachedDwellingFrac": 0.618,
+        "apartmentDwellingFrac": 0.376,
+        "seniorPct65plus": 0.134,
+        "youngAdultPct": 0.152,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z041",
+      "name": "Woburn",
+      "mix": {
+        "owner-detached": 0.1483,
+        "condo-owner": 0.251,
+        "renter-low": 0.177,
+        "renter-mid": 0.177,
+        "senior": 0.101,
+        "student": 0.0857,
+        "small-business": 0.0601
+      },
+      "drivers": {
+        "renterPct": 0.47,
+        "medianIncome": 59550,
+        "detachedDwellingFrac": 0.371,
+        "apartmentDwellingFrac": 0.628,
+        "seniorPct65plus": 0.144,
+        "youngAdultPct": 0.156,
+        "biaCount": 1
+      }
+    },
+    {
+      "zoneId": "z042",
+      "name": "Rouge",
+      "mix": {
+        "owner-detached": 0.5245,
+        "condo-owner": 0.1363,
+        "renter-low": 0.0418,
+        "renter-mid": 0.0888,
+        "senior": 0.0951,
+        "student": 0.0782,
+        "small-business": 0.0354
+      },
+      "drivers": {
+        "renterPct": 0.165,
+        "medianIncome": 93816,
+        "detachedDwellingFrac": 0.794,
+        "apartmentDwellingFrac": 0.206,
+        "seniorPct65plus": 0.136,
+        "youngAdultPct": 0.142,
+        "biaCount": 0
+      }
+    },
+    {
+      "zoneId": "z043",
+      "name": "Birchcliffe-Cliffside",
+      "mix": {
+        "owner-detached": 0.3067,
+        "condo-owner": 0.2164,
+        "renter-low": 0.13,
+        "renter-mid": 0.13,
+        "senior": 0.1063,
+        "student": 0.0585,
+        "small-business": 0.0521
+      },
+      "drivers": {
+        "renterPct": 0.332,
+        "medianIncome": 77238,
+        "detachedDwellingFrac": 0.583,
+        "apartmentDwellingFrac": 0.411,
+        "seniorPct65plus": 0.152,
+        "youngAdultPct": 0.106,
+        "biaCount": 0
+      }
+    }
+  ]
+}

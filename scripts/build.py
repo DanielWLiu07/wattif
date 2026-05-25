@@ -957,6 +957,135 @@ def build_sbei() -> dict:
     }
 
 
+def _profile_pct(s) -> float | None:
+    s = str(s or "").replace(",", "").replace("%", "").strip()
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def build_archetypes(zones: list[dict], buildings: dict) -> dict | None:
+    """data/processed/archetypes.json — per-zone agent archetype mix from REAL Toronto data.
+
+    Real inputs: tenure (renterPct) + median income (Census), dwelling structural type, one-person
+    households, seniors 65+, young-adults 20-29 (Census 2016 profile), building density (OSM), and
+    Business Improvement Area overlap (commercial density). The mapping of these to archetype
+    proportions is modeled (documented). Lets the backend seed the 4,000 agents to mirror real
+    per-neighbourhood composition (high-renter dense downtown vs owner-detached suburbs, etc.).
+    """
+    prof_path = RAW_DIR / PROFILES_FILE
+    if not prof_path.exists():
+        return None
+    rows = json.loads(prof_path.read_text())
+    by_id = {r.get("_id"): r for r in rows}
+    meta = {"_id", "Category", "Topic", "Data Source", "Characteristic", "City of Toronto"}
+    colmap = {normkey(c): c for c in rows[0].keys() if c not in meta}
+
+    bias = _load_overlap_polygons("bia-4326.geojson", "AREA_NAME") or []
+    dens = {b["zoneId"]: (b.get("buildingDensityPerKm2") or 0) for b in buildings["zones"]}
+    d_hi = max(dens.values()) or 1.0
+
+    def col_for(name: str) -> str | None:
+        k = normkey(ALIASES.get(name, name))
+        if k in colmap:
+            return colmap[k]
+        import difflib
+        m = difflib.get_close_matches(k, list(colmap), n=1, cutoff=0.9)
+        return colmap[m[0]] if m else None
+
+    def val(rid: int, col: str) -> float:
+        return _num(by_id.get(rid, {}).get(col))
+
+    out = []
+    real_profile = 0
+    for z in zones:
+        col = col_for(z["name"])
+        renter = z["demographics"]["renterPct"]
+        income = z["demographics"]["medianIncome"]
+        pop = z["demographics"]["population"] or 1
+
+        # Dwelling structural type (real): detached-ish vs apartment-ish fractions.
+        det_frac = apt_frac = None
+        one_person = senior = young = None
+        if col:
+            real_profile += 1
+            total_dw = val(58, col) or 0
+            detached = val(59, col) + val(62, col) + val(63, col)   # detached + semi + row
+            apartment = val(60, col) + val(64, col) + val(65, col)  # 5+, duplex, <5 storeys
+            if total_dw > 0:
+                det_frac = detached / total_dw
+                apt_frac = apartment / total_dw
+            one_person = _profile_pct(by_id.get(118, {}).get(col))
+            one_person = one_person / 100 if one_person is not None else None
+            senior = (val(1125, col) / pop) if val(1125, col) else None
+            young = (val(20, col) + val(21, col) + val(41, col) + val(42, col)) / pop
+
+        # Fallbacks (modeled) where the profile is missing for a zone.
+        if det_frac is None or (det_frac + apt_frac) <= 0:
+            apt_frac = clamp01(0.2 + 0.7 * renter)
+            det_frac = 1 - apt_frac
+        dn = det_frac / (det_frac + apt_frac)            # owner detached vs condo split
+        senior = senior if senior is not None else 0.15
+        young = young if young is not None else 0.14
+
+        # BIA commercial overlap (real) -> small-business intensity.
+        bia_frac, bia_names = zone_protected_fraction(z["polygon"]["coordinates"][0], bias)
+        dens_norm = dens.get(z["id"], 0) / d_hi
+
+        # --- compose the mix (modeled mapping of real signals) ---
+        senior_share = min(0.22, senior * 0.7)
+        student_share = min(0.20, young * 0.55)
+        small_biz = min(0.16, 0.03 + 0.45 * bia_frac + 0.05 * dens_norm)
+        resid = max(0.35, 1 - senior_share - student_share - small_biz)
+        owner_r, renter_r = (1 - renter) * resid, renter * resid
+        if income < 50000:
+            rl, rm = 0.70, 0.30
+        elif income < 90000:
+            rl, rm = 0.50, 0.50
+        else:
+            rl, rm = 0.32, 0.68
+        mix = {
+            "owner-detached": owner_r * dn,
+            "condo-owner": owner_r * (1 - dn),
+            "renter-low": renter_r * rl,
+            "renter-mid": renter_r * rm,
+            "senior": senior_share,
+            "student": student_share,
+            "small-business": small_biz,
+        }
+        tot = sum(mix.values()) or 1.0
+        mix = {k: round(v / tot, 4) for k, v in mix.items()}
+        out.append({
+            "zoneId": z["id"],
+            "name": z["name"],
+            "mix": mix,
+            "drivers": {
+                "renterPct": renter,
+                "medianIncome": income,
+                "detachedDwellingFrac": round(det_frac, 3),
+                "apartmentDwellingFrac": round(apt_frac, 3),
+                "seniorPct65plus": round(senior, 3),
+                "youngAdultPct": round(young, 3),
+                "biaCount": len(bia_names),
+            },
+        })
+    print(f"  ✓ archetypes: per-zone mix for {len(out)} zones "
+          f"({real_profile}/{len(zones)} with full Census dwelling/age profile)", file=sys.stderr)
+    return {
+        "source": "Derived: Census 2016 profile (tenure, income, dwelling type, one-person "
+                  "households, seniors 65+, young adults 20-29) + OSM building density + Business "
+                  "Improvement Areas (commercial density).",
+        "method": "REAL drivers (tenure/income/dwelling/age/BIA/density) → MODELED archetype mapping: "
+                  "tenure splits owner/renter; dwelling type splits owner-detached vs condo-owner; "
+                  "income splits renter-low vs renter-mid; senior65+ and young-adult shares carve out "
+                  "senior/student; small-business from BIA overlap + density. Proportions sum to 1.",
+        "archetypes": ["owner-detached", "condo-owner", "renter-low", "renter-mid",
+                       "senior", "student", "small-business"],
+        "zones": out,
+    }
+
+
 def build_generation_mix() -> dict:
     """data/processed/generation_mix.json — Ontario grid generation mix + emission intensity.
 
@@ -1481,6 +1610,7 @@ def main() -> int:
     constraints = build_constraints(zones, flood_risk)
     environment = build_environment(zones, load_wellbeing_env())
     heat_vulnerability = build_heat_vulnerability(zones, buildings, environment)
+    archetypes = build_archetypes(zones, buildings)
     district_energy = build_district_energy(zones)
     sbei = build_sbei()
     generation_mix = build_generation_mix()
@@ -1503,6 +1633,8 @@ def main() -> int:
     if flood:
         (OUT_DIR / "flood.json").write_text(json.dumps(flood, indent=2))
     (OUT_DIR / "heat_vulnerability.json").write_text(json.dumps(heat_vulnerability, indent=2))
+    if archetypes:
+        (OUT_DIR / "archetypes.json").write_text(json.dumps(archetypes, indent=2))
     (OUT_DIR / "district_energy.json").write_text(json.dumps(district_energy, indent=2))
     (OUT_DIR / "sbei.json").write_text(json.dumps(sbei, indent=2))
     (OUT_DIR / "generation_mix.json").write_text(json.dumps(generation_mix, indent=2))
