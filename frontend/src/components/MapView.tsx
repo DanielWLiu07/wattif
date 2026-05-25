@@ -27,12 +27,14 @@ import { useStore } from "@/store";
 import { buildLayers } from "@/map/layers";
 import type { Infra, LngLat } from "@/types";
 
+// Framed on the Toronto neighbourhoods (centre nudged north so Lake Ontario
+// sits at the bottom edge), moderate pitch, zoom where the 44 zones fill the frame.
 const INITIAL_VIEW_STATE = {
-  longitude: -79.38,
-  latitude: 43.65,
-  zoom: 12.4,
-  pitch: 52,
-  bearing: -18,
+  longitude: -79.385,
+  latitude: 43.715,
+  zoom: 11.2,
+  pitch: 40,
+  bearing: -10,
 };
 
 const MAPLIBRE_STYLE =

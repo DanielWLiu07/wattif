@@ -24,6 +24,7 @@ import type {
 import { INFRA_PRESETS, MODEL_URL } from "@/types";
 import * as api from "@/api/client";
 import { nearestZone, scenarioImpact } from "@/data/mock";
+import { makeLandTest } from "@/lib/geo";
 
 export type LayerKey =
   | "buildings"
@@ -133,6 +134,7 @@ type State = {
   init: () => Promise<void>;
   toggleLayer: (k: LayerKey) => void;
   setLayers: (partial: Partial<Record<LayerKey, boolean>>) => void;
+  setPrimaryOverlay: (k: "equity" | "sentiment" | "demand" | "flood" | "none") => void;
   setMode: (m: ToolMode) => void;
   setPlacementMode: (m: PlacementMode) => void;
   setPlaceKind: (k: InfraKind) => void;
@@ -405,10 +407,13 @@ export const useStore = create<State>((set, get) => ({
   loaded: false,
 
   init: async () => {
-    const [{ data: zones, live: zLive }, { data: agents }] = await Promise.all([
+    const [{ data: zones, live: zLive }, { data: rawAgents }] = await Promise.all([
       api.getZones(),
       api.getAgents(),
     ]);
+    // Clip markers that fall on water — keep only points inside a land zone.
+    const onLand = makeLandTest(zones);
+    const agents = rawAgents.filter((a) => onLand(a.position));
     const infra = api.seedInfra();
     const [{ data: metrics }, { data: sentiment }, { data: flows }] =
       await Promise.all([
@@ -459,8 +464,8 @@ export const useStore = create<State>((set, get) => ({
         heatVuln,
       ]) =>
         set({
-          facilities,
-          existingInfra,
+          facilities: facilities.filter((f) => onLand(f.position)),
+          existingInfra: existingInfra.filter((e) => onLand(e.position)),
           constraints,
           environment,
           generationMix,
@@ -517,6 +522,18 @@ export const useStore = create<State>((set, get) => ({
     set((s) => ({ layers: { ...s.layers, [k]: !s.layers[k] } })),
   setLayers: (partial) =>
     set((s) => ({ layers: { ...s.layers, ...partial } })),
+  // Make one choropleth overlay the active/primary one (others off) for a clean,
+  // self-explanatory map. "none" clears them all.
+  setPrimaryOverlay: (k) =>
+    set((s) => ({
+      layers: {
+        ...s.layers,
+        equity: k === "equity",
+        sentiment: k === "sentiment",
+        demand: k === "demand",
+        flood: k === "flood",
+      },
+    })),
   setMode: (m) => set({ mode: m }),
   setPlacementMode: (m) => {
     set({ placementMode: m });
@@ -549,10 +566,10 @@ export const useStore = create<State>((set, get) => ({
   resetView: () =>
     set({
       flyTo: {
-        target: [-79.38, 43.65],
-        zoom: 12.4,
-        pitch: 52,
-        bearing: -18,
+        target: [-79.385, 43.715],
+        zoom: 11.2,
+        pitch: 40,
+        bearing: -10,
         nonce: Date.now(),
       },
     }),

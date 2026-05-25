@@ -9,6 +9,7 @@ import { Timeline } from "@/components/Timeline";
 import { ScenarioBanner } from "@/components/ScenarioBanner";
 import { Welcome } from "@/components/Welcome";
 import { DemoCaption } from "@/components/DemoCaption";
+import { OverlayLegend } from "@/components/OverlayLegend";
 import { ScenarioFlash } from "@/components/ScenarioFlash";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -129,6 +130,7 @@ function App() {
         </div>
 
         <ScenarioFlash />
+        <OverlayLegend />
         <DemoCaption />
         <Welcome />
 
