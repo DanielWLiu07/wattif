@@ -652,11 +652,8 @@ export function MapView() {
           press Esc to exit
         </div>
       )}
-      {/* Camera reset + free-roam hint */}
+      {/* Camera reset */}
       <div className="pointer-events-auto absolute bottom-4 right-4 z-30 flex flex-col items-end gap-1.5">
-        <span className="rounded-full bg-background/70 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur">
-          drag to pan · right-drag to orbit/tilt · scroll to zoom
-        </span>
         <button
           onClick={() => resetView()}
           className="glass flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium shadow-lg transition-colors hover:text-primary"
