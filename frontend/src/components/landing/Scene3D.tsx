@@ -671,10 +671,9 @@ function writeStoredLayout(layout: StoredLayout) {
 // ── Main exported scene ───────────────────────────────────────────────────────
 
 export function Scene3D({ progress }: { progress: number }) {
-  // The committed baked layout is the source of truth for the live page, so a
-  // stale "Save to Device" layout in one browser never overrides what ships.
-  // (The ?edit editor still reads/writes localStorage for the design workflow.)
-  const stored = useMemo(() => BAKED_LAYOUT, []);
+  // Your saved ?edit layout (Save to Device) drives the page; the baked layout
+  // is only a fallback for browsers that have never saved one.
+  const stored = useMemo(() => readStoredLayout() ?? BAKED_LAYOUT, []);
   const storedByType = useMemo(() => {
     if (!stored) return null;
     return stored.models.reduce<Record<string, StoredModelEntry>>((acc, m) => {
