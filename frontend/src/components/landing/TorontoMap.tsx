@@ -42,8 +42,8 @@ const REGION_CARDS = [
 ];
 
 // ── Carousel geometry — playing-card proportions (0.714 ratio) ────────────
-const CARD_W     = 228;
-const CARD_H     = 320;
+const CARD_W     = 300;
+const CARD_H     = 340;
 const CARD_GAP   = 18;
 const CARD_STRIDE = CARD_W + CARD_GAP;
 const COPIES      = 3;
@@ -59,10 +59,10 @@ const RISE    = 80;                      // px the centered card rises above str
 //   left  → scrolls right-to-left (negative, so cards move rightward)
 //   right → scrolls left-to-right (positive, cards move leftward)
 // Speed is eased with a lerp so direction changes feel smooth.
-const DEFAULT_SPEED = 0.8;   // px/frame when not hovering
-const MAX_SCRUB     = 3.5;   // px/frame max when scrubbing
-const DEAD_ZONE     = 0.10;  // ±10% of half-width → near-stop
-const SPEED_LERP    = 0.055; // how fast speed transitions (lower = smoother)
+const DEFAULT_SPEED  = 0.8;   // px/frame gentle auto-drift when idle
+const WHEEL_FACTOR   = 0.35;  // wheel delta → scrub velocity
+const WHEEL_FRICTION = 0.92;  // per-frame scrub velocity decay
+const WHEEL_MAX      = 45;    // clamp scrub velocity
 
 // ── Live zone counts ────────────────────────────────────────────────────────
 type RawZone = {
@@ -114,18 +114,19 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [isHoveringStrip, setIsHoveringStrip] = useState(false);
+  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
   // Carousel + speed control refs — all DOM-mutated in rAF for zero-jank
-  const trackRef      = useRef<HTMLDivElement>(null);
-  const offsetRef     = useRef(0);
-  const prevActiveRef = useRef<string | null>(null);
-  const rafRef        = useRef(0);
+  const trackRef          = useRef<HTMLDivElement>(null);
+  const offsetRef         = useRef(0);
+  const prevActiveRef     = useRef<string | null>(null);
+  const rafRef            = useRef(0);
+  const hasInitializedRef = useRef(false); // first-time centering on All Toronto
 
-  // Speed scrub state
-  const currentSpeedRef = useRef(DEFAULT_SPEED); // actual lerped speed this frame
-  const mouseXRef       = useRef(0);             // last known mouse X in viewport
-  const isOverStripRef  = useRef(false);         // is mouse over the card strip?
-  const snapTargetRef   = useRef<number | null>(null); // when set, override speed with snap-to-card lerp
+  // Scroll state
+  const wheelVelRef   = useRef(0);     // wheel-driven scrub velocity (decays via friction)
+  const hoveringRef   = useRef(false); // hovering a card → pause auto-drift
+  const snapTargetRef = useRef<number | null>(null); // keyboard snap-to-card target
 
   useEffect(() => {
     if (active) {
@@ -137,6 +138,15 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
 
   useEffect(() => {
     if (!active) return;
+
+    // On first activation, center the carousel on "All Toronto" (copy 1 for seamless bidirectional scroll)
+    if (!hasInitializedRef.current) {
+      hasInitializedRef.current = true;
+      const vcx = window.innerWidth / 2;
+      const allTorontoAbsIdx = REGION_CARDS.length; // copy 1 of card 0
+      const initOffset = allTorontoAbsIdx * CARD_STRIDE + CARD_W / 2 - vcx;
+      offsetRef.current = ((initOffset % SET_W) + SET_W) % SET_W;
+    }
 
     const snapToAdjacentCard = (direction: 1 | -1) => {
       const vcx = window.innerWidth / 2;
@@ -162,21 +172,17 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     };
     document.addEventListener("keydown", onKeyDown);
 
-    const tick = () => {
-      // ── Compute target speed from mouse position ────────────────────────
-      let targetSpeed: number;
-      if (isOverStripRef.current) {
-        const vcx  = window.innerWidth / 2;
-        const norm = (mouseXRef.current - vcx) / vcx; // -1 (left) → 0 (center) → 1 (right)
-        const sign = norm < 0 ? -1 : 1;
-        const abs  = Math.abs(norm);
-        targetSpeed = abs < DEAD_ZONE
-          ? 0
-          : sign * ((abs - DEAD_ZONE) / (1 - DEAD_ZONE)) * MAX_SCRUB;
-      } else {
-        targetSpeed = DEFAULT_SPEED;
-      }
+    // Wheel scrubs the cards manually (journey is clamped at scope, so the
+    // wheel belongs to the carousel here). Accumulates into a decaying velocity.
+    const onWheel = (e: WheelEvent) => {
+      wheelVelRef.current = Math.max(
+        -WHEEL_MAX,
+        Math.min(WHEEL_MAX, wheelVelRef.current + (e.deltaY + e.deltaX) * WHEEL_FACTOR)
+      );
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
 
+    const tick = () => {
       // ── Snap-to-card override (keyboard nav) ────────────────────────────
       if (snapTargetRef.current !== null) {
         let diff = snapTargetRef.current - offsetRef.current;
@@ -190,9 +196,14 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           offsetRef.current += diff * 0.14;
         }
       } else {
-        // Normal speed-scrub
-        currentSpeedRef.current += (targetSpeed - currentSpeedRef.current) * SPEED_LERP;
-        offsetRef.current += currentSpeedRef.current;
+        // Wheel-driven manual scrub (decays via friction)
+        offsetRef.current += wheelVelRef.current;
+        wheelVelRef.current *= WHEEL_FRICTION;
+        if (Math.abs(wheelVelRef.current) < 0.05) wheelVelRef.current = 0;
+        // Gentle auto-drift only when idle — no wheel motion and not hovering a card
+        if (wheelVelRef.current === 0 && !hoveringRef.current) {
+          offsetRef.current += DEFAULT_SPEED;
+        }
       }
 
       if (offsetRef.current >= SET_W) offsetRef.current -= SET_W;
@@ -224,6 +235,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     return () => {
       cancelAnimationFrame(rafRef.current);
       document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("wheel", onWheel);
     };
   }, [active]);
 
@@ -236,8 +248,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     return map;
   }, []);
 
-  // Map highlight follows the centered card (no hover override — scrub to choose)
-  const effectiveRegion   = activeRegion;
+  // Hovering a card selects it (overrides the centered card); else the centered card
+  const effectiveRegion   = hoveredRegion ?? activeRegion;
   const highlightAll      = effectiveRegion === "All Toronto";
   const highlightedRegion = highlightAll ? null : effectiveRegion;
 
@@ -379,32 +391,31 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         </div>
 
         {/* ── Playing-card carousel strip ──────────────────────────────────────
-             bottom: -(CARD_H - STRIP_H) = -140 px → only the top STRIP_H=140 px
-             of each 280 px card is on-screen. overflow: visible allows the
+             bottom: -(CARD_H - STRIP_H) = -160 px → only the top STRIP_H=160 px
+             of each 320 px card is on-screen. overflow: visible allows the
              centered active card to rise above the strip edge into the map.
              Mouse events on this div drive the speed-scrub logic.
+             Slides up by 40px on first reveal (tied to map zone draw-in).
         ─────────────────────────────────────────────────────────────────────── */}
         <div
+          role="listbox"
+          aria-label="Choose your simulation scope"
           style={{
             position: "absolute",
-            bottom: -(CARD_H - STRIP_H),
+            bottom: revealed ? -(CARD_H - STRIP_H) : -(CARD_H - STRIP_H) - 40,
             left: 0, right: 0,
             height: CARD_H,
             overflow: "visible",
             zIndex: 10,
             perspective: "1100px",
             perspectiveOrigin: "50% 0%",
+            transition: "bottom 0.65s cubic-bezier(0.22, 1, 0.36, 1)",
           }}
-          onMouseMove={(e) => {
-            mouseXRef.current = e.clientX;
-            if (!isOverStripRef.current) {
-              isOverStripRef.current = true;
-              setIsHoveringStrip(true);
-            }
-          }}
+          onMouseEnter={() => setIsHoveringStrip(true)}
           onMouseLeave={() => {
-            isOverStripRef.current = false;
             setIsHoveringStrip(false);
+            setHoveredRegion(null);
+            hoveringRef.current = false;
           }}
         >
           {/* Top hairline */}
@@ -437,7 +448,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             opacity: isHoveringStrip ? 1 : 0,
             transition: "opacity 0.25s ease",
           }}>
-            ← scrub · center = slow · ↑↓ arrow keys →
+            ← scrub · center = slow · ←→ arrows jump cards →
           </div>
 
           {/* Track */}
@@ -455,7 +466,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             }}
           >
             {ALL_CARDS.map((card, i) => {
-              const isActive  = activeRegion === card.name;
+              const isActive  = effectiveRegion === card.name;
               const isCityCard = card.name === "All Toronto";
 
               // "All Toronto" always gets a faint volt border + background to signal it's special
@@ -480,6 +491,17 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
               return (
                 <button
                   key={i}
+                  role="option"
+                  aria-selected={isActive}
+                  aria-label={`${card.name} — ${getZoneCount(card.name)} zones, ${getAgentCount(card.name).toLocaleString()} agents. ${card.desc}`}
+                  onMouseEnter={() => {
+                    setHoveredRegion(card.name);
+                    hoveringRef.current = true;
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredRegion(null);
+                    hoveringRef.current = false;
+                  }}
                   onClick={() => handleClick(card.name)}
                   style={{
                     width: CARD_W,
