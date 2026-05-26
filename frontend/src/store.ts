@@ -1724,8 +1724,16 @@ export const useStore = create<State>((set, get) => ({
 
   runOptimize: async (n = 5) => {
     set({ optimizing: true });
-    const { infra } = get();
-    const { data } = await api.optimize(n, infra);
+    const { infra, selectedRegion, zones } = get();
+    
+    let zoneIds: string[] | undefined = undefined;
+    if (selectedRegion !== "All") {
+      zoneIds = zones
+        .filter((z) => getZoneRegion(z.name, z.centroid) === selectedRegion)
+        .map((z) => z.id);
+    }
+
+    const { data } = await api.optimize(n, infra, undefined, zoneIds);
     set({
       recommendations: data,
       optimizing: false,

@@ -162,7 +162,7 @@ def _rationale(
     ).strip()
 
 
-def _build_candidates(engine: SimEngine, kind: InfraKind | None):
+def _build_candidates(engine: SimEngine, kind: InfraKind | None, zone_ids: list[str] | None = None):
     """Candidate sites with precomputed supply/cost. When `kind` is None, each zone yields
     one candidate per *suitable* kind (see _suitable_kinds); otherwise one per zone of the
     requested kind. Returns (candidates, zone_demand, total_demand)."""
@@ -188,6 +188,8 @@ def _build_candidates(engine: SimEngine, kind: InfraKind | None):
 
     candidates = []
     for i, zone in enumerate(engine.zones):
+        if zone_ids is not None and zone.id not in zone_ids:
+            continue
         # Skip protected no-build zones entirely (constraints.json).
         if bool(engine.zone_no_build[i]):
             continue
@@ -264,9 +266,9 @@ def _raw_gains(
 
 
 def optimize_greedy(
-    engine: SimEngine, kind: InfraKind | None, n: int
+    engine: SimEngine, kind: InfraKind | None, n: int, zone_ids: list[str] | None = None
 ) -> list[Recommendation]:
-    candidates, _, total_demand = _build_candidates(engine, kind)
+    candidates, _, total_demand = _build_candidates(engine, kind, zone_ids=zone_ids)
     if not candidates:
         return []
     burden_sum = float(engine.zone_equity_weight.sum())
@@ -375,7 +377,7 @@ def optimize_greedy(
 
 
 def optimize_ortools(
-    engine: SimEngine, kind: InfraKind | None, n: int
+    engine: SimEngine, kind: InfraKind | None, n: int, zone_ids: list[str] | None = None
 ) -> list[Recommendation]:
     """OR-Tools CP-SAT 0/1 knapsack: pick the highest-value candidates within a budget.
 
@@ -385,9 +387,9 @@ def optimize_ortools(
         from ortools.sat.python import cp_model
     except ImportError:
         log.warning("ortools unavailable; falling back to greedy")
-        return optimize_greedy(engine, kind, n)
+        return optimize_greedy(engine, kind, n, zone_ids=zone_ids)
 
-    candidates, _, total_demand = _build_candidates(engine, kind)
+    candidates, _, total_demand = _build_candidates(engine, kind, zone_ids=zone_ids)
     if not candidates:
         return []
     burden_sum = float(engine.zone_equity_weight.sum())
@@ -510,8 +512,9 @@ def optimize(
     kind: InfraKind | None = None,
     n: int = 5,
     strategy: str = "greedy",
+    zone_ids: list[str] | None = None,
 ) -> list[Recommendation]:
     n = max(1, min(n, 25))
     if strategy == "ortools":
-        return optimize_ortools(engine, kind, n)
-    return optimize_greedy(engine, kind, n)
+        return optimize_ortools(engine, kind, n, zone_ids=zone_ids)
+    return optimize_greedy(engine, kind, n, zone_ids=zone_ids)
