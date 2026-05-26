@@ -1,4 +1,4 @@
-# Supabase setup (Phase 2)
+# Supabase setup (Phase 2-3)
 
 WattIf uses **Supabase Postgres** as the optional persistence layer. The FastAPI backend is the **only writer** (service role key). The frontend never receives the service role key.
 
@@ -28,17 +28,17 @@ When unset, `persistenceProvider` is `"memory"` and persistence REST routes retu
 
 ## Apply the schema
 
-Migration file:
+Migration files:
 
 ```
 supabase/migrations/20250525120000_initial_persistence.sql
+supabase/migrations/20250526120000_snapshot_extras.sql
 ```
 
 **Option A — Supabase SQL editor**
 
 1. Open your Supabase project → SQL → New query.
-2. Paste the migration file contents.
-3. Run once.
+2. Paste and run the migration files in timestamp order.
 
 **Option B — Supabase CLI**
 
@@ -57,6 +57,7 @@ Migrations are **not** applied automatically when the FastAPI app starts.
 2. `GET http://localhost:8000/api/health` → `"persistenceProvider": "supabase"`.
 3. `POST http://localhost:8000/api/projects` with body `{"name": "Toronto pilot"}` → 201.
 4. `GET http://localhost:8000/api/projects` → list includes the project.
+5. Phase 3 routes for proposal infrastructure and snapshots are available after both migrations are applied.
 
 Without env vars, step 3 returns **503** with `"available": false`.
 
@@ -73,5 +74,5 @@ Without env vars, step 3 returns **503** with `"available": false`.
 ## Key Takeaways
 
 1. Supabase is **optional** for local demo.
-2. Only the **backend** talks to Postgres in Phase 2.
-3. **Live simulation state** is still in-memory; persisted tables are for projects/proposals metadata foundation.
+2. Only the **backend** talks to Postgres.
+3. **Live simulation state** is still in-memory; Phase 3 persists proposal placements and manual snapshots around it.

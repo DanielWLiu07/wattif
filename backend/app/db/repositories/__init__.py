@@ -1,6 +1,15 @@
-"""Persistence entity repositories (Phase 2 skeleton)."""
+"""Persistence entity repositories."""
 
-from . import agents, assets, datasets, planner_runs, projects, proposals
+from . import (
+    agents,
+    assets,
+    datasets,
+    planner_runs,
+    projects,
+    proposal_infrastructure,
+    proposals,
+    simulation_snapshots,
+)
 
 __all__ = [
     "projects",
@@ -9,4 +18,6 @@ __all__ = [
     "datasets",
     "agents",
     "planner_runs",
+    "proposal_infrastructure",
+    "simulation_snapshots",
 ]

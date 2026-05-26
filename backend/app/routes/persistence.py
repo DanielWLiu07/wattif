@@ -1,4 +1,4 @@
-"""Persistence REST routes (Phase 2) — Supabase-backed when configured."""
+"""Persistence REST routes — Supabase-backed when configured."""
 
 from __future__ import annotations
 
@@ -7,7 +7,13 @@ import logging
 from fastapi import APIRouter, HTTPException, Query
 
 from ..db.repositories.base import PersistenceDisabledError
-from ..db.repositories import assets, projects, proposals
+from ..db.repositories import (
+    assets,
+    projects,
+    proposal_infrastructure,
+    proposals,
+    simulation_snapshots,
+)
 from ..persistence_models import (
     AssetDefinition,
     AssetDefinitionCreate,
@@ -16,6 +22,10 @@ from ..persistence_models import (
     ProjectCreate,
     Proposal,
     ProposalCreate,
+    ProposalInfrastructure,
+    ProposalInfrastructureCreate,
+    SimulationSnapshot,
+    SimulationSnapshotCreate,
 )
 
 log = logging.getLogger("wattif.routes.persistence")
@@ -66,6 +76,31 @@ def _row_to_asset(row: dict) -> AssetDefinition:
         spec=row.get("spec") or {},
         created_at=row.get("created_at"),
         updated_at=row.get("updated_at"),
+    )
+
+
+def _row_to_infrastructure(row: dict) -> ProposalInfrastructure:
+    return ProposalInfrastructure(
+        id=row["id"],
+        proposal_id=row["proposal_id"],
+        kind=row["kind"],
+        zone_id=row.get("zone_id"),
+        position=row.get("position"),
+        capacity_kw=row.get("capacity_kw"),
+        metadata=row.get("metadata") or {},
+        created_at=row.get("created_at"),
+    )
+
+
+def _row_to_snapshot(row: dict) -> SimulationSnapshot:
+    return SimulationSnapshot(
+        id=row["id"],
+        proposal_id=row["proposal_id"],
+        tick=row.get("tick", 0),
+        metrics=row.get("metrics") or {},
+        scenarios=row.get("scenarios") or [],
+        infrastructure=row.get("infrastructure") or [],
+        created_at=row.get("created_at"),
     )
 
 
@@ -131,6 +166,144 @@ def create_proposal(body: ProposalCreate) -> Proposal:
     except Exception as exc:
         log.warning("POST /api/proposals failed: %s", exc)
         raise HTTPException(status_code=502, detail="Persistence write failed") from exc
+
+
+@router.get(
+    "/proposals/{proposal_id}/infrastructure",
+    response_model=list[ProposalInfrastructure],
+)
+def list_proposal_infrastructure(
+    proposal_id: str,
+    limit: int = Query(default=200, ge=1, le=500),
+) -> list[ProposalInfrastructure]:
+    try:
+        rows = proposal_infrastructure.list_by_proposal(proposal_id, limit=limit)
+        return [_row_to_infrastructure(r) for r in rows]
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("GET /api/proposals/%s/infrastructure failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.post(
+    "/proposals/{proposal_id}/infrastructure",
+    response_model=ProposalInfrastructure,
+    status_code=201,
+)
+def create_proposal_infrastructure(
+    proposal_id: str,
+    body: ProposalInfrastructureCreate,
+) -> ProposalInfrastructure:
+    metadata = {
+        **body.metadata,
+        **{
+            k: v
+            for k, v in {
+                "costCad": body.cost_cad,
+                "status": body.status,
+                "modelUrl": body.model_url,
+                "placedBy": body.placed_by,
+                "clientId": body.client_id,
+            }.items()
+            if v is not None
+        },
+    }
+    try:
+        row = proposal_infrastructure.create(
+            proposal_id=proposal_id,
+            kind=body.kind,
+            position=body.position,
+            capacity_kw=body.capacity_kw,
+            zone_id=body.zone_id,
+            metadata=metadata,
+        )
+        return _row_to_infrastructure(row)
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("POST /api/proposals/%s/infrastructure failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence write failed") from exc
+
+
+@router.delete("/proposals/{proposal_id}/infrastructure/{infra_id}")
+def delete_proposal_infrastructure(proposal_id: str, infra_id: str) -> dict:
+    try:
+        ok = proposal_infrastructure.delete(infra_id)
+        if not ok:
+            raise HTTPException(status_code=404, detail=f"infra {infra_id} not found")
+        return {"ok": True, "proposalId": proposal_id, "infraId": infra_id}
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log.warning(
+            "DELETE /api/proposals/%s/infrastructure/%s failed: %s",
+            proposal_id,
+            infra_id,
+            exc,
+        )
+        raise HTTPException(status_code=502, detail="Persistence delete failed") from exc
+
+
+@router.get("/proposals/{proposal_id}/snapshots", response_model=list[SimulationSnapshot])
+def list_simulation_snapshots(
+    proposal_id: str,
+    limit: int = Query(default=50, ge=1, le=200),
+) -> list[SimulationSnapshot]:
+    try:
+        rows = simulation_snapshots.list_by_proposal(proposal_id, limit=limit)
+        return [_row_to_snapshot(r) for r in rows]
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("GET /api/proposals/%s/snapshots failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.post(
+    "/proposals/{proposal_id}/snapshots",
+    response_model=SimulationSnapshot,
+    status_code=201,
+)
+def create_simulation_snapshot(
+    proposal_id: str,
+    body: SimulationSnapshotCreate,
+) -> SimulationSnapshot:
+    try:
+        row = simulation_snapshots.create(
+            proposal_id=proposal_id,
+            tick=body.tick,
+            metrics=body.metrics,
+            scenarios=body.scenarios,
+            infrastructure=body.infrastructure,
+        )
+        return _row_to_snapshot(row)
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("POST /api/proposals/%s/snapshots failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence write failed") from exc
+
+
+@router.get(
+    "/proposals/{proposal_id}/snapshots/latest",
+    response_model=SimulationSnapshot,
+)
+def get_latest_simulation_snapshot(proposal_id: str) -> SimulationSnapshot:
+    try:
+        row = simulation_snapshots.get_latest(proposal_id)
+        if row is None:
+            raise HTTPException(status_code=404, detail="No snapshots found")
+        return _row_to_snapshot(row)
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log.warning("GET /api/proposals/%s/snapshots/latest failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
 
 
 @router.get("/assets/definitions", response_model=list[AssetDefinition])

@@ -48,6 +48,84 @@ export type Infra = {
   zoneId?: string;
 };
 
+// ---------- Supabase persistence contracts ----------
+
+export type Project = {
+  id: string;
+  name: string;
+  description?: string | null;
+  city: string;
+  metadata: Record<string, unknown>;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+};
+
+export type Proposal = {
+  id: string;
+  projectId: string;
+  name: string;
+  description?: string | null;
+  status: string;
+  metadata: Record<string, unknown>;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+};
+
+export type ProposalInfrastructureCreate = {
+  kind: InfraKind | string;
+  position: LngLat;
+  capacityKw?: number;
+  zoneId?: string;
+  costCad?: number;
+  status?: InfraStatus;
+  modelUrl?: string;
+  placedBy?: "you" | "ai";
+  clientId?: string;
+  metadata?: Record<string, unknown>;
+};
+
+export type ProposalInfrastructure = {
+  id: string;
+  proposalId: string;
+  kind: InfraKind | string;
+  zoneId?: string | null;
+  position?: LngLat | null;
+  capacityKw?: number | null;
+  metadata: Record<string, unknown>;
+  createdAt?: string | null;
+};
+
+export type SimulationSnapshotCreate = {
+  tick: number;
+  metrics: Record<string, unknown>;
+  scenarios?: Record<string, unknown>[];
+  infrastructure?: Record<string, unknown>[];
+};
+
+export type SimulationSnapshot = {
+  id: string;
+  proposalId: string;
+  tick: number;
+  metrics: Record<string, unknown>;
+  scenarios: Record<string, unknown>[];
+  infrastructure: Record<string, unknown>[];
+  createdAt?: string | null;
+};
+
+export function infraToPersisted(infra: Infra): ProposalInfrastructureCreate {
+  return {
+    kind: infra.kind,
+    position: infra.position,
+    capacityKw: infra.capacityKw,
+    zoneId: infra.zoneId,
+    costCad: infra.costCad,
+    status: infra.status,
+    modelUrl: infra.modelUrl,
+    placedBy: infra.placedBy,
+    clientId: infra.id,
+  };
+}
+
 export type SimMetrics = {
   tick: number;
   year: number;

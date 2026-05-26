@@ -14,15 +14,19 @@ import type {
   LngLat,
   PlacementMode,
   PlannerEvent,
+  Project,
+  Proposal,
+  ProposalInfrastructure,
   Recommendation,
   Scenario,
   ScenarioType,
   Sentiment,
   SimMetrics,
+  SimulationSnapshot,
   SitingPriorityZone,
   Zone,
 } from "@/types";
-import { INFRA_PRESETS, MODEL_URL } from "@/types";
+import { INFRA_PRESETS, MODEL_URL, infraToPersisted } from "@/types";
 import * as api from "@/api/client";
 import { nearestZone, scenarioImpact } from "@/data/mock";
 import { makeLandTest, sampleInside } from "@/lib/geo";
@@ -45,6 +49,7 @@ export type LayerKey =
   | "priority";
 
 export type ToolMode = "select" | "place";
+export type PersistenceMode = "memory" | "supabase-no-proposal" | "supabase-proposal";
 
 type FlyTo = {
   target: LngLat;
@@ -178,6 +183,24 @@ type State = {
   /** From GET /api/health when live; drives honesty labels in TopBar. */
   backendHealth: api.HealthMeta | null;
 
+  // persistence
+  projects: Project[];
+  proposals: Proposal[];
+  selectedProjectId: string | null;
+  selectedProposalId: string | null;
+  proposalInfrastructure: ProposalInfrastructure[];
+  latestSnapshot: SimulationSnapshot | null;
+  persistedInfraIds: Record<string, string>;
+  persistenceMode: PersistenceMode;
+  persistenceLoading: boolean;
+  persistenceError: string | null;
+  loadProjects: () => Promise<void>;
+  createProject: (name: string) => Promise<void>;
+  selectProject: (projectId: string | null) => Promise<void>;
+  createProposal: (name: string) => Promise<void>;
+  selectProposal: (proposalId: string | null) => Promise<void>;
+  saveSnapshot: () => Promise<void>;
+
   // actions
   init: () => Promise<void>;
   refetchLive: () => Promise<void>;
@@ -256,6 +279,44 @@ let chatSeq = 0;
 const cid = () => `c${chatSeq++}`;
 let actSeq = 0;
 const aid = () => `a${actSeq++}`;
+const PROJECT_KEY = "wattif:selectedProjectId";
+const PROPOSAL_KEY = "wattif:selectedProposalId";
+const stored = (key: string) =>
+  typeof window === "undefined" ? null : window.localStorage.getItem(key);
+const persistSelection = (key: string, value: string | null) => {
+  if (typeof window === "undefined") return;
+  if (value) window.localStorage.setItem(key, value);
+  else window.localStorage.removeItem(key);
+};
+const persistenceModeFor = (
+  health: api.HealthMeta | null,
+  selectedProposalId: string | null
+): PersistenceMode => {
+  if (health?.persistenceProvider !== "supabase") return "memory";
+  return selectedProposalId ? "supabase-proposal" : "supabase-no-proposal";
+};
+const BUILT_IN_KINDS = new Set<InfraKind>(["solar", "wind", "battery", "microgrid"]);
+const isInfraKind = (kind: string): kind is InfraKind =>
+  BUILT_IN_KINDS.has(kind as InfraKind);
+const persistedToInfra = (row: ProposalInfrastructure): Infra | null => {
+  if (!isInfraKind(row.kind) || !row.position) return null;
+  const meta = row.metadata ?? {};
+  const status = typeof meta.status === "string" ? meta.status : "planned";
+  return {
+    id: typeof meta.clientId === "string" ? meta.clientId : `proposal-infra-${row.id}`,
+    kind: row.kind,
+    position: row.position,
+    capacityKw:
+      typeof row.capacityKw === "number"
+        ? row.capacityKw
+        : INFRA_PRESETS[row.kind].capacityKw,
+    costCad: typeof meta.costCad === "number" ? meta.costCad : INFRA_PRESETS[row.kind].costCad,
+    modelUrl: typeof meta.modelUrl === "string" ? meta.modelUrl : MODEL_URL[row.kind],
+    status: status === "active" || status === "damaged" ? status : "planned",
+    placedBy: meta.placedBy === "ai" ? "ai" : "you",
+    zoneId: row.zoneId ?? undefined,
+  };
+};
 const hashStr = (s: string) => {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
@@ -581,6 +642,190 @@ export const useStore = create<State>((set, get) => ({
   wsReconnecting: false,
   loaded: false,
   backendHealth: null,
+  projects: [],
+  proposals: [],
+  selectedProjectId: stored(PROJECT_KEY),
+  selectedProposalId: stored(PROPOSAL_KEY),
+  proposalInfrastructure: [],
+  latestSnapshot: null,
+  persistedInfraIds: {},
+  persistenceMode: "memory",
+  persistenceLoading: false,
+  persistenceError: null,
+
+  loadProjects: async () => {
+    const health = get().backendHealth;
+    if (health?.persistenceProvider !== "supabase") {
+      set({
+        projects: [],
+        proposals: [],
+        selectedProjectId: null,
+        selectedProposalId: null,
+        persistenceMode: "memory",
+      });
+      return;
+    }
+    set({ persistenceLoading: true, persistenceError: null });
+    const projects = await api.listProjects();
+    if (!projects) {
+      set({ persistenceLoading: false, persistenceError: "Could not load projects" });
+      return;
+    }
+    set({ projects, persistenceLoading: false });
+    const selectedProjectId = get().selectedProjectId;
+    if (selectedProjectId && projects.some((p) => p.id === selectedProjectId)) {
+      const proposals = await api.listProposals(selectedProjectId);
+      if (proposals) {
+        set({ proposals });
+        const selectedProposalId = get().selectedProposalId;
+        if (
+          selectedProposalId &&
+          proposals.some((proposal) => proposal.id === selectedProposalId)
+        ) {
+          void get().selectProposal(selectedProposalId);
+        }
+      }
+    }
+  },
+
+  createProject: async (name) => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    set({ persistenceLoading: true, persistenceError: null });
+    const project = await api.createProject(trimmed);
+    if (!project) {
+      set({ persistenceLoading: false, persistenceError: "Could not create project" });
+      get().pushToast("Could not create project", "warn");
+      return;
+    }
+    set((s) => ({
+      projects: [project, ...s.projects],
+      persistenceLoading: false,
+    }));
+    await get().selectProject(project.id);
+  },
+
+  selectProject: async (projectId) => {
+    persistSelection(PROJECT_KEY, projectId);
+    persistSelection(PROPOSAL_KEY, null);
+    set({
+      selectedProjectId: projectId,
+      selectedProposalId: null,
+      proposals: [],
+      proposalInfrastructure: [],
+      latestSnapshot: null,
+      persistedInfraIds: {},
+      persistenceMode: persistenceModeFor(get().backendHealth, null),
+      persistenceError: null,
+    });
+    if (!projectId || get().backendHealth?.persistenceProvider !== "supabase") return;
+    set({ persistenceLoading: true });
+    const proposals = await api.listProposals(projectId);
+    if (!proposals) {
+      set({ persistenceLoading: false, persistenceError: "Could not load proposals" });
+      return;
+    }
+    set({ proposals, persistenceLoading: false });
+  },
+
+  createProposal: async (name) => {
+    const trimmed = name.trim();
+    const projectId = get().selectedProjectId;
+    if (!trimmed || !projectId) return;
+    set({ persistenceLoading: true, persistenceError: null });
+    const proposal = await api.createProposal(projectId, trimmed);
+    if (!proposal) {
+      set({ persistenceLoading: false, persistenceError: "Could not create proposal" });
+      get().pushToast("Could not create proposal", "warn");
+      return;
+    }
+    set((s) => ({
+      proposals: [proposal, ...s.proposals],
+      persistenceLoading: false,
+    }));
+    await get().selectProposal(proposal.id);
+  },
+
+  selectProposal: async (proposalId) => {
+    persistSelection(PROPOSAL_KEY, proposalId);
+    set({
+      selectedProposalId: proposalId,
+      persistenceMode: persistenceModeFor(get().backendHealth, proposalId),
+      proposalInfrastructure: [],
+      latestSnapshot: null,
+      persistedInfraIds: {},
+      persistenceError: null,
+    });
+    if (!proposalId || get().backendHealth?.persistenceProvider !== "supabase") return;
+
+    set({ persistenceLoading: true });
+    await get().resetSession();
+    const rows = await api.listProposalInfrastructure(proposalId);
+    if (!rows) {
+      set({
+        persistenceLoading: false,
+        persistenceError: "Could not load proposal infrastructure",
+      });
+      return;
+    }
+
+    const restored: Infra[] = [];
+    const persistedInfraIds: Record<string, string> = {};
+    let restoreFailed = false;
+    for (const row of rows) {
+      const draft = persistedToInfra(row);
+      if (!draft) {
+        restoreFailed = true;
+        continue;
+      }
+      const saved = { ...draft, ...(await api.placeInfra(draft)) };
+      restored.push(saved);
+      persistedInfraIds[saved.id] = row.id;
+    }
+    const latestSnapshot = await api.getLatestSnapshot(proposalId);
+
+    set({
+      proposalInfrastructure: rows,
+      infra: restored,
+      allInfra: restored,
+      latestSnapshot,
+      persistedInfraIds,
+      persistenceLoading: false,
+      persistenceError: restoreFailed
+        ? "Some persisted placements are listed only because they are not compatible with the current simulator."
+        : null,
+    });
+    await get().reset();
+    await get().refreshSentiment();
+    await get().refreshFlows();
+    void get().refreshSitingPriority();
+  },
+
+  saveSnapshot: async () => {
+    const { selectedProposalId, metrics, scenarios, infra } = get();
+    if (!selectedProposalId || !metrics) return;
+    const snapshot = await api.createSnapshot(selectedProposalId, {
+      tick: metrics.tick,
+      metrics: metrics as unknown as Record<string, unknown>,
+      scenarios: scenarios as unknown as Record<string, unknown>[],
+      infrastructure: infra.map((i) => ({
+        id: i.id,
+        kind: i.kind,
+        position: i.position,
+        capacityKw: i.capacityKw,
+        costCad: i.costCad,
+        status: i.status,
+        modelUrl: i.modelUrl,
+        zoneId: i.zoneId,
+      })),
+    });
+    if (snapshot) {
+      set({ latestSnapshot: snapshot });
+      get().pushToast("Snapshot saved", "good");
+    } else {
+      get().pushToast("Could not save snapshot", "warn");
+    }
+  },
 
   init: async () => {
     // Retry the REST fetch a few times before settling for mock — a page opened
@@ -635,11 +880,13 @@ export const useStore = create<State>((set, get) => ({
       voices: tagVoices(voices),
       live: zLive,
       backendHealth,
+      persistenceMode: persistenceModeFor(backendHealth, get().selectedProposalId),
       loaded: true,
       approvalHistory: Object.fromEntries(
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
     });
+    if (backendHealth?.persistenceProvider === "supabase") void get().loadProjects();
 
     // build-priority ranking (where to build next)
     void api
@@ -763,6 +1010,7 @@ export const useStore = create<State>((set, get) => ({
       flows,
       live: true,
       backendHealth,
+      persistenceMode: persistenceModeFor(backendHealth, s.selectedProposalId),
       approvalHistory: Object.fromEntries(
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
@@ -770,6 +1018,7 @@ export const useStore = create<State>((set, get) => ({
         ? { ...s.metrics, approvalPct: sentiment.cityApprovalPct }
         : s.metrics,
     }));
+    if (backendHealth?.persistenceProvider === "supabase") void get().loadProjects();
     // refresh the optional data layers too
     void Promise.all([
       api.getFacilities(),
@@ -917,7 +1166,7 @@ export const useStore = create<State>((set, get) => ({
   setHoveredRegion: (region) => set({ hoveredRegion: region }),
 
   addInfraAt: async (pos) => {
-    const { placeKind, infra, allInfra, selectedRegion, zones } = get();
+    const { placeKind, selectedRegion, zones } = get();
     const preset = INFRA_PRESETS[placeKind];
     const z = nearestZone(pos);
 
@@ -944,12 +1193,29 @@ export const useStore = create<State>((set, get) => ({
       allInfra: [...s.allInfra, optimistic] 
     }));
     
-    const saved = await api.placeInfra(optimistic);
+    const saved = { ...optimistic, ...(await api.placeInfra(optimistic)) };
     set((s) => ({
       infra: s.infra.map((i) => (i.id === optimistic.id ? saved : i)),
       allInfra: s.allInfra.map((i) => (i.id === optimistic.id ? saved : i)),
       spawnTimes: { ...s.spawnTimes, [saved.id]: Date.now(), [optimistic.id]: Date.now() },
     }));
+    {
+      const proposalId = get().selectedProposalId;
+      if (proposalId && get().backendHealth?.persistenceProvider === "supabase") {
+        const row = await api.createProposalInfrastructure(
+          proposalId,
+          infraToPersisted(saved)
+        );
+        if (row) {
+          set((s) => ({
+            proposalInfrastructure: [...s.proposalInfrastructure, row],
+            persistedInfraIds: { ...s.persistedInfraIds, [saved.id]: row.id },
+          }));
+        } else {
+          get().pushToast("Placement saved in sim, but proposal persistence failed", "warn");
+        }
+      }
+    }
     get().pushToast(
       `Placed ${optimistic.kind} in ${z?.name ?? "the city"}`,
       "good"
@@ -1009,18 +1275,30 @@ export const useStore = create<State>((set, get) => ({
 
   removeInfra: async (id) => {
     // mark for shrink-out; keep it on the map ~480ms, then actually remove
+    const proposalId = get().selectedProposalId;
+    const persistedId = get().persistedInfraIds[id];
     set((s) => ({
       removalTimes: { ...s.removalTimes, [id]: Date.now() },
       selectedInfraId: s.selectedInfraId === id ? null : s.selectedInfraId,
     }));
+    if (proposalId && persistedId) {
+      const ok = await api.deleteProposalInfrastructure(proposalId, persistedId);
+      if (!ok) get().pushToast("Could not delete proposal placement", "warn");
+    }
     await api.deleteInfra(id);
     setTimeout(() => {
       set((s) => {
         const rt = { ...s.removalTimes };
         delete rt[id];
+        const persistedInfraIds = { ...s.persistedInfraIds };
+        delete persistedInfraIds[id];
         return { 
           infra: s.infra.filter((i) => i.id !== id), 
           allInfra: s.allInfra.filter((i) => i.id !== id), 
+          proposalInfrastructure: s.proposalInfrastructure.filter(
+            (i) => i.id !== persistedId
+          ),
+          persistedInfraIds,
           removalTimes: rt 
         };
       });

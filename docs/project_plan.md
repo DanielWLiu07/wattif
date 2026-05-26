@@ -33,11 +33,11 @@ WattIf should become a **Figma/SimCity-style sandbox** for clean-energy infrastr
 
 See [project_details.md](./project_details.md). Summary:
 
-- Toronto-only fixtures, no upload, no Supabase, no persistence
+- Toronto-only fixtures, no upload, optional Supabase persistence for saved proposals
 - Placeable: solar, wind, battery, microgrid — **not EV chargers**
 - Scripted demo planner by default; real LLM optional
 - Template voices + rule-based sentiment — **not cohort LLM agents**
-- In-memory sim session; **optional Supabase** for projects/proposals metadata (Phase 2 foundation)
+- In-memory live sim engine; **optional Supabase** for projects/proposals, placements, and manual snapshots
 
 Status labels: [status_contract.md](./status_contract.md).
 
@@ -75,13 +75,26 @@ Status labels: [status_contract.md](./status_contract.md).
 
 See [supabase_setup.md](./supabase_setup.md).
 
-### Phase 3 — Dataset ingest + proposal UI (planned)
+### Phase 3 — Persist proposal state ✅ (complete)
+
+| Task | Deliverable | Status |
+|------|-------------|--------|
+| 3.1 | Project/proposal/placement/snapshot schema contracts | Done |
+| 3.2 | `proposal_infrastructure` repository methods | Done |
+| 3.3 | `simulation_snapshots` repository methods + snapshot extras migration | Done |
+| 3.4 | Proposal infrastructure + snapshot REST routes | Done |
+| 3.5 | Existing placement flow persists to selected proposal | Done |
+| 3.6 | Minimal project/proposal selection UI | Done |
+| 3.7 | Persisted placements reload into the active simulation when compatible | Done |
+| 3.8 | Explicit manual Save Snapshot action | Done |
+| 3.9 | Updated persistence honesty labels and docs | Done |
+
+**Still in-memory:** the live simulation engine and automatic per-tick state remain in-process.
+
+### Phase 4 — Dataset ingest + custom assets (planned)
 
 - Upload API for GeoJSON/CSV zones, infra points, survey priors
 - Validation pipeline; city/session abstraction beyond Toronto-only
-
-### Phase 4 — Custom assets (planned)
-
 - Upload GLB or asset manifest; register new infra kinds in sim (scoped)
 
 ### Phase 5 — Cohort resident agents (planned)
@@ -130,4 +143,4 @@ Regenerate or refresh audits when major phases land.
 
 1. **Phase 1 is documentation and honesty** — no Supabase, no new agents, no sim rewrite.
 2. **Target vision is a multi-phase effort**; see [status_contract.md](./status_contract.md) before claiming features in pitches.
-3. **Phase 2 persistence foundation is shipped**; env vars optional; sim state remains in-memory until Phase 3+.
+3. **Phase 3 proposal persistence is shipped**; env vars optional; live sim ticks remain in-memory while selected proposals can persist placements and manual snapshots.
