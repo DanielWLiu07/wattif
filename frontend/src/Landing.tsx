@@ -163,7 +163,7 @@ export function Landing() {
   const atScope = progress > 0.86;
 
   return (
-    <div className="fixed inset-0 z-[80] bg-white">
+    <div className="fixed inset-0 z-[80] bg-white" data-journey-progress={progress.toFixed(3)}>
       {/* ── 3D Canvas ─────────────────────────────────────────────────── */}
       <Canvas
         shadows

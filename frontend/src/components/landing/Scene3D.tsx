@@ -33,16 +33,26 @@ export function CameraRig({ progress }: { progress: number }) {
   useFrame(() => {
     const p = progress;
 
-    if (p < 0.86) {
-      // Drive forward: z 20 → -52
-      const d = p / 0.86;
-      tPos.current.set(0, 5, MathUtils.lerp(20, -52, d));
-      tLook.current.set(0, 1.5, MathUtils.lerp(0, -62, d));
+    if (p < 0.55) {
+      // Approach: drive forward toward the infrastructure row (hero → problem → demand)
+      const d = p / 0.55;
+      tPos.current.set(0, 5, MathUtils.lerp(20, -22, d));
+      tLook.current.set(0, 1.5, MathUtils.lerp(0, -40, d));
+    } else if (p < 0.75) {
+      // Infrastructure: pan LEFT → RIGHT across the row (no fly-through, kept at distance)
+      const d = (p - 0.55) / 0.2;
+      tPos.current.set(MathUtils.lerp(-14, 14, d), 5, -22);
+      tLook.current.set(MathUtils.lerp(-10, 10, d), 1.2, -40);
+    } else if (p < 0.86) {
+      // Settle back to centre and advance toward the siting coverage
+      const d = (p - 0.75) / 0.11;
+      tPos.current.set(MathUtils.lerp(14, 0, d), MathUtils.lerp(5, 6, d), MathUtils.lerp(-22, -50, d));
+      tLook.current.set(MathUtils.lerp(10, 0, d), 1.2, -68);
     } else {
       // Lift to top-down for scope selection
       const l = (p - 0.86) / 0.14;
-      tPos.current.set(0, MathUtils.lerp(5, 42, l), -52);
-      tLook.current.set(0, 0, -52);
+      tPos.current.set(0, MathUtils.lerp(6, 42, l), MathUtils.lerp(-50, -52, l));
+      tLook.current.set(0, 0, MathUtils.lerp(-68, -52, l));
     }
 
     camera.position.lerp(tPos.current, 0.09);
@@ -296,18 +306,18 @@ function InfraStation({ progress }: { progress: number }) {
   const p3 = MathUtils.clamp((progress - 0.71) / 0.08, 0, 1);
 
   return (
-    <group position={[0, 0, -42]}>
+    <group position={[0, 0, -40]}>
       {p0 > 0.01 && (
-        <GlbModel url="/models/solar_array.glb" position={[-7, 0, 1]} scale={2 * p0} />
+        <GlbModel url="/models/solar_array.glb" position={[-11, 0, 0]} scale={1.3 * p0} />
       )}
       {p1 > 0.01 && (
-        <GlbModel url="/models/wind_turbine.glb" position={[-2, 0, -1]} scale={2.8 * p1} rotateY={0.3} />
+        <GlbModel url="/models/wind_turbine.glb" position={[-4, 0, 0]} scale={1.7 * p1} rotateY={0.3} />
       )}
       {p2 > 0.01 && (
-        <GlbModel url="/models/battery.glb" position={[3, 0, 1]} scale={1.8 * p2} />
+        <GlbModel url="/models/battery.glb" position={[3.5, 0, 0]} scale={1.1 * p2} />
       )}
       {p3 > 0.01 && (
-        <GlbModel url="/models/microgrid_hub.glb" position={[8, 0, -1]} scale={2.2 * p3} />
+        <GlbModel url="/models/microgrid_hub.glb" position={[10, 0, 0]} scale={1.4 * p3} />
       )}
     </group>
   );
@@ -323,7 +333,7 @@ function SitingStation({ progress }: { progress: number }) {
   if (reveal < 0.01) return null;
 
   return (
-    <group position={[0, 0.05, -56]}>
+    <group position={[0, 0.05, -68]}>
       {covered.map((z, i) => {
         const [x, dz] = geoTo3D(z.centroid[0], z.centroid[1], 0.9);
         return (
