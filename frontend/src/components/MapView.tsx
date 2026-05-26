@@ -88,6 +88,7 @@ function MapboxDeckOverlay(props: MapboxOverlayProps) {
 
 export function MapView() {
   const zones = useStore((s) => s.zones);
+  const allZones = useStore((s) => s.allZones);
   const agents = useStore((s) => s.agents);
   const infra = useStore((s) => s.infra);
   const recommendations = useStore((s) => s.recommendations);
@@ -189,6 +190,7 @@ export function MapView() {
   const layers = useMemo<Layer[]>(() => {
     const base = buildLayers({
       zones,
+      allZones,
       agents,
       infra,
       recommendations,
@@ -274,6 +276,7 @@ export function MapView() {
     selectVoiceFromMap,
     regionCursorMode,
     hoveredRegion,
+    allZones,
   ]);
 
   const handleClick = useCallback(
@@ -284,7 +287,7 @@ export function MapView() {
       if (regionCursorMode) {
         const zoneName = obj?.properties?.name;
         if (zoneName) {
-          const zoneObj = zones.find(z => z.id === obj?.properties?.id || z.name === zoneName);
+          const zoneObj = allZones.find(z => z.id === obj?.properties?.id || z.name === zoneName);
           const region = getZoneRegion(zoneName, zoneObj?.centroid);
           setSelectedRegion(region);
           setRegionCursorMode(false);
@@ -318,7 +321,7 @@ export function MapView() {
         setRecCard((c) => (c?.pinned ? null : c)); // click empty → unpin card
       }
     },
-    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion]
+    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion, allZones]
   );
 
   const handleHover = useCallback((info: PickingInfo) => {
@@ -328,11 +331,11 @@ export function MapView() {
     if (regionCursorMode) {
       const zoneName = o?.properties?.name;
       if (zoneName) {
-        const zoneObj = zones.find(z => z.id === o?.properties?.id || z.name === zoneName);
+        const zoneObj = allZones.find(z => z.id === o?.properties?.id || z.name === zoneName);
         const region = getZoneRegion(zoneName, zoneObj?.centroid);
         setHoveredRegion(region);
         
-        const filtered = zones.filter(z => getZoneRegion(z.name, z.centroid) === region);
+        const filtered = allZones.filter(z => getZoneRegion(z.name, z.centroid) === region);
         const pop = filtered.reduce((sum, z) => sum + z.demographics.population, 0);
         
         const html = `<div class="p-1">
@@ -422,7 +425,7 @@ export function MapView() {
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones]);
+  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones, allZones]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;

@@ -1265,6 +1265,7 @@ export const useStore = create<State>((set, get) => ({
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
     });
+    get().setSelectedRegion(get().selectedRegion);
     if (backendHealth?.persistenceProvider === "supabase") void get().loadProjects();
 
     // build-priority ranking (where to build next)
@@ -1313,6 +1314,7 @@ export const useStore = create<State>((set, get) => ({
           sbei,
           activity: activity.length ? activity.slice(0, 80) : get().activity,
         });
+        get().setSelectedRegion(get().selectedRegion);
       }
     );
 
