@@ -35,14 +35,14 @@ function ringToPath(ring: number[][], step = 5): string {
 // ── Region definitions ──────────────────────────────────────────────────────
 // Zone counts derived from getZoneRegion logic applied to zonesFixture.json
 const REGIONS = [
-  { name: "All Toronto",  key: "All",          zones: 140, agents: "~4,000" },
-  { name: "Etobicoke",    key: "Etobicoke",    zones: 30,  agents: "~1,600" },
-  { name: "North York",   key: "North York",   zones: 27,  agents: "~1,450" },
-  { name: "Scarborough",  key: "Scarborough",  zones: 25,  agents: "~1,350" },
-  { name: "West Toronto", key: "West Toronto", zones: 22,  agents: "~1,100" },
-  { name: "East Toronto", key: "East Toronto", zones: 14,  agents: "~700"   },
-  { name: "Downtown",     key: "Downtown",     zones: 12,  agents: "~1,200" },
-  { name: "Midtown",      key: "Midtown",      zones: 10,  agents: "~500"   },
+  { name: "All Toronto",  key: "All",          zones: 140, agents: "8,001"  },
+  { name: "Etobicoke",    key: "Etobicoke",    zones: 30,  agents: "~1,715" },
+  { name: "North York",   key: "North York",   zones: 27,  agents: "~1,543" },
+  { name: "Scarborough",  key: "Scarborough",  zones: 25,  agents: "~1,429" },
+  { name: "West Toronto", key: "West Toronto", zones: 22,  agents: "~1,257" },
+  { name: "East Toronto", key: "East Toronto", zones: 14,  agents: "~800"   },
+  { name: "Downtown",     key: "Downtown",     zones: 12,  agents: "~686"   },
+  { name: "Midtown",      key: "Midtown",      zones: 10,  agents: "~571"   },
 ];
 
 // ── Processed zone data (memoized outside component) ───────────────────────
