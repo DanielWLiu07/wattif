@@ -75,6 +75,7 @@ function hashSeed(s: string): number {
 
 export type LayerInputs = {
   zones: Zone[];
+  allZones: Zone[];
   agents: Agent[];
   infra: Infra[];
   recommendations: Recommendation[];
@@ -115,6 +116,7 @@ export type LayerInputs = {
 export function buildLayers(input: LayerInputs): Layer[] {
   const {
     zones,
+    allZones,
     agents,
     infra,
     recommendations,
@@ -179,6 +181,37 @@ export function buildLayers(input: LayerInputs): Layer[] {
   // buffer so 3D buildings, infra models, and agents always draw cleanly on top
   // (no z-fighting / no colored plane cutting through the 3D geometry).
   const groundOffset = () => [1, 1] as [number, number];
+
+  // ---- Interactive Region Cursor Mode Base Layer ----
+  // If regionCursorMode is active, we must render an invisible or extremely faint pickable base layer for ALL zones
+  // so that the map cursor can pick any zone to determine the hovered and clicked region.
+  if (regionCursorMode && allZones && allZones.length) {
+    const fc: FeatureCollection = {
+      type: "FeatureCollection",
+      features: allZones.map((z) => ({
+        type: "Feature",
+        geometry: z.polygon,
+        properties: {
+          id: z.id,
+          name: z.name,
+        },
+      })),
+    };
+    out.push(
+      new GeoJsonLayer({
+        id: "region-cursor-base",
+        data: fc,
+        filled: true,
+        stroked: true,
+        getFillColor: [0, 0, 0, 1], // practically invisible but fully pickable
+        getLineColor: [16, 185, 129, 30], // extremely faint boundary line for visual cues
+        lineWidthMinPixels: 1.5,
+        extruded: false,
+        getPolygonOffset: groundOffset,
+        pickable: true,
+      })
+    );
+  }
 
   // ---- No-build / siting-penalty constraints (tint the zone polygons) ----
   if (layers.constraints && constraints.length && zones.length) {
@@ -352,10 +385,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
   }
 
   // ---- Interactive region cursor selection highlight ----
-  if (regionCursorMode && hoveredRegion && zones.length) {
+  if (regionCursorMode && hoveredRegion && allZones && allZones.length) {
     const fc = {
       type: "FeatureCollection",
-      features: zones
+      features: allZones
         .filter((z) => getZoneRegion(z.name, z.centroid) === hoveredRegion)
         .map((z) => ({
           type: "Feature",
