@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStore, getZoneRegion } from "@/store";
 import zonesRaw from "@/data/zonesFixture.json";
 
@@ -40,9 +40,6 @@ const REGION_CARDS = [
   { name: "East Toronto", desc: "High-equity burden communities, green spaces, and beaches." },
   { name: "West Toronto", desc: "Artistic, creative hubs and transit-oriented corridors." },
 ];
-
-// Regions for auto-cycle (skip "All Toronto" — too noisy as an auto-highlight)
-const CYCLE_REGIONS = REGION_CARDS.slice(1).map((c) => c.name);
 
 // ── Live zone counts from getZoneRegion ────────────────────────────────────
 type RawZone = {
@@ -120,20 +117,10 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     setRevealed(false);
   }, [active]);
 
-  // Auto-cycle through regions when active and nothing is hovered.
-  const cycleIdx = useRef(0);
+  // When active and nothing is hovered, auto-highlight the WHOLE landmass
+  // (all of Toronto lit) — hovering a card narrows it to that region.
   useEffect(() => {
-    if (!active || hoveredRegion !== null) {
-      setAutoCycleRegion(null);
-      return;
-    }
-    const tick = () => {
-      setAutoCycleRegion(CYCLE_REGIONS[cycleIdx.current % CYCLE_REGIONS.length]);
-      cycleIdx.current += 1;
-    };
-    tick(); // show first region immediately
-    const id = setInterval(tick, 2200);
-    return () => clearInterval(id);
+    setAutoCycleRegion(active && hoveredRegion === null ? "All Toronto" : null);
   }, [active, hoveredRegion]);
 
   const zonesByRegion = useMemo(() => {
@@ -314,20 +301,6 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                   />
                 ));
               })}
-
-              {/* Volt scan line sweeping L→R across the map */}
-              {revealed && (
-                <rect x="0" y="0" width="6" height={SVG_H} fill="hsl(72 95% 50%)" opacity="0.13">
-                  <animateTransform
-                    attributeName="transform"
-                    type="translate"
-                    from={`-6 0`}
-                    to={`${SVG_W + 6} 0`}
-                    dur="7s"
-                    repeatCount="indefinite"
-                  />
-                </rect>
-              )}
 
               {/* Twinkling activity dots at sampled zone centroids */}
               {revealed &&
