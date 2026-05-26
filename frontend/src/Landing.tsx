@@ -275,8 +275,14 @@ export function Landing() {
               style={{
                 transform: `translate(${heroXf.x}px, ${heroXf.y}px) scale(${heroXf.scale})`,
                 transformOrigin: "left top",
+                // Slight frosted white panel so the copy reads over the 3D scene.
+                background: "hsl(0 0% 100% / 0.5)",
+                backdropFilter: "blur(7px)",
+                WebkitBackdropFilter: "blur(7px)",
+                borderRadius: 20,
+                padding: "20px 28px",
                 ...(TEXT_EDIT
-                  ? { cursor: "move", pointerEvents: "auto", outline: "1px dashed hsl(var(--brand))", outlineOffset: 12, borderRadius: 4 }
+                  ? { cursor: "move", pointerEvents: "auto", outline: "1px dashed hsl(var(--brand))", outlineOffset: 12 }
                   : {}),
               }}
             >
