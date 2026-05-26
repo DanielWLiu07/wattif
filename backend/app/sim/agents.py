@@ -103,15 +103,24 @@ def ev_adoption_step(
     zone_ev_incentive: np.ndarray,
     tick: int,
     rng: np.random.Generator,
+    *,
+    zone_charger_access: np.ndarray | None = None,
 ) -> None:
-    """Advance EV adoption by one tick (mutates arr.ev). Driven mainly by an incentive program."""
+    """Advance EV adoption by one tick (mutates arr.ev).
+
+    Charger access raises baseline adoption; ev_incentive program is the main driver.
+    """
     eligible = ~arr.ev
     if not eligible.any():
         return
     incentive = zone_ev_incentive[arr.zone_idx]
+    access = (
+        zone_charger_access[arr.zone_idx]
+        if zone_charger_access is not None
+        else np.zeros(arr.n)
+    )
     trend = 1.0 + min(tick, 60) * 0.015
-    # Low baseline hazard; an active ev_incentive program is the main driver.
-    p = (0.004 + 0.06 * incentive) * arr.income_weight * trend
+    p = (0.004 + 0.06 * incentive + 0.025 * access) * arr.income_weight * trend
     p = np.clip(p, 0.0, 0.3)
     newly = eligible & (rng.random(arr.n) < p)
     arr.ev |= newly

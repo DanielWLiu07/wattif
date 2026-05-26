@@ -151,7 +151,7 @@ def test_opinion_drifts_toward_target():
     eng = w.engine
     before = eng.sentiment.city_approval_pct()
     # Strongly push every kind's target up, then advance.
-    for k in ("solar", "wind", "battery", "microgrid"):
+    for k in ("solar", "wind", "battery", "microgrid", "ev_charger"):
         eng.sentiment.shift_target_all(k, 0.4)
     eng.step_many(10)
     after = eng.sentiment.city_approval_pct()
@@ -380,7 +380,7 @@ def test_voices_rule_based_shape():
     assert len(voices) == 6
     for v in voices:
         assert v.text and v.stance in ("support", "oppose", "neutral")
-        assert v.topic in ("solar", "wind", "battery", "microgrid")
+        assert v.topic in ("solar", "wind", "battery", "microgrid", "ev_charger")
         assert v.avatar_seed == v.agent_id
 
 

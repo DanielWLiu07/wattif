@@ -59,7 +59,7 @@ _TOOLS: list[dict] = [
             "properties": {
                 "kind": {
                     "type": "string",
-                    "enum": ["solar", "wind", "battery", "microgrid"],
+                    "enum": ["solar", "wind", "battery", "microgrid", "ev_charger"],
                 },
                 "n": {"type": "integer", "minimum": 1, "maximum": 15},
             },
@@ -74,7 +74,7 @@ _TOOLS: list[dict] = [
             "properties": {
                 "kind": {
                     "type": "string",
-                    "enum": ["solar", "wind", "battery", "microgrid"],
+                    "enum": ["solar", "wind", "battery", "microgrid", "ev_charger"],
                 },
                 "zoneId": {"type": "string"},
                 "position": {
@@ -698,7 +698,7 @@ _REACTION_KINDS: dict[str, list[str]] = {
     "wind_lull": ["battery", "solar"],
     "population_boom": ["microgrid", "battery"],
     "factory_opening": ["microgrid", "battery"],
-    "ev_surge": ["battery", "microgrid"],
+    "ev_surge": ["ev_charger", "battery", "microgrid"],
     "turbine_noise_complaint": ["solar", "microgrid"],
     "grid_upgrade": ["solar", "wind"],
 }
@@ -708,6 +708,7 @@ _INTENT_KEYWORDS = {
     "solar": ["solar", "panel", "panels", "rooftop", "pv"],
     "wind": ["wind", "turbine", "turbines"],
     "microgrid": ["microgrid", "micro-grid", "community", "resilien"],
+    "ev_charger": ["ev charger", "ev chargers", "charging hub", "charging station", "charger"],
 }
 
 

@@ -73,3 +73,14 @@ def test_optimize_clamps_n():
     eng.reset()
     recs = optimize(eng, kind="solar", n=999)
     assert len(recs) <= 25
+
+
+def test_ev_charger_can_be_recommended():
+    eng = make_engine()
+    eng.reset()
+    # Boost EV propensity in dense zones so EV chargers enter the candidate pool.
+    eng.zone_ev_propensity[:] = 0.45
+    recs = optimize_greedy(eng, kind="ev_charger", n=4)
+    assert len(recs) >= 1
+    assert all(r.kind == "ev_charger" for r in recs)
+    assert all("EV" in r.rationale or "charging" in r.rationale.lower() for r in recs)

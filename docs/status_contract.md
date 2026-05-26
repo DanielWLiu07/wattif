@@ -37,12 +37,14 @@ See also: [project_details.md](./project_details.md) (current truth), [project_p
 | Resident voices (sim tick + default REST) | **Fallback-only** | Template library in `voices.py` |
 | Voice LLM enrichment | **Fallback-only** | Only when `realLlm` provider configured |
 | Resident “agents” as autonomous AI | **Missing** | Simulation records + templates, not LLM agents |
-| EV charger **placement** / simulation | **Missing** | Display-only on map |
+| EV charger **placement** / simulation | **Implemented** | Placeable `ev_charger` kind; lightweight demand/sentiment/adoption effects; template voices |
 | Dataset upload (city GIS, surveys, etc.) | **Missing** | Planned Phase 4+ |
 | Custom asset upload (GLB definitions) | **Missing** | Planned Phase 4+ |
 | Supabase persistence foundation | **Implemented** | Schema + backend client + REST when env configured; see [supabase_setup.md](./supabase_setup.md) |
 | Proposal save / load (end-to-end UI) | **Implemented** | Supabase-backed projects/proposals UI; placements persist to selected proposal |
 | Simulation snapshots (manual save) | **Implemented** | Explicit Save Snapshot action stores metrics, active scenarios, and infra state |
+| Snapshot history + restore to live sim | **Implemented** | Saved tab lists snapshots; Restore replays infra JSON to live sim only (proposal rows unchanged) |
+| Live vs snapshot metric comparison | **Implemented** | Saved tab compares coverage, approval, equity, emissions, grid load, cost |
 | Live sim state persistence (automatic) | **Missing** | Still in-memory `World` singleton; snapshots are manual |
 | Report export (PDF / summary) | **Missing** | Planned |
 | Cohort resident AI agents (20–30 personas) | **Missing** | Planned |

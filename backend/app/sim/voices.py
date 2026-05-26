@@ -19,6 +19,7 @@ _KIND_NOUN = {
     "wind": "wind turbines",
     "battery": "battery storage",
     "microgrid": "a community microgrid",
+    "ev_charger": "EV charging",
 }
 
 # ---------------------------------------------------------------------------
@@ -500,6 +501,12 @@ _PLACEMENT_LINES = {
         "Our own microgrid in {zone}? Resilience at last.",
         "{zone} getting a microgrid is the best news I've heard all year.",
     ],
+    "ev_charger": [
+        "EV chargers near my daily stops in {zone}? Finally — I can actually charge here.",
+        "Shared charging in {zone} helps renters like me who can't plug in at home.",
+        "A charging hub in {zone} — my commute just got a lot less stressful.",
+        "Businesses in {zone} will love foot traffic from a new charger.",
+    ],
 }
 
 
@@ -520,6 +527,11 @@ _PLACEMENT_OPPOSE = {
     "microgrid": [
         "A microgrid in {zone}? Sounds pricey — show me it cuts bills first.",
         "Not sure {zone} needs its own grid — who maintains it?",
+    ],
+    "ev_charger": [
+        "Another charger in {zone}? Hope it doesn't eat street parking.",
+        "EV hubs in {zone} are fine — just don't block loading zones.",
+        "Chargers in {zone} help some people, but congestion worries me.",
     ],
 }
 
@@ -557,7 +569,7 @@ _PROGRAM_LINES = {
 _PROGRAM_KIND = {
     "rooftop_solar_rebate": "solar",
     "retrofit_grant": "solar",
-    "ev_incentive": "battery",
+    "ev_incentive": "ev_charger",
 }
 
 
