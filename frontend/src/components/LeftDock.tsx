@@ -1,4 +1,4 @@
-import { Wrench, Zap, Map as MapIcon, Crosshair } from "lucide-react";
+import { Wrench, Zap, Map as MapIcon, Crosshair, FolderOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BuildTab } from "@/components/BuildTab";
@@ -6,15 +6,19 @@ import { ScenarioControls } from "@/components/ScenarioControls";
 import { LayersPanel } from "@/components/LayersPanel";
 import { LegendContent } from "@/components/LegendContent";
 import { BuildPriority } from "@/components/BuildPriority";
+import { ProjectsTab } from "@/components/ProjectsTab";
 
 export function LeftDock() {
   return (
     <div className="pointer-events-auto flex h-full w-[300px] flex-col p-3">
       <Card className="glass flex min-h-0 flex-1 flex-col overflow-hidden">
         <Tabs defaultValue="build" className="flex min-h-0 flex-1 flex-col">
-          <TabsList className="m-1.5 grid grid-cols-4 gap-0.5">
+          <TabsList className="m-1.5 grid grid-cols-5 gap-0.5">
             <TabsTrigger value="build" className="flex-col gap-0.5 px-0.5 py-1 text-[10px]">
               <Wrench className="h-3.5 w-3.5" /> Build
+            </TabsTrigger>
+            <TabsTrigger value="saved" className="flex-col gap-0.5 px-0.5 py-1 text-[10px]">
+              <FolderOpen className="h-3.5 w-3.5" /> Saved
             </TabsTrigger>
             <TabsTrigger value="events" className="flex-col gap-0.5 px-0.5 py-1 text-[10px]">
               <Zap className="h-3.5 w-3.5" /> Events
@@ -28,6 +32,9 @@ export function LeftDock() {
           </TabsList>
           <TabsContent value="build" className="mt-0 min-h-0 flex-1 overflow-y-auto">
             <BuildTab />
+          </TabsContent>
+          <TabsContent value="saved" className="mt-0 min-h-0 flex-1 overflow-y-auto">
+            <ProjectsTab />
           </TabsContent>
           <TabsContent value="events" className="mt-0 min-h-0 flex-1 overflow-y-auto">
             <ScenarioControls />
