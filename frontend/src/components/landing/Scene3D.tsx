@@ -642,13 +642,14 @@ interface StoredLayout {
 // has no saved layout, so every visitor sees the curated hero composition.
 const BAKED_LAYOUT: StoredLayout = {
   models: [
-    { type: "heroTurbine", position: [9.604, 0, 5.1],    rotation: [-0.082, -0.582, 0], scale: 0.29 },
-    { type: "solar",       position: [-8.946, 0, 1.172], rotation: [0, 0.548, 0],       scale: 0.85 },
-    { type: "wind",        position: [-13.72, 0, -9.71], rotation: [0, 0.718, 0],       scale: 0.45 },
-    { type: "battery",     position: [-0.62, 0, 7.218],  rotation: [0.008, 0.508, 0],   scale: 0.58 },
-    { type: "microgrid",   position: [6.6, 0, -8.29],    rotation: [0, -0.162, 0],      scale: 1.31 },
+    // Defaults for everything; only the wind turbine (uid 2) is hand-positioned.
+    { type: "heroTurbine", position: [3.5, 0, -1],       rotation: [0, 0, 0],     scale: 0.279 },
+    { type: "solar",       position: [-8, 0.001, -2],    rotation: [0, 0, 0],     scale: 0.229 },
+    { type: "wind",        position: [-13.72, 0, -9.71], rotation: [0, 0.718, 0], scale: 0.45 },
+    { type: "battery",     position: [8, 0, 1],          rotation: [0, 0, 0],     scale: 0.289 },
+    { type: "microgrid",   position: [13, 0, -3],        rotation: [0, 0, 0],     scale: 0.19 },
   ],
-  wordmark: { position: [-12.457, 4.312, 5.237], rotation: [0, 0.458, 0], scale: 1.83 },
+  wordmark: { position: [0, 5, -6], rotation: [0, 0, 0], scale: 1 },
 };
 
 function readStoredLayout(): StoredLayout | null {
@@ -844,6 +845,21 @@ function EditWordmark({
 
 function EditScene() {
   const orbitRef = useRef<unknown>(null);
+  const [freecam, setFreecam] = useState(false);
+
+  // Snap the camera back to the exact landing-page hero framing.
+  const resetToLanding = () => {
+    const c = orbitRef.current as {
+      object?: { position: { set: (x: number, y: number, z: number) => void }; fov?: number; updateProjectionMatrix?: () => void };
+      target?: { set: (x: number, y: number, z: number) => void };
+      update?: () => void;
+    } | null;
+    if (!c?.object || !c.target) return;
+    c.object.position.set(0, 5, 20);
+    c.target.set(0, 1.5, 0);
+    if (c.object.fov !== undefined) { c.object.fov = 52; c.object.updateProjectionMatrix?.(); }
+    c.update?.();
+  };
 
   // Seed the editor from a previously saved layout (positions) so "Save to
   // Device" persists your working arrangement across reloads of ?edit.
@@ -989,9 +1005,9 @@ function EditScene() {
         ref={orbitRef as React.RefObject<unknown>}
         makeDefault
         target={[0, 1.5, 0]}
-        enableRotate={false}
-        enablePan={false}
-        enableZoom={false}
+        enableRotate={freecam}
+        enablePan={freecam}
+        enableZoom={freecam}
       />
 
       {/* Invisible background plane to deselect */}
@@ -1047,11 +1063,33 @@ function EditScene() {
             boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
           }}
         >
-          <div style={{ fontWeight: 700, marginBottom: 4, color: "#c8f400", fontSize: 14 }}>
+          <div style={{ fontWeight: 700, marginBottom: 8, color: "#c8f400", fontSize: 14 }}>
             ⚡ Edit Mode
           </div>
-          <div style={{ color: "#666", marginBottom: 12, fontSize: 10 }}>
-            Camera locked to landing view
+
+          {/* Camera: locked to the landing framing, or freecam to look around */}
+          <div style={{ display: "flex", gap: 4, marginBottom: 12 }}>
+            <button
+              onClick={() => { setFreecam((f) => !f); if (freecam) resetToLanding(); }}
+              style={{
+                flex: 1, padding: "5px 0",
+                background: freecam ? "#c8f400" : "#242424",
+                color: freecam ? "#000" : "#aaa",
+                border: "1px solid #3a3a3a", borderRadius: 5, cursor: "pointer", fontSize: 11, fontWeight: 600,
+              }}
+            >
+              {freecam ? "Freecam: ON" : "Freecam: off"}
+            </button>
+            <button
+              onClick={resetToLanding}
+              style={{
+                padding: "5px 8px", background: "#1c1c1c", color: "#c8f400",
+                border: "1px solid #c8f400", borderRadius: 5, cursor: "pointer", fontSize: 11, fontWeight: 600,
+              }}
+              title="Snap back to the landing-page camera"
+            >
+              ⌂ Landing
+            </button>
           </div>
 
           {/* Model selection + transform mode */}
