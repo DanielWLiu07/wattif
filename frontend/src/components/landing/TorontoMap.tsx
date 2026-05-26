@@ -186,8 +186,8 @@ export function TorontoMap() {
             style={{ display: "block" }}
             aria-label="Toronto neighbourhood map"
           >
-            {/* Background */}
-            <rect width={SVG_W} height={SVG_H} fill="#fafafa" rx="4" />
+            {/* Transparent background — the map floats on the white page, no gray box */}
+            <rect width={SVG_W} height={SVG_H} fill="transparent" />
 
             {/* Zone paths — highlighted by hovered region */}
             {processedZones.map((zone) => {
