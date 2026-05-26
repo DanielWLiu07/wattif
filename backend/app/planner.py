@@ -1282,21 +1282,23 @@ async def run_planner(
     proposal_id: str | None = None,
 ) -> AsyncIterator[dict]:
     """Yield planner events. step mode uses `confirm` to gate mutating tools (WS only)."""
-    from .dataset_context import fetch_dataset_summaries, format_summaries_for_prompt
+    from .cohort_context import build_planner_context, fetch_concern_summaries
 
     budget = budget_cad if budget_cad is not None else DEFAULT_BUDGET_CAD
     tools = PlannerTools(world, budget)
     provider = config.llm_provider()
-    summaries = fetch_dataset_summaries(
+    dataset_context = build_planner_context(
         project_id=project_id, proposal_id=proposal_id
     )
-    dataset_context = format_summaries_for_prompt(summaries) or None
+    concern_count = len(
+        fetch_concern_summaries(project_id=project_id, proposal_id=proposal_id)
+    )
     if dataset_context:
         yield {
             "type": "thought",
             "text": (
-                f"Noting {len(summaries)} uploaded dataset(s) as planning context "
-                "(simulation unchanged)."
+                "Noting uploaded datasets and synthetic cohort concerns as planning "
+                f"context ({concern_count} concern(s); simulation unchanged)."
             ),
         }
 

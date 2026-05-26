@@ -158,3 +158,47 @@ class UploadedDatasetSummary(BaseModel):
     columns: list[str] = Field(default_factory=list)
     detected_type: str | None = None
     created_at: str | None = None
+
+
+class CohortProfile(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    project_id: str | None = None
+    proposal_id: str | None = None
+    name: str
+    cohort_type: str
+    zone_id: str | None = None
+    description: str | None = None
+    priorities: list[str] = Field(default_factory=list)
+    dataset_ids: list[str] = Field(default_factory=list)
+    confidence: float | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    created_at: str | None = None
+    updated_at: str | None = None
+
+
+class CohortConcern(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    cohort_id: str
+    project_id: str | None = None
+    proposal_id: str | None = None
+    severity: str
+    stance: str
+    topic: str
+    summary: str
+    evidence: list[str] = Field(default_factory=list)
+    related_dataset_ids: list[str] = Field(default_factory=list)
+    related_infra_ids: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    created_at: str | None = None
+
+
+class CohortGenerateResponse(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    cohorts: list[CohortProfile]
+    concerns: list[CohortConcern]
+    datasets_used: int = 0

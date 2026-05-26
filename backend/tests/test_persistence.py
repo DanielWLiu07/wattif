@@ -49,6 +49,9 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("get", "/api/projects/00000000-0000-0000-0000-000000000001/datasets", None),
         ("get", "/api/datasets/00000000-0000-0000-0000-000000000004", None),
         ("delete", "/api/datasets/00000000-0000-0000-0000-000000000004", None),
+        ("post", "/api/projects/00000000-0000-0000-0000-000000000001/cohorts/generate", None),
+        ("get", "/api/projects/00000000-0000-0000-0000-000000000001/cohorts", None),
+        ("get", "/api/projects/00000000-0000-0000-0000-000000000001/concerns", None),
     ):
         if method == "get":
             r = client.get(path)
