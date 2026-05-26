@@ -33,7 +33,7 @@ function plannerTooltip(live: boolean, health: HealthMeta | null): string {
   return "Offline mock planner — scripted events, no backend.";
 }
 
-function voicesLabel(_live: boolean, _health: HealthMeta | null): string {
+function voicesLabel(): string {
   return "Template voices";
 }
 
@@ -92,7 +92,7 @@ export function TopBar() {
   const openWelcome = () => useStore.setState({ showWelcome: true });
 
   const plannerText = plannerLabel(live, backendHealth);
-  const voicesText = voicesLabel(live, backendHealth);
+  const voicesText = voicesLabel();
   const sessionText = persistenceLabel(live, backendHealth, selectedProposalName);
   const realLlmActive = live && !!backendHealth?.realLlm;
   const supabaseActive = live && backendHealth?.persistenceProvider === "supabase";

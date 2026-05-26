@@ -28,6 +28,7 @@ import type {
   CohortGenerateResponse,
   CohortProfile,
   UploadedDataset,
+  UploadedInfrastructureAsset,
   UploadedDatasetSummary,
   Zone,
 } from "@/types";
@@ -270,6 +271,22 @@ export async function deleteDataset(
   return persistenceFetch<{ ok: boolean; datasetId: string }>(
     `/api/datasets/${datasetId}`,
     { method: "DELETE" }
+  );
+}
+
+export async function listProjectExistingInfrastructure(
+  projectId: string
+): Promise<PersistenceResult<UploadedInfrastructureAsset[]>> {
+  return persistenceFetch<UploadedInfrastructureAsset[]>(
+    `/api/projects/${projectId}/existing-infrastructure`
+  );
+}
+
+export async function listProposalExistingInfrastructure(
+  proposalId: string
+): Promise<PersistenceResult<UploadedInfrastructureAsset[]>> {
+  return persistenceFetch<UploadedInfrastructureAsset[]>(
+    `/api/proposals/${proposalId}/existing-infrastructure`
   );
 }
 

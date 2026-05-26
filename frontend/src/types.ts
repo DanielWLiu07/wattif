@@ -149,6 +149,31 @@ export type UploadedDataset = {
   metadata: Record<string, unknown>;
   createdAt?: string | null;
   uploadedAt?: string | null;
+  extractedExistingInfrastructureCount?: number;
+  invalidExistingInfrastructureRows?: number;
+  detectedExistingInfrastructureKind?: string | null;
+};
+
+export type UploadedInfrastructureAsset = {
+  id: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  datasetId: string;
+  assetKind: string;
+  sourceType: string;
+  name?: string | null;
+  address?: string | null;
+  latitude: number;
+  longitude: number;
+  zoneId?: string | null;
+  status?: string | null;
+  operator?: string | null;
+  capacityKw?: number | null;
+  powerKw?: number | null;
+  chargerType?: string | null;
+  metadata: Record<string, unknown>;
+  sourceRowIndex?: number | null;
+  createdAt?: string | null;
 };
 
 export type UploadedDatasetSummary = {

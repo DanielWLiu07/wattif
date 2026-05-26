@@ -24,7 +24,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Compass } from "lucide-react";
 import { useStore, getZoneRegion } from "@/store";
-import { buildLayers } from "@/map/layers";
+import { buildLayers, uploadedAssetsToMapPoints } from "@/map/layers";
 import { RecommendationImpact } from "@/components/RecommendationImpact";
 import type { Infra, LngLat, Recommendation } from "@/types";
 
@@ -104,6 +104,7 @@ export function MapView() {
   const voices = useStore((s) => s.voices);
   const facilities = useStore((s) => s.facilities);
   const existingInfra = useStore((s) => s.existingInfra);
+  const existingInfrastructureAssets = useStore((s) => s.existingInfrastructureAssets);
   const constraints = useStore((s) => s.constraints);
   const scenarioTargeting = useStore((s) => s.scenarioTargeting);
   const setTargetZone = useStore((s) => s.setTargetZone);
@@ -186,6 +187,11 @@ export function MapView() {
     [selectInfra]
   );
 
+  const uploadedExistingInfra = useMemo(
+    () => uploadedAssetsToMapPoints(existingInfrastructureAssets),
+    [existingInfrastructureAssets]
+  );
+
   const layers = useMemo<Layer[]>(() => {
     const base = buildLayers({
       zones,
@@ -203,6 +209,7 @@ export function MapView() {
       voices,
       facilities,
       existingInfra,
+      uploadedExistingInfra,
       constraints,
       floodRisk,
       districtEnergy,
@@ -253,6 +260,7 @@ export function MapView() {
     voices,
     facilities,
     existingInfra,
+    uploadedExistingInfra,
     constraints,
     floodRisk,
     districtEnergy,
@@ -311,7 +319,9 @@ export function MapView() {
         return;
       }
       if (obj?.kind && obj?.capacityKw) selectInfra(obj.id);
-      else if (obj?.properties?.id) selectZone(obj.properties.id);
+      else if (obj?._uploadedExisting) {
+        // read-only overlay — no selection
+      } else if (obj?.properties?.id) selectZone(obj.properties.id);
       else if (!obj) {
         selectZone(null);
         selectInfra(null);
@@ -375,6 +385,11 @@ export function MapView() {
       html = `<b>${o.kind.toUpperCase()}</b> · ${o.capacityKw} kW<br/>${o.status}${
         o.placedBy ? ` · placed by ${o.placedBy}` : ""
       }`;
+    } else if (o._uploadedExisting) {
+      const label = o.name || `Uploaded ${String(o.kind).replace(/_/g, " ")}`;
+      html = `<b>${label}</b><br/><span style="color:#fbbf24">Existing inventory (uploaded)</span>`;
+      if (o.status) html += `<br/>Status: ${o.status}`;
+      if (o.powerKw != null) html += `<br/>Power: ${o.powerKw} kW`;
     } else if (o.name && o.position && o.kind && !o.capacityKw && !o.rationale) {
       // facility or existing-infra marker
       html = `<b>${o.name}</b><br/>${String(o.kind).replace(/_/g, " ")}`;
