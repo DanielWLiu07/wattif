@@ -24,7 +24,7 @@ import type {
   Zone,
 } from "@/types";
 import { INFRA_COLOR, STANCE_COLOR, FACILITY_META } from "@/types";
-import { getZoneRegion } from "@/store";
+import { getZoneRegion, getHaversineDistance, INFRA_CLEARANCES } from "@/store";
 import type { LayerKey } from "@/store";
 
 type RGB = [number, number, number];
@@ -60,11 +60,11 @@ const incomeColor: Record<Agent["incomeBracket"], RGB> = {
 };
 
 const SIZE_SCALE: Record<InfraKind, number> = {
-  wind: 28,
-  solar: 16,
-  battery: 14,
-  microgrid: 22,
-  ev_charger: 12,
+  wind: 3.6,
+  solar: 4.5,
+  battery: 5.4,
+  microgrid: 4.2,
+  ev_charger: 4.5,
 };
 
 function hashSeed(s: string): number {
@@ -111,6 +111,8 @@ export type LayerInputs = {
   onVoiceClick: (id: string) => void;
   regionCursorMode?: boolean;
   hoveredRegion?: string | null;
+  placementHoverCoordinate?: [number, number] | null;
+  placementHoverKind?: InfraKind | null;
 };
 
 export function buildLayers(input: LayerInputs): Layer[] {
@@ -151,6 +153,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
     onVoiceClick,
     regionCursorMode,
     hoveredRegion,
+    placementHoverCoordinate,
+    placementHoverKind,
   } = input;
   const out: Layer[] = [];
   const zoneById = new Map(zones.map((z) => [z.id, z]));
@@ -801,45 +805,132 @@ export function buildLayers(input: LayerInputs): Layer[] {
   // ---- Infra base halos (pulsing batteries/microgrids) ----
   if (layers.infra && infra.length) {
     const pulse = 0.5 + 0.5 * Math.sin(time / 400);
+    const kindsList: InfraKind[] = ["solar", "wind", "battery", "microgrid", "ev_charger"];
+    const BASE_RADIUS: Record<InfraKind, number> = {
+      wind: 10.5,
+      solar: 22.5,
+      battery: 21.0,
+      microgrid: 27.0,
+      ev_charger: 10.5,
+    };
+    const BASE_HEIGHT: Record<InfraKind, number> = {
+      wind: 0.8,
+      solar: 0.2,
+      battery: 0.3,
+      microgrid: 0.4,
+      ev_charger: 0.15,
+    };
+
+    // 1. Soft Pulsing Glow Aura (wide, highly translucent electric red)
     out.push(
-      new ColumnLayer({
-        id: "infra-base",
+      new ScatterplotLayer({
+        id: "infra-zoom-auras",
         data: infra,
         getPosition: (i: Infra) => i.position,
+        getRadius: (i: Infra) => {
+          const baseRadius = BASE_RADIUS[i.kind] || 7.0;
+          return i.status === "active" ? (baseRadius * 3.5 + pulse * 8) : baseRadius * 2.0;
+        },
+        radiusUnits: "meters",
+        radiusMinPixels: 14, // Wide glow footprint
+        radiusMaxPixels: 60,
+        filled: true,
+        stroked: false,
         getFillColor: (i: Infra) => {
           const fade = removalTimes[i.id] ? infraScale(i.id) : 1;
-          if (i.status === "damaged") return [120, 40, 40, 200 * fade] as any;
-          const a = (i.status === "active" ? 200 : 110) * fade;
-          return [...INFRA_COLOR[i.kind], a] as any;
+          if (i.status === "damaged") return [180, 50, 50, 40 * fade];
+          const alpha = i.status === "active" ? (65 + pulse * 45) : 35;
+          return [255, 46, 99, alpha * fade]; // electric neon red aura
         },
-        getElevation: (i: Infra) => {
-          const base = 40;
-          if (i.kind === "battery" || i.kind === "microgrid" || i.kind === "ev_charger")
-            return base + pulse * 60;
-          return base;
-        },
-        radius: 75,
-        stroked: true,
-        getLineColor: (i: Infra) =>
-          (i.id === selectedInfraId ? [255, 255, 255, 255] : [255, 255, 255, 90]) as any,
-        lineWidthMinPixels: (selectedInfraId ? 2 : 0) as any,
-        diskResolution: 24,
-        extruded: true,
-        pickable: true,
-        autoHighlight: true,
-        highlightColor: [255, 255, 255, 60],
+        parameters: { depthTest: false } as any,
         updateTriggers: {
-          getElevation: [time],
+          getRadius: [time],
           getFillColor: [time, removalTimes],
-          getLineColor: [selectedInfraId],
         },
-        onClick: (info: any) => info.object && onInfraClick(info.object),
+        pickable: false,
       })
     );
 
+    // 2. High-Intensity Saturated Core & Unified Emerald Ring
+    out.push(
+      new ScatterplotLayer({
+        id: "infra-zoom-beacons",
+        data: infra,
+        getPosition: (i: Infra) => i.position,
+        getRadius: (i: Infra) => {
+          const baseRadius = BASE_RADIUS[i.kind] || 7.0;
+          return i.status === "active" ? (baseRadius * 2.2 + pulse * 4) : baseRadius * 1.5;
+        },
+        radiusUnits: "meters",
+        radiusMinPixels: 8, // Concentrated core
+        radiusMaxPixels: 28,
+        filled: true,
+        stroked: true,
+        getFillColor: (i: Infra) => {
+          const fade = removalTimes[i.id] ? infraScale(i.id) : 1;
+          if (i.status === "damaged") return [180, 40, 40, 160 * fade];
+          const alpha = i.status === "active" ? (180 + pulse * 75) : 120;
+          return [255, 46, 99, alpha * fade]; // intensely bright neon crimson core
+        },
+        getLineColor: (i: Infra) => {
+          const fade = removalTimes[i.id] ? infraScale(i.id) : 1;
+          if (i.status === "damaged") return [239, 68, 68, 255 * fade];
+          const alpha = i.status === "active" ? (220 + pulse * 35) : 150;
+          return [16, 185, 129, alpha * fade]; // emerald green outline (same for all active infra)
+        },
+        lineWidthMinPixels: 2.2, // robust and highly visible ring
+        parameters: { depthTest: false } as any,
+        updateTriggers: {
+          getRadius: [time],
+          getFillColor: [time, removalTimes],
+          getLineColor: [time, removalTimes],
+        },
+        pickable: false,
+      })
+    );
+
+    for (const kind of kindsList) {
+      const items = infra.filter((i) => i.kind === kind);
+      if (!items.length) continue;
+
+      out.push(
+        new ColumnLayer({
+          id: `infra-base-${kind}`,
+          data: items,
+          getPosition: (i: Infra) => i.position,
+          getFillColor: (i: Infra) => {
+            const fade = removalTimes[i.id] ? infraScale(i.id) : 1;
+            if (i.status === "damaged") return [120, 40, 40, 200 * fade] as any;
+            const a = (i.status === "active" ? 200 : 110) * fade;
+            return [...INFRA_COLOR[i.kind], a] as any;
+          },
+          getElevation: (i: Infra) => {
+            const base = BASE_HEIGHT[kind];
+            if (i.status === "active") return base + pulse * 0.15;
+            return base;
+          },
+          radius: BASE_RADIUS[kind],
+          stroked: true,
+          getLineColor: (i: Infra) =>
+            (i.id === selectedInfraId ? [255, 255, 255, 255] : [255, 255, 255, 90]) as any,
+          lineWidthMinPixels: (selectedInfraId ? 2 : 0) as any,
+          diskResolution: 24,
+          extruded: true,
+          pickable: true,
+          autoHighlight: true,
+          highlightColor: [255, 255, 255, 60],
+          updateTriggers: {
+            getElevation: [time],
+            getFillColor: [time, removalTimes],
+            getLineColor: [selectedInfraId],
+          },
+          onClick: (info: any) => info.object && onInfraClick(info.object),
+        })
+      );
+    }
+
     // One ScenegraphLayer per kind. Wind turbines spin (yaw animates with time).
-    const kinds: InfraKind[] = ["solar", "wind", "battery", "microgrid", "ev_charger"];
-    for (const kind of kinds) {
+    for (const kind of kindsList) {
       const items = infra.filter((i) => i.kind === kind && i.status !== "damaged");
       if (!items.length) continue;
       const spin = kind === "wind";
@@ -1043,6 +1134,34 @@ export function buildLayers(input: LayerInputs): Layer[] {
           getBackgroundColor: [selectedVoiceId],
           getBorderWidth: [selectedVoiceId],
         },
+      })
+    );
+  }
+
+  // ---- Manual Placement Spacing Preview Halo ----
+  if (placementHoverCoordinate && placementHoverKind) {
+    const clearance = INFRA_CLEARANCES[placementHoverKind] || 30;
+    const isColliding = infra.some((existing) => {
+      if (existing.status === "damaged") return false;
+      const dist = getHaversineDistance(placementHoverCoordinate, existing.position);
+      const reqDist = Math.max(clearance, INFRA_CLEARANCES[existing.kind] || 30);
+      return dist < reqDist;
+    });
+
+    out.push(
+      new ScatterplotLayer({
+        id: "placement-halo",
+        data: [{ position: placementHoverCoordinate, isColliding }],
+        getPosition: (d: any) => d.position,
+        getRadius: clearance,
+        radiusUnits: "meters",
+        filled: true,
+        stroked: true,
+        getFillColor: (d: any) => d.isColliding ? [239, 68, 68, 45] : [16, 185, 129, 45], // Pulsing red / translucent emerald green
+        getLineColor: (d: any) => d.isColliding ? [239, 68, 68, 200] : [16, 185, 129, 200],
+        lineWidthMinPixels: 2.5,
+        parameters: { depthTest: false } as any, // always draw on top of terrain
+        pickable: false,
       })
     );
   }
