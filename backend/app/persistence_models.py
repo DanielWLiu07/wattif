@@ -202,3 +202,23 @@ class CohortGenerateResponse(BaseModel):
     cohorts: list[CohortProfile]
     concerns: list[CohortConcern]
     datasets_used: int = 0
+
+
+class ProposalReportSection(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    title: str
+    markdown: str
+
+
+class ProposalReport(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    project_id: str
+    proposal_id: str
+    generated_at: str
+    markdown: str
+    html: str | None = None
+    sections: list[ProposalReportSection] = Field(default_factory=list)
+    has_operator_recommendation: bool = False

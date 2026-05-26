@@ -39,3 +39,28 @@ def get_run(run_id: str) -> dict[str, Any] | None:
     except Exception as exc:
         log.warning("get_run failed: %s", exc)
         raise
+
+
+def create_run(
+    *,
+    proposal_id: str | None = None,
+    mode: str | None = None,
+    provider: str | None = None,
+    output: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    row = {
+        "proposal_id": proposal_id,
+        "mode": mode,
+        "provider": provider,
+        "output": output or {},
+    }
+    try:
+        resp = table(TABLE).insert(row).execute()
+        if not resp.data:
+            raise RuntimeError("insert returned no rows")
+        return resp.data[0]
+    except PersistenceDisabledError:
+        raise
+    except Exception as exc:
+        log.warning("create_run failed: %s", exc)
+        raise

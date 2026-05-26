@@ -814,11 +814,15 @@ class PlannerChat:
         budget_cad: float,
         goal: str | None = None,
         dataset_context: str | None = None,
+        project_id: str | None = None,
+        proposal_id: str | None = None,
     ):
         self.world = world
         self.tools = PlannerTools(world, budget_cad)
         self.goal = goal
         self.dataset_context = dataset_context
+        self.project_id = project_id
+        self.proposal_id = proposal_id
         self.provider = config.llm_provider()
         self.pending_scenarios: list = []  # Scenario objects injected since last observation
         self.messages: list[dict] = []  # LLM conversation history
@@ -831,9 +835,37 @@ class PlannerChat:
         scns, self.pending_scenarios = self.pending_scenarios, []
         return scns
 
-    async def turn(self, user_message: str, confirm: ConfirmFn | None = None):
+    def sync_context(
+        self,
+        *,
+        project_id: str | None = None,
+        proposal_id: str | None = None,
+    ) -> None:
+        """Refresh planner context when project/proposal changes mid-session."""
+        from .cohort_context import build_planner_context
+
+        if project_id is not None:
+            self.project_id = project_id
+        if proposal_id is not None:
+            self.proposal_id = proposal_id
+        self.dataset_context = build_planner_context(
+            project_id=self.project_id, proposal_id=self.proposal_id
+        )
+
+    async def turn(
+        self,
+        user_message: str,
+        confirm: ConfirmFn | None = None,
+        intent: str | None = None,
+    ):
         """Run one planning turn for a user message, streaming events."""
+        from .concern_recommendations import is_concern_improvement_intent
+
         self.turn_count += 1
+        if is_concern_improvement_intent(user_message, intent):
+            async for ev in self._concern_recommendation_turn(user_message, confirm):
+                yield ev
+            return
         if self.provider in (None, "demo") or self.provider is None:
             async for ev in self._demo_turn(user_message, confirm):
                 yield ev
@@ -845,6 +877,141 @@ class PlannerChat:
                 log.warning("LLM chat turn failed (%s); using demo turn", exc)
                 async for ev in self._demo_turn(user_message, confirm):
                     yield ev
+
+    async def _concern_recommendation_turn(
+        self, user_message: str, confirm: ConfirmFn | None
+    ):
+        """Structured operator recommendations grounded in cohort concerns."""
+        from .cohort_context import (
+            fetch_concern_summaries,
+            fetch_proposal_infra_summary,
+        )
+        from .concern_recommendations import build_concern_recommendations
+        from .dataset_context import fetch_dataset_summaries
+
+        yield {
+            "type": "thought",
+            "text": (
+                "Operator mode: reviewing uploaded datasets, synthetic cohort concerns, "
+                "and current proposal infrastructure before recommending changes."
+            ),
+        }
+        await _sleep()
+
+        concerns = fetch_concern_summaries(
+            project_id=self.project_id, proposal_id=self.proposal_id
+        )
+        datasets = fetch_dataset_summaries(
+            project_id=self.project_id, proposal_id=self.proposal_id
+        )
+        proposal_infra = fetch_proposal_infra_summary(proposal_id=self.proposal_id)
+
+        yield {
+            "type": "tool_call",
+            "name": "get_metrics",
+            "args": {},
+        }
+        metrics = self.tools.execute("get_metrics", {})
+        yield {"type": "tool_result", "name": "get_metrics", "result": metrics}
+        await _sleep()
+
+        if not concerns:
+            yield {
+                "type": "thought",
+                "text": (
+                    "No cohort concerns found for this project/proposal — generate concerns "
+                    "from uploaded datasets before expecting grounded recommendations."
+                ),
+            }
+            await _sleep()
+
+        rec = build_concern_recommendations(
+            concerns=concerns,
+            dataset_summaries=datasets,
+            proposal_infra=proposal_infra,
+            tools=self.tools,
+            user_message=user_message,
+        )
+        yield {"type": "recommendation", "recommendation": rec}
+
+        placed = 0
+        if concerns and rec.get("optional_tool_actions"):
+            for action in rec.get("optional_tool_actions") or []:
+                if action.get("name") != "place_infrastructure":
+                    continue
+                args = action.get("args") or {}
+                yield {
+                    "type": "thought",
+                    "text": action.get("rationale")
+                    or f"Applying concern-aware {args.get('kind')} placement.",
+                }
+                yield {"type": "tool_call", "name": "place_infrastructure", "args": args}
+                if not await _maybe_confirm(
+                    {"name": "place_infrastructure", "args": args}, confirm
+                ):
+                    yield {
+                        "type": "tool_result",
+                        "name": "place_infrastructure",
+                        "result": {"rejected": True},
+                    }
+                    continue
+                pres = self.tools.execute("place_infrastructure", args)
+                yield {
+                    "type": "tool_result",
+                    "name": "place_infrastructure",
+                    "result": pres,
+                }
+                if "placed" in pres:
+                    placed += 1
+                    yield {"type": "placement", "infra": pres["placed"]}
+                await _sleep()
+
+        if placed:
+            yield {
+                "type": "tool_call",
+                "name": "run_simulation",
+                "args": {"ticks": 12},
+            }
+            sim = self.tools.execute("run_simulation", {"ticks": 12})
+            yield {"type": "tool_result", "name": "run_simulation", "result": sim}
+
+        from .concern_recommendations import refresh_recommendation_after_actions
+
+        rec = refresh_recommendation_after_actions(
+            rec,
+            proposal_infra=proposal_infra,
+            session_placements=self.tools.placements,
+            placed_count=placed,
+            remaining_budget=self.tools.remaining,
+        )
+
+        self._maybe_persist_recommendation(rec, user_message)
+
+        yield {
+            "type": "done",
+            "summary": rec.get("summary", "Concern-aware recommendations ready."),
+            "recommendation": rec,
+            "placements": self.tools.placements,
+            "spentCad": round(self.tools.spent, 2),
+        }
+
+    def _maybe_persist_recommendation(self, rec: dict, user_message: str) -> None:
+        if not self.proposal_id:
+            return
+        try:
+            from .db.repositories import planner_runs as runs_repo
+            from .db.repositories.base import PersistenceDisabledError
+
+            runs_repo.create_run(
+                proposal_id=self.proposal_id,
+                mode="concern_recommendation",
+                provider=self.provider or "demo",
+                output={"userMessage": user_message, "recommendation": rec},
+            )
+        except PersistenceDisabledError:
+            return
+        except Exception as exc:  # noqa: BLE001 — optional persistence
+            log.debug("planner recommendation persist skipped: %s", exc)
 
     # -- demo (keyless) turn --------------------------------------------
     def _react_observation(self):
@@ -1283,6 +1450,7 @@ async def run_planner(
 ) -> AsyncIterator[dict]:
     """Yield planner events. step mode uses `confirm` to gate mutating tools (WS only)."""
     from .cohort_context import build_planner_context, fetch_concern_summaries
+    from .concern_recommendations import is_concern_improvement_intent
 
     budget = budget_cad if budget_cad is not None else DEFAULT_BUDGET_CAD
     tools = PlannerTools(world, budget)
@@ -1308,6 +1476,19 @@ async def run_planner(
     }
 
     step_confirm = confirm if mode == "step" else None
+
+    if goal and is_concern_improvement_intent(goal):
+        chat = PlannerChat(
+            world,
+            budget,
+            goal=goal,
+            dataset_context=dataset_context,
+            project_id=project_id,
+            proposal_id=proposal_id,
+        )
+        async for ev in chat._concern_recommendation_turn(goal, step_confirm):
+            yield ev
+        return
 
     if provider is None:
         async for ev in _planner_lite(tools, goal, step_confirm):

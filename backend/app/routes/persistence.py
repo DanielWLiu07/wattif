@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from ..db.repositories.base import PersistenceDisabledError
 from ..db.repositories import (
@@ -24,9 +25,12 @@ from ..persistence_models import (
     ProposalCreate,
     ProposalInfrastructure,
     ProposalInfrastructureCreate,
+    ProposalReport,
+    ProposalReportSection,
     SimulationSnapshot,
     SimulationSnapshotCreate,
 )
+from ..report_generator import generate_proposal_report
 
 log = logging.getLogger("wattif.routes.persistence")
 
@@ -304,6 +308,46 @@ def get_latest_simulation_snapshot(proposal_id: str) -> SimulationSnapshot:
     except Exception as exc:
         log.warning("GET /api/proposals/%s/snapshots/latest failed: %s", proposal_id, exc)
         raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.get("/proposals/{proposal_id}/report", response_model=None)
+def get_proposal_report(
+    proposal_id: str,
+    format: str = Query(default="json", alias="format"),
+):
+    """Generate a deterministic decision memo for a proposal (Phase 10)."""
+    try:
+        payload = generate_proposal_report(proposal_id)
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except ValueError as exc:
+        code = str(exc)
+        if code == "proposal_not_found":
+            raise HTTPException(status_code=404, detail="Proposal not found") from exc
+        if code == "project_not_found":
+            raise HTTPException(status_code=404, detail="Project not found") from exc
+        raise HTTPException(status_code=400, detail=code) from exc
+    except Exception as exc:
+        log.warning("GET /api/proposals/%s/report failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Report generation failed") from exc
+
+    report = ProposalReport(
+        project_id=payload["projectId"],
+        proposal_id=payload["proposalId"],
+        generated_at=payload["generatedAt"],
+        markdown=payload["markdown"],
+        html=payload.get("html"),
+        sections=[ProposalReportSection(**s) for s in payload.get("sections") or []],
+        has_operator_recommendation=payload.get("hasOperatorRecommendation", False),
+    )
+    if format == "markdown":
+        return PlainTextResponse(
+            content=report.markdown,
+            media_type="text/markdown; charset=utf-8",
+        )
+    if format == "html":
+        return HTMLResponse(content=report.html or "", media_type="text/html; charset=utf-8")
+    return report
 
 
 @router.get("/assets/definitions", response_model=list[AssetDefinition])
