@@ -22,7 +22,7 @@ function Delta({ d, unit = "%" }: { d: number; unit?: string }) {
   const up = d > 0;
   return (
     <span
-      className={`ml-1 text-[9px] font-semibold ${up ? "text-emerald-400" : "text-red-400"}`}
+      className={`ml-1 text-[9px] font-semibold ${up ? "text-emerald-600" : "text-red-500"}`}
     >
       {up ? "▲" : "▼"}
       {Math.abs(d).toFixed(1)}
@@ -53,7 +53,7 @@ function MiniStats() {
     {
       label: "Approval",
       value: `${app.toFixed(0)}%`,
-      tint: "text-sky-300",
+      tint: "text-data-info",
       delta: appD,
     },
     {

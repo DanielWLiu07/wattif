@@ -595,7 +595,7 @@ export function MapView() {
       </div>
 
       {scenarioTargeting && (
-        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-yellow-400/50 bg-yellow-400/15 px-4 py-1.5 text-xs font-medium text-yellow-200">
+        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-yellow-500/50 bg-yellow-400/15 px-4 py-1.5 text-xs font-medium text-yellow-700">
           {targetZoneId ? (
             <>
               🎯 Targeting{" "}
@@ -611,7 +611,7 @@ export function MapView() {
       )}
 
       {regionCursorMode && (
-        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-emerald-400/50 bg-emerald-400/15 px-4 py-1.5 text-xs font-semibold text-emerald-200">
+        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-emerald-500/50 bg-emerald-400/15 px-4 py-1.5 text-xs font-semibold text-emerald-700">
           📍 Hover and click any neighborhood to simulate its region only · Esc to cancel
         </div>
       )}

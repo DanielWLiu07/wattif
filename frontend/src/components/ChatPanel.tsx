@@ -76,7 +76,7 @@ function Item({ item }: { item: ChatItem }) {
     );
   if (item.role === "system")
     return (
-      <div className="flex items-center gap-1.5 rounded-md border border-yellow-400/30 bg-yellow-400/10 px-2 py-1.5 text-[11px] text-yellow-100">
+      <div className="flex items-center gap-1.5 rounded-md border border-yellow-500/30 bg-yellow-400/10 px-2 py-1.5 text-[11px] text-yellow-700">
         <Zap className="h-3.5 w-3.5 shrink-0 text-yellow-400" />
         {item.text}
       </div>

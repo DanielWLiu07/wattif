@@ -937,13 +937,13 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getText: (d: any) =>
           `${d.delta > 0 ? "▲" : "▼"}${Math.abs(d.delta * 100).toFixed(0)}%`,
         getColor: (d: any) =>
-          (d.delta > 0 ? [52, 211, 153, 255] : [248, 113, 113, 255]) as any,
+          (d.delta > 0 ? [5, 150, 105, 255] : [220, 38, 38, 255]) as any,
         getSize: 15,
         sizeUnits: "pixels",
         fontWeight: 700,
         getPixelOffset: [0, 8],
         background: true,
-        getBackgroundColor: [10, 14, 26, 220],
+        getBackgroundColor: [255, 255, 255, 235],
         backgroundPadding: [4, 2, 4, 2],
         billboard: true,
         getTextAnchor: "middle",
@@ -981,16 +981,16 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getPosition: (d: any) => d.position,
         getText: (d: any) => d.text,
         getSize: (d: any) => (d.selected ? 15 : 12),
-        getColor: (d: any) => [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255] as any,
+        // Ink text on a solid white card → reads cleanly over the white map.
+        getColor: () => [15, 23, 42, 255] as any,
         getPixelOffset: [0, -30],
         background: true,
         getBackgroundColor: (d: any) =>
-          (d.selected ? [30, 41, 75, 245] : [10, 14, 26, 225]) as any,
+          (d.selected ? [255, 255, 255, 255] : [255, 255, 255, 235]) as any,
+        // Stance is carried by an always-on colored border (green/red/slate).
         getBorderColor: (d: any) =>
-          (d.selected
-            ? [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255]
-            : [0, 0, 0, 0]) as any,
-        getBorderWidth: (d: any) => (d.selected ? 1.5 : 0),
+          [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255] as any,
+        getBorderWidth: (d: any) => (d.selected ? 2 : 1),
         backgroundPadding: [7, 5, 7, 5],
         fontWeight: 600,
         sizeUnits: "pixels",

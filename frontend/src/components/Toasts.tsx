@@ -15,8 +15,8 @@ const ICON = {
 } as const;
 const TINT = {
   good: "border-primary/40 text-primary",
-  warn: "border-yellow-400/40 text-yellow-200",
-  bad: "border-red-400/40 text-red-300",
+  warn: "border-yellow-500/40 text-yellow-700",
+  bad: "border-red-400/40 text-red-600",
   info: "border-border text-foreground",
 } as const;
 

@@ -95,7 +95,7 @@ export function RecommendationImpact({
       <div className="grid grid-cols-3 gap-1.5">
         <div className="rounded-lg border border-border/60 bg-secondary/30 p-1.5">
           <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
-            <Users className="h-3 w-3 text-sky-300" /> served
+            <Users className="h-3 w-3 text-sky-600" /> served
           </div>
           <div className="mt-0.5 text-sm font-semibold num">
             ~{fmt(served)}

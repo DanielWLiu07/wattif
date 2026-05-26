@@ -47,7 +47,7 @@ export function ScenarioControls() {
           className={cn(
             "flex items-center justify-center gap-1.5 rounded-lg border px-2 py-1.5 text-[11px] transition-colors",
             !city
-              ? "border-yellow-400/60 bg-yellow-400/10 text-yellow-200"
+              ? "border-yellow-500/60 bg-yellow-400/10 text-yellow-700"
               : "border-border hover:bg-secondary"
           )}
         >
@@ -70,7 +70,7 @@ export function ScenarioControls() {
       </div>
 
       {targeting && (
-        <p className="flex items-center gap-1 rounded-md border border-yellow-400/40 bg-yellow-400/10 px-2 py-1.5 text-[11px] text-yellow-100">
+        <p className="flex items-center gap-1 rounded-md border border-yellow-500/40 bg-yellow-400/10 px-2 py-1.5 text-[11px] text-yellow-700">
           <Zap className="h-3 w-3 shrink-0" /> Crosshair active — click a
           neighbourhood to strike it. Esc to cancel.
         </p>

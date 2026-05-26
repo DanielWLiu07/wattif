@@ -14,27 +14,27 @@ export function ScenarioBanner() {
   const targetName = zones.find((z) => z.id === lastTargetZoneId)?.name;
 
   return (
-    <div className="pointer-events-auto mx-auto mt-1 flex w-fit max-w-[680px] items-center gap-3 rounded-full border border-yellow-400/40 bg-yellow-400/10 px-4 py-1.5">
+    <div className="pointer-events-auto mx-auto mt-1 flex w-fit max-w-[680px] items-center gap-3 rounded-full border border-yellow-500/50 bg-yellow-400/15 px-4 py-1.5">
       <span className="text-lg leading-none">{icon}</span>
       <div className="flex items-center gap-2 text-xs">
-        <AlertTriangle className="h-3.5 w-3.5 text-yellow-400" />
-        <b className="text-yellow-200">{active.label}</b>
+        <AlertTriangle className="h-3.5 w-3.5 text-yellow-600" />
+        <b className="text-yellow-800">{active.label}</b>
         {targetName ? (
-          <span className="rounded-full bg-yellow-400/20 px-2 py-0.5 text-[11px] text-yellow-100">
+          <span className="rounded-full bg-yellow-400/25 px-2 py-0.5 text-[11px] text-yellow-800">
             🎯 {targetName}
           </span>
         ) : (
-          <span className="rounded-full bg-yellow-400/10 px-2 py-0.5 text-[11px] text-yellow-100/80">
+          <span className="rounded-full bg-yellow-400/15 px-2 py-0.5 text-[11px] text-yellow-700">
             city-wide
           </span>
         )}
-        <span className="hidden max-w-[320px] truncate text-yellow-100/70 sm:inline">
+        <span className="hidden max-w-[320px] truncate text-yellow-700 sm:inline">
           {active.description}
         </span>
       </div>
       <button
         onClick={resetSession}
-        className="ml-1 rounded-full p-0.5 text-yellow-200/60 hover:bg-yellow-400/20 hover:text-yellow-100"
+        className="ml-1 rounded-full p-0.5 text-yellow-700/70 hover:bg-yellow-400/25 hover:text-yellow-900"
         aria-label="Clear scenario"
       >
         <X className="h-3.5 w-3.5" />
