@@ -162,6 +162,7 @@ class PlannerTools:
         self.budget_total = budget_cad
         self.spent = 0.0
         self.placements: list[dict] = []  # infra placed this run (camelCase dicts)
+        self.guard_intent: str | None = None
 
     @property
     def remaining(self) -> float:
@@ -184,6 +185,16 @@ class PlannerTools:
         )
 
     def execute(self, name: str, args: dict) -> dict:
+        from .planner_intent import allows_tool
+
+        if self.guard_intent is not None and not allows_tool(self.guard_intent, name):
+            return {
+                "blocked": True,
+                "error": (
+                    f"Tool '{name}' is not allowed for '{self.guard_intent}' intent. "
+                    "Only explicit placement requests may mutate infrastructure."
+                ),
+            }
         try:
             fn = getattr(self, f"_t_{name}", None)
             if fn is None:
@@ -330,13 +341,18 @@ def _system_prompt(
     dataset_context: str | None = None,
 ) -> str:
     base = (
-        "You are the WattIf siting planner for Toronto. Goal: maximize renewable coverage AND "
-        "equity (prioritize high energy-burden neighbourhoods) while staying within budget.\n"
+        "You are the WattIf planning copilot for Toronto. Reason broadly; act narrowly.\n"
+        "Answer project/planning questions directly from context when possible.\n"
+        "Uploaded existing infrastructure is read-only context — not proposed infrastructure.\n"
+        "Synthetic cohort concerns are synthetic, not real residents or public consultation.\n"
+        "Do NOT place, build, remove, launch programs, or auto-optimize-to-place unless the user "
+        "explicitly asks to place/build/add/auto-place infrastructure.\n"
+        "For recommendation questions, suggest actions first; wait for explicit placement "
+        "instruction before mutating the proposal.\n"
         f"Budget: {budget:,.0f} CAD. {('User goal: ' + goal) if goal else ''}\n"
-        "Workflow: inspect city state + metrics, call optimize for candidate sites, place a few "
-        "high-value installations (favor high-burden zones), run the simulation to verify gains, "
-        "and stop when the budget is mostly used or coverage/equity clearly improved. Keep your "
-        "thoughts to one short sentence before each tool call. Be decisive — don't loop."
+        "When explicitly asked to place infrastructure: inspect city state + metrics, call optimize "
+        "for candidate sites, place high-value installations (favor high-burden zones), optionally "
+        "run simulation to verify. Keep thoughts to one short sentence before each tool call."
     )
     if dataset_context:
         base += f"\n\n{dataset_context}"
@@ -859,27 +875,52 @@ class PlannerChat:
         intent: str | None = None,
     ):
         """Run one planning turn for a user message, streaming events."""
-        from .concern_recommendations import is_concern_improvement_intent
+        from .planner_copilot import (
+            is_copilot_intent,
+            run_copilot_turn,
+            run_recommendation_turn,
+        )
+        from .planner_intent import classify_planner_intent
 
         self.turn_count += 1
-        if is_concern_improvement_intent(user_message, intent):
-            async for ev in self._concern_recommendation_turn(user_message, confirm):
+        bucket = classify_planner_intent(user_message, intent)
+        self.tools.guard_intent = bucket
+
+        if is_copilot_intent(bucket):
+            async for ev in run_copilot_turn(bucket, self, user_message):
                 yield ev
             return
-        if self.provider in (None, "demo") or self.provider is None:
-            async for ev in self._demo_turn(user_message, confirm):
+
+        if bucket == "recommendation":
+            async for ev in run_recommendation_turn(self, user_message, confirm):
                 yield ev
-        else:
-            try:
-                async for ev in self._llm_turn(user_message, confirm):
+            return
+
+        if bucket == "explicit_placement":
+            self.tools.guard_intent = "explicit_placement"
+            parsed = parse_intent(user_message)
+            if parsed.get("program"):
+                async for ev in self._demo_program_turn(parsed, confirm):
                     yield ev
-            except Exception as exc:  # noqa: BLE001
-                log.warning("LLM chat turn failed (%s); using demo turn", exc)
+                return
+            if self.provider in (None, "demo") or self.provider is None:
                 async for ev in self._demo_turn(user_message, confirm):
                     yield ev
+            else:
+                try:
+                    async for ev in self._llm_turn(user_message, confirm):
+                        yield ev
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("LLM chat turn failed (%s); using demo turn", exc)
+                    async for ev in self._demo_turn(user_message, confirm):
+                        yield ev
+            return
+
+        async for ev in run_copilot_turn("general_wattif_question", self, user_message):
+            yield ev
 
     async def _concern_recommendation_turn(
-        self, user_message: str, confirm: ConfirmFn | None
+        self, user_message: str, confirm: ConfirmFn | None, auto_place: bool = True
     ):
         """Structured operator recommendations grounded in cohort concerns."""
         from .cohort_context import (
@@ -935,7 +976,7 @@ class PlannerChat:
         yield {"type": "recommendation", "recommendation": rec}
 
         placed = 0
-        if concerns and rec.get("optional_tool_actions"):
+        if auto_place and concerns and rec.get("optional_tool_actions"):
             for action in rec.get("optional_tool_actions") or []:
                 if action.get("name") != "place_infrastructure":
                     continue
@@ -1450,7 +1491,6 @@ async def run_planner(
 ) -> AsyncIterator[dict]:
     """Yield planner events. step mode uses `confirm` to gate mutating tools (WS only)."""
     from .cohort_context import build_planner_context, fetch_concern_summaries
-    from .concern_recommendations import is_concern_improvement_intent
 
     budget = budget_cad if budget_cad is not None else DEFAULT_BUDGET_CAD
     tools = PlannerTools(world, budget)
@@ -1477,7 +1517,7 @@ async def run_planner(
 
     step_confirm = confirm if mode == "step" else None
 
-    if goal and is_concern_improvement_intent(goal):
+    if goal:
         chat = PlannerChat(
             world,
             budget,
@@ -1486,7 +1526,7 @@ async def run_planner(
             project_id=project_id,
             proposal_id=proposal_id,
         )
-        async for ev in chat._concern_recommendation_turn(goal, step_confirm):
+        async for ev in chat.turn(goal, step_confirm):
             yield ev
         return
 
