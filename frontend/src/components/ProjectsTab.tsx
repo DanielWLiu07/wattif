@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, Database, FolderPlus, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SnapshotCompare, SnapshotHistory } from "@/components/SnapshotCompare";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 
@@ -13,15 +14,14 @@ export function ProjectsTab() {
   const selectedProjectId = useStore((s) => s.selectedProjectId);
   const selectedProposalId = useStore((s) => s.selectedProposalId);
   const proposalInfrastructure = useStore((s) => s.proposalInfrastructure);
-  const latestSnapshot = useStore((s) => s.latestSnapshot);
   const persistenceMode = useStore((s) => s.persistenceMode);
   const persistenceLoading = useStore((s) => s.persistenceLoading);
   const persistenceError = useStore((s) => s.persistenceError);
+  const restoringSnapshot = useStore((s) => s.restoringSnapshot);
   const createProject = useStore((s) => s.createProject);
   const selectProject = useStore((s) => s.selectProject);
   const createProposal = useStore((s) => s.createProposal);
   const selectProposal = useStore((s) => s.selectProposal);
-  const saveSnapshot = useStore((s) => s.saveSnapshot);
 
   const [projectName, setProjectName] = useState("");
   const [proposalName, setProposalName] = useState("");
@@ -67,6 +67,9 @@ export function ProjectsTab() {
           </div>
           {persistenceLoading && (
             <span className="text-[10px] text-muted-foreground">Loading...</span>
+          )}
+          {restoringSnapshot && (
+            <span className="text-[10px] text-muted-foreground">Restoring...</span>
           )}
         </div>
         <form
@@ -164,31 +167,9 @@ export function ProjectsTab() {
       </section>
 
       {selectedProposalId && (
-        <section className="space-y-2">
-          <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5">
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <div className="text-xs font-medium">Simulation snapshot</div>
-              <Button
-                size="sm"
-                className="h-7"
-                disabled={!supabaseActive || !selectedProposalId}
-                onClick={() => void saveSnapshot()}
-              >
-                <Save className="h-3.5 w-3.5" />
-                Save
-              </Button>
-            </div>
-            {latestSnapshot ? (
-              <p className="text-[11px] text-muted-foreground">
-                Latest saved tick {latestSnapshot.tick}
-                {latestSnapshot.createdAt ? ` at ${latestSnapshot.createdAt}` : ""}
-              </p>
-            ) : (
-              <p className="text-[11px] text-muted-foreground">
-                No snapshot saved yet for this proposal.
-              </p>
-            )}
-          </div>
+        <section className="space-y-3">
+          <SnapshotHistory />
+          <SnapshotCompare />
 
           <div className="flex items-center justify-between">
             <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
