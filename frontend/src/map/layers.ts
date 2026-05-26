@@ -838,28 +838,30 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getPosition: (i: Infra) => i.position,
         getFillColor: (i: Infra) => {
           const fade = removalTimes[i.id] ? infraScale(i.id) : 1;
-          if (i.status === "damaged") return [120, 40, 40, 200 * fade] as any;
-          const a = (i.status === "active" ? 200 : 110) * fade;
+          // Pulse lives in the alpha now (not elevation) so battery/microgrid
+          // halos still "breathe" without a 3D column poking behind buildings.
+          const breathe =
+            i.kind === "battery" || i.kind === "microgrid" ? 0.7 + 0.3 * pulse : 1;
+          if (i.status === "damaged") return [120, 40, 40, 190 * fade] as any;
+          const a = (i.status === "active" ? 150 : 90) * fade * breathe;
           return [...INFRA_COLOR[i.kind], a] as any;
         },
-        getElevation: (i: Infra) => {
-          const base = 40;
-          if (i.kind === "battery" || i.kind === "microgrid")
-            return base + pulse * 60;
-          return base;
-        },
-        radius: 75,
+        getElevation: 0,
+        radius: 60,
         stroked: true,
         getLineColor: (i: Infra) =>
-          (i.id === selectedInfraId ? [15, 23, 42, 255] : [15, 23, 42, 90]) as any,
+          (i.id === selectedInfraId ? [15, 23, 42, 255] : [15, 23, 42, 70]) as any,
         lineWidthMinPixels: (selectedInfraId ? 2 : 0) as any,
-        diskResolution: 24,
-        extruded: true,
+        diskResolution: 28,
+        // Flat ground halo (not an extruded column) drawn on top of the basemap
+        // in the ground band → never clips through / behind 3D buildings.
+        extruded: false,
+        getPolygonOffset: groundOffset,
+        parameters: { depthTest: false } as any,
         pickable: true,
         autoHighlight: true,
         highlightColor: [15, 23, 42, 60],
         updateTriggers: {
-          getElevation: [time],
           getFillColor: [time, removalTimes],
           getLineColor: [selectedInfraId],
         },

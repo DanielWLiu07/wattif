@@ -86,8 +86,24 @@ function RoadProgress({
 }) {
   const station = stationFromProgress(progress);
 
+  // Even-space the dots (thresholds are uneven: 0/.25/.55/.86, which looks
+  // left-shifted) and align the fill to that even spacing so it reads centered.
+  const N = STATION_THRESHOLDS.length;
+  const evenPos = (i: number) => (i / (N - 1)) * 100;
+  let fill = 100;
+  for (let i = 0; i < N; i++) {
+    const lo = STATION_THRESHOLDS[i];
+    const hi = STATION_THRESHOLDS[i + 1] ?? 1;
+    if (progress < hi) {
+      const frac = hi > lo ? (progress - lo) / (hi - lo) : 0;
+      fill = ((i + Math.max(0, Math.min(1, frac))) / (N - 1)) * 100;
+      break;
+    }
+  }
+  fill = Math.min(100, fill);
+
   return (
-    <div className="fixed bottom-7 left-1/2 z-[85] -translate-x-1/2 flex flex-col items-center gap-2.5">
+    <div className="fixed top-6 left-1/2 z-[85] -translate-x-1/2 flex flex-col items-center gap-2.5">
       {/* Label re-mounts on station change → CSS animation fires */}
       <span
         key={station}
@@ -105,9 +121,9 @@ function RoadProgress({
           <div
             className="absolute left-0 h-full rounded-full"
             style={{
-              width: `${progress * 100}%`,
+              width: `${fill}%`,
               background: "hsl(var(--brand))",
-              transition: "width 0.06s linear",
+              transition: "width 0.12s ease-out",
             }}
           />
           {STATION_THRESHOLDS.map((threshold, i) => {
@@ -118,7 +134,7 @@ function RoadProgress({
                 onClick={() => onDotClick(i)}
                 aria-label={STATION_LABELS[i]}
                 className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2"
-                style={{ left: `${threshold * 100}%` }}
+                style={{ left: `${evenPos(i)}%` }}
               >
                 <span
                   className="block rounded-full"
@@ -296,7 +312,7 @@ export function Landing() {
         {/* ── Scroll hint ──────────────────────────────────────────────── */}
         {!EDIT_MODE && station === 0 && (
           <div
-            className="pointer-events-none fixed bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            className="pointer-events-none fixed top-[76px] left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
             style={{ color: "hsl(var(--muted-foreground) / 0.5)", zIndex: 85 }}
           >
             <span className="font-mono text-[10px] tracking-widest uppercase">Scroll to explore</span>
