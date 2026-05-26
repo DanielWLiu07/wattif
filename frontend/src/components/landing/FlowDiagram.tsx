@@ -4,44 +4,7 @@ interface FlowDiagramProps {
   visible: boolean;
 }
 
-const NODES = [
-  {
-    label: "City Data",
-    stat: "419,582",
-    unit: "buildings mapped",
-    Icon: Buildings,
-    iconColor: "#60a5fa",
-    iconBg: "rgba(59,130,246,0.12)",
-    iconBorder: "rgba(59,130,246,0.3)",
-  },
-  {
-    label: "Simulated Agents",
-    stat: "8,001",
-    unit: "residents modelled",
-    Icon: Users,
-    iconColor: "#a78bfa",
-    iconBg: "rgba(139,92,246,0.12)",
-    iconBorder: "rgba(139,92,246,0.3)",
-  },
-  {
-    label: "AI Planner",
-    stat: "583",
-    unit: "sites analyzed",
-    Icon: Cpu,
-    iconColor: "hsl(72 95% 45%)",
-    iconBg: "hsl(72 95% 50% / 0.12)",
-    iconBorder: "hsl(72 95% 50% / 0.4)",
-  },
-  {
-    label: "Sited Infrastructure",
-    stat: "182",
-    unit: "assets placed",
-    Icon: Lightning,
-    iconColor: "#34d399",
-    iconBg: "rgba(16,185,129,0.12)",
-    iconBorder: "rgba(16,185,129,0.3)",
-  },
-] as const;
+const GRID_H = 340; // 170px per row
 
 const CHIPS = [
   { label: "Solar",    Icon: Sun,            color: "#fbbf24" },
@@ -50,208 +13,209 @@ const CHIPS = [
   { label: "Microgrid",Icon: Broadcast,      color: "hsl(72 95% 50%)" },
 ] as const;
 
-function Connector({ index, visible }: { index: number; visible: boolean }) {
-  const delay = index * 180 + 200;
-  return (
-    <div
-      style={{
-        flex: 1,
-        alignSelf: "flex-start",
-        marginTop: 31, // vertically center against the 64px icon
-        position: "relative",
-        height: 2,
-      }}
-    >
-      {/* Line draw-in */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "hsl(var(--foreground) / 0.1)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          background: "hsl(72 95% 50% / 0.55)",
-          transformOrigin: "left",
-          transform: visible ? "scaleX(1)" : "scaleX(0)",
-          transition: `transform 0.5s ease ${delay}ms`,
-        }}
-      />
-      {/* Traveling volt pulse dot */}
-      <div
-        style={{
-          position: "absolute",
-          width: 7,
-          height: 7,
-          borderRadius: "50%",
-          background: "hsl(72 95% 50%)",
-          top: -2.5,
-          boxShadow: "0 0 8px 3px hsl(72 95% 50% / 0.5)",
-          animation: visible
-            ? `pulseDot 1.8s ease-in-out ${delay + 500}ms infinite`
-            : "none",
-        }}
-      />
-    </div>
-  );
-}
-
 export function FlowDiagram({ visible }: FlowDiagramProps) {
-  const vis = (delay: number) => ({
+  const slide = (from: string, delay: number): React.CSSProperties => ({
     opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(9px)",
-    transition: "opacity 0.42s ease, transform 0.42s ease",
-    transitionDelay: visible ? `${delay}ms` : "0ms",
+    transform: visible ? "none" : from,
+    transition: `opacity 0.5s ease ${delay}ms, transform 0.58s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms`,
   });
 
   return (
-    <>
-      <style>{`
-        @keyframes pulseDot {
-          0%   { left: 5%;  opacity: 0;   }
-          12%  {            opacity: 1;   }
-          88%  {            opacity: 1;   }
-          100% { left: 92%; opacity: 0;   }
-        }
-      `}</style>
-
+    <div
+      className="pointer-events-none absolute top-0 left-0 flex h-full w-full flex-col items-start justify-center px-16"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1)" : "scale(0.985)",
+        filter: visible ? "blur(0px)" : "blur(3px)",
+        transition: "opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease",
+        willChange: "opacity, transform, filter",
+      }}
+    >
+      {/* Header */}
       <div
-        className="pointer-events-none absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center px-16"
+        className="mb-7"
         style={{
           opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.97)",
-          filter: visible ? "blur(0px)" : "blur(3px)",
-          transition: "opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease",
-          willChange: "opacity, transform, filter",
+          transform: visible ? "none" : "translateY(8px)",
+          transition: "opacity 0.42s ease, transform 0.42s ease",
         }}
       >
-        {/* Header */}
-        <div className="mb-12 flex flex-col items-center gap-3" style={vis(0)}>
-          <span className="label" style={{ color: "hsl(var(--brand))" }}>
-            How WattIf Works
-          </span>
-          <h2
-            className="font-display font-bold leading-tight text-foreground text-center"
-            style={{ fontSize: "clamp(2rem, 3vw, 2.75rem)", letterSpacing: "-0.02em" }}
-          >
-            An AI that sites the grid —{" "}
-            <span style={{ color: "hsl(var(--brand))" }}>live.</span>
-          </h2>
+        <span className="label" style={{ color: "hsl(var(--brand))", display: "block", marginBottom: "0.4rem" }}>
+          How WattIf Works
+        </span>
+        <h2
+          className="font-display font-bold leading-tight text-foreground"
+          style={{ fontSize: "clamp(1.8rem, 2.4vw, 2.5rem)", letterSpacing: "-0.025em" }}
+        >
+          An AI that sites the grid —{" "}
+          <span style={{ color: "hsl(var(--brand))" }}>live.</span>
+        </h2>
+      </div>
+
+      {/* ── Typographic 2×2 number composition ── */}
+      <div
+        style={{
+          position: "relative",
+          display: "grid",
+          gridTemplateColumns: "44% 56%",
+          gridTemplateRows: `${GRID_H / 2}px ${GRID_H / 2}px`,
+          width: "100%",
+          height: GRID_H,
+        }}
+      >
+        {/* Hairline cross — vertical */}
+        <div aria-hidden style={{
+          position: "absolute", top: 0, bottom: 0, left: "44%", width: 1,
+          background: "hsl(var(--foreground) / 0.07)", pointerEvents: "none", zIndex: 1,
+        }} />
+        {/* Hairline cross — horizontal */}
+        <div aria-hidden style={{
+          position: "absolute", left: 0, right: 0, top: "50%", height: 1,
+          background: "hsl(var(--foreground) / 0.07)", pointerEvents: "none", zIndex: 1,
+        }} />
+
+        {/* ── 01 City Data — top-left ── */}
+        <div
+          style={{
+            gridColumn: 1, gridRow: 1,
+            display: "flex", flexDirection: "column", justifyContent: "center",
+            padding: "0 32px 0 0",
+            ...slide("translate(-52px,-32px)", 40),
+          }}
+        >
+          <div style={{
+            fontFamily: "monospace", fontSize: 9, fontWeight: 600,
+            letterSpacing: "0.12em", textTransform: "uppercase",
+            color: "hsl(var(--foreground) / 0.3)",
+            display: "flex", alignItems: "center", gap: 6, marginBottom: 8,
+          }}>
+            <Buildings size={11} color="#60a5fa" weight="bold" />
+            01 · City Data
+          </div>
+          <div style={{
+            fontFamily: "monospace", fontSize: "4.5rem", fontWeight: 800,
+            lineHeight: 0.88, letterSpacing: "-0.03em",
+            color: "hsl(var(--foreground))",
+          }}>
+            419,582
+          </div>
+          <div style={{ fontSize: 11, color: "hsl(var(--foreground) / 0.38)", marginTop: 9, fontFamily: "monospace" }}>
+            buildings mapped
+          </div>
         </div>
 
-        {/* Flow row */}
+        {/* ── 04 Sited Infrastructure — top-right, HERO ── */}
         <div
-          className="flex w-full items-start"
-          style={{ maxWidth: 960, ...vis(80) }}
+          style={{
+            gridColumn: 2, gridRow: 1,
+            display: "flex", flexDirection: "column", justifyContent: "center",
+            padding: "0 0 0 40px",
+            ...slide("translate(52px,-32px)", 280),
+          }}
         >
-          {NODES.map((node, i) => (
-            <div key={node.label} className="flex items-start" style={{ flex: 1 }}>
-              {/* Node */}
-              <div
-                className="flex flex-col items-center gap-3"
-                style={{ flex: "0 0 auto", width: 140 }}
-              >
-                {/* Icon circle */}
-                <div
-                  style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: "50%",
-                    background: node.iconBg,
-                    border: `1.5px solid ${node.iconBorder}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "scale(1)" : "scale(0.8)",
-                    transition: `opacity 0.4s ease ${i * 180 + 100}ms, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) ${i * 180 + 100}ms`,
-                  }}
-                >
-                  <node.Icon size={28} color={node.iconColor} weight="duotone" />
-                </div>
+          <div style={{
+            fontFamily: "monospace", fontSize: 9, fontWeight: 600,
+            letterSpacing: "0.12em", textTransform: "uppercase",
+            color: "hsl(var(--foreground) / 0.3)",
+            display: "flex", alignItems: "center", gap: 6, marginBottom: 8,
+          }}>
+            <Lightning size={11} color="#34d399" weight="bold" />
+            04 · Sited Infrastructure
+          </div>
+          {/* Hero number in volt */}
+          <div style={{
+            fontFamily: "monospace", fontSize: "8rem", fontWeight: 900,
+            lineHeight: 0.85, letterSpacing: "-0.05em",
+            color: "hsl(var(--brand))",
+          }}>
+            182
+          </div>
+          <div style={{ fontSize: 12, color: "hsl(var(--foreground) / 0.38)", marginTop: 10, fontFamily: "monospace" }}>
+            clean-energy assets placed
+          </div>
+        </div>
 
-                {/* Text */}
-                <div
-                  className="flex flex-col items-center gap-1 text-center"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "translateY(0)" : "translateY(5px)",
-                    transition: `opacity 0.4s ease ${i * 180 + 220}ms, transform 0.4s ease ${i * 180 + 220}ms`,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 10,
-                      fontFamily: "monospace",
-                      fontWeight: 600,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      color: "hsl(var(--foreground) / 0.45)",
-                    }}
-                  >
-                    {node.label}
-                  </span>
-                  <span
-                    className="font-mono font-semibold text-foreground"
-                    style={{ fontSize: "1.75rem", lineHeight: 1 }}
-                  >
-                    {node.stat}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "hsl(var(--foreground) / 0.45)",
-                    }}
-                  >
-                    {node.unit}
-                  </span>
-                </div>
+        {/* ── 02 Simulated Agents — bottom-left ── */}
+        <div
+          style={{
+            gridColumn: 1, gridRow: 2,
+            display: "flex", flexDirection: "column", justifyContent: "center",
+            padding: "0 32px 0 0",
+            ...slide("translate(-52px,32px)", 120),
+          }}
+        >
+          <div style={{
+            fontFamily: "monospace", fontSize: "3.9rem", fontWeight: 800,
+            lineHeight: 0.88, letterSpacing: "-0.03em",
+            color: "hsl(var(--foreground))",
+          }}>
+            8,001
+          </div>
+          <div style={{
+            fontSize: 11, color: "hsl(var(--foreground) / 0.38)", marginTop: 9, fontFamily: "monospace",
+            display: "flex", alignItems: "center", gap: 6,
+          }}>
+            <Users size={11} color="#a78bfa" weight="bold" />
+            02 · Simulated Agents · residents modelled
+          </div>
+        </div>
 
-                {/* Chips — only on last node */}
-                {i === NODES.length - 1 && (
-                  <div
-                    className="mt-3 flex flex-wrap justify-center gap-2"
-                    style={{
-                      opacity: visible ? 1 : 0,
-                      transition: `opacity 0.4s ease ${i * 180 + 480}ms`,
-                    }}
-                  >
-                    {CHIPS.map(({ label, Icon, color }) => (
-                      <div
-                        key={label}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 4,
-                          padding: "4px 10px",
-                          borderRadius: 999,
-                          border: `1px solid ${color}55`,
-                          background: `${color}12`,
-                          fontSize: 11,
-                          fontFamily: "monospace",
-                          color,
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <Icon size={12} weight="bold" color={color} />
-                        {label}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Connector — after every node except the last */}
-              {i < NODES.length - 1 && <Connector index={i} visible={visible} />}
-            </div>
-          ))}
+        {/* ── 03 AI Planner — bottom-right ── */}
+        <div
+          style={{
+            gridColumn: 2, gridRow: 2,
+            display: "flex", flexDirection: "column", justifyContent: "center",
+            padding: "0 0 0 40px",
+            ...slide("translate(52px,32px)", 200),
+          }}
+        >
+          <div style={{
+            fontFamily: "monospace", fontSize: "5.2rem", fontWeight: 800,
+            lineHeight: 0.88, letterSpacing: "-0.04em",
+            color: "hsl(var(--foreground))",
+          }}>
+            583
+          </div>
+          <div style={{
+            fontSize: 11, color: "hsl(var(--foreground) / 0.38)", marginTop: 9, fontFamily: "monospace",
+            display: "flex", alignItems: "center", gap: 6,
+          }}>
+            <Cpu size={11} color="hsl(72 95% 42%)" weight="bold" />
+            03 · AI Planner · sites analyzed
+          </div>
         </div>
       </div>
-    </>
+
+      {/* ── Infra chips — woven below "182", aligned to right column ── */}
+      <div
+        style={{
+          display: "flex", gap: 8, marginTop: 16,
+          paddingLeft: "44%",
+          paddingRight: 0,
+          flexWrap: "wrap",
+        }}
+      >
+        {CHIPS.map(({ label, Icon, color }, i) => (
+          <div
+            key={label}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "6px 12px",
+              border: `1px solid ${color}50`,
+              borderRadius: 3,
+              background: `${color}0d`,
+              fontSize: 11, fontFamily: "monospace", fontWeight: 600,
+              color,
+              opacity: visible ? 1 : 0,
+              transform: visible ? "none" : "scale(0.85)",
+              transition: `opacity 0.38s ease ${360 + i * 55}ms, transform 0.42s cubic-bezier(0.34,1.56,0.64,1) ${360 + i * 55}ms`,
+            }}
+          >
+            <Icon size={12} color={color} weight="bold" />
+            {label}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

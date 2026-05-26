@@ -323,6 +323,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             animation: "dotGridDrift 22s linear infinite",
           }} />
 
+          {/* Centre glow */}
           <div aria-hidden style={{
             position: "absolute", top: "50%", left: "55%",
             transform: "translate(-50%, -50%)",
@@ -332,8 +333,24 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             animation: "voltGlowBreathe 5s ease-in-out infinite",
             pointerEvents: "none",
           }} />
+          {/* Left margin ambient glow */}
+          <div aria-hidden style={{
+            position: "absolute", top: "50%", left: 0,
+            transform: "translateY(-50%)",
+            width: 260, height: 420,
+            background: "radial-gradient(ellipse at left center, hsl(72 95% 50% / 0.07) 0%, transparent 72%)",
+            pointerEvents: "none",
+          }} />
+          {/* Right margin ambient glow */}
+          <div aria-hidden style={{
+            position: "absolute", top: "50%", right: 0,
+            transform: "translateY(-50%)",
+            width: 260, height: 420,
+            background: "radial-gradient(ellipse at right center, hsl(72 95% 50% / 0.07) 0%, transparent 72%)",
+            pointerEvents: "none",
+          }} />
 
-          <div style={{ position: "relative", width: "min(840px, 90%)", aspectRatio: `${SVG_W} / ${SVG_H}` }}>
+          <div style={{ position: "relative", width: "min(1060px, 96%)", aspectRatio: `${SVG_W} / ${SVG_H}` }}>
             <svg
               viewBox={`0 0 ${SVG_W} ${SVG_H}`}
               width="100%" height="100%"

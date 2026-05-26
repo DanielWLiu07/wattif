@@ -6,8 +6,8 @@ const THRESHOLD = 0.6;
 // Bars fill the right column: 140 × (BAR_W + BAR_GAP) ≈ 945 px at 1440 wide screen
 const BAR_W   = 6;
 const BAR_GAP = 0.8;
-const CHART_H    = 300;
-const MAX_BAR_H  = 260;
+const CHART_H    = 390;
+const MAX_BAR_H  = 345;
 
 type ZoneEntry = { id: string; demographics: { energyBurdenIndex: number } };
 
