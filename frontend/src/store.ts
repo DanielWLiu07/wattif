@@ -24,6 +24,8 @@ import type {
   SimMetrics,
   SimulationSnapshot,
   SitingPriorityZone,
+  UploadedDataset,
+  UploadedDatasetSummary,
   Zone,
 } from "@/types";
 import {
@@ -203,7 +205,16 @@ type State = {
   persistenceMode: PersistenceMode;
   persistenceLoading: boolean;
   persistenceError: string | null;
+  datasets: UploadedDataset[];
+  selectedDatasetId: string | null;
+  datasetSummaries: UploadedDatasetSummary[];
+  datasetUploading: boolean;
+  datasetError: string | null;
   loadProjects: () => Promise<void>;
+  loadDatasets: () => Promise<void>;
+  uploadDataset: (file: File, datasetType?: string) => Promise<void>;
+  selectDataset: (datasetId: string | null) => void;
+  deleteDataset: (datasetId: string) => Promise<void>;
   createProject: (name: string) => Promise<void>;
   selectProject: (projectId: string | null) => Promise<void>;
   createProposal: (name: string) => Promise<void>;
@@ -510,6 +521,8 @@ function attachSession(
         position: f.position,
         name: f.name,
       })),
+    projectIdProvider: () => get().selectedProjectId,
+    proposalIdProvider: () => get().selectedProposalId,
     onEvent: handleEvent,
     onStatus: (open) => set({ chatConnected: open }),
     onBusy: (busy) =>
@@ -664,6 +677,97 @@ export const useStore = create<State>((set, get) => ({
   persistenceMode: "memory",
   persistenceLoading: false,
   persistenceError: null,
+  datasets: [],
+  selectedDatasetId: null,
+  datasetSummaries: [],
+  datasetUploading: false,
+  datasetError: null,
+
+  loadDatasets: async () => {
+    const { selectedProjectId, selectedProposalId, backendHealth } = get();
+    if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
+      set({ datasets: [], datasetSummaries: [], datasetError: null });
+      return;
+    }
+    const merged = new Map<string, UploadedDataset>();
+    const projectRes = await api.listProjectDatasets(selectedProjectId);
+    if (!projectRes.ok) {
+      set({
+        datasets: [],
+        datasetSummaries: [],
+        datasetError: projectRes.unavailable
+          ? "Supabase persistence is not configured"
+          : projectRes.error ?? "Could not load datasets",
+      });
+      return;
+    }
+    for (const d of projectRes.data) merged.set(d.id, d);
+    if (selectedProposalId) {
+      const propRes = await api.listProposalDatasets(selectedProposalId);
+      if (propRes.ok) {
+        for (const d of propRes.data) merged.set(d.id, d);
+      }
+    }
+    const ctxRes = await api.getProjectDatasetContext(selectedProjectId);
+    set({
+      datasets: [...merged.values()],
+      datasetSummaries: ctxRes.ok ? ctxRes.data : [],
+      datasetError: null,
+      selectedDatasetId: get().selectedDatasetId,
+    });
+  },
+
+  uploadDataset: async (file, datasetType) => {
+    const { selectedProjectId, selectedProposalId } = get();
+    if (!selectedProjectId && !selectedProposalId) {
+      get().pushToast("Select a project first", "warn");
+      return;
+    }
+    set({ datasetUploading: true, datasetError: null });
+    const res = await api.uploadDataset({
+      file,
+      projectId: selectedProjectId,
+      proposalId: selectedProposalId,
+      datasetType,
+    });
+    if (!res.ok) {
+      set({
+        datasetUploading: false,
+        datasetError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Upload failed",
+      });
+      get().pushToast(res.error ?? "Upload failed", "warn");
+      return;
+    }
+    set((s) => ({
+      datasets: [res.data, ...s.datasets.filter((d) => d.id !== res.data.id)],
+      selectedDatasetId: res.data.id,
+      datasetUploading: false,
+    }));
+    await get().loadDatasets();
+    get().pushToast(`Uploaded ${res.data.name} (${res.data.datasetType})`, "good");
+  },
+
+  selectDataset: (datasetId) => set({ selectedDatasetId: datasetId }),
+
+  deleteDataset: async (datasetId) => {
+    const res = await api.deleteDataset(datasetId);
+    if (!res.ok) {
+      set({
+        datasetError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Delete failed",
+      });
+      return;
+    }
+    set((s) => ({
+      datasets: s.datasets.filter((d) => d.id !== datasetId),
+      selectedDatasetId:
+        s.selectedDatasetId === datasetId ? null : s.selectedDatasetId,
+    }));
+    await get().loadDatasets();
+  },
 
   loadProjects: async () => {
     const health = get().backendHealth;
@@ -695,6 +799,8 @@ export const useStore = create<State>((set, get) => ({
           proposals.some((proposal) => proposal.id === selectedProposalId)
         ) {
           void get().selectProposal(selectedProposalId);
+        } else {
+          void get().loadDatasets();
         }
       }
     }
@@ -729,8 +835,12 @@ export const useStore = create<State>((set, get) => ({
       latestSnapshot: null,
       compareSnapshotId: null,
       persistedInfraIds: {},
+      datasets: [],
+      selectedDatasetId: null,
+      datasetSummaries: [],
       persistenceMode: persistenceModeFor(get().backendHealth, null),
       persistenceError: null,
+      datasetError: null,
     });
     if (!projectId || get().backendHealth?.persistenceProvider !== "supabase") return;
     set({ persistenceLoading: true });
@@ -740,6 +850,7 @@ export const useStore = create<State>((set, get) => ({
       return;
     }
     set({ proposals, persistenceLoading: false });
+    void get().loadDatasets();
   },
 
   createProposal: async (name) => {
@@ -820,6 +931,7 @@ export const useStore = create<State>((set, get) => ({
     await get().refreshSentiment();
     await get().refreshFlows();
     void get().refreshSitingPriority();
+    void get().loadDatasets();
   },
 
   saveSnapshot: async () => {

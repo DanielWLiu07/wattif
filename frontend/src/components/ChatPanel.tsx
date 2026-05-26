@@ -95,6 +95,7 @@ export function ChatPanel() {
   const chatBusy = useStore((s) => s.chatBusy);
   const chatAwaiting = useStore((s) => s.chatAwaiting);
   const chatConnected = useStore((s) => s.chatConnected);
+  const datasetSummaries = useStore((s) => s.datasetSummaries);
   const sendChat = useStore((s) => s.sendChat);
   const clearChat = useStore((s) => s.clearChat);
   const approveStep = useStore((s) => s.approveStep);
@@ -140,6 +141,18 @@ export function ChatPanel() {
           )}
         </div>
       </div>
+
+      {datasetSummaries.length > 0 && (
+        <div className="border-b border-border/60 bg-secondary/20 px-3 py-1.5 text-[10px] text-muted-foreground">
+          Planner context: {datasetSummaries.length} uploaded dataset
+          {datasetSummaries.length === 1 ? "" : "s"} (
+          {datasetSummaries
+            .slice(0, 3)
+            .map((d) => d.datasetType.replace(/_/g, " "))
+            .join(", ")}
+          ) — simulation unchanged.
+        </div>
+      )}
 
       <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-3">
         {chat.length === 0 && (

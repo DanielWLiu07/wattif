@@ -103,6 +103,57 @@ array stores compact live infra state: `id`, `kind`, `position`, `capacityKw`,
 - **Comparison** reads stored `metrics` from a selected snapshot vs current live
   `SimMetrics` (coverage, approval, equity, emissions, grid load, cost).
 
+## UploadedDataset (Phase 7)
+
+Project/proposal-scoped dataset registry. Stores metadata and preview rows/features only — not full uploaded file bytes.
+
+```ts
+type UploadedDataset = {
+  id: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  name: string;
+  datasetType:
+    | "ev_chargers"
+    | "ev_sentiment"
+    | "energy_demand"
+    | "weather_risk"
+    | "grid_infrastructure"
+    | "demographic"
+    | "zoning_constraints"
+    | "public_feedback"
+    | "generic";
+  fileType?: "csv" | "json" | "geojson" | null;
+  rowCount?: number | null;
+  featureCount?: number | null;
+  columns: string[];
+  preview: Record<string, unknown>[];
+  metadata: Record<string, unknown>; // includes detectedType, geometryTypes, originalFilename
+  createdAt?: string | null;
+  uploadedAt?: string | null;
+};
+```
+
+### Phase 7 API routes
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/api/datasets/upload` | Multipart upload (`file`, `projectId`, `proposalId`, optional `datasetType`) |
+| `GET` | `/api/projects/{project_id}/datasets` | List datasets for a project |
+| `GET` | `/api/proposals/{proposal_id}/datasets` | List datasets for a proposal |
+| `GET` | `/api/projects/{project_id}/datasets/context` | Lightweight summaries for planner |
+| `GET` | `/api/datasets/{dataset_id}` | Fetch one dataset |
+| `DELETE` | `/api/datasets/{dataset_id}` | Delete dataset metadata |
+
+Upload limits (demo): 512 KiB per file; CSV ≤ 10k rows; GeoJSON ≤ 5k features; preview capped at 10 rows / 5 features.
+
+### Phase 7 honesty rules
+
+- Uploaded data is stored, previewed, and summarized for planner/operator context.
+- Uploaded data does **not** regenerate zones, agents, demand, or the full Toronto simulation.
+- Uploaded data does **not** create true resident/cohort LLM agents automatically.
+- Future Phase 8 agents should consume summaries via `backend/app/dataset_context.py`.
+
 ## Runtime Rules
 
 - The backend is the only Supabase writer.

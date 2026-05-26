@@ -46,6 +46,9 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots/latest", None),
         ("get", "/api/assets/definitions", None),
         ("post", "/api/assets/definitions", {"name": "A", "kind": "solar"}),
+        ("get", "/api/projects/00000000-0000-0000-0000-000000000001/datasets", None),
+        ("get", "/api/datasets/00000000-0000-0000-0000-000000000004", None),
+        ("delete", "/api/datasets/00000000-0000-0000-0000-000000000004", None),
     ):
         if method == "get":
             r = client.get(path)

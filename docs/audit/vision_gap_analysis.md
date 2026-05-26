@@ -186,7 +186,7 @@ Current WattIf is a strong demo prototype with:
 | WattIf can save proposals | Implemented when Supabase configured | `backend/app/routes/persistence.py`, `frontend/src/components/ProjectsTab.tsx` | Yes, with qualifier | Add auth, RLS, ownership, and error recovery |
 | WattIf saves snapshots with metrics/scenarios/infrastructure | Implemented | `SimulationSnapshotCreate`, migration adding `scenarios` and `infrastructure` | Yes | Add full restore/replay support |
 | WattIf fully restores simulation snapshots | Partial/missing | `selectProposal()` loads latest snapshot but re-places infra and resets simulation | No | Engine snapshot hydrate endpoint and frontend restore action |
-| WattIf supports uploaded city datasets | Missing | `uploaded_datasets` SQL exists, but no upload route or UI | No | File upload, storage, schema mapping, project binding, validation |
+| WattIf supports uploaded city datasets | Partial (Phase 7 MVP) | `POST /api/datasets/upload`, Saved tab UI, metadata/preview persistence | Yes, with qualifier | Bind layers to map/sim, regenerate world from uploads |
 | WattIf visualizes GIS layers | Partial | Known layers in `frontend/src/map/layers.ts` and `backend/app/data/loader.py` | Yes, for built-in layers | Arbitrary GeoJSON/CSV layer importer |
 | WattIf estimates cost | Partial heuristic | `INFRA_PRESETS`, `COST_PER_KW`, `candidate_cost()` | Carefully | Replace presets with configurable cost library/assumptions |
 | WattIf estimates generation | Partial heuristic | `CAPACITY_FACTOR` in `backend/app/sim/engine.py` | Carefully | Resource data, temporal profiles, asset-specific specs |
@@ -205,7 +205,7 @@ Current WattIf is a strong demo prototype with:
 
 | Gap | Impact |
 |---|---|
-| No upload/import workflow | Product cannot yet adapt to a city designer's own datasets |
+| Upload does not rebuild simulation | Datasets provide planner context only until Phase 8+ world binding |
 | No proposal canvas metaphor | Users place assets on a map, but not in a Figma-like object/versioning workflow |
 | No project-scoped data model | Supabase saves proposals, but runtime data is global Toronto fixtures |
 | No export/report workflow | Planner results and proposal impacts are not packaged for review |

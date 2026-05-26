@@ -26,6 +26,7 @@ from .models import (
     Zone,
 )
 from . import ml_bridge
+from .routes.datasets import router as datasets_router
 from .routes.persistence import router as persistence_router
 from .sim.llm import generate_rationales
 from .state import get_world
@@ -59,6 +60,7 @@ app.add_middleware(
 )
 
 app.include_router(persistence_router)
+app.include_router(datasets_router)
 
 
 # ---------------------------------------------------------------------------
@@ -558,6 +560,7 @@ async def planner_run(body: PlannerRunRequest | None = None) -> dict:
 
     Step mode requires the WS endpoint (no pause channel over REST) — REST forces auto.
     """
+    from .dataset_context import fetch_dataset_summaries, format_summaries_for_prompt
     from .planner import run_planner
 
     body = body or PlannerRunRequest()
@@ -565,10 +568,22 @@ async def planner_run(body: PlannerRunRequest | None = None) -> dict:
     events = [
         ev
         async for ev in run_planner(
-            world, mode="auto", goal=body.goal, budget_cad=body.budget_cad
+            world,
+            mode="auto",
+            goal=body.goal,
+            budget_cad=body.budget_cad,
+            project_id=body.project_id,
+            proposal_id=body.proposal_id,
         )
     ]
-    return {"events": events}
+    summaries = fetch_dataset_summaries(
+        project_id=body.project_id, proposal_id=body.proposal_id
+    )
+    return {
+        "events": events,
+        "datasetSummaries": summaries,
+        "datasetContext": format_summaries_for_prompt(summaries) or None,
+    }
 
 
 @app.websocket("/ws/planner")
@@ -590,6 +605,7 @@ async def ws_planner(ws: WebSocket) -> None:
       awaiting_approval | done, in REAL TIME as each happens. The socket stays open after 'done'
       so follow-ups continue with the world + conversation preserved.
     """
+    from .dataset_context import fetch_dataset_summaries, format_summaries_for_prompt
     from .planner import DEFAULT_BUDGET_CAD, PlannerChat
 
     await ws.accept()
@@ -601,9 +617,17 @@ async def ws_planner(ws: WebSocket) -> None:
 
     mode = cfg.get("mode", "auto")
     budget = cfg.get("budgetCad") or DEFAULT_BUDGET_CAD
+    project_id = cfg.get("projectId") or cfg.get("project_id")
+    proposal_id = cfg.get("proposalId") or cfg.get("proposal_id")
+    summaries = fetch_dataset_summaries(
+        project_id=project_id, proposal_id=proposal_id
+    )
+    dataset_context = format_summaries_for_prompt(summaries) or None
     # The typed instruction may arrive as `text` (frontend) or `goal` (alias).
     first_text = cfg.get("text") or cfg.get("goal")
-    chat = PlannerChat(world, budget, goal=first_text)
+    chat = PlannerChat(
+        world, budget, goal=first_text, dataset_context=dataset_context
+    )
 
     user_q: asyncio.Queue = asyncio.Queue()
     approval_q: asyncio.Queue = asyncio.Queue()

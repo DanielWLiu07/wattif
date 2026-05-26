@@ -23,6 +23,8 @@ import type {
   SimMetrics,
   SimulationSnapshot,
   SimulationSnapshotCreate,
+  UploadedDataset,
+  UploadedDatasetSummary,
   Zone,
 } from "@/types";
 import {
@@ -169,6 +171,101 @@ export async function getLatestSnapshot(
 ): Promise<SimulationSnapshot | null> {
   return tryFetch<SimulationSnapshot>(
     `/api/proposals/${proposalId}/snapshots/latest`
+  );
+}
+
+// ---------------- Dataset upload (Phase 7) ----------------
+
+export type PersistenceResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; unavailable: boolean; error?: string };
+
+async function persistenceFetch<T>(
+  path: string,
+  init?: RequestInit
+): Promise<PersistenceResult<T>> {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    const res = await fetch(`${API_URL}${path}`, {
+      ...init,
+      signal: ctrl.signal,
+      headers: { ...(init?.headers ?? {}) },
+    });
+    clearTimeout(t);
+    if (res.status === 503) {
+      const body = await res.json().catch(() => ({}));
+      const reason =
+        (body as { detail?: { reason?: string } })?.detail?.reason ??
+        "Supabase persistence is not configured";
+      return { ok: false, unavailable: true, error: reason };
+    }
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      const detail = (body as { detail?: string }).detail;
+      return {
+        ok: false,
+        unavailable: false,
+        error: typeof detail === "string" ? detail : `Request failed (${res.status})`,
+      };
+    }
+    return { ok: true, data: (await res.json()) as T };
+  } catch {
+    return { ok: false, unavailable: false, error: "Network error" };
+  }
+}
+
+export async function listProjectDatasets(
+  projectId: string
+): Promise<PersistenceResult<UploadedDataset[]>> {
+  return persistenceFetch<UploadedDataset[]>(`/api/projects/${projectId}/datasets`);
+}
+
+export async function listProposalDatasets(
+  proposalId: string
+): Promise<PersistenceResult<UploadedDataset[]>> {
+  return persistenceFetch<UploadedDataset[]>(
+    `/api/proposals/${proposalId}/datasets`
+  );
+}
+
+export async function getDataset(
+  datasetId: string
+): Promise<PersistenceResult<UploadedDataset>> {
+  return persistenceFetch<UploadedDataset>(`/api/datasets/${datasetId}`);
+}
+
+export async function getProjectDatasetContext(
+  projectId: string
+): Promise<PersistenceResult<UploadedDatasetSummary[]>> {
+  return persistenceFetch<UploadedDatasetSummary[]>(
+    `/api/projects/${projectId}/datasets/context`
+  );
+}
+
+export async function uploadDataset(opts: {
+  file: File;
+  projectId?: string | null;
+  proposalId?: string | null;
+  datasetType?: string;
+}): Promise<PersistenceResult<UploadedDataset>> {
+  const form = new FormData();
+  form.append("file", opts.file);
+  if (opts.projectId) form.append("projectId", opts.projectId);
+  if (opts.proposalId) form.append("proposalId", opts.proposalId);
+  if (opts.datasetType) form.append("datasetType", opts.datasetType);
+  return persistenceFetch<UploadedDataset>("/api/datasets/upload", {
+    method: "POST",
+    body: form,
+  });
+}
+
+export async function deleteDataset(
+  datasetId: string
+): Promise<PersistenceResult<{ ok: boolean; datasetId: string }>> {
+  return persistenceFetch<{ ok: boolean; datasetId: string }>(
+    `/api/datasets/${datasetId}`,
+    { method: "DELETE" }
   );
 }
 
@@ -643,11 +740,21 @@ export type PlannerSession = {
 export function createPlannerSession(opts: {
   infraProvider: () => Infra[];
   facilitiesProvider?: () => { kind: string; position: [number, number]; name?: string }[];
+  projectIdProvider?: () => string | null;
+  proposalIdProvider?: () => string | null;
   onEvent: (e: PlannerEvent) => void;
   onStatus?: (open: boolean) => void;
   onBusy?: (busy: boolean) => void;
 }): PlannerSession {
-  const { infraProvider, facilitiesProvider, onEvent, onStatus, onBusy } = opts;
+  const {
+    infraProvider,
+    facilitiesProvider,
+    projectIdProvider,
+    proposalIdProvider,
+    onEvent,
+    onStatus,
+    onBusy,
+  } = opts;
   let ws: WebSocket | null = null;
   let live = false;
   let closed = false;
@@ -658,6 +765,15 @@ export function createPlannerSession(opts: {
     ws.onopen = () => {
       live = true;
       onStatus?.(true);
+      const projectId = projectIdProvider?.() ?? undefined;
+      const proposalId = proposalIdProvider?.() ?? undefined;
+      ws?.send(
+        JSON.stringify({
+          mode: "auto",
+          ...(projectId ? { projectId } : {}),
+          ...(proposalId ? { proposalId } : {}),
+        })
+      );
     };
     ws.onmessage = (ev) => {
       try {
@@ -718,12 +834,16 @@ export function createPlannerSession(opts: {
       stepMode = sopts?.mode === "step";
       onBusy?.(true);
       if (live && ws && ws.readyState === WebSocket.OPEN) {
+        const projectId = projectIdProvider?.() ?? undefined;
+        const proposalId = proposalIdProvider?.() ?? undefined;
         ws.send(
           JSON.stringify({
             type: "user_message",
             text,
             mode: sopts?.mode ?? "auto",
             budgetCad: sopts?.budgetCad ?? 8_000_000,
+            ...(projectId ? { projectId } : {}),
+            ...(proposalId ? { proposalId } : {}),
           })
         );
         return;

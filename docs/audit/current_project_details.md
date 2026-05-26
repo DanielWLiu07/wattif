@@ -238,6 +238,9 @@ What works:
 | Reload proposal placements after refresh/reselect | Implemented | `selectProposal()` in `frontend/src/store.ts` |
 | Save snapshots with metrics/scenarios/infrastructure | Implemented | `saveSnapshot()` in `frontend/src/store.ts`, snapshot migration |
 | Get latest snapshot | Implemented | `/api/proposals/{id}/snapshots/latest` |
+| Upload CSV/JSON/GeoJSON datasets | Implemented (Phase 7) | `DatasetUploadPanel`, `/api/datasets/upload` |
+| List/preview/delete uploaded datasets | Implemented (Phase 7) | `/api/projects/{id}/datasets`, Saved tab |
+| Planner reads uploaded dataset summaries | Implemented (Phase 7) | `dataset_context.py`, WS `projectId`/`proposalId` |
 
 What does not yet work:
 
@@ -245,7 +248,9 @@ What does not yet work:
 |---|---|
 | Full simulation restore from snapshot | Latest snapshot is displayed and stored, but not replayed into the engine as a complete state restore |
 | Multi-user isolation/auth | Not implemented |
-| Dataset-per-project persistence | `uploaded_datasets` is schema only |
+| Dataset upload MVP | Implemented (Phase 7): upload/list/preview/delete; planner context; no sim rebuild |
+| Full simulation rebuild from uploaded data | Not implemented |
+| True resident/cohort LLM agents from uploads | Not implemented (Phase 8) |
 | Versioned proposal diff/review workflow | Not implemented |
 
 ## Scenario and Disaster Functionality
