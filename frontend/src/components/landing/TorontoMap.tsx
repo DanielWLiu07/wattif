@@ -59,7 +59,6 @@ const RISE    = 80;                      // px the centered card rises above str
 //   left  → scrolls right-to-left (negative, so cards move rightward)
 //   right → scrolls left-to-right (positive, cards move leftward)
 // Speed is eased with a lerp so direction changes feel smooth.
-const DEFAULT_SPEED  = 0.8;   // px/frame gentle auto-drift when idle
 const WHEEL_FACTOR   = 0.35;  // wheel delta → scrub velocity
 const WHEEL_FRICTION = 0.92;  // per-frame scrub velocity decay
 const WHEEL_MAX      = 45;    // clamp scrub velocity
@@ -147,13 +146,17 @@ function StatItem({ label, value, accent = false, align = "left" }: {
       }}>
         {label}
       </div>
-      <div style={{
-        fontFamily: "JetBrains Mono, monospace",
-        fontSize: accent ? 30 : 22, fontWeight: 700, lineHeight: 1,
-        letterSpacing: "-0.02em",
-        color: accent ? "hsl(var(--brand))" : "hsl(var(--foreground) / 0.82)",
-        transition: "color 0.2s ease",
-      }}>
+      {/* key={value} re-mounts on change → the swap animation replays */}
+      <div
+        key={value}
+        style={{
+          fontFamily: "JetBrains Mono, monospace",
+          fontSize: accent ? 30 : 22, fontWeight: 700, lineHeight: 1,
+          letterSpacing: "-0.02em",
+          color: accent ? "hsl(var(--brand))" : "hsl(var(--foreground) / 0.82)",
+          animation: "statSwap 0.34s cubic-bezier(0.22,1,0.36,1) both",
+        }}
+      >
         {value}
       </div>
     </div>
@@ -255,11 +258,18 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           offsetRef.current += diff * 0.14;
         }
       } else if (!hoveringRef.current) {
-        // Wheel scrub + gentle auto-drift — ONLY when not hovering a card.
+        // Wheel scrub; once momentum dies, SNAP the nearest card to the exact
+        // viewport centre so the raised card is always centred between its
+        // two neighbours (no perpetual drift leaving it off-centre).
         offsetRef.current += wheelVelRef.current;
         wheelVelRef.current *= WHEEL_FRICTION;
         if (Math.abs(wheelVelRef.current) < 0.05) wheelVelRef.current = 0;
-        if (wheelVelRef.current === 0) offsetRef.current += DEFAULT_SPEED;
+        if (wheelVelRef.current === 0) {
+          const vcx = window.innerWidth / 2;
+          const nearest = Math.round((offsetRef.current + vcx - CARD_W / 2) / CARD_STRIDE);
+          const ideal = nearest * CARD_STRIDE + CARD_W / 2 - vcx;
+          offsetRef.current += (ideal - offsetRef.current) * 0.12;
+        }
       } else {
         // Hovering a card → carousel FROZEN + wheel momentum killed, so the
         // card under the cursor stays put and stays selected (no matter what).
@@ -346,6 +356,10 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   return (
     <>
       <style>{`
+        @keyframes statSwap {
+          from { opacity: 0; transform: translateY(7px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
         @keyframes zoneDrawIn {
           from { opacity: 0; transform: translateY(4px); }
           to   { opacity: 1; transform: translateY(0); }
