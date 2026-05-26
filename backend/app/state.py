@@ -37,6 +37,58 @@ class World:
         self.last_scenario_type: str | None = None
         self._scenario_rng = np.random.default_rng(config.RANDOM_SEED + 1000)
 
+        # Causal event log + approval/coverage series (drives the Events timeline).
+        self.events: list[dict] = []
+        self.approval_series: list[dict] = [self._series_point()]
+
+    # -- events / causal timeline -------------------------------------
+    def _snapshot(self) -> dict:
+        """Current city approval (0..1) + coverage (0..1) — for before/after deltas."""
+        metrics, _ = self.engine._compute()
+        return {
+            "approval": float(self.engine.sentiment.city_approval_pct()),
+            "coverage": float(metrics.coverage_pct),
+        }
+
+    def _series_point(self) -> dict:
+        snap = self._snapshot()
+        return {"tick": int(self.engine.tick), "approval": round(snap["approval"], 4),
+                "coverage": round(snap["coverage"], 4)}
+
+    def _append_series(self) -> None:
+        self.approval_series.append(self._series_point())
+
+    def record_event(self, type_: str, kind: str | None, label: str,
+                     zone_ids: list[str], before: dict, after: dict, voices: list) -> dict:
+        """Build + store a CityEvent linking an action to its measured effect + reactions."""
+        def _st(v, s):  # stance count helper, tolerant of attr/dict
+            return getattr(v, "stance", None) == s
+        ev = {
+            "id": f"evt-{uuid.uuid4().hex[:8]}",
+            "tick": int(self.engine.tick),
+            "type": type_,
+            "kind": kind,
+            "label": label,
+            "zoneIds": zone_ids,
+            "delta": {
+                "approval": round(after["approval"] - before["approval"], 4),
+                "coverage": round(after["coverage"] - before["coverage"], 4),
+            },
+            "reaction": {
+                "support": sum(1 for v in voices if _st(v, "support")),
+                "oppose": sum(1 for v in voices if _st(v, "oppose")),
+                "neutral": sum(1 for v in voices if _st(v, "neutral")),
+            },
+            "voices": [
+                {"text": getattr(v, "text", ""), "stance": getattr(v, "stance", "neutral"),
+                 "archetype": getattr(v, "archetype", ""), "zoneId": getattr(v, "zone_id", None)}
+                for v in voices
+            ],
+        }
+        self.events.append(ev)
+        self._append_series()
+        return ev
+
     # -- agents --------------------------------------------------------
     def agents_for(self, zone_id: str | None) -> list:
         if zone_id is None:
@@ -51,6 +103,8 @@ class World:
         self.last_scenario_type = None
         self._scenario_rng = np.random.default_rng(config.RANDOM_SEED + 1000)
         self.engine.reset()
+        self.events.clear()
+        self.approval_series = [self._series_point()]
 
     def apply_scenario(
         self,
