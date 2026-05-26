@@ -641,13 +641,13 @@ interface StoredLayout {
 // Committed default arrangement (hand-placed in ?edit). Used when the browser
 // has no saved layout, so every visitor sees the curated hero composition.
 const BAKED_LAYOUT: StoredLayout = {
+  // Original default positions for every object — no hand-placed overrides.
   models: [
-    // Defaults for everything; only the wind turbine (uid 2) is hand-positioned.
-    { type: "heroTurbine", position: [3.5, 0, -1],       rotation: [0, 0, 0],     scale: 0.279 },
-    { type: "solar",       position: [-8, 0.001, -2],    rotation: [0, 0, 0],     scale: 0.229 },
-    { type: "wind",        position: [-13.72, 0, -9.71], rotation: [0, 0.718, 0], scale: 0.45 },
-    { type: "battery",     position: [8, 0, 1],          rotation: [0, 0, 0],     scale: 0.289 },
-    { type: "microgrid",   position: [13, 0, -3],        rotation: [0, 0, 0],     scale: 0.19 },
+    { type: "heroTurbine", position: [3.5, 0, -1],   rotation: [0, 0, 0], scale: 0.279 },
+    { type: "solar",       position: [-8, 0.001, -2], rotation: [0, 0, 0], scale: 0.229 },
+    { type: "wind",        position: [-4, 0, -40],   rotation: [0, 0, 0], scale: 0.152 },
+    { type: "battery",     position: [8, 0, 1],      rotation: [0, 0, 0], scale: 0.289 },
+    { type: "microgrid",   position: [13, 0, -3],    rotation: [0, 0, 0], scale: 0.19 },
   ],
   wordmark: { position: [0, 5, -6], rotation: [0, 0, 0], scale: 1 },
 };
@@ -1249,8 +1249,21 @@ function EditScene() {
           >
             Copy Layout JSON
           </button>
+          <button
+            onClick={() => { try { localStorage.removeItem(LAYOUT_KEY); } catch { /* ignore */ } location.reload(); }}
+            style={{
+              width: "100%", padding: "7px",
+              background: "transparent", color: "#e57373",
+              border: "1px solid #5a2a2a", borderRadius: 6,
+              cursor: "pointer", fontWeight: 600, fontSize: 11,
+              marginBottom: 6,
+            }}
+            title="Clear this browser's saved layout and reload at the default positions"
+          >
+            ↺ Reset to default layout
+          </button>
           <div style={{ color: "#444", fontSize: 10, textAlign: "center" }}>
-            Save → normal scene reads layout · Copy → logs to console
+            Save → this browser · Reset → clears it · Copy → logs JSON
           </div>
         </div>
 
