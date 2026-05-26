@@ -342,7 +342,7 @@ export function MapView() {
           ? `<br/>Flood risk: ${(flood * 100).toFixed(0)}%`
           : ""
       }${
-        district?.servedFraction > 0.05
+        district && district.servedFraction > 0.05
           ? `<br/><span style="color:#2dd4bf">District energy: ${(district.servedFraction * 100).toFixed(0)}% · ${district.systemName}</span>`
           : ""
       }${
@@ -407,7 +407,6 @@ export function MapView() {
         setRecCard((c) => (c?.pinned ? null : c)); // click empty → unpin card
       }
     },
-    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion, zones]
     [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion, allZones]
   );
 
@@ -507,7 +506,7 @@ export function MapView() {
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [buildDistrictPopupHtml, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones]);
+  }, [buildDistrictPopupHtml, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, allZones, zones, mode]);
 
   const handleContextMenu = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
@@ -550,7 +549,6 @@ export function MapView() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
-  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones, allZones, mode]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;
