@@ -644,7 +644,7 @@ const BAKED_LAYOUT: StoredLayout = {
   models: [
     { type: "heroTurbine", position: [9.604, 0, 5.1],    rotation: [-0.082, -0.582, 0], scale: 0.29 },
     { type: "solar",       position: [-8.946, 0, 1.172], rotation: [0, 0.548, 0],       scale: 0.85 },
-    { type: "wind",        position: [-4, 0, -40],       rotation: [0, 0, 0],           scale: 0.152 },
+    { type: "wind",        position: [-13.72, 0, -9.71], rotation: [0, 0.718, 0],       scale: 0.45 },
     { type: "battery",     position: [-0.62, 0, 7.218],  rotation: [0.008, 0.508, 0],   scale: 0.58 },
     { type: "microgrid",   position: [6.6, 0, -8.29],    rotation: [0, -0.162, 0],      scale: 1.31 },
   ],
@@ -670,7 +670,10 @@ function writeStoredLayout(layout: StoredLayout) {
 // ── Main exported scene ───────────────────────────────────────────────────────
 
 export function Scene3D({ progress }: { progress: number }) {
-  const stored = useMemo(() => readStoredLayout() ?? BAKED_LAYOUT, []);
+  // The committed baked layout is the source of truth for the live page, so a
+  // stale "Save to Device" layout in one browser never overrides what ships.
+  // (The ?edit editor still reads/writes localStorage for the design workflow.)
+  const stored = useMemo(() => BAKED_LAYOUT, []);
   const storedByType = useMemo(() => {
     if (!stored) return null;
     return stored.models.reduce<Record<string, StoredModelEntry>>((acc, m) => {
@@ -842,7 +845,16 @@ function EditWordmark({
 function EditScene() {
   const orbitRef = useRef<unknown>(null);
 
-  const [models, setModels] = useState<EditModelSpec[]>(EDIT_DEFAULTS);
+  // Seed the editor from a previously saved layout (positions) so "Save to
+  // Device" persists your working arrangement across reloads of ?edit.
+  const [models, setModels] = useState<EditModelSpec[]>(() => {
+    const saved = readStoredLayout();
+    if (!saved) return EDIT_DEFAULTS;
+    return EDIT_DEFAULTS.map((d) => {
+      const s = saved.models.find((m) => m.type === d.type);
+      return s ? { ...d, initPos: s.position } : d;
+    });
+  });
   const [selectedUid, setSelectedUid] = useState<number | null>(null);
   const [tcMode, setTcMode] = useState<"translate" | "rotate" | "scale">("translate");
 
