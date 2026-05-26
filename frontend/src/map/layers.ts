@@ -910,7 +910,9 @@ export function buildLayers(input: LayerInputs): Layer[] {
       if (key.includes("solar")) return INFRA_COLOR.solar;
       if (key.includes("wind")) return INFRA_COLOR.wind;
       if (key.includes("hydro")) return [56, 189, 248];
-      if (key.includes("ev") || key.includes("charg")) return [129, 140, 248];
+      // EV chargers: muted slate-blue (was bright indigo, which clashed with the
+      // battery accent and made the city read as a field of purple circles).
+      if (key.includes("ev") || key.includes("charg")) return [125, 145, 170];
       return [148, 163, 184];
     };
     out.push(
@@ -918,15 +920,17 @@ export function buildLayers(input: LayerInputs): Layer[] {
         id: "existing-infra",
         data: existingInfra,
         getPosition: (d: ExistingInfra) => d.position,
-        getFillColor: (d: ExistingInfra) => [...colorFor(d.kind), 60] as any,
-        getLineColor: (d: ExistingInfra) => colorFor(d.kind) as any,
+        // Quiet context dots: low-alpha fill, thin ring, capped small so the
+        // hundreds of existing assets don't visually clip across everything.
+        getFillColor: (d: ExistingInfra) => [...colorFor(d.kind), 26] as any,
+        getLineColor: (d: ExistingInfra) => [...colorFor(d.kind), 150] as any,
         stroked: true,
         filled: true,
-        getRadius: 55,
-        radiusMinPixels: 3,
-        radiusMaxPixels: 9,
-        lineWidthMinPixels: 1.5,
-        opacity: 0.9,
+        getRadius: 40,
+        radiusMinPixels: 1.5,
+        radiusMaxPixels: 4.5,
+        lineWidthMinPixels: 1,
+        opacity: 0.5,
         billboard: true,
         parameters: { depthTest: false } as any,
         pickable: true,

@@ -39,8 +39,10 @@ export function FlowDiagram({ visible }: FlowDiagramProps) {
         willChange: "opacity, transform, filter",
       }}
     >
-      {/* Cluster wrapper — fixed coordinate canvas centred on screen */}
-      <div style={{ position: "relative", width: 640, height: 392 }}>
+      {/* Cluster wrapper — fixed coordinate canvas centred on screen.
+          Block footprints are hand-computed (Space Grotesk digit advance
+          ≈0.52em) so no number or label collides with its neighbour. */}
+      <div style={{ position: "relative", width: 820, height: 470 }}>
 
         {/* Header — sits just above the cluster, left-aligned to 419,582 */}
         <div
@@ -66,7 +68,7 @@ export function FlowDiagram({ visible }: FlowDiagramProps) {
         {/* hairline connector tucked behind the numbers (cluster spine) */}
         <svg
           aria-hidden
-          viewBox="0 0 640 392"
+          viewBox="0 0 820 470"
           style={{
             position: "absolute", inset: 0, width: "100%", height: "100%",
             pointerEvents: "none",
@@ -80,18 +82,18 @@ export function FlowDiagram({ visible }: FlowDiagramProps) {
             </marker>
           </defs>
           <path
-            d="M 70,150 C 150,210 230,150 300,210 S 430,230 470,205"
+            d="M 80,170 C 160,260 250,250 330,300 S 520,250 600,215"
             stroke="hsl(72 95% 45%)" strokeWidth="1" fill="none"
             strokeDasharray="3 5" markerEnd="url(#arr)"
           />
         </svg>
 
         {/* ── 01 · City Data — top-left anchor ── */}
-        <div style={{ position: "absolute", left: 0, top: 78 }}>
+        <div style={{ position: "absolute", left: 0, top: 84 }}>
           <div style={slide("translate(-28px,-18px)", 60)}>
             <div style={{
-              fontFamily: "monospace", fontSize: "4.4rem", fontWeight: 800,
-              lineHeight: 0.82, letterSpacing: "-0.04em",
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: "5.6rem", fontWeight: 700,
+              lineHeight: 0.82, letterSpacing: "-0.045em",
               color: "hsl(var(--foreground))",
             }}>
               419,582
@@ -103,12 +105,12 @@ export function FlowDiagram({ visible }: FlowDiagramProps) {
           </div>
         </div>
 
-        {/* ── 02 · Simulated Agents — tucked under 419,582, indented right ── */}
-        <div style={{ position: "absolute", left: 40, top: 196 }}>
+        {/* ── 02 · Simulated Agents — tucked under 419,582, slight indent ── */}
+        <div style={{ position: "absolute", left: 6, top: 248 }}>
           <div style={slide("translate(-22px,12px)", 150)}>
             <div style={{
-              fontFamily: "monospace", fontSize: "3.1rem", fontWeight: 800,
-              lineHeight: 0.82, letterSpacing: "-0.035em",
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: "4rem", fontWeight: 700,
+              lineHeight: 0.82, letterSpacing: "-0.04em",
               color: "hsl(var(--foreground) / 0.72)",
             }}>
               8,001
@@ -120,12 +122,12 @@ export function FlowDiagram({ visible }: FlowDiagramProps) {
           </div>
         </div>
 
-        {/* ── 03 · AI Planner — nestles to the right of 8,001, baseline lower ── */}
-        <div style={{ position: "absolute", left: 232, top: 214 }}>
+        {/* ── 03 · AI Planner — nestles right of 8,001, baseline lower ── */}
+        <div style={{ position: "absolute", left: 300, top: 276 }}>
           <div style={slide("translate(-12px,22px)", 230)}>
             <div style={{
-              fontFamily: "monospace", fontSize: "2.7rem", fontWeight: 800,
-              lineHeight: 0.82, letterSpacing: "-0.04em",
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: "3.6rem", fontWeight: 700,
+              lineHeight: 0.82, letterSpacing: "-0.045em",
               color: "hsl(var(--foreground) / 0.6)",
             }}>
               583
@@ -139,11 +141,11 @@ export function FlowDiagram({ visible }: FlowDiagramProps) {
 
         {/* ── 04 · Sited Infrastructure — HERO, packed against the right edge,
               vertically straddling the cluster so it interlocks, not floats ── */}
-        <div style={{ position: "absolute", right: 0, top: 70, textAlign: "right" }}>
+        <div style={{ position: "absolute", right: 0, top: 116, textAlign: "right" }}>
           <div style={slide("translate(34px,0) scale(0.94)", 300)}>
             <div style={{
-              fontFamily: "monospace", fontSize: "8.6rem", fontWeight: 900,
-              lineHeight: 0.78, letterSpacing: "-0.06em",
+              fontFamily: "'Space Grotesk', sans-serif", fontSize: "9.2rem", fontWeight: 700,
+              lineHeight: 0.78, letterSpacing: "-0.05em",
               color: "hsl(var(--brand))",
             }}>
               182

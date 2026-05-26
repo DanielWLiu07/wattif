@@ -88,6 +88,35 @@ function getAgentCount(name: string) {
   return Math.round((getZoneCount(name) / TOTAL_ZONES) * TOTAL_AGENTS);
 }
 
+// ── Land area per region (km²), derived from real polygons via the shoelace
+//    formula on an equirectangular projection at Toronto's latitude ──────────
+const LAT_REF_RAD = ((LAT_MIN + LAT_MAX) / 2) * (Math.PI / 180);
+const KM_PER_DEG_LAT = 110.574;
+const KM_PER_DEG_LNG = 111.320 * Math.cos(LAT_REF_RAD);
+
+function ringAreaKm2(ring: number[][]): number {
+  let sum = 0;
+  for (let i = 0; i < ring.length; i++) {
+    const [lng1, lat1] = ring[i];
+    const [lng2, lat2] = ring[(i + 1) % ring.length];
+    sum += (lng1 * KM_PER_DEG_LNG) * (lat2 * KM_PER_DEG_LAT)
+         - (lng2 * KM_PER_DEG_LNG) * (lat1 * KM_PER_DEG_LAT);
+  }
+  return Math.abs(sum) / 2;
+}
+
+const areaByRegion: Record<string, number> = {};
+let TOTAL_AREA = 0;
+for (const z of rawZones) {
+  const r = getZoneRegion(z.name, z.centroid);
+  let a = 0;
+  for (const poly of z.polygon.coordinates) a += ringAreaKm2(poly[0]);
+  areaByRegion[r] = (areaByRegion[r] ?? 0) + a;
+  TOTAL_AREA += a;
+}
+
+function getAreaKm2(name: string) { return name === "All Toronto" ? TOTAL_AREA : (areaByRegion[name] ?? 0); }
+
 // ── Processed zone data ────────────────────────────────────────────────────
 type ZoneGeo = {
   id: string; name: string; centroid: [number, number];
@@ -139,7 +168,6 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
 
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
-  const [isHoveringStrip, setIsHoveringStrip] = useState(false);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
   // Carousel + speed control refs — all DOM-mutated in rAF for zero-jank
@@ -287,6 +315,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   const sAgents  = getAgentCount(statRegion);
   const sShare   = (sZones / TOTAL_ZONES) * 100;
   const sDensity = sZones > 0 ? Math.round(sAgents / sZones) : 0;
+  const sArea    = getAreaKm2(statRegion);
+  const sPerKm2  = sArea > 0 ? Math.round(sAgents / sArea) : 0;
 
   const colDelay = ["0ms", "140ms", "280ms"] as const;
 
@@ -321,12 +351,12 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
       `}</style>
 
       <div
-        className="fixed inset-0 z-[90] bg-background"
-        style={{ overflow: "visible" }}
+        className="fixed inset-0 z-[90]"
+        style={{ overflow: "visible", background: "transparent" }}
       >
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <div className="border-b border-border px-8 py-4 flex items-baseline gap-4">
+        <div className="px-8 py-4 flex items-baseline gap-4">
           <div>
             <p className="label inline" style={{ color: "hsl(var(--brand))" }}>Final step — </p>
             <span className="font-display text-lg font-bold text-foreground">Choose your scope.</span>
@@ -349,13 +379,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             overflow: "hidden",
           }}
         >
-          <div aria-hidden style={{
-            position: "absolute", inset: 0,
-            backgroundImage: "radial-gradient(circle, hsl(72 95% 50%) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-            opacity: 0.07,
-            animation: "dotGridDrift 22s linear infinite",
-          }} />
+          {/* (dot-grid removed — the live 3D perspective grid now shows through
+              the transparent scope background instead.) */}
 
           {/* Centre glow */}
           <div aria-hidden style={{
@@ -402,6 +427,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
               {statRegion}
             </div>
             <StatItem label="Zones"         value={sZones.toString()}        accent />
+            <StatItem label="Land area"     value={`${sArea.toFixed(0)} km²`} />
             <StatItem label="Share of city" value={`${sShare.toFixed(1)}%`} />
           </div>
 
@@ -425,6 +451,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             </div>
             <StatItem label="Agents modelled" value={sAgents.toLocaleString()} accent align="right" />
             <StatItem label="Avg / zone"      value={sDensity.toString()}      align="right" />
+            <StatItem label="Agents / km²"    value={sPerKm2.toString()}       align="right" />
           </div>
 
           <div style={{ position: "relative", width: "min(780px, 60%)", aspectRatio: `${SVG_W} / ${SVG_H}` }}>
@@ -508,9 +535,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             perspectiveOrigin: "50% 0%",
             transition: "bottom 0.65s cubic-bezier(0.22, 1, 0.36, 1)",
           }}
-          onMouseEnter={() => setIsHoveringStrip(true)}
           onMouseLeave={() => {
-            setIsHoveringStrip(false);
             setHoveredRegion(null);
             hoveringRef.current = false;
           }}
@@ -534,19 +559,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             zIndex: 3, pointerEvents: "none",
           }} />
 
-          {/* Speed-scrub hint — fades in when hovering the strip */}
-          <div style={{
-            position: "absolute", top: -22, left: "50%",
-            transform: "translateX(-50%)",
-            fontFamily: "monospace", fontSize: 10,
-            color: "hsl(var(--muted-foreground) / 0.5)",
-            pointerEvents: "none", zIndex: 5,
-            whiteSpace: "nowrap",
-            opacity: isHoveringStrip ? 1 : 0,
-            transition: "opacity 0.25s ease",
-          }}>
-            ← scrub · center = slow · ←→ arrows jump cards →
-          </div>
+          {/* (scrub hint removed — the header already explains the controls,
+              and it collided with the risen active card.) */}
 
           {/* Track */}
           <div
