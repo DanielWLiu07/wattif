@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 export function Welcome() {
   const showWelcome = useStore((s) => s.showWelcome);
   const dismissWelcome = useStore((s) => s.dismissWelcome);
-  const runGuidedDemo = useStore((s) => s.runGuidedDemo);
   if (!showWelcome) return null;
 
   return (
@@ -45,10 +44,7 @@ export function Welcome() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Button className="w-full" onClick={() => void runGuidedDemo()}>
-            <Play /> Run guided demo
-          </Button>
-          <Button variant="outline" className="w-full" onClick={dismissWelcome}>
+          <Button className="w-full" onClick={dismissWelcome}>
             <MousePointerClick /> Explore on my own
           </Button>
         </div>
