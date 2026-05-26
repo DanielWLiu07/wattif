@@ -496,30 +496,6 @@ function InfraStation({ progress }: { progress: number }) {
   );
 }
 
-// ── Siting coverage ───────────────────────────────────────────────────────────
-
-function SitingStation({ progress }: { progress: number }) {
-  const zones = zonesRaw as ZoneEntry[];
-  const covered = useMemo(() => zones.filter((_, i) => i % 3 === 0), [zones]);
-
-  const reveal = MathUtils.clamp((progress - 0.7) / 0.15, 0, 1);
-  if (reveal < 0.01) return null;
-
-  return (
-    <group position={[0, 0.05, -68]}>
-      {covered.map((z, i) => {
-        const [x, dz] = geoTo3D(z.centroid[0], z.centroid[1], 0.9);
-        return (
-          <mesh key={i} position={[x, 0, dz]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[1.4, 1.4]} />
-            <meshBasicMaterial color="#c8f400" transparent opacity={0.35 * reveal} />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-}
-
 // ── Main exported scene ───────────────────────────────────────────────────────
 
 export function Scene3D({ progress }: { progress: number }) {
@@ -541,7 +517,6 @@ export function Scene3D({ progress }: { progress: number }) {
         <ProblemStation progress={progress} />
         <DemandStation progress={progress} />
         <InfraStation progress={progress} />
-        <SitingStation progress={progress} />
       </Suspense>
     </>
   );
