@@ -24,8 +24,8 @@ Phase 3 delivered **partial Supabase persistence**: projects, proposals, proposa
 | **Live sim state** | Full state in DB | In-memory `World` only | **High** |
 | **Multi-user auth / RBAC** | Teams, permissions | None; service role backend | **High** |
 | **Row-level security** | Tenant isolation | Not enabled | **High** |
-| **Dataset upload** | Real utility data | Table stub; no upload flow | **High** |
-| **Report export** | PDF/CSV deliverables | Not implemented | **High** |
+| **Report export** | PDF/CSV deliverables | Markdown/HTML decision memo (Phase 10); copy/download in Saved tab; not PDF; not engineering validation | **Medium** — was “none”, now partial demo export |
+| **Dataset upload** | Real utility data | Upload/list/preview/delete + planner context (Phase 7) | **Partial** |
 | **LLM resident agents** | Autonomous stakeholders | Template voices; optional LLM on some REST | **High** |
 | **EV charger placement** | Full asset catalog | Placeable + lightweight sim/sentiment/optimizer; not full network planning | **Low** for demo sandbox |
 | **Real-time collab** | Multi-user edit | Not implemented | **High** |
@@ -111,7 +111,7 @@ Not commitments — gap closure order often cited in project plan:
 1. Auth + RLS
 2. Sync snapshot restore ↔ proposal_infrastructure (optional explicit “persist restore”)
 3. Dataset upload
-4. Report export
+4. Report export — **partial (Phase 10):** markdown/HTML decision memo; PDF and persisted report history still missing
 5. LLM agent loop (if still in vision)
 
 ---
@@ -120,7 +120,7 @@ Not commitments — gap closure order often cited in project plan:
 
 1. **Persistence moved from “none” to “partial Supabase”** — update all external messaging accordingly.
 2. **Saved proposal infrastructure and manual snapshots are production-quality for a hackathon MVP**, not for enterprise planning.
-3. **Largest remaining gaps:** auth, full sim persistence, dataset pipeline, export, real LLM agents.
+3. **Largest remaining gaps:** auth, full sim persistence, PDF/report persistence, real LLM agents.
 4. **Do not conflate** “we have a database” with “we have a multi-user planning platform.”
 # WattIf Vision Gap Analysis
 
@@ -194,8 +194,9 @@ Current WattIf is a strong demo prototype with:
 | WattIf estimates equity impact | Implemented heuristic | `zone_equity_weight` and `equity_score` in `backend/app/sim/engine.py` | Yes, as heuristic | Document methodology and support custom equity datasets |
 | WattIf estimates resilience impact | Partial heuristic | Outage/microgrid behavior in `backend/app/scenarios.py` and `engine.py` | Carefully | Calibrated outage/restoration/resilience model |
 | WattIf has resident voices | Implemented as simulated voices | `backend/app/sim/voices.py`, `frontend/src/components/VoicesFeed.tsx` | Yes, with qualifier | Persistent, proposal-grounded cohort agents |
-| WattIf has LLM-powered resident agents | Missing/optional rewrite only | `enrich_voices()` only rewrites templates with real provider keys | No | Per-cohort prompts, memory, tools, persisted concerns |
-| WattIf has an operator/planner agent | Partial | `backend/app/planner.py`, `frontend/src/components/ChatPanel.tsx` | Yes, with qualifier | Make real provider status explicit and persist runs |
+| WattIf has dataset-grounded cohort concerns | Partial (Phase 8 MVP) | `concern_generator.py`, `agent_profiles`/`agent_concerns`, Saved tab UI | Yes, with qualifier | Fully autonomous LLM cohort agents; validated consultation |
+| WattIf has LLM-powered resident agents | Missing/optional rewrite only | `enrich_voices()` only rewrites templates with real provider keys | No | Per-cohort prompts, memory, tools, autonomous multi-agent system |
+| WattIf has an operator/planner agent | Partial (Phase 9 concern mode) | `backend/app/planner.py`, `concern_recommendations.py`, `ChatPanel.tsx` | Yes, with qualifier | Autonomous multi-agent residents; validated engineering reports |
 | The planner is always a real LLM | False | `WATTIF_DEMO_LLM` defaults scripted provider on | No | Require real provider or disclose demo mode clearly |
 | ML models drive the simulation | Mostly false | `ml_bridge` is optional and defensive | No | Ship model code/artifacts and validate outputs |
 | App works without backend | Implemented fallback | `frontend/src/api/client.ts`, `frontend/src/data/mock.ts` | Yes | Label offline/mock mode clearly |
@@ -205,7 +206,8 @@ Current WattIf is a strong demo prototype with:
 
 | Gap | Impact |
 |---|---|
-| Upload does not rebuild simulation | Datasets provide planner context only until Phase 8+ world binding |
+| Upload does not rebuild simulation | Datasets provide planner context only until future world binding |
+| Cohort concerns are synthetic | Generated from dataset previews via rules — not real residents or validated surveys |
 | No proposal canvas metaphor | Users place assets on a map, but not in a Figma-like object/versioning workflow |
 | No project-scoped data model | Supabase saves proposals, but runtime data is global Toronto fixtures |
 | No export/report workflow | Planner results and proposal impacts are not packaged for review |
@@ -353,7 +355,7 @@ Scope:
 | Layer binding | Render uploaded GeoJSON or point CSV as a custom map layer |
 | Snapshot restore | Hydrate engine from saved infrastructure/scenarios/metrics or replay deterministically |
 | Cohort agents v1 | Persist 5-10 cohort profiles per project, generated from loaded data, with structured concerns |
-| Planner grounding | Planner reads saved proposal, current metrics, and cohort concerns before recommending changes |
+| Planner grounding | Planner reads saved proposal infra, uploaded dataset summaries, and synthetic cohort concerns; concern-aware recommendation mode returns structured actions (Phase 9) |
 | Honesty UI | Always-visible badge for Live/Mock, Supabase/Memory, Real LLM/Demo, ML/Heuristic |
 
 Why this phase: it directly attacks the biggest credibility gap. The app already looks like the vision; now it needs data grounding and persistence semantics to make that appearance honest.

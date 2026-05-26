@@ -118,8 +118,11 @@ export function SnapshotHistory() {
           Snapshot history requires Supabase persistence.
         </p>
       ) : snapshots.length === 0 ? (
-        <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] text-muted-foreground">
-          No snapshots yet. Save one to capture the current live sim state.
+        <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] leading-snug text-muted-foreground">
+          <span className="font-medium text-foreground">No snapshot yet.</span> Run the
+          simulation from Build, optionally apply a stress scenario, then click{" "}
+          <span className="text-foreground">Save</span> to capture metrics for comparison
+          and the decision memo.
         </p>
       ) : (
         <div className="max-h-40 space-y-1 overflow-y-auto">
@@ -214,8 +217,10 @@ export function SnapshotCompare() {
           Snapshot comparison requires Supabase persistence.
         </p>
       ) : !target ? (
-        <p className="text-[11px] text-muted-foreground">
-          Save a snapshot to compare metrics against the live sim.
+        <p className="text-[11px] leading-snug text-muted-foreground">
+          <span className="font-medium text-foreground">No snapshot to compare.</span> Save
+          one in Snapshot history above, then select it to compare live metrics against the
+          saved run.
         </p>
       ) : !metrics ? (
         <p className="text-[11px] text-muted-foreground">Waiting for live metrics…</p>

@@ -68,16 +68,20 @@ export function CohortConcernsPanel() {
         onClick={() => void generateCohortConcerns()}
       >
         <Sparkles className="h-3.5 w-3.5" />
-        {cohortGenerating ? "Generating…" : "Generate resident concerns"}
+        {cohortGenerating ? "Generating…" : "Generate synthetic cohort concerns"}
       </Button>
 
       {datasets.length === 0 && supabaseActive && (
-        <p className="text-[10px] text-muted-foreground">Upload datasets first.</p>
+        <p className="text-[10px] text-muted-foreground">
+          Upload at least one dataset before generating concerns.
+        </p>
       )}
 
       <div className="max-h-24 space-y-1 overflow-y-auto">
         {cohorts.length === 0 ? (
-          <p className="text-[10px] text-muted-foreground">No cohorts yet.</p>
+          <p className="text-[10px] text-muted-foreground">
+            Cohort profiles appear after generation.
+          </p>
         ) : (
           cohorts.map((c) => <CohortCard key={c.id} cohort={c} />)
         )}
@@ -85,8 +89,10 @@ export function CohortConcernsPanel() {
 
       <div className="max-h-36 space-y-1.5 overflow-y-auto">
         {cohortConcerns.length === 0 ? (
-          <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] text-muted-foreground">
-            No concerns generated yet.
+          <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] leading-snug text-muted-foreground">
+            <span className="font-medium text-foreground">No concerns yet.</span> Upload
+            datasets, then click Generate synthetic cohort concerns. Use Chat to ask the planner/operator
+            to address them.
           </p>
         ) : (
           cohortConcerns.map((concern) => (

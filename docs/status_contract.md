@@ -63,8 +63,8 @@ The top bar uses these user-facing strings (see `TopBar.tsx`):
 | **Mock data** | Backend unreachable |
 | **Demo planner** | No `realLlm` in `/api/health` (includes offline mock) |
 | **Real LLM planner** | `/api/health` reports `realLlm` (Anthropic or Feather) |
-| **Template voices** | No `realLlm` (tick path always templated; label is conservative) |
-| **LLM voices** | `realLlm` set — REST enrichment available |
+| **Template voices** | Always — sim tick path uses templates; resident agents are not autonomous LLMs |
+| **Real LLM planner** | `/api/health` reports `realLlm` (Anthropic or Feather) — separate from voice labels |
 | **In-memory** | Live backend, `persistenceProvider` is `"memory"` |
 | **Supabase · no proposal** | Live backend, Supabase configured, but no proposal selected |
 | **Saving to "<proposal name>"** | Live backend, Supabase configured, and placements/snapshots persist to the selected proposal |

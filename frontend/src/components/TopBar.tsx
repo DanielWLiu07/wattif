@@ -33,14 +33,13 @@ function plannerTooltip(live: boolean, health: HealthMeta | null): string {
   return "Offline mock planner — scripted events, no backend.";
 }
 
-function voicesLabel(live: boolean, health: HealthMeta | null): string {
-  if (live && health?.realLlm) return "LLM voices";
+function voicesLabel(_live: boolean, _health: HealthMeta | null): string {
   return "Template voices";
 }
 
 function voicesTooltip(live: boolean, health: HealthMeta | null): string {
   if (live && health?.realLlm) {
-    return "REST voice posts can be LLM-enriched. Sim ticks still use templates.";
+    return "Sim tick voices stay template-based. The planner/operator may use a real LLM separately.";
   }
   return "Resident quotes are template-based, not autonomous LLM agents.";
 }
@@ -262,7 +261,7 @@ export function TopBar() {
                   variant="outline"
                   className="font-normal lg:hidden"
                 >
-                  {realLlmActive ? "LLM" : "Demo"} · Template ·{" "}
+                  {realLlmActive ? "Real LLM" : "Demo"} · Template ·{" "}
                   {compactPersistenceText}
                 </Badge>
               </TooltipTrigger>

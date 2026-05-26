@@ -16,6 +16,7 @@ import type {
   Proposal,
   ProposalInfrastructure,
   ProposalInfrastructureCreate,
+  ProposalReport,
   Recommendation,
   Scenario,
   ScenarioType,
@@ -305,6 +306,22 @@ export async function deleteConcern(
   return persistenceFetch<{ ok: boolean; concernId: string }>(
     `/api/concerns/${concernId}`,
     { method: "DELETE" }
+  );
+}
+
+// ---------------- Decision memo / impact report (Phase 10) ----------------
+
+export async function getProposalReport(
+  proposalId: string
+): Promise<PersistenceResult<ProposalReport>> {
+  return persistenceFetch<ProposalReport>(`/api/proposals/${proposalId}/report`);
+}
+
+export async function getOperatorRecommendationStatus(
+  proposalId: string
+): Promise<PersistenceResult<{ hasOperatorRecommendation: boolean }>> {
+  return persistenceFetch<{ hasOperatorRecommendation: boolean }>(
+    `/api/proposals/${proposalId}/operator-recommendation-status`
   );
 }
 
@@ -647,7 +664,7 @@ export async function getGenerationMix(): Promise<GenerationMix | null> {
 }
 
 export const CONCERN_IMPROVEMENT_PROMPT =
-  "Improve this proposal based on resident concerns";
+  "Based on synthetic cohort concerns, what should we change in this proposal?";
 
 const CONCERN_INTENT_RE =
   /based on (?:resident )?concern|address (?:the )?(?:uploaded )?(?:feedback|concern)|resident concern|uploaded feedback|reduce opposition|heatwave|improve (?:this )?proposal|use (?:the )?(?:resident )?concern|cohort concern|what should i change|how do we reduce opposition/i;

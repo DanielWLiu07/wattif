@@ -214,6 +214,22 @@ export type CohortGenerateResponse = {
   datasetsUsed: number;
 };
 
+export type ProposalReportSection = {
+  id: string;
+  title: string;
+  markdown: string;
+};
+
+export type ProposalReport = {
+  projectId: string;
+  proposalId: string;
+  generatedAt: string;
+  markdown: string;
+  html?: string | null;
+  sections: ProposalReportSection[];
+  hasOperatorRecommendation: boolean;
+};
+
 export function infraToPersisted(infra: Infra): ProposalInfrastructureCreate {
   return {
     kind: infra.kind,

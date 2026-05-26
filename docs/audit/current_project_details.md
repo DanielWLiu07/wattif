@@ -107,7 +107,7 @@ This is a strong demo flow. It should not be described as a validated planning w
 | Place EV charger | **Real** | Fifth placeable kind; persists + snapshots like other infra |
 | Resident voices | **Template** | LLM optional on REST paths only |
 | Dataset upload | **Missing** | Table exists; no upload UI/API |
-| Report export | **Missing** | |
+| Report export | **Partial (Phase 10)** | Markdown/HTML decision memo via `GET /api/proposals/{id}/report`; Saved tab panel; not PDF; not persisted |
 | User login / RBAC | **Missing** | Service role backend only |
 | LLM resident agents | **Missing** | Rule/template voices only |
 
@@ -241,6 +241,10 @@ What works:
 | Upload CSV/JSON/GeoJSON datasets | Implemented (Phase 7) | `DatasetUploadPanel`, `/api/datasets/upload` |
 | List/preview/delete uploaded datasets | Implemented (Phase 7) | `/api/projects/{id}/datasets`, Saved tab |
 | Planner reads uploaded dataset summaries | Implemented (Phase 7) | `dataset_context.py`, WS `projectId`/`proposalId` |
+| Generate dataset-grounded cohort concerns | Implemented (Phase 8) | `CohortConcernsPanel`, `/api/projects/{id}/cohorts/generate` |
+| Planner reads synthetic cohort concern summaries | Implemented (Phase 8) | `cohort_context.py`, `build_planner_context` |
+| Operator recommends proposal changes from concerns | Implemented (Phase 9) | `concern_recommendations.py`, ChatPanel concern mode |
+| Generate proposal impact report / decision memo | Implemented (Phase 10) | `report_generator.py`, `DecisionMemoPanel`, `/api/proposals/{id}/report` |
 
 What does not yet work:
 
@@ -250,7 +254,8 @@ What does not yet work:
 | Multi-user isolation/auth | Not implemented |
 | Dataset upload MVP | Implemented (Phase 7): upload/list/preview/delete; planner context; no sim rebuild |
 | Full simulation rebuild from uploaded data | Not implemented |
-| True resident/cohort LLM agents from uploads | Not implemented (Phase 8) |
+| True autonomous LLM resident/cohort agents | Not implemented — Phase 8 uses deterministic rules only |
+| Validated public consultation / survey results | Not implemented — concerns are synthetic decision-support signals |
 | Versioned proposal diff/review workflow | Not implemented |
 
 ## Scenario and Disaster Functionality
@@ -313,15 +318,17 @@ The planner can:
 | Launch adoption programs | Implemented as simulated incentive levers |
 | Respond to scenarios during chat | Implemented in demo and LLM paths |
 | Ask for approval in step mode | Implemented over WebSocket |
+| Recommend proposal improvements from synthetic cohort concerns | Implemented (Phase 9) — structured `recommendation` events, concern-topic mapping, optional tool placements |
+| Read uploaded datasets + proposal infra in planner context | Implemented (Phase 7–9) | `build_planner_context` |
 
 It does not yet:
 
 | Missing behavior | Why |
 |---|---|
-| Ground recommendations in uploaded user data | No upload/project data pipeline |
-| Interpret persistent resident concern records | Concern tables exist but are not wired in |
-| Persist planner memory across app sessions | WebSocket session only |
-| Provide validated tradeoff reports | Chat events are transient UI outputs |
+| Persist planner memory across app sessions | WebSocket session only (concern runs optionally log to `planner_runs`) |
+| Provide validated tradeoff reports | Chat/recommendation events and Phase 10 decision memo are decision-support, not engineering sign-off |
+| Export stakeholder-ready PDF reports | Phase 10 provides markdown/HTML only; no PDF pipeline |
+| Autonomous real resident LLM agents | Phase 8/9 concerns remain deterministic/synthetic |
 
 Evidence: `backend/app/planner.py`, `frontend/src/components/ChatPanel.tsx`, `frontend/src/api/client.ts`.
 
@@ -353,7 +360,7 @@ What is not real:
 - No resident stores memory or a private history.
 - No resident independently reads the proposal and reasons.
 - No resident is grounded in uploaded household records.
-- No resident concerns are saved to `agent_concerns`.
+- Phase 8 saves deterministic cohort concerns to `agent_concerns` when generated; runtime map voices remain separate.
 
 ## What Is Real
 
