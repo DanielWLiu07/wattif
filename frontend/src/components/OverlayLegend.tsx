@@ -1,3 +1,4 @@
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 
@@ -50,6 +51,8 @@ const OVERLAYS: {
 export function OverlayLegend() {
   const layers = useStore((s) => s.layers);
   const setPrimaryOverlay = useStore((s) => s.setPrimaryOverlay);
+  const showLegend = useStore((s) => s.showLegend);
+  const toggleLegend = useStore((s) => s.toggleLegend);
 
   // Active overlay = highest-priority toggled-on choropleth.
   const active =
@@ -59,55 +62,79 @@ export function OverlayLegend() {
   const meta = OVERLAYS.find((o) => o.key === active);
 
   return (
-    <div className="pointer-events-auto absolute bottom-4 left-4 z-30 w-[230px]">
-      <div className="glass rounded-xl px-3 py-2.5 shadow-xl">
-        <div className="mb-1.5 flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-            Map overlay
-          </span>
-          <span className="text-xs font-semibold">
-            {meta ? meta.label : "None"}
-          </span>
-        </div>
-
-        {meta ? (
-          <div className="mb-2 flex items-center gap-1.5 text-[10px] text-muted-foreground">
-            <span>{meta.low}</span>
-            <span className={cn("h-2 flex-1 rounded-full bg-gradient-to-r", meta.ramp)} />
-            <span>{meta.high}</span>
-          </div>
+    <div className="pointer-events-auto absolute bottom-0 left-4 z-30 flex w-[230px] flex-col-reverse items-stretch gap-1">
+      <button
+        type="button"
+        onClick={toggleLegend}
+        className="glass flex h-5 w-full items-center justify-center rounded-t-md text-muted-foreground shadow-lg transition-colors hover:text-foreground"
+        aria-label={`${showLegend ? "Collapse" : "Expand"} map overlay`}
+      >
+        {showLegend ? (
+          <ChevronDown className="h-4 w-4" />
         ) : (
-          <p className="mb-2 text-[10px] text-muted-foreground">
-            No overlay — pick one to colour the zones.
-          </p>
+          <ChevronUp className="h-4 w-4" />
         )}
+      </button>
 
-        <div className="flex flex-wrap gap-1">
-          {OVERLAYS.map((o) => (
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300",
+          showLegend
+            ? "max-h-64 translate-y-0 opacity-100"
+            : "max-h-0 translate-y-2 opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="glass rounded-xl px-3 py-2.5 shadow-xl">
+          <div className="mb-1.5 flex items-center justify-between">
+            <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+              Map overlay
+            </span>
+            <span className="text-xs font-semibold">
+              {meta ? meta.label : "None"}
+            </span>
+          </div>
+
+          {meta ? (
+            <div className="mb-2 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+              <span>{meta.low}</span>
+              <span
+                className={cn("h-2 flex-1 rounded-full bg-gradient-to-r", meta.ramp)}
+              />
+              <span>{meta.high}</span>
+            </div>
+          ) : (
+            <p className="mb-2 text-[10px] text-muted-foreground">
+              No overlay — pick one to colour the zones.
+            </p>
+          )}
+
+          <div className="flex flex-wrap gap-1">
+            {OVERLAYS.map((o) => (
+              <button
+                key={o.key}
+                onClick={() => setPrimaryOverlay(o.key)}
+                className={cn(
+                  "rounded-md border px-1.5 py-0.5 text-[10px] transition-colors",
+                  active === o.key
+                    ? "border-primary bg-primary/15 text-primary"
+                    : "border-border bg-secondary/30 hover:bg-secondary"
+                )}
+              >
+                {o.label}
+              </button>
+            ))}
             <button
-              key={o.key}
-              onClick={() => setPrimaryOverlay(o.key)}
+              onClick={() => setPrimaryOverlay("none")}
               className={cn(
                 "rounded-md border px-1.5 py-0.5 text-[10px] transition-colors",
-                active === o.key
+                active === "none"
                   ? "border-primary bg-primary/15 text-primary"
                   : "border-border bg-secondary/30 hover:bg-secondary"
               )}
             >
-              {o.label}
+              None
             </button>
-          ))}
-          <button
-            onClick={() => setPrimaryOverlay("none")}
-            className={cn(
-              "rounded-md border px-1.5 py-0.5 text-[10px] transition-colors",
-              active === "none"
-                ? "border-primary bg-primary/15 text-primary"
-                : "border-border bg-secondary/30 hover:bg-secondary"
-            )}
-          >
-            None
-          </button>
+          </div>
         </div>
       </div>
     </div>
