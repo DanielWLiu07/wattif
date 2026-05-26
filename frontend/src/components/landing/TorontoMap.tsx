@@ -195,15 +195,16 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         } else {
           offsetRef.current += diff * 0.14;
         }
-      } else {
-        // Wheel-driven manual scrub (decays via friction)
+      } else if (!hoveringRef.current) {
+        // Wheel scrub + gentle auto-drift — ONLY when not hovering a card.
         offsetRef.current += wheelVelRef.current;
         wheelVelRef.current *= WHEEL_FRICTION;
         if (Math.abs(wheelVelRef.current) < 0.05) wheelVelRef.current = 0;
-        // Gentle auto-drift only when idle — no wheel motion and not hovering a card
-        if (wheelVelRef.current === 0 && !hoveringRef.current) {
-          offsetRef.current += DEFAULT_SPEED;
-        }
+        if (wheelVelRef.current === 0) offsetRef.current += DEFAULT_SPEED;
+      } else {
+        // Hovering a card → carousel FROZEN + wheel momentum killed, so the
+        // card under the cursor stays put and stays selected (no matter what).
+        wheelVelRef.current = 0;
       }
 
       if (offsetRef.current >= SET_W) offsetRef.current -= SET_W;
