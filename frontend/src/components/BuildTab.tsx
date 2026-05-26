@@ -3,6 +3,7 @@ import {
   Wind,
   BatteryCharging,
   Network,
+  PlugZap,
   MousePointer2,
   Sparkles,
   Check,
@@ -27,8 +28,9 @@ const KIND_ICON: Record<InfraKind, React.ElementType> = {
   wind: Wind,
   battery: BatteryCharging,
   microgrid: Network,
+  ev_charger: PlugZap,
 };
-const KINDS: InfraKind[] = ["solar", "wind", "battery", "microgrid"];
+const KINDS: InfraKind[] = ["solar", "wind", "battery", "microgrid", "ev_charger"];
 const MODES: {
   key: PlacementMode;
   label: string;

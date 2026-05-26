@@ -32,7 +32,7 @@ export type Agent = {
   solarAdopted: boolean;
 };
 
-export type InfraKind = "solar" | "wind" | "battery" | "microgrid";
+export type InfraKind = "solar" | "wind" | "battery" | "microgrid" | "ev_charger";
 
 export type InfraStatus = "planned" | "active" | "damaged";
 
@@ -155,6 +155,7 @@ export const MODEL_URL: Record<InfraKind, string> = {
   solar: "/models/solar_array.glb",
   battery: "/models/battery.glb",
   microgrid: "/models/microgrid_hub.glb",
+  ev_charger: "/models/ev_charger.glb",
 };
 
 // Typical capacity (kW) + cost (CAD) presets used when placing infra in the UI.
@@ -166,9 +167,16 @@ export const INFRA_PRESETS: Record<
   wind: { capacityKw: 900, costCad: 1_800_000, label: "Wind Turbine" },
   battery: { capacityKw: 500, costCad: 650_000, label: "Battery Storage" },
   microgrid: { capacityKw: 1500, costCad: 2_400_000, label: "Microgrid Hub" },
+  ev_charger: { capacityKw: 150, costCad: 95_000, label: "EV Charger Hub" },
 };
 
-const BUILT_IN_KINDS = new Set<InfraKind>(["solar", "wind", "battery", "microgrid"]);
+const BUILT_IN_KINDS = new Set<InfraKind>([
+  "solar",
+  "wind",
+  "battery",
+  "microgrid",
+  "ev_charger",
+]);
 
 export const isBuiltInInfraKind = (kind: string): kind is InfraKind =>
   BUILT_IN_KINDS.has(kind as InfraKind);
@@ -225,6 +233,7 @@ export const INFRA_COLOR: Record<InfraKind, [number, number, number]> = {
   wind: [56, 189, 248],
   battery: [167, 139, 250],
   microgrid: [52, 211, 153],
+  ev_charger: [129, 140, 248],
 };
 
 // ---------- v2: Scenarios / Sentiment / Planner / Living scene ----------
