@@ -15,6 +15,7 @@ import type { InfraKind, Recommendation } from "@/types";
 import { INFRA_PRESETS, INFRA_COLOR } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ForecastPreview } from "@/components/ForecastPreview";
 import { fmt } from "@/lib/utils";
 
 const KIND_ICON: Record<InfraKind, React.ElementType> = {
@@ -122,6 +123,15 @@ export function RecommendationImpact({
       <p className="mt-2 text-[11px] leading-snug text-foreground/90">
         {rec.rationale}
       </p>
+
+      {/* What-if projection: how this exact site moves the city over time. */}
+      {pinned && (
+        <ForecastPreview
+          kind={rec.kind}
+          position={rec.position}
+          className="mt-2"
+        />
+      )}
 
       {pinned && (
         <Button

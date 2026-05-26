@@ -14,6 +14,9 @@ from .models import (
     Agent,
     AgentVoice,
     Flow,
+    ForecastPoint,
+    ForecastRequest,
+    ForecastResponse,
     Infra,
     InfraCreate,
     OptimizeRequest,
@@ -129,6 +132,74 @@ def get_forecast(
         ),
         "source": "ml" if ml_value is not None else "baseline",
     }
+
+
+def _forecast_series(sim, ticks: int) -> list[ForecastPoint]:
+    """Snapshot metrics at t0, then after each step — horizon+1 points total."""
+    points: list[ForecastPoint] = []
+
+    def snap() -> ForecastPoint:
+        m = sim.current_metrics()
+        return ForecastPoint(
+            tick=m.tick,
+            approval=round(float(m.approval_pct), 4),
+            coverage=round(float(m.coverage_pct), 4),
+            equity=round(float(m.equity_score), 4),
+            emissions=round(float(m.emissions_tonnes), 2),
+        )
+
+    points.append(snap())  # t0 (current tick, before stepping)
+    for _ in range(ticks):
+        sim.step()
+        points.append(snap())
+    return points
+
+
+@app.post("/api/forecast", response_model=ForecastResponse)
+def post_forecast(body: ForecastRequest | None = None) -> ForecastResponse:
+    """Forward-simulate the live world `ticks` months and return the projected metric
+    series (approval/coverage/equity/emissions). With `proposed` builds, also returns a
+    `projected` series = current world + those builds, stepped forward — the "what-if I
+    build here" overlay. Never mutates the live world (operates on deepcopy clones)."""
+    import copy
+
+    body = body or ForecastRequest()
+    ticks = max(1, min(int(body.ticks), 36))
+    world = get_world()
+
+    # Baseline: clone the live engine and step it forward untouched.
+    baseline_sim = copy.deepcopy(world.engine)
+    baseline = _forecast_series(baseline_sim, ticks)
+
+    projected: list[ForecastPoint] | None = None
+    if body.proposed:
+        proj_sim = copy.deepcopy(world.engine)
+        for p in body.proposed:
+            proj_sim.add_infra(_build_proposed_infra(p.kind, p.position))
+        projected = _forecast_series(proj_sim, ticks)
+
+    return ForecastResponse(horizon=ticks, baseline=baseline, projected=projected)
+
+
+def _build_proposed_infra(kind: str, position) -> Infra:
+    """Construct an Infra from a {kind, position} proposal, mirroring World.place_infra
+    (default capacity + cost + model URL). For forecast clones only — does NOT place."""
+    import uuid
+
+    from .models import MODEL_URLS
+    from .optimizer import DEFAULT_CAPACITY_KW, candidate_cost
+
+    capacity_kw = DEFAULT_CAPACITY_KW.get(kind, 4000.0)
+    cost_cad = candidate_cost(kind, capacity_kw)
+    return Infra(
+        id=f"infra-{uuid.uuid4().hex[:8]}",
+        kind=kind,
+        position=position,
+        capacity_kw=capacity_kw,
+        cost_cad=round(cost_cad, 2),
+        model_url=MODEL_URLS.get(kind, ""),
+        status="planned",
+    )
 
 
 @app.get("/api/siting-priority")

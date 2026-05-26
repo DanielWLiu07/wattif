@@ -21,6 +21,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ForecastPreview } from "@/components/ForecastPreview";
+import { getZoneRegion } from "@/store";
+import type { LngLat } from "@/types";
 import { cn, fmtCad } from "@/lib/utils";
 
 const KIND_ICON: Record<InfraKind, React.ElementType> = {
@@ -62,6 +65,22 @@ export function BuildTab() {
 
   const zoneName = (id?: string) => zones.find((z) => z.id === id)?.name;
   const spent = infra.reduce((sum, i) => sum + (i.costCad ?? 0), 0);
+
+  // Representative site for the what-if projection while the user is choosing a
+  // kind (before they click the map): the centroid of the selected region's
+  // zones, or all of Toronto. Lets the preview answer "what would building this
+  // do?" up-front; the map click later refines the exact spot.
+  const previewPosition: LngLat | null = (() => {
+    if (!zones.length) return null;
+    const inScope =
+      selectedRegion === "All"
+        ? zones
+        : zones.filter((z) => getZoneRegion(z.name, z.centroid) === selectedRegion);
+    const pick = inScope.length ? inScope : zones;
+    const lng = pick.reduce((s, z) => s + z.centroid[0], 0) / pick.length;
+    const lat = pick.reduce((s, z) => s + z.centroid[1], 0) / pick.length;
+    return [lng, lat];
+  })();
 
   return (
     <div className="flex min-h-full flex-col gap-3 p-3">
@@ -160,6 +179,11 @@ export function BuildTab() {
               {infra.length}
             </Badge>
           </div>
+
+          {/* What-if projection for the selected kind at the in-scope site. */}
+          {mode === "place" && previewPosition && (
+            <ForecastPreview kind={placeKind} position={previewPosition} />
+          )}
         </>
       ) : (
         <p className="rounded-lg border border-brand/30 bg-brand/5 p-2.5 text-[11px] leading-snug text-muted-foreground">

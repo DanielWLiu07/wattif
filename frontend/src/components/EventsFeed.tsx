@@ -24,7 +24,8 @@ import {
   YAxis,
 } from "recharts";
 import { useStore } from "@/store";
-import type { CityEvent, EventPoint, InfraKind } from "@/types";
+import { getForecast } from "@/api/client";
+import type { CityEvent, EventPoint, Forecast, InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -73,12 +74,54 @@ export function EventsFeed() {
   const traceEvent = useStore((s) => s.traceEvent);
   const loadEvents = useStore((s) => s.loadEvents);
   const [open, setOpen] = useState<string | null>(null);
+  const [forecast, setForecast] = useState<Forecast | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Refresh whenever the tab mounts so freshly-placed/fired events show up.
   useEffect(() => {
     void loadEvents();
   }, [loadEvents]);
+
+  // City-wide projected continuation — where sentiment is heading. No `proposed`
+  // build, so we use the `baseline` series. Degrades silently if /api/forecast
+  // isn't live yet (forecast stays null → no dashed line, chart unchanged).
+  useEffect(() => {
+    let alive = true;
+    void getForecast(12).then((f) => {
+      if (alive) setForecast(f);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [events.length]);
+
+  // Stitch historical (solid) + projected (dashed) into one dataset keyed by
+  // tick. Historical points carry `approval`; projected points carry `proj`.
+  // The seam point carries both so the two lines visually connect.
+  const chartData = useMemo(() => {
+    const rows: { tick: number; approval?: number; proj?: number }[] = series.map(
+      (s) => ({ tick: s.tick, approval: s.approval })
+    );
+    const lastTick = series.length ? series[series.length - 1].tick : null;
+    const baseline = forecast?.baseline ?? [];
+    if (lastTick != null && baseline.length) {
+      // Forecast t0 == "now"; align it onto the end of the historical line so
+      // the projection continues from the latest measured point.
+      const lastApproval = series[series.length - 1].approval;
+      rows[rows.length - 1] = { ...rows[rows.length - 1], proj: lastApproval };
+      for (let i = 1; i < baseline.length; i++) {
+        rows.push({ tick: lastTick + i, proj: baseline[i].approval });
+      }
+    }
+    return rows;
+  }, [series, forecast]);
+
+  // Net projected change over the horizon, for a compact "→ projected" label.
+  const projDelta = useMemo(() => {
+    const b = forecast?.baseline;
+    if (!b || b.length < 2) return null;
+    return b[b.length - 1].approval - b[0].approval;
+  }, [forecast]);
 
   const ordered = useMemo(
     () => [...events].sort((a, b) => b.tick - a.tick),
@@ -116,13 +159,32 @@ export function EventsFeed() {
       <div className="shrink-0 border-b border-border p-3">
         <div className="mb-1 flex items-center justify-between">
           <span className="label">Approval over time</span>
-          <span className="num text-[10px] text-muted-foreground">
-            {events.length} events
-          </span>
+          <div className="flex items-center gap-2">
+            {projDelta !== null && (
+              <span
+                className="num inline-flex items-center gap-1 text-[10px]"
+                title="Projected change over the next 12 ticks"
+              >
+                {projDelta >= 0 ? (
+                  <TrendUp className="h-3 w-3 text-data-good" weight="bold" />
+                ) : (
+                  <TrendDown className="h-3 w-3 text-data-alert" weight="bold" />
+                )}
+                <span
+                  className={projDelta >= 0 ? "text-data-good" : "text-data-alert"}
+                >
+                  {pp(projDelta)}pp projected
+                </span>
+              </span>
+            )}
+            <span className="num text-[10px] text-muted-foreground">
+              {events.length} events
+            </span>
+          </div>
         </div>
         {series.length > 1 ? (
           <ResponsiveContainer width="100%" height={72}>
-            <AreaChart data={series} margin={{ top: 6, right: 6, bottom: 0, left: -34 }}>
+            <AreaChart data={chartData} margin={{ top: 6, right: 6, bottom: 0, left: -34 }}>
               <defs>
                 <linearGradient id="gEvtApp" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="hsl(212 90% 55%)" stopOpacity={0.35} />
@@ -151,6 +213,20 @@ export function EventsFeed() {
                 fill="url(#gEvtApp)"
                 isAnimationActive={false}
               />
+              {/* Projected continuation — dashed volt line, no fill. Reads as
+                  "where the city is heading". connectNulls bridges the seam. */}
+              {chartData.some((d) => d.proj != null) && (
+                <Line
+                  type="monotone"
+                  dataKey="proj"
+                  stroke="hsl(var(--brand))"
+                  strokeWidth={2}
+                  strokeDasharray="3 3"
+                  dot={false}
+                  connectNulls
+                  isAnimationActive={false}
+                />
+              )}
               {/* Marker for the currently-open event */}
               {open && events.find((e) => e.id === open) && (
                 <ReferenceLine

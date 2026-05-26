@@ -284,3 +284,33 @@ class PlannerRunRequest(CamelModel):
     mode: Literal["auto", "step"] = "auto"
     goal: str | None = None
     budget_cad: float | None = None
+
+
+# ---------------------------------------------------------------------------
+# Forecast (forward simulation): project metrics over a horizon, with an
+# optional "what-if I build here" overlay.
+# ---------------------------------------------------------------------------
+class ForecastProposal(CamelModel):
+    """A hypothetical build to overlay on the projected run."""
+
+    kind: InfraKind
+    position: Coord
+
+
+class ForecastRequest(CamelModel):
+    ticks: int = 12
+    proposed: list[ForecastProposal] | None = None
+
+
+class ForecastPoint(CamelModel):
+    tick: int
+    approval: float
+    coverage: float
+    equity: float
+    emissions: float
+
+
+class ForecastResponse(CamelModel):
+    horizon: int
+    baseline: list[ForecastPoint]
+    projected: list[ForecastPoint] | None = None

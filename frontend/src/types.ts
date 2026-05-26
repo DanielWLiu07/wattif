@@ -263,6 +263,28 @@ export type CityEvent = {
 };
 export type EventPoint = { tick: number; approval: number; coverage: number };
 
+// ---------- Forecast: projected city trajectory over a horizon ----------
+// One point per tick (horizon + 1 incl. t0). All ratios 0..1; emissions is a
+// raw float (tonnes).
+export type ForecastPoint = {
+  tick: number;
+  approval: number; // 0..1
+  coverage: number; // 0..1
+  equity: number; // 0..1
+  emissions: number;
+};
+
+// POST /api/forecast response. `projected` is present only when a `proposed`
+// build set was sent (current world + proposed builds); otherwise null.
+export type Forecast = {
+  horizon: number;
+  baseline: ForecastPoint[];
+  projected: ForecastPoint[] | null;
+};
+
+// A proposed build to project — kind + [lng, lat] position.
+export type ProposedBuild = { kind: InfraKind; position: LngLat };
+
 // Activity log — chronological narration of what changed each tick.
 export type ActivitySeverity = "info" | "good" | "warn" | "bad";
 export type ActivityItem = {
