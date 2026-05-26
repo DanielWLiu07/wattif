@@ -133,7 +133,6 @@ const processedZones: ZoneGeo[] = rawZones.map((z) => {
   };
 });
 
-const twinkleZones = processedZones.filter((_, i) => i % 6 === 0);
 
 // ── Side-panel stat row ───────────────────────────────────────────────────
 function StatItem({ label, value, accent = false, align = "left" }: {
@@ -373,9 +372,9 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         className="fixed inset-0 z-[90]"
         style={{
           overflow: "visible",
-          // Translucent white wash: lets the live 3D grid read through faintly
-          // without it dominating the scope screen.
-          background: "hsl(0 0% 100% / 0.62)",
+          // Translucent white wash: a faded white sheet in front of the 3D grid
+          // so it reads as a soft hint, not a strong pattern.
+          background: "hsl(0 0% 100% / 0.82)",
           // "Dive into the city" on select: zoom toward the map + fade.
           transformOrigin: "50% 42%",
           transform: launching ? "scale(1.45)" : "scale(1)",
@@ -509,19 +508,6 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                     }}
                   />
                 ));
-              })}
-
-              {revealed && twinkleZones.map((z, i) => {
-                const cx = lngToX(z.centroid[0]).toFixed(1);
-                const cy = latToY(z.centroid[1]).toFixed(1);
-                const dur = `${2.4 + (i % 5) * 0.6}s`;
-                const beg = `${(i % 7) * 0.4}s`;
-                return (
-                  <circle key={z.id} cx={cx} cy={cy} r="2" fill="hsl(72 95% 50%)">
-                    <animate attributeName="opacity" values="0;0.75;0" dur={dur} begin={beg} repeatCount="indefinite" />
-                    <animate attributeName="r"       values="1.5;2.8;1.5" dur={dur} begin={beg} repeatCount="indefinite" />
-                  </circle>
-                );
               })}
 
               {Object.entries(zonesByRegion).map(([region, zones]) => {
