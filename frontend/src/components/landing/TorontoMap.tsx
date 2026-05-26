@@ -352,7 +352,12 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
 
       <div
         className="fixed inset-0 z-[90]"
-        style={{ overflow: "visible", background: "transparent" }}
+        style={{
+          overflow: "visible",
+          // Translucent white wash: lets the live 3D grid read through faintly
+          // without it dominating the scope screen.
+          background: "hsl(0 0% 100% / 0.62)",
+        }}
       >
 
         {/* ── Header ──────────────────────────────────────────────────────── */}

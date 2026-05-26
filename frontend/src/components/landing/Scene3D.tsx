@@ -130,8 +130,10 @@ function Floor({ progress }: { progress: number }) {
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-    // Idle drift speed + journey boost when scrolling
-    const speed = 3 + progress * 14;
+    // Idle drift speed + journey boost when scrolling. At the scope screen
+    // (progress past ~0.86) the journey has arrived, so the grid eases to a
+    // slow ambient crawl instead of racing.
+    const speed = progress > 0.86 ? 1.4 : 3 + progress * 14;
     elapsed.current += delta * speed;
     // Loop within one section so the grid tiles seamlessly
     const offset = elapsed.current % SECTION_SIZE;
