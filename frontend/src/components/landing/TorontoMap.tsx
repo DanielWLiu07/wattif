@@ -169,11 +169,16 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
+  // Index (into ALL_CARDS) of the specific card under the cursor + the centered
+  // card. The cursor always wins: hovered card is the selected one, one at a time.
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [centeredIdx, setCenteredIdx] = useState<number>(REGION_CARDS.length);
 
   // Carousel + speed control refs — all DOM-mutated in rAF for zero-jank
   const trackRef          = useRef<HTMLDivElement>(null);
   const offsetRef         = useRef(0);
   const prevActiveRef     = useRef<string | null>(null);
+  const prevCenteredIdxRef = useRef<number>(REGION_CARDS.length);
   const rafRef            = useRef(0);
   const hasInitializedRef = useRef(false); // first-time centering on All Toronto
 
@@ -269,18 +274,24 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         trackRef.current.style.transform = `translateX(${-offsetRef.current}px)`;
       }
 
-      // Center detection: the card nearest the viewport horizontal midpoint
+      // Center detection: the card nearest the viewport horizontal midpoint.
+      // Scan ALL copies so the centered index is the actually-visible card.
       const vcx = window.innerWidth / 2;
       let closest: string | null = null;
+      let closestIdx = 0;
       let minDist = Infinity;
-      for (let i = 0; i < REGION_CARDS.length * 2; i++) {
+      for (let i = 0; i < ALL_CARDS.length; i++) {
         const cardCx = i * CARD_STRIDE + CARD_W / 2 - offsetRef.current;
         const dist   = Math.abs(cardCx - vcx);
-        if (dist < minDist) { minDist = dist; closest = REGION_CARDS[i % REGION_CARDS.length].name; }
+        if (dist < minDist) { minDist = dist; closest = REGION_CARDS[i % REGION_CARDS.length].name; closestIdx = i; }
       }
       if (closest !== prevActiveRef.current) {
         prevActiveRef.current = closest;
         setActiveRegion(closest);
+      }
+      if (closestIdx !== prevCenteredIdxRef.current) {
+        prevCenteredIdxRef.current = closestIdx;
+        setCenteredIdx(closestIdx);
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -542,6 +553,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           }}
           onMouseLeave={() => {
             setHoveredRegion(null);
+            setHoveredIdx(null);
             hoveringRef.current = false;
           }}
         >
@@ -582,7 +594,9 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             }}
           >
             {ALL_CARDS.map((card, i) => {
-              const isActive  = effectiveRegion === card.name;
+              // The cursor wins: while hovering, only the exact card under the
+              // mouse is active; otherwise it's the centered card. One at a time.
+              const isActive  = hoveredIdx !== null ? i === hoveredIdx : i === centeredIdx;
               const isCityCard = card.name === "All Toronto";
 
               // "All Toronto" always gets a faint volt border + background to signal it's special
@@ -612,10 +626,12 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                   aria-label={`${card.name} — ${getZoneCount(card.name)} zones, ${getAgentCount(card.name).toLocaleString()} agents. ${card.desc}`}
                   onMouseEnter={() => {
                     setHoveredRegion(card.name);
+                    setHoveredIdx(i);
                     hoveringRef.current = true;
                   }}
                   onMouseLeave={() => {
                     setHoveredRegion(null);
+                    setHoveredIdx(null);
                     hoveringRef.current = false;
                   }}
                   onClick={() => handleClick(card.name)}
