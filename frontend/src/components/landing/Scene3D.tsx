@@ -1,8 +1,37 @@
 import { useRef, useMemo, useEffect, Suspense } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Grid, useGLTF } from "@react-three/drei";
-import { Vector3, MathUtils, Color, type Group, type Mesh } from "three";
+import { Vector3, Box3, MathUtils, Color, type Group, type Mesh } from "three";
 import zonesRaw from "@/data/zonesFixture.json";
+
+// ── Model sizing (configure here) ───────────────────────────────────────────
+// Each model is normalised by its bounding box to a TARGET HEIGHT in world units,
+// so the GLB's intrinsic scale doesn't matter — tune these to resize the scene.
+const MODEL_HEIGHTS = {
+  heroTurbine: 11, // hero: whole turbine (mast + blades) must fit the frame
+  solar: 2.2,
+  wind: 6,
+  battery: 2.6,
+  microgrid: 3.2,
+};
+
+// Returns the uniform scale that makes `obj`'s tallest axis equal `targetH`,
+// plus the y-offset that drops its base onto the grid (y=0).
+function fitToHeight(obj: Group, targetH: number) {
+  const box = new Box3().setFromObject(obj);
+  const size = new Vector3();
+  box.getSize(size);
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const scale = targetH / maxDim;
+  return { scale, yBase: -box.min.y * scale };
+}
+
+// Smoothstep easing — gives reveals/transitions a soft accelerate-decelerate
+// instead of a linear ramp, so things grow/fade in smoothly.
+const ease = (t: number) => {
+  const x = MathUtils.clamp(t, 0, 1);
+  return x * x * (3 - 2 * x);
+};
 
 // Preload all models up-front so there's no hitch on the infra station
 useGLTF.preload("/models/wind_turbine.glb");
@@ -132,15 +161,15 @@ function VoltHorizon() {
 function GlbModel({
   url,
   position,
-  scale = 1,
+  targetH,
+  reveal = 1,
   rotateY = 0,
-  visible = true,
 }: {
   url: string;
   position: [number, number, number];
-  scale?: number;
+  targetH: number;
+  reveal?: number;
   rotateY?: number;
-  visible?: boolean;
 }) {
   const { scene } = useGLTF(url);
   const groupRef = useRef<Group>(null);
@@ -156,16 +185,23 @@ function GlbModel({
     return c;
   }, [scene]);
 
+  // Normalise the model to its target height (bbox-based), drop base onto grid.
+  const fit = useMemo(() => fitToHeight(cloned, targetH), [cloned, targetH]);
+
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * rotateY;
     }
   });
 
-  if (!visible) return null;
+  if (reveal < 0.01) return null;
 
   return (
-    <group ref={groupRef} position={position} scale={scale}>
+    <group
+      ref={groupRef}
+      position={[position[0], position[1] + fit.yBase * reveal, position[2]]}
+      scale={fit.scale * reveal}
+    >
       <primitive object={cloned} />
     </group>
   );
@@ -202,6 +238,8 @@ function HeroStation() {
     });
   }, [cloned]);
 
+  const fit = useMemo(() => fitToHeight(cloned, MODEL_HEIGHTS.heroTurbine), [cloned]);
+
   useFrame((_, delta) => {
     if (bladeRef.current) {
       bladeRef.current.rotation.z -= delta * 0.55;
@@ -211,7 +249,7 @@ function HeroStation() {
   });
 
   return (
-    <group ref={groupRef} position={[3.5, 0, -1]} scale={3.2} castShadow>
+    <group ref={groupRef} position={[3.5, fit.yBase, -1]} scale={fit.scale} castShadow>
       <primitive object={cloned} />
     </group>
   );
@@ -309,18 +347,10 @@ function InfraStation({ progress }: { progress: number }) {
 
   return (
     <group position={[0, 0, -40]}>
-      {p0 > 0.01 && (
-        <GlbModel url="/models/solar_array.glb" position={[-11, 0, 0]} scale={1.3 * p0} />
-      )}
-      {p1 > 0.01 && (
-        <GlbModel url="/models/wind_turbine.glb" position={[-4, 0, 0]} scale={1.7 * p1} rotateY={0.3} />
-      )}
-      {p2 > 0.01 && (
-        <GlbModel url="/models/battery.glb" position={[3.5, 0, 0]} scale={1.1 * p2} />
-      )}
-      {p3 > 0.01 && (
-        <GlbModel url="/models/microgrid_hub.glb" position={[10, 0, 0]} scale={1.4 * p3} />
-      )}
+      <GlbModel url="/models/solar_array.glb"   position={[-11, 0, 0]} targetH={MODEL_HEIGHTS.solar}     reveal={ease(p0)} />
+      <GlbModel url="/models/wind_turbine.glb"  position={[-4, 0, 0]}  targetH={MODEL_HEIGHTS.wind}      reveal={ease(p1)} rotateY={0.3} />
+      <GlbModel url="/models/battery.glb"       position={[3.5, 0, 0]} targetH={MODEL_HEIGHTS.battery}   reveal={ease(p2)} />
+      <GlbModel url="/models/microgrid_hub.glb" position={[10, 0, 0]}  targetH={MODEL_HEIGHTS.microgrid} reveal={ease(p3)} />
     </group>
   );
 }
