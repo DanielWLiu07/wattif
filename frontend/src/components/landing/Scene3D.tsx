@@ -903,6 +903,21 @@ function EditScene() {
     syncFromGroup();
   };
 
+  // Snap the orbit camera back to the exact landing-page hero framing so you can
+  // preview how the arrangement reads on the real page.
+  const resetToLanding = () => {
+    const c = orbitRef.current as {
+      object?: { position: { set: (x: number, y: number, z: number) => void }; fov?: number; updateProjectionMatrix?: () => void };
+      target?: { set: (x: number, y: number, z: number) => void };
+      update?: () => void;
+    } | null;
+    if (!c?.object || !c.target) return;
+    c.object.position.set(0, 5, 20);
+    c.target.set(0, 1.5, 0);
+    if (c.object.fov !== undefined) { c.object.fov = 52; c.object.updateProjectionMatrix?.(); }
+    c.update?.();
+  };
+
   const copyLayout = () => {
     const layout = collectLayout();
     const json = JSON.stringify(layout, null, 2);
@@ -919,7 +934,9 @@ function EditScene() {
       <Particles />
       <ScanLine />
 
-      <OrbitControls ref={orbitRef as React.RefObject<unknown>} makeDefault />
+      {/* Default target = the hero camera's look-at, so the editor opens on the
+          exact landing-page framing (camera starts at [0,5,20] via the Canvas). */}
+      <OrbitControls ref={orbitRef as React.RefObject<unknown>} makeDefault target={[0, 1.5, 0]} />
 
       {/* Invisible background plane to deselect */}
       <mesh
@@ -974,9 +991,23 @@ function EditScene() {
             boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
           }}
         >
-          <div style={{ fontWeight: 700, marginBottom: 14, color: "#c8f400", fontSize: 14 }}>
+          <div style={{ fontWeight: 700, marginBottom: 10, color: "#c8f400", fontSize: 14 }}>
             ⚡ Edit Mode
           </div>
+
+          {/* Snap back to the real landing-page camera framing */}
+          <button
+            onClick={resetToLanding}
+            style={{
+              width: "100%", padding: "6px 0", marginBottom: 12,
+              background: "#1c1c1c", color: "#c8f400",
+              border: "1px solid #c8f400", borderRadius: 6,
+              cursor: "pointer", fontSize: 11, fontWeight: 600,
+            }}
+            title="View the scene from the landing page's hero camera"
+          >
+            ⌂ Landing view
+          </button>
 
           {/* Model selection + transform mode */}
           <div style={{ marginBottom: 12 }}>
