@@ -394,15 +394,27 @@ export async function stepSim(
 export async function optimize(
   n: number,
   infra: Infra[],
-  kind?: Infra["kind"]
+  kind?: Infra["kind"],
+  zoneIds?: string[]
 ): Promise<{ data: Recommendation[]; live: boolean }> {
   const r = await tryFetch<Recommendation[]>("/api/optimize", {
     method: "POST",
-    body: JSON.stringify({ n, kind }),
+    body: JSON.stringify({ n, kind, zoneIds }),
   });
-  return r && r.length
-    ? { data: r, live: true }
-    : { data: mockOptimize(n, infra), live: false };
+  if (r && r.length) {
+    return { data: r, live: true };
+  }
+  let mockData = mockOptimize(n, infra);
+  if (zoneIds) {
+    const zoneSet = new Set(zoneIds);
+    mockData = mockOptimize(200, infra)
+      .filter((rec) => {
+        const z = ZONES.find((z) => z.centroid[0] === rec.position[0] && z.centroid[1] === rec.position[1]);
+        return z && zoneSet.has(z.id);
+      })
+      .slice(0, n);
+  }
+  return { data: mockData, live: false };
 }
 
 export { seedInfra };

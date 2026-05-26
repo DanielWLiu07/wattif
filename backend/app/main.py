@@ -294,7 +294,7 @@ def optimize_endpoint(body: OptimizeRequest | None = None) -> list[Recommendatio
     from .optimizer import optimize
 
     body = body or OptimizeRequest()
-    return optimize(get_world().engine, kind=body.kind, n=body.n)
+    return optimize(get_world().engine, kind=body.kind, n=body.n, zone_ids=body.zone_ids)
 
 
 # ---------------------------------------------------------------------------

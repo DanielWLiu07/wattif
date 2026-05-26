@@ -270,6 +270,7 @@ class StepRequest(CamelModel):
 class OptimizeRequest(CamelModel):
     kind: InfraKind | None = None
     n: int = 5
+    zone_ids: list[str] | None = None
 
 
 class ScenarioRequest(CamelModel):
