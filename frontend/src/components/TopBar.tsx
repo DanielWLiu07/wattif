@@ -2,7 +2,6 @@ import {
   Zap,
   Wifi,
   FlaskConical,
-  Play,
   HelpCircle,
   Bot,
   MessageSquare,
@@ -78,14 +77,11 @@ export function TopBar() {
   const wsReconnecting = useStore((s) => s.wsReconnecting);
   const loaded = useStore((s) => s.loaded);
   const zones = useStore((s) => s.zones);
-  const demo = useStore((s) => s.demo);
   const backendHealth = useStore((s) => s.backendHealth);
   const selectedProposalId = useStore((s) => s.selectedProposalId);
   const selectedProposalName = useStore(
     (s) => s.proposals.find((p) => p.id === s.selectedProposalId)?.name
   );
-  const runGuidedDemo = useStore((s) => s.runGuidedDemo);
-  const stopDemo = useStore((s) => s.stopDemo);
   const voicesCount = useStore((s) => s.voices.length);
   const focusVoices = useStore((s) => s.selectVoiceFromMap);
   const selectedRegion = useStore((s) => s.selectedRegion);
@@ -123,16 +119,6 @@ export function TopBar() {
       </div>
 
       <div className="glass flex max-w-[min(100vw-2rem,42rem)] flex-wrap items-center justify-end gap-1.5 rounded-xl px-2.5 py-1.5 shadow-lg">
-        <Button
-          size="sm"
-          variant={demo.running ? "secondary" : "default"}
-          className="h-7"
-          onClick={() => (demo.running ? stopDemo() : void runGuidedDemo())}
-        >
-          <Play className="h-3.5 w-3.5" />
-          {demo.running ? "Stop demo" : "Guided demo"}
-        </Button>
-
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
