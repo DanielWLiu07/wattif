@@ -54,6 +54,8 @@ export function CameraRig({ progress }: { progress: number }) {
   const { camera } = useThree();
   const tPos = useRef(new Vector3(0, 5, 20));
   const tLook = useRef(new Vector3(0, 1.5, 0));
+  // Smoothed look target — lags the position slightly for a cinematic feel
+  const currentLook = useRef(new Vector3(0, 1.5, 0));
 
   useFrame(() => {
     const p = progress;
@@ -76,8 +78,15 @@ export function CameraRig({ progress }: { progress: number }) {
       tLook.current.set(0, 0, MathUtils.lerp(-68, -52, l));
     }
 
-    camera.position.lerp(tPos.current, 0.09);
-    camera.lookAt(tLook.current);
+    // Distance-adaptive lerp: fast approach when far, eases to a soft settle.
+    // This gives a cinematic "arrival" at each waypoint instead of constant-speed lerp.
+    const dist = camera.position.distanceTo(tPos.current);
+    const lerpK = MathUtils.clamp(0.04 + dist * 0.016, 0.04, 0.14);
+    camera.position.lerp(tPos.current, lerpK);
+
+    // Look target lags slightly behind position for a natural, weighted feel
+    currentLook.current.lerp(tLook.current, 0.07);
+    camera.lookAt(currentLook.current);
     camera.updateProjectionMatrix();
   });
 
