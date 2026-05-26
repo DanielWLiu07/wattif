@@ -146,6 +146,7 @@ export function MapView() {
     pinned: boolean;
   } | null>(null);
   const mapRef = useRef<MaplibreRef | MapboxMapRef | null>(null);
+  const rightClickDragRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
 
   // ---- animation clock (drives flows / turbine spin / battery pulse) ----
   const [time, setTime] = useState(0);
@@ -467,6 +468,9 @@ export function MapView() {
   const handleContextMenu = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
       event.preventDefault();
+      const rightClickDrag = rightClickDragRef.current;
+      rightClickDragRef.current = null;
+      if (rightClickDrag?.moved) return;
       if (!districtHoverHtml) return;
       setDistrictPopup({
         x: event.clientX,
@@ -477,6 +481,23 @@ export function MapView() {
     },
     [districtHoverHtml]
   );
+
+  const handleMapMouseDown = useCallback((event: MouseEvent<HTMLDivElement>) => {
+    if (event.button !== 2) return;
+    rightClickDragRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      moved: false,
+    };
+  }, []);
+
+  const handleMapMouseMove = useCallback((event: MouseEvent<HTMLDivElement>) => {
+    const rightClickDrag = rightClickDragRef.current;
+    if (!rightClickDrag || (event.buttons & 2) !== 2) return;
+    const dx = event.clientX - rightClickDrag.x;
+    const dy = event.clientY - rightClickDrag.y;
+    if (dx * dx + dy * dy > 36) rightClickDrag.moved = true;
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -574,7 +595,12 @@ export function MapView() {
   };
 
   return (
-    <div className="absolute inset-0" onContextMenu={handleContextMenu}>
+    <div
+      className="absolute inset-0"
+      onContextMenu={handleContextMenu}
+      onMouseDownCapture={handleMapMouseDown}
+      onMouseMoveCapture={handleMapMouseMove}
+    >
       {USE_MAPBOX ? (
         <MapboxMap
           ref={mapRef as any}
