@@ -69,9 +69,16 @@ export function TopBar() {
 
   return (
     <header className="pointer-events-auto flex h-[52px] w-full shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4">
-      {/* LEFT — brand */}
+      {/* LEFT — brand (click → back to landing / scope select) */}
       <div className="flex min-w-0 flex-1 items-center gap-2.5">
-        <Logo size="sm" />
+        <button
+          onClick={() => useStore.setState({ showRegionSelector: true })}
+          className="-mx-1 flex items-center rounded-md px-1 py-0.5 transition-colors duration-150 hover:bg-muted"
+          aria-label="Back to start"
+          title="Back to start"
+        >
+          <Logo size="sm" />
+        </button>
         <span className="hidden truncate border-l border-border pl-2.5 text-[11px] text-muted-foreground lg:inline">
           Toronto energy-equity simulator
         </span>
