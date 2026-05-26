@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Sun,
   Wind,
@@ -7,18 +7,24 @@ import {
   Warning,
   CaretRight,
   ChartLineUp,
+  ArrowsLeftRight,
+  TrendUp,
+  TrendDown,
 } from "@phosphor-icons/react";
 import {
   Area,
   AreaChart,
+  Line,
+  LineChart,
   ReferenceDot,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip as RTooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { useStore } from "@/store";
-import type { CityEvent, InfraKind } from "@/types";
+import type { CityEvent, EventPoint, InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -41,24 +47,67 @@ function eventVisual(e: CityEvent): { Icon: React.ElementType; color: string } {
 // signed percentage-points string, e.g. 0.011 → "+1.1"
 const pp = (x: number) => `${x >= 0 ? "+" : "−"}${Math.abs(x * 100).toFixed(1)}`;
 
+/** Mini approval trajectory from an event tick onward — "how it evolved after". */
+function Aftermath({ data, color }: { data: EventPoint[]; color: string }) {
+  return (
+    <ResponsiveContainer width="100%" height={44}>
+      <LineChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
+        <XAxis dataKey="tick" type="number" domain={["dataMin", "dataMax"]} hide />
+        <YAxis domain={["dataMin - 0.02", "dataMax + 0.02"]} hide />
+        <Line
+          type="monotone"
+          dataKey="approval"
+          stroke={color}
+          strokeWidth={1.75}
+          dot={{ r: 1.5, fill: color }}
+          isAnimationActive={false}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
 export function EventsFeed() {
   const events = useStore((s) => s.events);
   const series = useStore((s) => s.eventSeries);
   const traceEvent = useStore((s) => s.traceEvent);
   const loadEvents = useStore((s) => s.loadEvents);
   const [open, setOpen] = useState<string | null>(null);
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Refresh whenever the tab mounts so freshly-placed/fired events show up.
   useEffect(() => {
     void loadEvents();
   }, [loadEvents]);
 
-  const ordered = [...events].sort((a, b) => b.tick - a.tick); // newest first
+  const ordered = useMemo(
+    () => [...events].sort((a, b) => b.tick - a.tick),
+    [events]
+  ); // newest first
+
+  // Map of event.id → events that touch at least one of the same zones.
+  const interactions = useMemo(() => {
+    const m: Record<string, CityEvent[]> = {};
+    for (const e of events) {
+      const zset = new Set(e.zoneIds);
+      m[e.id] = events
+        .filter((o) => o.id !== e.id && o.zoneIds.some((z) => zset.has(z)))
+        .sort((a, b) => b.tick - a.tick);
+    }
+    return m;
+  }, [events]);
 
   const approvalAt = (tick: number) => {
     let val = series[0]?.approval ?? 0.5;
     for (const s of series) if (s.tick <= tick) val = s.approval;
     return val;
+  };
+
+  const openEvent = (id: string) => {
+    setOpen(id);
+    requestAnimationFrame(() =>
+      cardRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "center" })
+    );
   };
 
   return (
@@ -102,12 +151,20 @@ export function EventsFeed() {
                 fill="url(#gEvtApp)"
                 isAnimationActive={false}
               />
+              {/* Marker for the currently-open event */}
+              {open && events.find((e) => e.id === open) && (
+                <ReferenceLine
+                  x={events.find((e) => e.id === open)!.tick}
+                  stroke="hsl(72 95% 42%)"
+                  strokeDasharray="2 2"
+                />
+              )}
               {events.map((e) => (
                 <ReferenceDot
                   key={e.id}
                   x={e.tick}
                   y={approvalAt(e.tick)}
-                  r={3.5}
+                  r={e.id === open ? 5 : 3.5}
                   fill="hsl(72 95% 45%)"
                   stroke="hsl(0 0% 100%)"
                   strokeWidth={1.5}
@@ -142,8 +199,28 @@ export function EventsFeed() {
             const da = e.delta.approval;
             const dc = e.delta.coverage;
             const isOpen = open === e.id;
+
+            // Sentiment trajectory after this event (this tick onward).
+            const aftermath = series.filter((s) => s.tick >= e.tick);
+            const net =
+              aftermath.length >= 2
+                ? aftermath[aftermath.length - 1].approval - aftermath[0].approval
+                : null;
+            const span =
+              aftermath.length >= 2
+                ? aftermath[aftermath.length - 1].tick - aftermath[0].tick
+                : 0;
+            const related = interactions[e.id] ?? [];
+
             return (
-              <div key={e.id} className="rounded-lg border border-border bg-card p-2.5">
+              <div
+                key={e.id}
+                ref={(el) => (cardRefs.current[e.id] = el)}
+                className={cn(
+                  "rounded-lg border bg-card p-2.5 transition-colors",
+                  isOpen ? "border-brand/60" : "border-border"
+                )}
+              >
                 <button
                   onClick={() => traceEvent(e.zoneIds)}
                   className="flex w-full items-start gap-2 text-left transition-opacity hover:opacity-80"
@@ -169,11 +246,20 @@ export function EventsFeed() {
                       <span className={dc >= 0 ? "text-data-good" : "text-data-alert"}>
                         {pp(dc)}pp coverage
                       </span>
+                      {related.length > 0 && (
+                        <span
+                          className="inline-flex items-center gap-0.5 text-muted-foreground"
+                          title={`${related.length} event(s) touch the same zones`}
+                        >
+                          <ArrowsLeftRight className="h-2.5 w-2.5" />
+                          {related.length}
+                        </span>
+                      )}
                     </span>
                   </span>
                 </button>
 
-                {/* reaction split — the star: counts + support/neutral/oppose bar */}
+                {/* reaction split — counts + support/neutral/oppose bar */}
                 <div className="num mt-2 flex items-center justify-between text-[10px]">
                   <span className="text-data-good">{r.support} support</span>
                   {r.neutral > 0 && (
@@ -187,38 +273,108 @@ export function EventsFeed() {
                   <div className="bg-data-alert" style={{ width: w(r.oppose) }} />
                 </div>
 
-                {e.voices.length > 0 && (
-                  <>
-                    <button
-                      onClick={() => setOpen(isOpen ? null : e.id)}
-                      className="mt-1.5 flex items-center gap-1 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      <CaretRight
-                        className={cn("h-3 w-3 transition-transform duration-150", isOpen && "rotate-90")}
-                      />
-                      <span className="num">{r.support + r.oppose + r.neutral}</span> reactions
-                    </button>
-                    {isOpen && (
-                      <div className="mt-1 space-y-1 pl-1">
-                        {e.voices.slice(0, 3).map((v, i) => (
-                          <div
-                            key={i}
+                <button
+                  onClick={() => setOpen(isOpen ? null : e.id)}
+                  className="mt-1.5 flex items-center gap-1 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <CaretRight
+                    className={cn("h-3 w-3 transition-transform duration-150", isOpen && "rotate-90")}
+                  />
+                  Aftermath, {total} reactions
+                  {related.length > 0 && ` · ${related.length} linked`}
+                </button>
+
+                {isOpen && (
+                  <div className="mt-2 space-y-2.5">
+                    {/* ── How it evolved: approval trajectory after the event ── */}
+                    <div className="rounded-md bg-muted/40 p-2">
+                      <div className="mb-0.5 flex items-center justify-between">
+                        <span className="label flex items-center gap-1">
+                          {net !== null && net >= 0 ? (
+                            <TrendUp className="h-3 w-3 text-data-good" />
+                          ) : (
+                            <TrendDown className="h-3 w-3 text-data-alert" />
+                          )}
+                          Sentiment aftermath
+                        </span>
+                        {net !== null && (
+                          <span
                             className={cn(
-                              "border-l-2 pl-2 text-[10px] leading-snug",
-                              v.stance === "support"
-                                ? "border-data-good"
-                                : v.stance === "oppose"
-                                ? "border-data-alert"
-                                : "border-border"
+                              "num text-[10px]",
+                              net >= 0 ? "text-data-good" : "text-data-alert"
                             )}
                           >
-                            <span className="text-foreground">“{v.text}”</span>
-                            <span className="text-muted-foreground"> — {v.archetype}</span>
-                          </div>
-                        ))}
+                            {pp(net)}pp over {span} ticks
+                          </span>
+                        )}
+                      </div>
+                      {aftermath.length >= 2 ? (
+                        <Aftermath
+                          data={aftermath}
+                          color={net !== null && net >= 0 ? "hsl(142 71% 40%)" : "hsl(0 72% 51%)"}
+                        />
+                      ) : (
+                        <p className="py-2 text-center text-[10px] text-muted-foreground">
+                          Run the sim to watch how this event plays out.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* ── How events interact: shared-zone links ── */}
+                    {related.length > 0 && (
+                      <div>
+                        <span className="label flex items-center gap-1">
+                          <ArrowsLeftRight className="h-3 w-3" /> Interacts with
+                        </span>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {related.slice(0, 5).map((rel) => {
+                            const shared = rel.zoneIds.filter((z) =>
+                              e.zoneIds.includes(z)
+                            ).length;
+                            return (
+                              <button
+                                key={rel.id}
+                                onClick={() => {
+                                  traceEvent(rel.zoneIds);
+                                  openEvent(rel.id);
+                                }}
+                                className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2 py-0.5 text-[10px] transition-colors hover:border-brand/60 hover:bg-muted"
+                                title={`${shared} shared zone(s) · jump to this event`}
+                              >
+                                <span className="truncate max-w-[120px]">{rel.label}</span>
+                                <span className="num text-muted-foreground">t{rel.tick}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
-                  </>
+
+                    {/* ── Related chats: every voice tied to this event ── */}
+                    {e.voices.length > 0 && (
+                      <div>
+                        <span className="label">Reactions from residents</span>
+                        <div className="mt-1 max-h-44 space-y-1 overflow-y-auto pr-1">
+                          {e.voices.map((v, i) => (
+                            <div
+                              key={i}
+                              className={cn(
+                                "border-l-2 pl-2 text-[10px] leading-snug",
+                                v.stance === "support"
+                                  ? "border-data-good"
+                                  : v.stance === "oppose"
+                                  ? "border-data-alert"
+                                  : "border-border"
+                              )}
+                            >
+                              <span className="text-foreground">“{v.text}”</span>
+                              <span className="text-muted-foreground"> — {v.archetype}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             );
