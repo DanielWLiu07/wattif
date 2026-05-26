@@ -292,7 +292,7 @@ export function Landing() {
               {/* (HTML title removed — the 3D "WattIf?" wordmark is the hero title now) */}
 
               <StaggerChild index={2} visible={s0}>
-                <p className="max-w-md font-sans text-base leading-relaxed text-muted-foreground">
+                <p className="max-w-md font-sans text-base leading-relaxed text-foreground">
                   Site solar, wind, and battery across Toronto's 140 neighbourhoods —
                   and simulate who benefits first.
                 </p>
