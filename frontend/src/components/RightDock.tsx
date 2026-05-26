@@ -140,7 +140,7 @@ export function RightDock() {
   };
 
   return (
-    <div className="pointer-events-auto flex h-full w-[340px] flex-col gap-2 overflow-hidden p-3">
+    <div className="pointer-events-auto flex h-full w-full flex-col gap-2 overflow-hidden p-3">
       <div className="shrink-0">
         <MiniStats />
       </div>

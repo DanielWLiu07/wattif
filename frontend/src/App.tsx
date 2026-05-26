@@ -110,7 +110,7 @@ function App() {
             <div className="flex items-stretch">
               <div
                 className={`overflow-hidden transition-all duration-300 ${
-                  leftOpen ? "w-[300px] opacity-100" : "w-0 opacity-0"
+                  leftOpen ? "w-[340px] opacity-100" : "w-0 opacity-0"
                 }`}
               >
                 <LeftDock />
@@ -131,7 +131,7 @@ function App() {
               </div>
               <div
                 className={`overflow-hidden transition-all duration-300 ${
-                  rightOpen ? "w-[330px] opacity-100" : "w-0 opacity-0"
+                  rightOpen ? "w-[340px] opacity-100" : "w-0 opacity-0"
                 }`}
               >
                 <RightDock />

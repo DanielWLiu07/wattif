@@ -14,7 +14,7 @@ import { BuildPriority } from "@/components/BuildPriority";
 
 export function LeftDock() {
   return (
-    <div className="pointer-events-auto flex h-full w-[300px] flex-col p-3">
+    <div className="pointer-events-auto flex h-full w-full flex-col p-3">
       <Card className="glass flex min-h-0 flex-1 flex-col overflow-hidden">
         <Tabs defaultValue="build" className="flex min-h-0 flex-1 flex-col">
           <TabsList className="m-1.5 grid grid-cols-4 gap-0.5">
