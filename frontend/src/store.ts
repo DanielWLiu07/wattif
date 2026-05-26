@@ -152,8 +152,8 @@ type State = {
   programs: { type: string; label: string; zones: string[]; startedTick: number }[];
   // subject-tied sentiment readout ("X% support this <thing> here")
   subjectApproval:
-    | { label: string; support: number; oppose: number; neutral: number }
-    | null;
+  | { label: string; support: number; oppose: number; neutral: number }
+  | null;
 
   // v3 chat (real-time agentic conversation)
   chat: ChatItem[];
@@ -502,9 +502,8 @@ function attachSession(
         set,
         [
           {
-            text: `AI placed a ${e.infra.kind} (${e.infra.capacityKw} kW)${
-              zName ? ` in ${zName}` : ""
-            }`,
+            text: `AI placed a ${e.infra.kind} (${e.infra.capacityKw} kW)${zName ? ` in ${zName}` : ""
+              }`,
             severity: "good",
             zoneId: e.infra.zoneId,
           },
@@ -713,14 +712,14 @@ export const useStore = create<State>((set, get) => ({
       api.listProjectCohorts(selectedProjectId),
       api.listProjectConcerns(selectedProjectId),
     ]);
-    if (!cohortRes.ok || !concernRes.ok) {
-      const err = !cohortRes.ok ? cohortRes : concernRes;
+    if (cohortRes.ok === false || concernRes.ok === false) {
+      const isCohortErr = cohortRes.ok === false;
+      const unavailable = isCohortErr ? cohortRes.unavailable : concernRes.unavailable;
+      const error = isCohortErr ? cohortRes.error : concernRes.error;
       set({
-        cohortError: err.ok
-          ? "Could not load cohort concerns"
-          : err.unavailable
+        cohortError: unavailable
           ? "Supabase persistence is not configured"
-          : err.error ?? "Could not load cohort concerns",
+          : error ?? "Could not load cohort concerns",
       });
       return;
     }
@@ -736,7 +735,7 @@ export const useStore = create<State>((set, get) => ({
     if (!selectedProjectId) return;
     set({ cohortGenerating: true, cohortError: null });
     const res = await api.generateCohorts(selectedProjectId, selectedProposalId);
-    if (!res.ok) {
+    if (res.ok === false) {
       set({
         cohortGenerating: false,
         cohortError: res.unavailable
@@ -761,7 +760,7 @@ export const useStore = create<State>((set, get) => ({
 
   deleteCohortConcern: async (concernId) => {
     const res = await api.deleteConcern(concernId);
-    if (!res.ok) {
+    if (res.ok === false) {
       set({
         cohortError: res.unavailable
           ? "Supabase persistence is not configured"
@@ -782,7 +781,7 @@ export const useStore = create<State>((set, get) => ({
     }
     const merged = new Map<string, UploadedDataset>();
     const projectRes = await api.listProjectDatasets(selectedProjectId);
-    if (!projectRes.ok) {
+    if (projectRes.ok === false) {
       set({
         datasets: [],
         datasetSummaries: [],
@@ -822,7 +821,7 @@ export const useStore = create<State>((set, get) => ({
       proposalId: selectedProposalId,
       datasetType,
     });
-    if (!res.ok) {
+    if (res.ok === false) {
       set({
         datasetUploading: false,
         datasetError: res.unavailable
@@ -845,7 +844,7 @@ export const useStore = create<State>((set, get) => ({
 
   deleteDataset: async (datasetId) => {
     const res = await api.deleteDataset(datasetId);
-    if (!res.ok) {
+    if (res.ok === false) {
       set({
         datasetError: res.unavailable
           ? "Supabase persistence is not configured"
@@ -1445,7 +1444,7 @@ export const useStore = create<State>((set, get) => ({
       const filteredZones = allZones.filter(z => getZoneRegion(z.name, z.centroid) === region);
       const zIds = new Set(filteredZones.map(z => z.id));
       const onRegionLand = makeLandTest(filteredZones);
-      
+
       set({
         zones: filteredZones,
         agents: allAgents.filter(a => zIds.has(a.zoneId)),
@@ -1491,11 +1490,11 @@ export const useStore = create<State>((set, get) => ({
       placedBy: "you",
       zoneId: z?.id,
     };
-    set((s) => ({ 
-      infra: [...s.infra, optimistic], 
-      allInfra: [...s.allInfra, optimistic] 
+    set((s) => ({
+      infra: [...s.infra, optimistic],
+      allInfra: [...s.allInfra, optimistic]
     }));
-    
+
     const saved = { ...optimistic, ...(await api.placeInfra(optimistic)) };
     set((s) => ({
       infra: s.infra.map((i) => (i.id === optimistic.id ? saved : i)),
@@ -1531,14 +1530,14 @@ export const useStore = create<State>((set, get) => ({
         sp.proposalApproval != null || sp.supportCount != null;
       const split = hasLive
         ? toSplit(
-            sp.proposalApproval,
-            sp.supportCount,
-            sp.opposeCount,
-            sp.neutralCount
-          )
+          sp.proposalApproval,
+          sp.supportCount,
+          sp.opposeCount,
+          sp.neutralCount
+        )
         : subjectSplit(
-            Math.max(0, Math.min(1, (get().sentiment?.perZone[z?.id ?? ""] ?? 0.5) + KIND_BIAS[placeKind]))
-          );
+          Math.max(0, Math.min(1, (get().sentiment?.perZone[z?.id ?? ""] ?? 0.5) + KIND_BIAS[placeKind]))
+        );
       set({ subjectApproval: { label: `this ${placeKind}`, ...split } });
     }
     // nearby people orient toward the new installation (gentle cluster)
@@ -1558,9 +1557,8 @@ export const useStore = create<State>((set, get) => ({
       set,
       [
         {
-          text: `You placed a ${optimistic.kind} (${optimistic.capacityKw} kW) in ${
-            z?.name ?? "the city"
-          }`,
+          text: `You placed a ${optimistic.kind} (${optimistic.capacityKw} kW) in ${z?.name ?? "the city"
+            }`,
           severity: "good",
           zoneId: z?.id,
         },
@@ -1595,14 +1593,14 @@ export const useStore = create<State>((set, get) => ({
         delete rt[id];
         const persistedInfraIds = { ...s.persistedInfraIds };
         delete persistedInfraIds[id];
-        return { 
-          infra: s.infra.filter((i) => i.id !== id), 
-          allInfra: s.allInfra.filter((i) => i.id !== id), 
+        return {
+          infra: s.infra.filter((i) => i.id !== id),
+          allInfra: s.allInfra.filter((i) => i.id !== id),
           proposalInfrastructure: s.proposalInfrastructure.filter(
             (i) => i.id !== persistedId
           ),
           persistedInfraIds,
-          removalTimes: rt 
+          removalTimes: rt
         };
       });
       void get().reset();
@@ -1725,7 +1723,7 @@ export const useStore = create<State>((set, get) => ({
   runOptimize: async (n = 5) => {
     set({ optimizing: true });
     const { infra, selectedRegion, zones } = get();
-    
+
     let zoneIds: string[] | undefined = undefined;
     if (selectedRegion !== "All") {
       zoneIds = zones
@@ -1786,8 +1784,8 @@ export const useStore = create<State>((set, get) => ({
       scenario.type === "heatwave"
         ? "cooling_centre"
         : scenario.type === "blackout" || scenario.type === "ice_storm"
-        ? "shelter"
-        : null;
+          ? "shelter"
+          : null;
     const gset = new Set(gathering);
     const facs = get().facilities;
     const d2 = (a: LngLat, b: LngLat) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
@@ -1844,9 +1842,8 @@ export const useStore = create<State>((set, get) => ({
         set,
         [
           {
-            text: `${scenario.label} ${zoneName ? `hit ${zoneName}` : "struck city-wide"}${
-              outage.size ? ` — ${outage.size} zone(s) affected` : ""
-            }`,
+            text: `${scenario.label} ${zoneName ? `hit ${zoneName}` : "struck city-wide"}${outage.size ? ` — ${outage.size} zone(s) affected` : ""
+              }`,
             severity: sev,
             zoneId,
           },
@@ -1866,9 +1863,8 @@ export const useStore = create<State>((set, get) => ({
           {
             id: cid(),
             role: "system",
-            text: `⚡ Scenario fired: ${scenario.label}${
-              zoneName ? ` → ${zoneName}` : " (city-wide)"
-            }. Agents & grid are reacting…`,
+            text: `⚡ Scenario fired: ${scenario.label}${zoneName ? ` → ${zoneName}` : " (city-wide)"
+              }. Agents & grid are reacting…`,
           },
         ],
       }));
@@ -2028,12 +2024,12 @@ export const useStore = create<State>((set, get) => ({
       zoneIds && zoneIds.length
         ? zoneIds
         : [...zones]
-            .sort(
-              (a, b) =>
-                b.demographics.energyBurdenIndex - a.demographics.energyBurdenIndex
-            )
-            .slice(0, 6)
-            .map((z) => z.id);
+          .sort(
+            (a, b) =>
+              b.demographics.energyBurdenIndex - a.demographics.energyBurdenIndex
+          )
+          .slice(0, 6)
+          .map((z) => z.id);
     // boost rooftop adoption in target zones → glints start appearing
     const adopt = { ...get().adoptionByZone };
     for (const zid of targets) adopt[zid] = Math.min(1, (adopt[zid] ?? 0) + 0.22);
