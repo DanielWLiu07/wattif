@@ -309,6 +309,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             top: 53,
             left: 0, right: 0,
             bottom: STRIP_H,
+            // Lift the map up so the risen centered card doesn't collide with it
+            paddingBottom: RISE + 24,
             overflow: "hidden",
           }}
         >
