@@ -641,15 +641,14 @@ interface StoredLayout {
 // Committed default arrangement (hand-placed in ?edit). Used when the browser
 // has no saved layout, so every visitor sees the curated hero composition.
 const BAKED_LAYOUT: StoredLayout = {
-  // Original default positions for every object — no hand-placed overrides.
   models: [
-    { type: "heroTurbine", position: [3.5, 0, -1],   rotation: [0, 0, 0], scale: 0.279 },
-    { type: "solar",       position: [-8, 0.001, -2], rotation: [0, 0, 0], scale: 0.229 },
-    { type: "wind",        position: [-4, 0, -40],   rotation: [0, 0, 0], scale: 0.152 },
-    { type: "battery",     position: [8, 0, 1],      rotation: [0, 0, 0], scale: 0.289 },
-    { type: "microgrid",   position: [13, 0, -3],    rotation: [0, 0, 0], scale: 0.19 },
+    { type: "heroTurbine", position: [9.604, 0, 5.1],    rotation: [-0.082, -0.582, 0], scale: 0.29 },
+    { type: "solar",       position: [-8.946, 0, 1.172], rotation: [0, 0.548, 0],       scale: 0.85 },
+    { type: "wind",        position: [-4, 0, -40],       rotation: [0, 0, 0],           scale: 0.152 },
+    { type: "battery",     position: [-0.62, 0, 7.218],  rotation: [0.008, 0.508, 0],   scale: 0.58 },
+    { type: "microgrid",   position: [6.6, 0, -8.29],    rotation: [0, -0.162, 0],      scale: 1.31 },
   ],
-  wordmark: { position: [0, 5, -6], rotation: [0, 0, 0], scale: 1 },
+  wordmark: { position: [-12.457, 4.312, 5.237], rotation: [0, 0.458, 0], scale: 1.83 },
 };
 
 function readStoredLayout(): StoredLayout | null {
@@ -671,9 +670,10 @@ function writeStoredLayout(layout: StoredLayout) {
 // ── Main exported scene ───────────────────────────────────────────────────────
 
 export function Scene3D({ progress }: { progress: number }) {
-  // Your saved ?edit layout (Save to Device) drives the page; the baked layout
-  // is only a fallback for browsers that have never saved one.
-  const stored = useMemo(() => readStoredLayout() ?? BAKED_LAYOUT, []);
+  // The committed baked layout is the source of truth — what's baked is exactly
+  // what shows, so a stale "Save to Device" layout never masks it. (?edit still
+  // uses localStorage as the designer's scratchpad.)
+  const stored = useMemo(() => BAKED_LAYOUT, []);
   const storedByType = useMemo(() => {
     if (!stored) return null;
     return stored.models.reduce<Record<string, StoredModelEntry>>((acc, m) => {
