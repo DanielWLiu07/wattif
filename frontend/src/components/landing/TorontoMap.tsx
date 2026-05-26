@@ -62,7 +62,6 @@ const RISE    = 80;                      // px the centered card rises above str
 const WHEEL_FACTOR   = 0.35;  // wheel delta → scrub velocity
 const WHEEL_FRICTION = 0.92;  // per-frame scrub velocity decay
 const WHEEL_MAX      = 45;    // clamp scrub velocity
-const AUTO_ADVANCE_FRAMES = 150; // ~2.5s settled on a card before auto-advancing
 
 // ── Live zone counts ────────────────────────────────────────────────────────
 type RawZone = {
@@ -190,7 +189,6 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   const wheelVelRef   = useRef(0);     // wheel-driven scrub velocity (decays via friction)
   const hoveringRef   = useRef(false); // hovering a card → pause auto-drift
   const snapTargetRef = useRef<number | null>(null); // keyboard snap-to-card target
-  const autoIdleRef   = useRef(0);     // frames settled on a card → drives auto-advance
   const lastMoveRef   = useRef(0);     // ts of last pointer move over the strip (active hover)
 
   useEffect(() => {
@@ -260,42 +258,20 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         } else {
           offsetRef.current += diff * 0.14;
         }
-      } else if (!(hoveringRef.current && performance.now() - lastMoveRef.current < 1100)) {
-        // Autoscroll runs unless the cursor is ACTIVELY hovering (moved over the
-        // strip within the last ~1.1s). A cursor merely resting on the cards no
-        // longer freezes it — so the carousel keeps cycling on its own.
-        if (hoveringRef.current) {
-          // hover went stale → release it so the centred card drives selection
-          hoveringRef.current = false;
-          setHoveredIdx(null);
-          setHoveredRegion(null);
-        }
-        // Wheel scrub; once momentum dies, snap the nearest card to centre, then
-        // AUTO-ADVANCE card-by-card so every resting card stays centred.
+      } else {
+        // MANUAL scroll only — no autoscroll. The wheel scrubs the cards
+        // (momentum decays); when idle and not actively hovering, the nearest
+        // card eases to centre so a card always rests centred.
+        const activeHover = hoveringRef.current && performance.now() - lastMoveRef.current < 1100;
         offsetRef.current += wheelVelRef.current;
         wheelVelRef.current *= WHEEL_FRICTION;
         if (Math.abs(wheelVelRef.current) < 0.05) wheelVelRef.current = 0;
-        if (wheelVelRef.current === 0) {
+        if (wheelVelRef.current === 0 && !activeHover) {
           const vcx = window.innerWidth / 2;
           const nearest = Math.round((offsetRef.current + vcx - CARD_W / 2) / CARD_STRIDE);
           const ideal = nearest * CARD_STRIDE + CARD_W / 2 - vcx;
           offsetRef.current += (ideal - offsetRef.current) * 0.12;
-          if (Math.abs(ideal - offsetRef.current) < 1) {
-            autoIdleRef.current += 1;
-            if (autoIdleRef.current >= AUTO_ADVANCE_FRAMES) {
-              // glide to the next card via the snap mechanism (handles wrap)
-              snapTargetRef.current = (nearest + 1) * CARD_STRIDE + CARD_W / 2 - vcx;
-              autoIdleRef.current = 0;
-            }
-          }
-        } else {
-          autoIdleRef.current = 0;
         }
-      } else {
-        // Hovering a card → carousel FROZEN + wheel momentum killed, so the
-        // card under the cursor stays put and stays selected (no matter what).
-        wheelVelRef.current = 0;
-        autoIdleRef.current = 0;
       }
 
       if (offsetRef.current >= SET_W) offsetRef.current -= SET_W;

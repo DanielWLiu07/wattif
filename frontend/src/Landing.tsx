@@ -162,6 +162,9 @@ export function Landing() {
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+      // At the scope screen the wheel belongs to the card carousel only — pin
+      // the journey at the end so scrolling the cards never moves the page.
+      if (currentRef.current > 0.86) { targetRef.current = 1; return; }
       const delta = (e.deltaY + e.deltaX) / 4200;
       targetRef.current = Math.max(0, Math.min(1, targetRef.current + delta));
     };
