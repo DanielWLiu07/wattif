@@ -41,14 +41,23 @@ const REGION_CARDS = [
   { name: "West Toronto", desc: "Artistic, creative hubs and transit-oriented corridors." },
 ];
 
-// ── Carousel geometry ─────────────────────────────────────────────────────
-// 3 copies for seamless looping. Wrap happens at 1× SET_W.
-const CARD_W = 264;
-const CARD_GAP = 20;
-const CARD_STRIDE = CARD_W + CARD_GAP;
-const COPIES = 3;
-const SET_W = REGION_CARDS.length * CARD_STRIDE; // one full set width in px
-const ALL_CARDS = Array.from({ length: COPIES }, () => REGION_CARDS).flat();
+// ── Carousel geometry — playing-card proportions (0.714 ratio) ────────────
+//
+// Cards are taller than they are wide, like poker cards (2.5:3.5).
+// The strip is anchored at the screen bottom and only the top half of each
+// card is visible (bottom half goes below the fold). The strip has
+// overflow: visible so the centered active card can rise above the strip edge.
+
+const CARD_W     = 200;  // card width px
+const CARD_H     = 280;  // card height px (200 × 3.5/2.5 = 280)
+const CARD_GAP   = 18;
+const CARD_STRIDE = CARD_W + CARD_GAP;              // 218 px
+const COPIES      = 3;
+const SET_W       = REGION_CARDS.length * CARD_STRIDE; // 8 × 218 = 1744 px
+const ALL_CARDS   = Array.from({ length: COPIES }, () => REGION_CARDS).flat();
+
+const STRIP_H = Math.round(CARD_H / 2); // 140 px — visible top-half strip height
+const RISE    = 72;  // px the centered card rises above the strip top
 
 // ── Live zone counts ────────────────────────────────────────────────────────
 type RawZone = {
@@ -59,7 +68,7 @@ type RawZone = {
 };
 
 const rawZones = zonesRaw as RawZone[];
-const TOTAL_ZONES = rawZones.length;
+const TOTAL_ZONES  = rawZones.length;
 const TOTAL_AGENTS = 8001;
 
 const zoneCounts: Record<string, number> = {};
@@ -83,7 +92,7 @@ type ZoneGeo = {
   centroid: [number, number];
   region: string;
   paths: string[];
-  col: 0 | 1 | 2; // for left→right draw-in stagger
+  col: 0 | 1 | 2;
 };
 
 const processedZones: ZoneGeo[] = rawZones.map((z) => {
@@ -105,18 +114,16 @@ const twinkleZones = processedZones.filter((_, i) => i % 6 === 0);
 export function TorontoMap({ active = false }: { active?: boolean }) {
   const setSelectedRegion = useStore((s) => s.setSelectedRegion);
 
-  // activeRegion = derived from center-detection each rAF frame
-  // hoveredRegion = set by mouse events; pauses carousel and wins over center
-  const [activeRegion, setActiveRegion] = useState<string | null>(null);
+  const [activeRegion,  setActiveRegion]  = useState<string | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
 
   // Carousel refs — DOM-mutated directly in rAF for zero-jank scrolling
-  const trackRef = useRef<HTMLDivElement>(null);
-  const offsetRef = useRef(0);
-  const pausedRef = useRef(false);
+  const trackRef      = useRef<HTMLDivElement>(null);
+  const offsetRef     = useRef(0);
+  const pausedRef     = useRef(false);
   const prevActiveRef = useRef<string | null>(null);
-  const rafRef = useRef(0);
+  const rafRef        = useRef(0);
 
   // Draw-in: flip `revealed` 80ms after scope becomes active; reset on hide
   useEffect(() => {
@@ -131,7 +138,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   useEffect(() => {
     if (!active) return;
 
-    const SPEED = 0.9; // px per frame at 60 fps
+    const SPEED = 0.85; // px per frame at 60 fps
 
     const tick = () => {
       if (!pausedRef.current) {
@@ -139,17 +146,15 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         if (offsetRef.current >= SET_W) offsetRef.current -= SET_W;
       }
 
-      // Apply transform directly — no React re-render per frame
       if (trackRef.current) {
         trackRef.current.style.transform = `translateX(${-offsetRef.current}px)`;
       }
 
-      // Center detection: find which card is closest to viewport midpoint
+      // Center detection: the SINGLE card nearest the viewport horizontal midpoint
       if (!pausedRef.current) {
         const vcx = window.innerWidth / 2;
         let closest: string | null = null;
         let minDist = Infinity;
-        // Check first two copies so there's always a card near center
         for (let i = 0; i < REGION_CARDS.length * 2; i++) {
           const cardCx = i * CARD_STRIDE + CARD_W / 2 - offsetRef.current;
           const dist = Math.abs(cardCx - vcx);
@@ -158,7 +163,6 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             closest = REGION_CARDS[i % REGION_CARDS.length].name;
           }
         }
-        // Only update React state on actual region change (≤8× per loop)
         if (closest !== prevActiveRef.current) {
           prevActiveRef.current = closest;
           setActiveRegion(closest);
@@ -181,9 +185,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     return map;
   }, []);
 
-  // Hover wins over center-based detection
-  const effectiveRegion = hoveredRegion ?? activeRegion;
-  const highlightAll = effectiveRegion === "All Toronto";
+  const effectiveRegion  = hoveredRegion ?? activeRegion;
+  const highlightAll     = effectiveRegion === "All Toronto";
   const highlightedRegion = highlightAll ? null : effectiveRegion;
 
   const colDelay = ["0ms", "140ms", "280ms"] as const;
@@ -218,9 +221,13 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         }
       `}</style>
 
-      <div className="fixed inset-0 z-[90] flex flex-col bg-background overflow-hidden">
+      {/* ── Main container — overflow: visible so active cards can rise above strip ── */}
+      <div
+        className="fixed inset-0 z-[90] bg-background"
+        style={{ overflow: "visible" }}
+      >
 
-        {/* ── Header ────────────────────────────────────────────────────── */}
+        {/* ── Header ──────────────────────────────────────────────────────── */}
         <div className="shrink-0 border-b border-border px-8 py-4 flex items-baseline gap-4">
           <div>
             <p className="label inline" style={{ color: "hsl(var(--brand))" }}>Final step — </p>
@@ -231,15 +238,22 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           </span>
         </div>
 
-        {/* ── Map — top focal point ──────────────────────────────────────── */}
-        <div className="relative flex flex-1 items-center justify-center overflow-hidden min-h-0">
-
+        {/* ── Map — fills space above the card strip ──────────────────────── */}
+        <div
+          className="relative flex flex-1 items-center justify-center"
+          style={{
+            position: "absolute",
+            top: 53, // approximate header height
+            left: 0, right: 0,
+            bottom: STRIP_H, // leave room for visible card strip
+            overflow: "hidden",
+          }}
+        >
           {/* Drifting volt dot-grid */}
           <div
             aria-hidden
             style={{
-              position: "absolute",
-              inset: 0,
+              position: "absolute", inset: 0,
               backgroundImage: "radial-gradient(circle, hsl(72 95% 50%) 1px, transparent 1px)",
               backgroundSize: "28px 28px",
               opacity: 0.07,
@@ -251,12 +265,9 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           <div
             aria-hidden
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "55%",
+              position: "absolute", top: "50%", left: "55%",
               transform: "translate(-50%, -50%)",
-              width: 520,
-              height: 520,
+              width: 520, height: 520,
               borderRadius: "50%",
               background: "radial-gradient(circle, hsl(72 95% 50% / 0.1) 0%, transparent 68%)",
               animation: "voltGlowBreathe 5s ease-in-out infinite",
@@ -276,13 +287,12 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             >
               <rect width={SVG_W} height={SVG_H} fill="transparent" />
 
-              {/* Zone paths — left→right draw-in stagger */}
               {processedZones.map((zone) => {
                 const isTarget =
                   highlightAll ||
                   (highlightedRegion !== null && zone.region === highlightedRegion);
-                const fill = isTarget ? "hsl(72 95% 50%)" : "#e8e8e8";
-                const stroke = isTarget ? "hsl(72 95% 30%)" : "#cfcfcf";
+                const fill   = isTarget ? "hsl(72 95% 50%)"     : "#e8e8e8";
+                const stroke = isTarget ? "hsl(72 95% 30%)"     : "#cfcfcf";
                 return zone.paths.map((d, pi) => (
                   <path
                     key={`${zone.id}-${pi}`}
@@ -300,32 +310,29 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                 ));
               })}
 
-              {/* Twinkling centroid dots */}
               {revealed &&
                 twinkleZones.map((z, i) => {
-                  const cx = lngToX(z.centroid[0]).toFixed(1);
-                  const cy = latToY(z.centroid[1]).toFixed(1);
+                  const cx  = lngToX(z.centroid[0]).toFixed(1);
+                  const cy  = latToY(z.centroid[1]).toFixed(1);
                   const dur = `${2.4 + (i % 5) * 0.6}s`;
-                  const begin = `${(i % 7) * 0.4}s`;
+                  const beg = `${(i % 7) * 0.4}s`;
                   return (
                     <circle key={z.id} cx={cx} cy={cy} r="2" fill="hsl(72 95% 50%)">
-                      <animate attributeName="opacity" values="0;0.75;0" dur={dur} begin={begin} repeatCount="indefinite" />
-                      <animate attributeName="r" values="1.5;2.8;1.5" dur={dur} begin={begin} repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0;0.75;0" dur={dur} begin={beg} repeatCount="indefinite" />
+                      <animate attributeName="r"       values="1.5;2.8;1.5" dur={dur} begin={beg} repeatCount="indefinite" />
                     </circle>
                   );
                 })}
 
-              {/* Region centroid labels */}
               {Object.entries(zonesByRegion).map(([region, zones]) => {
                 if (zones.length === 0) return null;
-                const avgX = zones.reduce((s, z) => s + lngToX(z.centroid[0]), 0) / zones.length;
-                const avgY = zones.reduce((s, z) => s + latToY(z.centroid[1]), 0) / zones.length;
+                const avgX    = zones.reduce((s, z) => s + lngToX(z.centroid[0]), 0) / zones.length;
+                const avgY    = zones.reduce((s, z) => s + latToY(z.centroid[1]), 0) / zones.length;
                 const isActive = highlightedRegion === region || highlightAll;
                 return (
                   <text
                     key={region}
-                    x={avgX}
-                    y={avgY}
+                    x={avgX} y={avgY}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fontSize="7"
@@ -344,80 +351,183 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           </div>
         </div>
 
-        {/* ── Infinite card carousel — bottom ───────────────────────────── */}
-        <div className="relative shrink-0 border-t border-border" style={{ height: 196 }}>
-          {/* Left/right edge fades */}
-          <div aria-hidden style={{ position: "absolute", left: 0, inset: "0 auto", width: 96, background: "linear-gradient(to right, hsl(var(--background)), transparent)", zIndex: 2, pointerEvents: "none" }} />
-          <div aria-hidden style={{ position: "absolute", right: 0, inset: "0 auto 0 auto", width: 96, background: "linear-gradient(to left, hsl(var(--background)), transparent)", zIndex: 2, pointerEvents: "none" }} />
+        {/* ── Playing-card carousel strip ──────────────────────────────────────
+             Positioned so only the top STRIP_H px of each card is on-screen.
+             overflow: visible allows the centered active card to rise above the
+             strip's top edge into the map area without being clipped.
+        ─────────────────────────────────────────────────────────────────────── */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: -(CARD_H - STRIP_H), // = -140px — only top half on screen
+            left: 0,
+            right: 0,
+            height: CARD_H,
+            overflow: "visible",
+            zIndex: 10,
+            perspective: "1100px",
+            perspectiveOrigin: "50% 0%",
+          }}
+        >
+          {/* Top hairline — visual separation between map and card tops */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0, left: 0, right: 0,
+              height: 1,
+              background: "linear-gradient(to right, transparent, hsl(var(--border) / 0.6) 20%, hsl(var(--border) / 0.6) 80%, transparent)",
+              zIndex: 4,
+              pointerEvents: "none",
+            }}
+          />
 
-          {/* Track — transform applied directly by rAF */}
-          <div className="h-full overflow-hidden">
-            <div
-              ref={trackRef}
-              className="flex h-full items-center will-change-transform"
-              style={{ gap: CARD_GAP, paddingInline: CARD_GAP }}
-            >
-              {ALL_CARDS.map((card, i) => {
-                const isHovered = hoveredRegion === card.name;
-                // All copies of the centered region get active styling so the right one is always lit
-                const isCenterActive = !hoveredRegion && activeRegion === card.name;
-                const isActive = isHovered || isCenterActive;
+          {/* Left edge fade */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute", top: 0, left: 0,
+              width: 88, height: STRIP_H,
+              background: "linear-gradient(to right, hsl(var(--background)), transparent)",
+              zIndex: 3, pointerEvents: "none",
+            }}
+          />
+          {/* Right edge fade */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute", top: 0, right: 0,
+              width: 88, height: STRIP_H,
+              background: "linear-gradient(to left, hsl(var(--background)), transparent)",
+              zIndex: 3, pointerEvents: "none",
+            }}
+          />
 
-                return (
-                  <button
-                    key={i}
-                    onMouseEnter={() => handleMouseEnter(card.name)}
-                    onMouseLeave={handleMouseLeave}
-                    onClick={() => handleClick(card.name)}
+          {/* Track — transformed by rAF */}
+          <div
+            ref={trackRef}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: CARD_GAP,
+              paddingInline: CARD_GAP,
+              willChange: "transform",
+              transformStyle: "preserve-3d",
+              position: "absolute",
+              top: 0, left: 0,
+            }}
+          >
+            {ALL_CARDS.map((card, i) => {
+              const isHovered     = hoveredRegion === card.name;
+              const isCenterActive = !hoveredRegion && activeRegion === card.name;
+              const isActive      = isHovered || isCenterActive;
+
+              return (
+                <button
+                  key={i}
+                  onMouseEnter={() => handleMouseEnter(card.name)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleClick(card.name)}
+                  style={{
+                    // Playing card dimensions
+                    width: CARD_W,
+                    height: CARD_H,
+                    flexShrink: 0,
+
+                    // Card face styling
+                    borderRadius: 14,
+                    border: `1.5px solid ${isActive ? "hsl(var(--brand))" : "hsl(var(--border) / 0.7)"}`,
+                    background: isActive
+                      ? "linear-gradient(160deg, #fff 0%, hsl(72 95% 98%) 100%)"
+                      : "white",
+                    padding: "20px 18px 0",
+                    textAlign: "left",
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+
+                    // Shadow — volt glow for active, subtle lift for inactive
+                    boxShadow: isActive
+                      ? "0 -6px 28px hsl(var(--brand) / 0.22), 0 2px 12px rgba(0,0,0,0.1)"
+                      : "0 -2px 8px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.04)",
+
+                    // 3D transforms:
+                    // Inactive: slight rotateX tilt — like cards lying on a table
+                    // Active: stands upright and rises above the strip into map area
+                    transform: isActive
+                      ? `translateY(-${RISE}px) rotateX(0deg) scale(1.05)`
+                      : "rotateX(5deg)",
+                    transformOrigin: "bottom center",
+                    transition: [
+                      "transform 0.38s cubic-bezier(0.34,1.56,0.64,1)",
+                      "border-color 0.2s ease",
+                      "box-shadow 0.2s ease",
+                      "background 0.2s ease",
+                    ].join(", "),
+                    willChange: "transform",
+
+                    // Only pointer-events on the visible strip portion
+                    pointerEvents: "auto",
+                  }}
+                >
+                  {/* Region name */}
+                  <span
                     style={{
-                      minWidth: CARD_W,
-                      flexShrink: 0,
-                      height: 156,
-                      borderRadius: 16,
-                      border: `1px solid ${isActive ? "hsl(var(--brand))" : "hsl(var(--border))"}`,
-                      background: "white",
-                      padding: "18px 22px",
-                      textAlign: "left",
-                      cursor: "pointer",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 5,
-                      boxShadow: isActive
-                        ? "0 4px 20px hsl(var(--brand) / 0.18)"
-                        : "0 1px 4px rgb(0 0 0 / 0.04)",
-                      transform: isActive ? "translateY(-3px)" : "translateY(0)",
-                      transition: "border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease",
+                      fontSize: 17,
+                      fontWeight: 700,
+                      lineHeight: 1.2,
+                      fontFamily: "Space Grotesk, sans-serif",
+                      color: isActive ? "hsl(var(--foreground))" : "#1a1a1a",
+                      letterSpacing: "-0.01em",
+                      transition: "color 0.2s ease",
                     }}
                   >
-                    <span
-                      className="font-display font-bold leading-tight"
-                      style={{
-                        fontSize: 16,
-                        color: isActive ? "hsl(var(--brand-ink, var(--foreground)))" : "hsl(var(--foreground))",
-                        transition: "color 0.18s ease",
-                      }}
-                    >
-                      {card.name}
-                    </span>
-                    <span
-                      className="font-sans text-muted-foreground leading-snug"
-                      style={{
-                        fontSize: 11,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {card.desc}
-                    </span>
-                    <span className="font-mono text-muted-foreground/60 mt-auto" style={{ fontSize: 10 }}>
-                      {getZoneCount(card.name)} zones · {getAgentCount(card.name).toLocaleString()} agents
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                    {card.name}
+                  </span>
+
+                  {/* Description — 2-line clamp */}
+                  <span
+                    style={{
+                      fontSize: 11,
+                      lineHeight: 1.5,
+                      color: "#9a9a9a",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {card.desc}
+                  </span>
+
+                  {/* Zone & agent counts — stays in top half */}
+                  <span
+                    style={{
+                      fontSize: 10,
+                      fontFamily: "JetBrains Mono, monospace",
+                      color: isActive ? "hsl(var(--brand) / 0.8)" : "#c0c0c0",
+                      marginTop: "auto",
+                      paddingBottom: 16,
+                      transition: "color 0.2s ease",
+                    }}
+                  >
+                    {getZoneCount(card.name)} zones · {getAgentCount(card.name).toLocaleString()} agents
+                  </span>
+
+                  {/* Volt accent stripe — decorative bottom-of-card element (below fold) */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 0, left: 0, right: 0,
+                      height: 4,
+                      borderRadius: "0 0 13px 13px",
+                      background: isActive ? "hsl(var(--brand))" : "transparent",
+                      transition: "background 0.2s ease",
+                    }}
+                  />
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
