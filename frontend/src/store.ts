@@ -28,6 +28,7 @@ import type {
   CohortProfile,
   ProposalReport,
   UploadedDataset,
+  UploadedInfrastructureAsset,
   UploadedDatasetSummary,
   Zone,
 } from "@/types";
@@ -218,6 +219,8 @@ type State = {
   datasetSummaries: UploadedDatasetSummary[];
   datasetUploading: boolean;
   datasetError: string | null;
+  existingInfrastructureAssets: UploadedInfrastructureAsset[];
+  existingInfrastructureError: string | null;
   cohorts: CohortProfile[];
   cohortConcerns: CohortConcern[];
   cohortGenerating: boolean;
@@ -228,6 +231,7 @@ type State = {
   operatorRecommendationReady: boolean;
   loadProjects: () => Promise<void>;
   loadDatasets: () => Promise<void>;
+  loadExistingInfrastructure: () => Promise<void>;
   uploadDataset: (file: File, datasetType?: string) => Promise<void>;
   selectDataset: (datasetId: string | null) => void;
   deleteDataset: (datasetId: string) => Promise<void>;
@@ -458,6 +462,27 @@ function getRegionFlyTo(region: string, allZones: Zone[]): FlyTo {
     nonce: Date.now(),
   };
 }
+export const getHaversineDistance = (pos1: [number, number], pos2: [number, number]): number => {
+  const R = 6371000; // Earth's radius in meters
+  const dLat = ((pos2[1] - pos1[1]) * Math.PI) / 180;
+  const dLng = ((pos2[0] - pos1[0]) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((pos1[1] * Math.PI) / 180) *
+      Math.cos((pos2[1] * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
+export const INFRA_CLEARANCES: Record<string, number> = {
+  wind: 200,
+  microgrid: 120,
+  battery: 60,
+  solar: 40,
+  ev_charger: 30,
+};
 
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
@@ -747,6 +772,8 @@ export const useStore = create<State>((set, get) => ({
   datasetSummaries: [],
   datasetUploading: false,
   datasetError: null,
+  existingInfrastructureAssets: [],
+  existingInfrastructureError: null,
   cohorts: [],
   cohortConcerns: [],
   cohortGenerating: false,
@@ -898,6 +925,31 @@ export const useStore = create<State>((set, get) => ({
       selectedDatasetId: get().selectedDatasetId,
     });
     void get().loadCohortConcerns();
+    void get().loadExistingInfrastructure();
+  },
+
+  loadExistingInfrastructure: async () => {
+    const { selectedProjectId, selectedProposalId, backendHealth } = get();
+    if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
+      set({ existingInfrastructureAssets: [], existingInfrastructureError: null });
+      return;
+    }
+    const res = selectedProposalId
+      ? await api.listProposalExistingInfrastructure(selectedProposalId)
+      : await api.listProjectExistingInfrastructure(selectedProjectId);
+    if (!res.ok) {
+      set({
+        existingInfrastructureError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Could not load uploaded existing infrastructure",
+        existingInfrastructureAssets: [],
+      });
+      return;
+    }
+    set({
+      existingInfrastructureAssets: res.data,
+      existingInfrastructureError: null,
+    });
   },
 
   uploadDataset: async (file, datasetType) => {
@@ -929,7 +981,14 @@ export const useStore = create<State>((set, get) => ({
       datasetUploading: false,
     }));
     await get().loadDatasets();
-    get().pushToast(`Uploaded ${res.data.name} (${res.data.datasetType})`, "good");
+    void get().loadExistingInfrastructure();
+    const extracted = res.data.extractedExistingInfrastructureCount ?? 0;
+    get().pushToast(
+      extracted > 0
+        ? `Uploaded ${res.data.name} — extracted ${extracted} existing infrastructure point(s)`
+        : `Uploaded ${res.data.name} (${res.data.datasetType})`,
+      "good"
+    );
   },
 
   selectDataset: (datasetId) => set({ selectedDatasetId: datasetId }),
@@ -950,6 +1009,7 @@ export const useStore = create<State>((set, get) => ({
         s.selectedDatasetId === datasetId ? null : s.selectedDatasetId,
     }));
     await get().loadDatasets();
+    void get().loadExistingInfrastructure();
   },
 
   loadProjects: async () => {
@@ -1028,6 +1088,8 @@ export const useStore = create<State>((set, get) => ({
       persistenceError: null,
       datasetError: null,
       cohortError: null,
+      existingInfrastructureAssets: [],
+      existingInfrastructureError: null,
     });
     if (!projectId || get().backendHealth?.persistenceProvider !== "supabase") return;
     set({ persistenceLoading: true });
@@ -1038,6 +1100,7 @@ export const useStore = create<State>((set, get) => ({
     }
     set({ proposals, persistenceLoading: false });
     void get().loadDatasets();
+    void get().loadExistingInfrastructure();
   },
 
   createProposal: async (name) => {
@@ -1125,6 +1188,7 @@ export const useStore = create<State>((set, get) => ({
     await get().refreshFlows();
     void get().refreshSitingPriority();
     void get().loadDatasets();
+    void get().loadExistingInfrastructure();
 
     const statusRes = await api.getOperatorRecommendationStatus(proposalId);
     if (statusRes.ok && statusRes.data.hasOperatorRecommendation) {
@@ -1291,6 +1355,7 @@ export const useStore = create<State>((set, get) => ({
         Object.entries(sentiment.perZone).map(([k, v]) => [k, [v]])
       ),
     });
+    get().setSelectedRegion(get().selectedRegion);
     if (backendHealth?.persistenceProvider === "supabase") void get().loadProjects();
 
     // build-priority ranking (where to build next)
@@ -1339,6 +1404,7 @@ export const useStore = create<State>((set, get) => ({
           sbei,
           activity: activity.length ? activity.slice(0, 80) : get().activity,
         });
+        get().setSelectedRegion(get().selectedRegion);
       }
     );
 
@@ -1570,6 +1636,24 @@ export const useStore = create<State>((set, get) => ({
     const activeZoneIds = new Set(zones.map(zone => zone.id));
     if (selectedRegion !== "All" && z && !activeZoneIds.has(z.id)) {
       get().pushToast(`Cannot place infrastructure outside the active region (${selectedRegion})`, "warn");
+      return;
+    }
+
+    // Enforce programmatic spacing clearances to prevent model overlapping/clipping
+    const placeLimit = INFRA_CLEARANCES[placeKind];
+    const conflicts = get().infra.filter((existing) => {
+      const dist = getHaversineDistance(pos, existing.position);
+      const requiredDist = Math.max(placeLimit, INFRA_CLEARANCES[existing.kind]);
+      return dist < requiredDist;
+    });
+
+    if (conflicts.length > 0) {
+      const nearest = conflicts[0];
+      const maxLimit = Math.max(placeLimit, INFRA_CLEARANCES[nearest.kind]);
+      get().pushToast(
+        `Placement Blocked: Too close to an existing ${nearest.kind} (requires ${maxLimit}m clearance)`,
+        "warn"
+      );
       return;
     }
 

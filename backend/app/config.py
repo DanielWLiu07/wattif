@@ -12,7 +12,8 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT = BACKEND_DIR.parent
 
 # Always load backend/.env regardless of process cwd (uvicorn may start from repo root).
-load_dotenv(BACKEND_DIR / ".env")
+# override=True so file values win over stale empty shell env vars.
+load_dotenv(BACKEND_DIR / ".env", override=True)
 DATA_PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 
 # --- LLM provider (reasoning-agent layer) -------------------------------

@@ -164,4 +164,11 @@ def build_planner_context(
     )
     if pi:
         parts.append(pi)
+    from .existing_infra_context import format_uploaded_existing_infra_for_prompt
+
+    ui = format_uploaded_existing_infra_for_prompt(
+        project_id=project_id, proposal_id=proposal_id
+    )
+    if ui:
+        parts.append(ui)
     return "\n\n".join(parts) if parts else None
