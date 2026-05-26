@@ -168,6 +168,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
 
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
+  const [launching, setLaunching] = useState(false);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   // Index (into ALL_CARDS) of the specific card under the cursor + the centered
   // card. The cursor always wins: hovered card is the selected one, one at a time.
@@ -331,9 +332,16 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
 
   const colDelay = ["0ms", "140ms", "280ms"] as const;
 
+  // Clicking a scope "dives into the city": the whole selector zooms toward the
+  // map + fades, then the dashboard mounts (which fades in) — a continuous feel.
   const handleClick = (name: string) => {
-    setSelectedRegion(name);
-    useStore.setState({ showRegionSelector: false });
+    if (launching) return;
+    setLaunching(true);
+    setHoveredRegion(name); // lock the highlight on the chosen region during the dive
+    window.setTimeout(() => {
+      setSelectedRegion(name);
+      useStore.setState({ showRegionSelector: false });
+    }, 620);
   };
 
   return (
@@ -368,6 +376,13 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
           // Translucent white wash: lets the live 3D grid read through faintly
           // without it dominating the scope screen.
           background: "hsl(0 0% 100% / 0.62)",
+          // "Dive into the city" on select: zoom toward the map + fade.
+          transformOrigin: "50% 42%",
+          transform: launching ? "scale(1.45)" : "scale(1)",
+          opacity: launching ? 0 : 1,
+          transition: launching
+            ? "transform 0.62s cubic-bezier(0.7,0,0.84,0), opacity 0.62s ease-in"
+            : "none",
         }}
       >
 

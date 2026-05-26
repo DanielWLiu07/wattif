@@ -166,3 +166,10 @@ a,
   }
 }
 
+
+/* Dashboard reveal — pairs with the scope "dive into the city" zoom-out so the
+   simulator fades up as the selector finishes diving in. */
+@keyframes appReveal {
+  from { opacity: 0; transform: scale(1.03); }
+  to   { opacity: 1; transform: scale(1); }
+}

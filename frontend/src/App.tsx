@@ -96,7 +96,10 @@ function App() {
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="relative h-full w-full overflow-hidden bg-background">
+      <div
+        className="relative h-full w-full overflow-hidden bg-background"
+        style={{ animation: "appReveal 0.55s ease both" }}
+      >
         {/* Map is the hero */}
         <MapView />
 
