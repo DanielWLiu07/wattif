@@ -17,7 +17,7 @@ const TEXT_EDIT =
 
 const HERO_TEXT_KEY = "wattif:hero-text";
 type HeroTextXf = { x: number; y: number; scale: number };
-const HERO_TEXT_DEFAULT: HeroTextXf = { x: -3.293, y: 47.852, scale: 1 };
+const HERO_TEXT_DEFAULT: HeroTextXf = { x: -3.293, y: 93.567, scale: 1 };
 
 function readHeroText(): HeroTextXf {
   try {
