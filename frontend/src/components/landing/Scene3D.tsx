@@ -399,8 +399,16 @@ function StoredGlbModel({
 
 // ── Hero station ──────────────────────────────────────────────────────────────
 
-function HeroStation({ stored }: {
-  stored?: { position: [number, number, number]; rotation: [number, number, number]; scale: number };
+// Default positions for hero-area models when no stored layout exists
+const HERO_DEFAULTS: Record<string, [number, number, number]> = {
+  heroTurbine: [3.5,  0, -1],
+  solar:       [-8,  0, -2],
+  battery:     [8,   0,  1],
+  microgrid:   [13,  0, -3],
+};
+
+function HeroTurbine({ stored }: {
+  stored?: StoredModelEntry | null;
 }) {
   const { scene } = useGLTF("/models/wind_turbine.glb");
   const groupRef = useRef<Group>(null);
@@ -448,8 +456,68 @@ function HeroStation({ stored }: {
   }
 
   return (
-    <group ref={groupRef} position={[3.5, fit.yBase, -1]} scale={fit.scale} castShadow>
+    <group ref={groupRef} position={[HERO_DEFAULTS.heroTurbine[0], fit.yBase, HERO_DEFAULTS.heroTurbine[2]]} scale={fit.scale} castShadow>
       <primitive object={cloned} />
+    </group>
+  );
+}
+
+// Generic hero model: uses stored layout if present, else fits to targetH at default pos
+function HeroGlbModel({ url, targetH, defaultPos, stored }: {
+  url: string;
+  targetH: number;
+  defaultPos: [number, number, number];
+  stored?: StoredModelEntry | null;
+}) {
+  const { scene } = useGLTF(url);
+  const groupRef = useRef<Group>(null);
+  const cloned = useMemo(() => {
+    const c = scene.clone(true);
+    c.traverse((child) => {
+      if ((child as Mesh).isMesh) { child.castShadow = true; child.receiveShadow = true; }
+    });
+    return c;
+  }, [scene]);
+  const fit = useMemo(() => fitToHeight(cloned, targetH), [cloned, targetH]);
+
+  if (stored) {
+    return (
+      <group ref={groupRef} position={stored.position} rotation={stored.rotation} scale={stored.scale} castShadow>
+        <primitive object={cloned} />
+      </group>
+    );
+  }
+  return (
+    <group ref={groupRef} position={[defaultPos[0], fit.yBase, defaultPos[2]]} scale={fit.scale} castShadow>
+      <primitive object={cloned} />
+    </group>
+  );
+}
+
+function HeroStation({ storedModels, progress }: {
+  storedModels?: Record<string, StoredModelEntry> | null;
+  progress: number;
+}) {
+  const groupRef = useRef<Group>(null);
+  // Smoothed reveal: 1 in hero range, fades to 0 by progress 0.24
+  const smoothReveal = useRef(1);
+
+  useFrame((_, delta) => {
+    const target = MathUtils.clamp(1 - (progress - 0.06) / 0.18, 0, 1);
+    smoothReveal.current = MathUtils.lerp(smoothReveal.current, target, 1 - Math.pow(0.004, delta));
+    if (groupRef.current) {
+      groupRef.current.visible = smoothReveal.current > 0.01;
+      // Scale toward 0 when fading so models don't cast shadows / appear in 2D stations
+      groupRef.current.scale.setScalar(smoothReveal.current);
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <HeroTurbine stored={storedModels?.heroTurbine} />
+      <HeroGlbModel url="/models/solar_array.glb"   targetH={MODEL_HEIGHTS.solar}     defaultPos={HERO_DEFAULTS.solar}     stored={storedModels?.solar} />
+      <HeroGlbModel url="/models/battery.glb"        targetH={MODEL_HEIGHTS.battery}   defaultPos={HERO_DEFAULTS.battery}   stored={storedModels?.battery} />
+      <HeroGlbModel url="/models/microgrid_hub.glb"  targetH={MODEL_HEIGHTS.microgrid} defaultPos={HERO_DEFAULTS.microgrid} stored={storedModels?.microgrid} />
     </group>
   );
 }
@@ -566,7 +634,7 @@ export function Scene3D({ progress }: { progress: number }) {
       <CameraRig progress={progress} />
 
       <Suspense fallback={null}>
-        <HeroStation stored={storedByType?.heroTurbine} />
+        <HeroStation storedModels={storedByType} progress={progress} />
         <ProblemStation progress={progress} />
         <DemandStation progress={progress} />
         <InfraStation progress={progress} storedModels={storedByType ?? undefined} />
@@ -608,10 +676,10 @@ interface EditModelSpec {
 
 const EDIT_DEFAULTS: EditModelSpec[] = [
   { uid: 0, type: "heroTurbine",  url: "/models/wind_turbine.glb",  targetH: MODEL_HEIGHTS.heroTurbine, initPos: [3.5,  0, -1] },
-  { uid: 1, type: "solar",        url: "/models/solar_array.glb",   targetH: MODEL_HEIGHTS.solar,       initPos: [-11,  0, -40] },
+  { uid: 1, type: "solar",        url: "/models/solar_array.glb",   targetH: MODEL_HEIGHTS.solar,       initPos: [-8,   0, -2] },
   { uid: 2, type: "wind",         url: "/models/wind_turbine.glb",  targetH: MODEL_HEIGHTS.wind,        initPos: [-4,   0, -40] },
-  { uid: 3, type: "battery",      url: "/models/battery.glb",       targetH: MODEL_HEIGHTS.battery,     initPos: [3.5,  0, -40] },
-  { uid: 4, type: "microgrid",    url: "/models/microgrid_hub.glb", targetH: MODEL_HEIGHTS.microgrid,   initPos: [10,   0, -40] },
+  { uid: 3, type: "battery",      url: "/models/battery.glb",       targetH: MODEL_HEIGHTS.battery,     initPos: [8,    0,  1] },
+  { uid: 4, type: "microgrid",    url: "/models/microgrid_hub.glb", targetH: MODEL_HEIGHTS.microgrid,   initPos: [13,   0, -3] },
 ];
 
 const ADD_CATALOG: { type: string; url: string; targetH: number }[] = [
