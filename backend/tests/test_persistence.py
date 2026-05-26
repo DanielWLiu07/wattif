@@ -5,7 +5,7 @@ from __future__ import annotations
 import app.config as config
 import app.db.supabase_client as sc
 import app.state as state
-from app.db.repositories import proposal_infrastructure
+from app.db.repositories import proposal_infrastructure, simulation_snapshots
 from app.db.repositories.base import PersistenceDisabledError
 from app.main import app
 from fastapi.testclient import TestClient
@@ -67,6 +67,25 @@ def test_proposal_infrastructure_repository_disabled(monkeypatch):
 
     with pytest.raises(PersistenceDisabledError):
         proposal_infrastructure.delete("00000000-0000-0000-0000-000000000003")
+
+
+def test_simulation_snapshots_repository_disabled(monkeypatch):
+    _disable_supabase(monkeypatch)
+
+    with pytest.raises(PersistenceDisabledError):
+        simulation_snapshots.list_by_proposal("00000000-0000-0000-0000-000000000002")
+
+    with pytest.raises(PersistenceDisabledError):
+        simulation_snapshots.get_latest("00000000-0000-0000-0000-000000000002")
+
+    with pytest.raises(PersistenceDisabledError):
+        simulation_snapshots.create(
+            proposal_id="00000000-0000-0000-0000-000000000002",
+            tick=1,
+            metrics={"coveragePct": 0.2},
+            scenarios=[],
+            infrastructure=[],
+        )
 
 
 def test_health_reports_supabase_when_env_set(monkeypatch):

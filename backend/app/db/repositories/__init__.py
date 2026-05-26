@@ -8,6 +8,7 @@ from . import (
     projects,
     proposal_infrastructure,
     proposals,
+    simulation_snapshots,
 )
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "agents",
     "planner_runs",
     "proposal_infrastructure",
+    "simulation_snapshots",
 ]
