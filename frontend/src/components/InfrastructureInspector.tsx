@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Sun, Wind, BatteryCharging, Network, Crosshair, Trash2, Bot, User } from "lucide-react";
+import { Sun, Wind, BatteryCharging, Network, PlugZap, Crosshair, Trash2, Bot, User } from "lucide-react";
 import { useStore } from "@/store";
 import type { InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";
@@ -13,6 +13,7 @@ const KIND_ICON: Record<InfraKind, React.ElementType> = {
   wind: Wind,
   battery: BatteryCharging,
   microgrid: Network,
+  ev_charger: PlugZap,
 };
 const rgb = ([r, g, b]: [number, number, number]) => `rgb(${r},${g},${b})`;
 

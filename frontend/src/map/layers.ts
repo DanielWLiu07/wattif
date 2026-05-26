@@ -64,6 +64,7 @@ const SIZE_SCALE: Record<InfraKind, number> = {
   solar: 16,
   battery: 14,
   microgrid: 22,
+  ev_charger: 12,
 };
 
 function hashSeed(s: string): number {
@@ -780,7 +781,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
         },
         getElevation: (i: Infra) => {
           const base = 40;
-          if (i.kind === "battery" || i.kind === "microgrid")
+          if (i.kind === "battery" || i.kind === "microgrid" || i.kind === "ev_charger")
             return base + pulse * 60;
           return base;
         },
@@ -804,7 +805,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     );
 
     // One ScenegraphLayer per kind. Wind turbines spin (yaw animates with time).
-    const kinds: InfraKind[] = ["solar", "wind", "battery", "microgrid"];
+    const kinds: InfraKind[] = ["solar", "wind", "battery", "microgrid", "ev_charger"];
     for (const kind of kinds) {
       const items = infra.filter((i) => i.kind === kind && i.status !== "damaged");
       if (!items.length) continue;

@@ -369,6 +369,7 @@ const KIND_BIAS: Record<InfraKind, number> = {
   wind: -0.12,
   battery: 0.08,
   microgrid: 0.12,
+  ev_charger: 0.09,
 };
 
 export const getZoneRegion = (zoneName: string, centroid?: [number, number]): string => {

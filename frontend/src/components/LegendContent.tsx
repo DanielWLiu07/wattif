@@ -57,6 +57,9 @@ export function LegendContent() {
           <span className="flex items-center gap-1.5">
             <Swatch color={rgb(INFRA_COLOR.microgrid)} /> Microgrid
           </span>
+          <span className="flex items-center gap-1.5">
+            <Swatch color={rgb(INFRA_COLOR.ev_charger)} /> EV charger
+          </span>
         </div>
         <div className="mt-1 text-[10px] text-muted-foreground">
           hollow rings = existing (real) renewables / EV

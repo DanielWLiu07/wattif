@@ -1,4 +1,4 @@
-import { Sun, Wind, BatteryCharging, Network, Sparkles, Check, X, Users, Leaf, Scale } from "lucide-react";
+import { Sun, Wind, BatteryCharging, Network, PlugZap, Sparkles, Check, X, Users, Leaf, Scale } from "lucide-react";
 import { useStore } from "@/store";
 import type { InfraKind, Recommendation } from "@/types";
 import { INFRA_PRESETS, INFRA_COLOR } from "@/types";
@@ -11,6 +11,7 @@ const KIND_ICON: Record<InfraKind, React.ElementType> = {
   wind: Wind,
   battery: BatteryCharging,
   microgrid: Network,
+  ev_charger: PlugZap,
 };
 const rgb = ([r, g, b]: [number, number, number]) => `rgb(${r},${g},${b})`;
 

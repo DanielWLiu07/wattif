@@ -8,6 +8,7 @@ Outputs (in this directory):
   - solar_array.glb    tilted panel grid (cells + mullions) on a legged frame
   - battery.glb        corrugated container + vent + doors/terminals + base pad
   - microgrid_hub.glb  building + gable roof + annex + cabinets + conduit
+  - ev_charger.glb     curbside charging hub with posts + canopy
 
 Conventions (drop-in compatible with the frontend):
   - glTF 2.0 binary, Y-up. Height runs along +Y.
@@ -413,11 +414,33 @@ def make_microgrid_hub():
 
 
 # ---------------------------------------------------------------------------
+# EV charging hub
+# ---------------------------------------------------------------------------
+def make_ev_charger():
+    """Compact curbside charging hub: base pad, posts, canopy, plug heads."""
+    parts = []
+    pad = pbr("#3a3f47", metallic=0.15, rough=0.9, name="pad")
+    post = pbr("#818cf8", metallic=0.55, rough=0.45, name="post")
+    canopy = pbr("#6366f1", metallic=0.35, rough=0.55, name="canopy")
+    accent = pbr("#22d3ee", metallic=0.7, rough=0.35, name="plug")
+    sign = pbr("#f8fafc", metallic=0.1, rough=0.6, name="sign")
+
+    parts.append((box([3.2, 0.15, 2.4], pad, translate=(0, 0.075, 0)), "pad"))
+    for x in (-1.0, 1.0):
+        parts.append((box([0.35, 2.2, 0.35], post, translate=(x, 1.1, 0)), "post"))
+        parts.append((box([0.5, 0.9, 0.25], accent, translate=(x, 1.0, 0.55)), "plug"))
+    parts.append((box([3.0, 0.12, 2.0], canopy, translate=(0, 2.25, 0)), "canopy"))
+    parts.append((box([1.2, 0.5, 0.08], sign, translate=(0, 1.6, -1.05)), "sign"))
+    return parts
+
+
+# ---------------------------------------------------------------------------
 BUILDERS = {
     "wind_turbine": make_wind_turbine,
     "solar_array": make_solar_array,
     "battery": make_battery,
     "microgrid_hub": make_microgrid_hub,
+    "ev_charger": make_ev_charger,
 }
 
 SIZE_LIMIT = 1_500_000
