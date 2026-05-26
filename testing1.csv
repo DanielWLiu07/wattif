@@ -1,0 +1,6 @@
+﻿name,address,latitude,longitude,charger_type,power_kw,status,operator
+Islington Charger A,100 City Centre Dr,43.6452,-79.5281,Level 3,150,active,City
+Islington Charger B,5242 Dundas St W,43.6378,-79.5369,Level 2,19.2,active,Private
+Islington Charger C,399 The West Mall,43.6494,-79.5591,Level 3,100,unavailable,Utility
+Islington Charger D,10 East Mall Crescent,43.6308,-79.5532,Level 2,22,active,City
+Islington Charger E,250 The East Mall,43.6421,-79.5587,Level 3,120,maintenance,Utility

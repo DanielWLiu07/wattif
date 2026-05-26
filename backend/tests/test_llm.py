@@ -59,8 +59,11 @@ def test_provider_selection_featherless_env_aliases(monkeypatch):
     monkeypatch.setenv("FEATHERLESS_BASE_URL", "https://api.featherless.ai/v1")
     monkeypatch.setenv("FEATHERLESS_MODEL", "google/gemma-test")
 
+    import importlib
+
     import app.config as config
 
+    monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **k: True)
     importlib.reload(config)
     assert config.FEATHER_API_KEY == "rc_test_key"
     assert config.FEATHER_BASE_URL == "https://api.featherless.ai/v1"

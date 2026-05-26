@@ -6,14 +6,19 @@ import logging
 
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
 
+from ..data.infra_extract import extract_infrastructure_assets
 from ..data.dataset_parse import DatasetParseError, parse_upload
 from ..dataset_context import fetch_dataset_summaries
 from ..db.repositories import datasets as datasets_repo
+from ..db.repositories import proposals as proposals_repo
+from ..db.repositories import uploaded_infrastructure as uploaded_infra_repo
 from ..db.repositories.base import PersistenceDisabledError
+from ..existing_infra_context import fetch_uploaded_infrastructure
 from ..persistence_models import (
     PersistenceUnavailableResponse,
     UploadedDataset,
     UploadedDatasetSummary,
+    UploadedInfrastructureAsset,
 )
 
 log = logging.getLogger("wattif.routes.datasets")
@@ -30,13 +35,15 @@ def _unavailable() -> HTTPException:
     )
 
 
-def _row_to_dataset(row: dict) -> UploadedDataset:
+def _row_to_dataset(row: dict, extraction: dict | None = None) -> UploadedDataset:
     columns = row.get("columns") or []
     if not isinstance(columns, list):
         columns = []
     preview = row.get("preview") or []
     if not isinstance(preview, list):
         preview = []
+    meta = row.get("metadata") or {}
+    ext = extraction or meta.get("infraExtraction") or {}
     return UploadedDataset(
         id=row["id"],
         project_id=row.get("project_id"),
@@ -48,10 +55,41 @@ def _row_to_dataset(row: dict) -> UploadedDataset:
         feature_count=row.get("feature_count"),
         columns=[str(c) for c in columns],
         preview=preview,
-        metadata=row.get("metadata") or {},
+        metadata=meta,
         created_at=row.get("created_at"),
         updated_at=row.get("updated_at"),
         uploaded_at=row.get("uploaded_at") or row.get("created_at"),
+        extracted_existing_infrastructure_count=int(
+            ext.get("extracted_existing_infrastructure_count", 0)
+        ),
+        invalid_existing_infrastructure_rows=int(
+            ext.get("invalid_existing_infrastructure_rows", 0)
+        ),
+        detected_existing_infrastructure_kind=ext.get("detected_existing_infrastructure_kind"),
+    )
+
+
+def _row_to_infra_asset(row: dict) -> UploadedInfrastructureAsset:
+    return UploadedInfrastructureAsset(
+        id=row["id"],
+        project_id=row.get("project_id"),
+        proposal_id=row.get("proposal_id"),
+        dataset_id=row["dataset_id"],
+        asset_kind=row.get("asset_kind", "unknown"),
+        source_type=row.get("source_type", "upload"),
+        name=row.get("name"),
+        address=row.get("address"),
+        latitude=float(row["latitude"]),
+        longitude=float(row["longitude"]),
+        zone_id=row.get("zone_id"),
+        status=row.get("status"),
+        operator=row.get("operator"),
+        capacity_kw=row.get("capacity_kw"),
+        power_kw=row.get("power_kw"),
+        charger_type=row.get("charger_type"),
+        metadata=row.get("metadata") or {},
+        source_row_index=row.get("source_row_index"),
+        created_at=row.get("created_at"),
     )
 
 
@@ -69,6 +107,15 @@ def _row_to_summary(row: dict) -> UploadedDatasetSummary:
         detected_type=meta.get("detectedType"),
         created_at=row.get("created_at") or row.get("uploaded_at"),
     )
+
+
+def _resolve_project_id(project_id: str | None, proposal_id: str | None) -> str | None:
+    if project_id:
+        return project_id
+    if proposal_id:
+        prop = proposals_repo.get_proposal(proposal_id)
+        return prop.get("project_id") if prop else None
+    return None
 
 
 @router.post("/datasets/upload", response_model=UploadedDataset, status_code=201)
@@ -96,19 +143,35 @@ async def upload_dataset(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     try:
+        assets, extraction = extract_infrastructure_assets(
+            rows=parsed.get("rows") or [],
+            dataset_type=parsed["dataset_type"],
+        )
+        resolved_project_id = _resolve_project_id(project_id, proposal_id)
+        meta = {
+            **(parsed.get("metadata") or {}),
+            "infraExtraction": extraction,
+        }
         row = datasets_repo.create_dataset(
             name=parsed["name"],
             dataset_type=parsed["dataset_type"],
-            project_id=project_id,
+            project_id=resolved_project_id or project_id,
             proposal_id=proposal_id,
             file_type=parsed["file_type"],
             row_count=parsed.get("row_count"),
             feature_count=parsed.get("feature_count"),
             columns=parsed.get("columns"),
             preview=parsed.get("preview"),
-            metadata=parsed.get("metadata"),
+            metadata=meta,
         )
-        return _row_to_dataset(row)
+        if assets:
+            uploaded_infra_repo.create_assets_batch(
+                assets,
+                project_id=resolved_project_id or project_id,
+                proposal_id=proposal_id,
+                dataset_id=row["id"],
+            )
+        return _row_to_dataset(row, extraction=extraction)
     except PersistenceDisabledError:
         raise _unavailable() from None
     except Exception as exc:
@@ -186,9 +249,52 @@ def get_dataset(dataset_id: str) -> UploadedDataset:
         raise HTTPException(status_code=502, detail="Persistence query failed") from exc
 
 
+@router.get(
+    "/projects/{project_id}/existing-infrastructure",
+    response_model=list[UploadedInfrastructureAsset],
+)
+def list_project_existing_infrastructure(
+    project_id: str,
+    limit: int = Query(default=500, ge=1, le=1000),
+) -> list[UploadedInfrastructureAsset]:
+    try:
+        rows = fetch_uploaded_infrastructure(project_id=project_id, limit=limit)
+        return [_row_to_infra_asset(r) for r in rows]
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning(
+            "GET /api/projects/%s/existing-infrastructure failed: %s", project_id, exc
+        )
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.get(
+    "/proposals/{proposal_id}/existing-infrastructure",
+    response_model=list[UploadedInfrastructureAsset],
+)
+def list_proposal_existing_infrastructure(
+    proposal_id: str,
+    limit: int = Query(default=500, ge=1, le=1000),
+) -> list[UploadedInfrastructureAsset]:
+    try:
+        rows = fetch_uploaded_infrastructure(proposal_id=proposal_id, limit=limit)
+        return [_row_to_infra_asset(r) for r in rows]
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning(
+            "GET /api/proposals/%s/existing-infrastructure failed: %s",
+            proposal_id,
+            exc,
+        )
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
 @router.delete("/datasets/{dataset_id}")
 def delete_dataset(dataset_id: str) -> dict:
     try:
+        uploaded_infra_repo.delete_by_dataset(dataset_id)
         ok = datasets_repo.delete_dataset(dataset_id)
         if not ok:
             raise HTTPException(status_code=404, detail=f"dataset {dataset_id} not found")

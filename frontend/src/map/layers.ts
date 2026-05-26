@@ -21,6 +21,7 @@ import type {
   InfraKind,
   Recommendation,
   Sentiment,
+  UploadedInfrastructureAsset,
   Zone,
 } from "@/types";
 import { INFRA_COLOR, STANCE_COLOR, FACILITY_META } from "@/types";
@@ -28,6 +29,31 @@ import { getZoneRegion, getHaversineDistance, INFRA_CLEARANCES } from "@/store";
 import type { LayerKey } from "@/store";
 
 type RGB = [number, number, number];
+
+/** Map-friendly point for uploaded existing infrastructure (read-only overlay). */
+export type UploadedExistingMapPoint = {
+  id: string;
+  kind: string;
+  name?: string | null;
+  position: [number, number];
+  status?: string | null;
+  powerKw?: number | null;
+  _uploadedExisting: true;
+};
+
+export function uploadedAssetsToMapPoints(
+  assets: UploadedInfrastructureAsset[]
+): UploadedExistingMapPoint[] {
+  return assets.map((a) => ({
+    id: a.id,
+    kind: a.assetKind,
+    name: a.name,
+    position: [a.longitude, a.latitude] as [number, number],
+    status: a.status,
+    powerKw: a.powerKw ?? a.capacityKw,
+    _uploadedExisting: true as const,
+  }));
+}
 
 // green (low burden) -> amber -> red (high burden)
 export function burdenColor(t: number): RGB {
@@ -90,6 +116,7 @@ export type LayerInputs = {
   voices: AgentVoice[];
   facilities: Facility[];
   existingInfra: ExistingInfra[];
+  uploadedExistingInfra: UploadedExistingMapPoint[];
   constraints: ConstraintZone[];
   floodRisk: Record<string, number>;
   districtEnergy: Record<string, { servedFraction: number; systemName: string }>;
@@ -133,6 +160,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
     voices,
     facilities,
     existingInfra,
+    uploadedExistingInfra,
     constraints,
     floodRisk,
     districtEnergy,
@@ -987,6 +1015,45 @@ export function buildLayers(input: LayerInputs): Layer[] {
         radiusMinPixels: 3,
         radiusMaxPixels: 9,
         lineWidthMinPixels: 1.5,
+        opacity: 0.9,
+        billboard: true,
+        parameters: { depthTest: false } as any,
+        pickable: true,
+      })
+    );
+  }
+
+  // ---- Uploaded existing infrastructure (read-only dataset overlay) ----
+  if (uploadedExistingInfra.length) {
+    const UPLOADED_RING: RGB = [251, 191, 36]; // amber — distinct from proposed 3D models + fixture layer
+    out.push(
+      new ScatterplotLayer({
+        id: "uploaded-existing-infra-ring",
+        data: uploadedExistingInfra,
+        getPosition: (d: UploadedExistingMapPoint) => d.position,
+        getFillColor: [0, 0, 0, 0],
+        getLineColor: UPLOADED_RING as any,
+        stroked: true,
+        filled: false,
+        getRadius: 75,
+        radiusMinPixels: 7,
+        radiusMaxPixels: 14,
+        lineWidthMinPixels: 2.5,
+        opacity: 0.95,
+        billboard: true,
+        parameters: { depthTest: false } as any,
+        pickable: true,
+      }),
+      new ScatterplotLayer({
+        id: "uploaded-existing-infra-dot",
+        data: uploadedExistingInfra,
+        getPosition: (d: UploadedExistingMapPoint) => d.position,
+        getFillColor: [251, 191, 36, 200] as any,
+        stroked: false,
+        filled: true,
+        getRadius: 18,
+        radiusMinPixels: 2,
+        radiusMaxPixels: 4,
         opacity: 0.9,
         billboard: true,
         parameters: { depthTest: false } as any,
