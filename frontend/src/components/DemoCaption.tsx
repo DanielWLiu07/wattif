@@ -7,7 +7,7 @@ export function DemoCaption() {
   if (!demo.running) return null;
 
   return (
-    <div className="pointer-events-auto absolute bottom-24 left-1/2 z-40 w-[560px] max-w-[90vw] -translate-x-1/2">
+    <div className="pointer-events-auto absolute bottom-32 left-1/2 z-40 w-[560px] max-w-[90vw] -translate-x-1/2">
       <div className="glass animate-in fade-in slide-in-from-bottom-2 flex items-center gap-3 rounded-xl px-4 py-3 duration-300">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/20 text-accent">
           <Sparkles className="h-4 w-4" />

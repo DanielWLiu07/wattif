@@ -173,8 +173,15 @@ export function EventsFeed() {
                   </span>
                 </button>
 
-                {/* support / neutral / oppose bar */}
-                <div className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-muted">
+                {/* reaction split — the star: counts + support/neutral/oppose bar */}
+                <div className="num mt-2 flex items-center justify-between text-[10px]">
+                  <span className="text-data-good">{r.support} support</span>
+                  {r.neutral > 0 && (
+                    <span className="text-muted-foreground">{r.neutral} neutral</span>
+                  )}
+                  <span className="text-data-alert">{r.oppose} oppose</span>
+                </div>
+                <div className="mt-1 flex h-2 overflow-hidden rounded-full bg-muted">
                   <div className="bg-data-good" style={{ width: w(r.support) }} />
                   <div className="bg-muted-foreground/40" style={{ width: w(r.neutral) }} />
                   <div className="bg-data-alert" style={{ width: w(r.oppose) }} />
