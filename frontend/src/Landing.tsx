@@ -9,6 +9,25 @@ const EDIT_MODE =
   typeof window !== "undefined" &&
   new URLSearchParams(window.location.search).has("edit");
 
+// ── Hero text (eyebrow + headline + button + stats) position/scale ────────────
+// Drag-edit at localhost:5173/?text. Baked default below is what ships.
+const TEXT_EDIT =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("text");
+
+const HERO_TEXT_KEY = "wattif:hero-text";
+type HeroTextXf = { x: number; y: number; scale: number };
+const HERO_TEXT_DEFAULT: HeroTextXf = { x: 0, y: 0, scale: 1 };
+
+function readHeroText(): HeroTextXf {
+  try {
+    const r = typeof localStorage !== "undefined" ? localStorage.getItem(HERO_TEXT_KEY) : null;
+    return r ? (JSON.parse(r) as HeroTextXf) : HERO_TEXT_DEFAULT;
+  } catch {
+    return HERO_TEXT_DEFAULT;
+  }
+}
+
 // ── Overlay — cross-fades the whole station block in/out ──────────────────────
 // Scale (0.97↔1) + blur (3px↔0) + opacity makes exits feel like a retreat
 // and entries like a sharp focus-pull rather than a plain fade.
@@ -159,6 +178,29 @@ export function Landing() {
   const targetRef = useRef(0);
   const currentRef = useRef(0);
 
+  // Hero text transform — editable at ?text, otherwise the baked default.
+  const [heroXf, setHeroXf] = useState<HeroTextXf>(() =>
+    TEXT_EDIT ? readHeroText() : HERO_TEXT_DEFAULT
+  );
+  const heroDragRef = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  const onHeroPointerDown = (e: React.PointerEvent) => {
+    if (!TEXT_EDIT) return;
+    e.preventDefault();
+    heroDragRef.current = { sx: e.clientX, sy: e.clientY, ox: heroXf.x, oy: heroXf.y };
+    const move = (ev: PointerEvent) => {
+      const d = heroDragRef.current;
+      if (!d) return;
+      setHeroXf((p) => ({ ...p, x: d.ox + (ev.clientX - d.sx), y: d.oy + (ev.clientY - d.sy) }));
+    };
+    const up = () => {
+      heroDragRef.current = null;
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
@@ -227,7 +269,17 @@ export function Landing() {
 
           {/* Station 0: Hero */}
           <Overlay visible={s0}>
-            <div className="flex flex-col gap-6">
+            <div
+              className="flex flex-col gap-6"
+              onPointerDown={onHeroPointerDown}
+              style={{
+                transform: `translate(${heroXf.x}px, ${heroXf.y}px) scale(${heroXf.scale})`,
+                transformOrigin: "left top",
+                ...(TEXT_EDIT
+                  ? { cursor: "move", pointerEvents: "auto", outline: "1px dashed hsl(var(--brand))", outlineOffset: 12, borderRadius: 4 }
+                  : {}),
+              }}
+            >
               <StaggerChild index={0} visible={s0}>
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full" style={{ background: "hsl(var(--brand))" }} />
@@ -307,6 +359,43 @@ export function Landing() {
                 <animate attributeName="cy" values="5;8;5" dur="1.8s" repeatCount="indefinite" />
               </circle>
             </svg>
+          </div>
+        )}
+
+        {/* ── Hero-text editor panel (?text) ───────────────────────────── */}
+        {TEXT_EDIT && (
+          <div
+            style={{
+              position: "fixed", right: 16, top: 16, zIndex: 200, width: 232,
+              background: "rgba(10,10,10,0.92)", color: "#fff", borderRadius: 12,
+              padding: 16, fontFamily: "monospace", fontSize: 12, userSelect: "none",
+              boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
+            }}
+          >
+            <div style={{ fontWeight: 700, marginBottom: 4, color: "#c8f400", fontSize: 14 }}>✎ Hero text</div>
+            <div style={{ color: "#777", marginBottom: 10, fontSize: 10 }}>Drag the dashed block to move it</div>
+            <div style={{ display: "flex", justifyContent: "space-between", color: "#c8f400", marginBottom: 8 }}>
+              <span>x {Math.round(heroXf.x)}</span><span>y {Math.round(heroXf.y)}</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
+              <span style={{ width: 30, color: "#888" }}>scale</span>
+              <input type="range" min={0.4} max={2} step={0.01} value={heroXf.scale}
+                onChange={(e) => setHeroXf((p) => ({ ...p, scale: parseFloat(e.target.value) }))}
+                style={{ flex: 1, accentColor: "#c8f400" }} />
+              <span style={{ width: 32, textAlign: "right", color: "#c8f400" }}>{heroXf.scale.toFixed(2)}</span>
+            </div>
+            <button
+              onClick={() => { try { localStorage.setItem(HERO_TEXT_KEY, JSON.stringify(heroXf)); } catch { /* ignore */ } }}
+              style={{ width: "100%", padding: 8, background: "#1e2e00", color: "#c8f400", border: "1px solid #c8f400", borderRadius: 6, cursor: "pointer", fontWeight: 600, marginBottom: 6 }}
+            >Save to Device</button>
+            <button
+              onClick={() => navigator.clipboard?.writeText(JSON.stringify(heroXf, null, 2)).catch(() => {})}
+              style={{ width: "100%", padding: 8, background: "#c8f400", color: "#000", border: "none", borderRadius: 6, cursor: "pointer", fontWeight: 700, marginBottom: 6 }}
+            >Copy JSON</button>
+            <button
+              onClick={() => { setHeroXf(HERO_TEXT_DEFAULT); try { localStorage.removeItem(HERO_TEXT_KEY); } catch { /* ignore */ } }}
+              style={{ width: "100%", padding: 6, background: "transparent", color: "#e57373", border: "1px solid #5a2a2a", borderRadius: 6, cursor: "pointer", fontSize: 11 }}
+            >↺ Reset</button>
           </div>
         )}
 
