@@ -872,7 +872,8 @@ export const useStore = create<State>((set, get) => ({
   setSelectedRegion: (region) => {
     const { allZones, allAgents, allSampledAgents, allFacilities, allExistingInfra, allInfra } = get();
     set({ selectedRegion: region });
-    if (region === "All") {
+    // "All" and "All Toronto" both mean the whole city (no region filter).
+    if (region === "All" || region === "All Toronto") {
       set({
         zones: allZones,
         agents: allAgents,
@@ -916,7 +917,7 @@ export const useStore = create<State>((set, get) => ({
 
     // Enforce region-locked placement: reject placing outside active filtered zones
     const activeZoneIds = new Set(zones.map(zone => zone.id));
-    if (selectedRegion !== "All" && z && !activeZoneIds.has(z.id)) {
+    if (selectedRegion !== "All" && selectedRegion !== "All Toronto" && z && !activeZoneIds.has(z.id)) {
       get().pushToast(`Cannot place infrastructure outside the active region (${selectedRegion})`, "warn");
       return;
     }
