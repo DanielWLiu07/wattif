@@ -113,6 +113,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
 
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
+  const [isHoveringStrip, setIsHoveringStrip] = useState(false);
 
   // Carousel + speed control refs — all DOM-mutated in rAF for zero-jank
   const trackRef      = useRef<HTMLDivElement>(null);
@@ -124,6 +125,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   const currentSpeedRef = useRef(DEFAULT_SPEED); // actual lerped speed this frame
   const mouseXRef       = useRef(0);             // last known mouse X in viewport
   const isOverStripRef  = useRef(false);         // is mouse over the card strip?
+  const snapTargetRef   = useRef<number | null>(null); // when set, override speed with snap-to-card lerp
 
   useEffect(() => {
     if (active) {
@@ -136,6 +138,30 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   useEffect(() => {
     if (!active) return;
 
+    const snapToAdjacentCard = (direction: 1 | -1) => {
+      const vcx = window.innerWidth / 2;
+      const currentIdx = REGION_CARDS.findIndex(c => c.name === prevActiveRef.current);
+      if (currentIdx < 0) return;
+      const targetIdx = ((currentIdx + direction) + REGION_CARDS.length) % REGION_CARDS.length;
+      // Find nearest copy of the target card across all COPIES
+      let bestOffset = offsetRef.current;
+      let bestDist = Infinity;
+      for (let copy = 0; copy < COPIES; copy++) {
+        const absIdx = copy * REGION_CARDS.length + targetIdx;
+        const neededOffset = absIdx * CARD_STRIDE + CARD_W / 2 - vcx;
+        const dist = Math.abs(neededOffset - offsetRef.current);
+        if (dist < bestDist) { bestDist = dist; bestOffset = neededOffset; }
+      }
+      snapTargetRef.current = bestOffset;
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (!active) return;
+      if (e.key === "ArrowRight") snapToAdjacentCard(1);
+      if (e.key === "ArrowLeft")  snapToAdjacentCard(-1);
+    };
+    document.addEventListener("keydown", onKeyDown);
+
     const tick = () => {
       // ── Compute target speed from mouse position ────────────────────────
       let targetSpeed: number;
@@ -144,7 +170,6 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         const norm = (mouseXRef.current - vcx) / vcx; // -1 (left) → 0 (center) → 1 (right)
         const sign = norm < 0 ? -1 : 1;
         const abs  = Math.abs(norm);
-        // Dead zone at center → near-stop; outside → ramp up to MAX_SCRUB
         targetSpeed = abs < DEAD_ZONE
           ? 0
           : sign * ((abs - DEAD_ZONE) / (1 - DEAD_ZONE)) * MAX_SCRUB;
@@ -152,11 +177,24 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         targetSpeed = DEFAULT_SPEED;
       }
 
-      // Ease current speed toward target
-      currentSpeedRef.current += (targetSpeed - currentSpeedRef.current) * SPEED_LERP;
+      // ── Snap-to-card override (keyboard nav) ────────────────────────────
+      if (snapTargetRef.current !== null) {
+        let diff = snapTargetRef.current - offsetRef.current;
+        // Prefer shorter path across the wrap boundary
+        if (diff > SET_W / 2) diff -= SET_W;
+        if (diff < -SET_W / 2) diff += SET_W;
+        if (Math.abs(diff) < 0.5) {
+          offsetRef.current = ((snapTargetRef.current % SET_W) + SET_W) % SET_W;
+          snapTargetRef.current = null;
+        } else {
+          offsetRef.current += diff * 0.14;
+        }
+      } else {
+        // Normal speed-scrub
+        currentSpeedRef.current += (targetSpeed - currentSpeedRef.current) * SPEED_LERP;
+        offsetRef.current += currentSpeedRef.current;
+      }
 
-      // Advance offset (bidirectional — negative offset allowed for leftward scroll)
-      offsetRef.current += currentSpeedRef.current;
       if (offsetRef.current >= SET_W) offsetRef.current -= SET_W;
       if (offsetRef.current < 0)      offsetRef.current += SET_W;
 
@@ -183,7 +221,10 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     };
 
     rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [active]);
 
   const zonesByRegion = useMemo(() => {
@@ -221,6 +262,14 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         @keyframes voltGlowBreathe {
           0%, 100% { opacity: 0.55; transform: scale(1); }
           50%      { opacity: 1;    transform: scale(1.08); }
+        }
+        @keyframes cityCardPulse {
+          0%, 100% { box-shadow: 0 -2px 12px hsl(72 95% 50% / 0.12); }
+          50%      { box-shadow: 0 -2px 20px hsl(72 95% 50% / 0.26); }
+        }
+        @keyframes activeCardPulse {
+          0%, 100% { box-shadow: 0 -8px 32px hsl(72 95% 50% / 0.25), 0 2px 14px rgba(0,0,0,0.10); }
+          50%      { box-shadow: 0 -8px 48px hsl(72 95% 50% / 0.45), 0 2px 18px rgba(0,0,0,0.12); }
         }
       `}</style>
 
@@ -347,11 +396,15 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             perspectiveOrigin: "50% 0%",
           }}
           onMouseMove={(e) => {
-            mouseXRef.current    = e.clientX;
-            isOverStripRef.current = true;
+            mouseXRef.current = e.clientX;
+            if (!isOverStripRef.current) {
+              isOverStripRef.current = true;
+              setIsHoveringStrip(true);
+            }
           }}
           onMouseLeave={() => {
             isOverStripRef.current = false;
+            setIsHoveringStrip(false);
           }}
         >
           {/* Top hairline */}
@@ -373,16 +426,18 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             zIndex: 3, pointerEvents: "none",
           }} />
 
-          {/* Speed-scrub hint — always visible above the strip */}
+          {/* Speed-scrub hint — fades in when hovering the strip */}
           <div style={{
             position: "absolute", top: -22, left: "50%",
             transform: "translateX(-50%)",
             fontFamily: "monospace", fontSize: 10,
-            color: "hsl(var(--muted-foreground) / 0.4)",
+            color: "hsl(var(--muted-foreground) / 0.5)",
             pointerEvents: "none", zIndex: 5,
             whiteSpace: "nowrap",
+            opacity: isHoveringStrip ? 1 : 0,
+            transition: "opacity 0.25s ease",
           }}>
-            ← scrub · center = slow · click to begin →
+            ← scrub · center = slow · ↑↓ arrow keys →
           </div>
 
           {/* Track */}
@@ -400,7 +455,27 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             }}
           >
             {ALL_CARDS.map((card, i) => {
-              const isActive = activeRegion === card.name;
+              const isActive  = activeRegion === card.name;
+              const isCityCard = card.name === "All Toronto";
+
+              // "All Toronto" always gets a faint volt border + background to signal it's special
+              const borderColor = isActive
+                ? "hsl(var(--brand))"
+                : isCityCard
+                  ? "hsl(var(--brand) / 0.4)"
+                  : "hsl(var(--border) / 0.7)";
+              const bgColor = isActive
+                ? "linear-gradient(160deg, #fff 0%, hsl(72 95% 97%) 100%)"
+                : isCityCard
+                  ? "hsl(72 95% 99.2%)"
+                  : "white";
+              // Active card uses CSS animation for pulsing glow;
+              // city card uses a softer version; others use static shadow.
+              const shadowOrAnim = isActive
+                ? { animation: "activeCardPulse 2.8s ease-in-out infinite" }
+                : isCityCard
+                  ? { animation: "cityCardPulse 3.5s ease-in-out infinite" }
+                  : { boxShadow: "0 -2px 8px rgba(0,0,0,0.05)" };
 
               return (
                 <button
@@ -410,22 +485,17 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                     width: CARD_W,
                     height: CARD_H,
                     flexShrink: 0,
+                    position: "relative",
                     borderRadius: 16,
-                    border: `1.5px solid ${isActive ? "hsl(var(--brand))" : "hsl(var(--border) / 0.7)"}`,
-                    background: isActive
-                      ? "linear-gradient(160deg, #fff 0%, hsl(72 95% 97%) 100%)"
-                      : "white",
+                    border: `1.5px solid ${borderColor}`,
+                    background: bgColor,
                     padding: "22px 20px 0",
                     textAlign: "left",
                     cursor: "pointer",
                     display: "flex",
                     flexDirection: "column",
                     gap: 0,
-                    boxShadow: isActive
-                      ? "0 -8px 32px hsl(var(--brand) / 0.25), 0 2px 14px rgba(0,0,0,0.1)"
-                      : "0 -2px 8px rgba(0,0,0,0.05)",
-                    // Active: stands upright + rises above strip (into map area)
-                    // Inactive: lean back at rotateX to suggest cards-on-table depth
+                    ...shadowOrAnim,
                     transform: isActive
                       ? `translateY(-${RISE}px) rotateX(0deg) scale(1.05)`
                       : "rotateX(5deg)",
@@ -433,13 +503,27 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                     transition: [
                       "transform 0.38s cubic-bezier(0.34,1.56,0.64,1)",
                       "border-color 0.2s ease",
-                      "box-shadow 0.2s ease",
                       "background 0.2s ease",
                     ].join(", "),
                     willChange: "transform",
                     pointerEvents: "auto",
                   }}
                 >
+                  {/* "FULL CITY" badge for All Toronto — always shown */}
+                  {isCityCard && (
+                    <div style={{
+                      position: "absolute", top: 14, right: 14,
+                      fontSize: 9, fontFamily: "JetBrains Mono, monospace",
+                      letterSpacing: "0.08em", fontWeight: 600,
+                      color: isActive ? "hsl(80 60% 20%)" : "hsl(var(--brand) / 0.7)",
+                      background: isActive ? "hsl(72 95% 88%)" : "hsl(72 95% 93%)",
+                      padding: "2px 7px",
+                      borderRadius: 99,
+                    }}>
+                      FULL CITY
+                    </div>
+                  )}
+
                   {/* Region name */}
                   <span style={{
                     fontSize: 18, fontWeight: 700, lineHeight: 1.15,
@@ -457,7 +541,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                   <span style={{
                     fontSize: 11,
                     fontFamily: "JetBrains Mono, monospace",
-                    color: isActive ? "hsl(var(--brand))" : "#b0b0b0",
+                    color: isActive ? "hsl(var(--brand))" : isCityCard ? "hsl(var(--brand) / 0.6)" : "#b0b0b0",
                     transition: "color 0.2s ease",
                     display: "block",
                     marginBottom: 10,
@@ -469,7 +553,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                   {/* Hairline divider */}
                   <div style={{
                     height: 1,
-                    background: isActive ? "hsl(var(--brand) / 0.2)" : "hsl(var(--border) / 0.5)",
+                    background: isActive || isCityCard ? "hsl(var(--brand) / 0.2)" : "hsl(var(--border) / 0.5)",
                     marginBottom: 10,
                     transition: "background 0.2s ease",
                   }} />
@@ -485,12 +569,12 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                     {card.desc}
                   </span>
 
-                  {/* Volt accent stripe at bottom of card face (below fold normally) */}
+                  {/* Volt accent stripe at bottom of card face */}
                   <div style={{
                     position: "absolute",
                     bottom: 0, left: 0, right: 0, height: 4,
                     borderRadius: "0 0 15px 15px",
-                    background: isActive ? "hsl(var(--brand))" : "transparent",
+                    background: isActive ? "hsl(var(--brand))" : isCityCard ? "hsl(var(--brand) / 0.35)" : "transparent",
                     transition: "background 0.2s ease",
                   }} />
                 </button>
