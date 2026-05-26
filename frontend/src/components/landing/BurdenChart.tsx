@@ -3,10 +3,11 @@ import zonesRaw from "@/data/zonesFixture.json";
 import { landingStats } from "@/data/landingStats";
 
 const THRESHOLD = 0.6;
-const BAR_W = 3.8;
-const BAR_GAP = 1.4;
-const CHART_H = 220;
-const MAX_BAR_H = 185;
+// Bars fill the right column: 140 × (BAR_W + BAR_GAP) ≈ 945 px at 1440 wide screen
+const BAR_W   = 6;
+const BAR_GAP = 0.8;
+const CHART_H    = 300;
+const MAX_BAR_H  = 260;
 
 type ZoneEntry = { id: string; demographics: { energyBurdenIndex: number } };
 
@@ -16,14 +17,14 @@ function burdenColor(v: number): string {
     // slate-300 (#cbd5e1) → amber-400 (#fbbf24)
     const r = Math.round(203 + (251 - 203) * t);
     const g = Math.round(213 + (191 - 213) * t);
-    const b = Math.round(225 + (36 - 225) * t);
+    const b = Math.round(225 + (36  - 225) * t);
     return `rgb(${r},${g},${b})`;
   } else {
     const t = (v - THRESHOLD) / (1 - THRESHOLD);
     // amber-400 (#fbbf24) → red-500 (#ef4444)
     const r = Math.round(251 + (239 - 251) * t);
-    const g = Math.round(191 + (68 - 191) * t);
-    const b = Math.round(36 + (68 - 36) * t);
+    const g = Math.round(191 + (68  - 191) * t);
+    const b = Math.round(36  + (68  - 36)  * t);
     return `rgb(${r},${g},${b})`;
   }
 }
@@ -42,15 +43,15 @@ export function BurdenChart({ visible }: BurdenChartProps) {
   );
 
   const highlightStat = landingStats.find((s) => s.key === "highBurdenZones");
-  const renterStat = landingStats.find((s) => s.key === "renterShare");
-  const gridStat = landingStats.find((s) => s.key === "gridIntensity");
+  const renterStat    = landingStats.find((s) => s.key === "renterShare");
+  const gridStat      = landingStats.find((s) => s.key === "gridIntensity");
 
   const thresholdBottom = THRESHOLD * MAX_BAR_H;
 
-  const vis = (delay: number) => ({
-    opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(9px)",
-    transition: "opacity 0.42s ease, transform 0.42s ease",
+  const vis = (delay: number): React.CSSProperties => ({
+    opacity:         visible ? 1 : 0,
+    transform:       visible ? "translateY(0)" : "translateY(9px)",
+    transition:      "opacity 0.42s ease, transform 0.42s ease",
     transitionDelay: visible ? `${delay}ms` : "0ms",
   });
 
@@ -63,38 +64,32 @@ export function BurdenChart({ visible }: BurdenChartProps) {
         }
       `}</style>
 
+      {/* Full-width overlay — same fade/slide as Overlay component */}
       <div
         className="pointer-events-none absolute top-0 left-0 flex h-full w-full items-center px-16"
         style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.97)",
-          filter: visible ? "blur(0px)" : "blur(3px)",
+          opacity:    visible ? 1 : 0,
+          transform:  visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.97)",
+          filter:     visible ? "blur(0px)" : "blur(3px)",
           transition: "opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease",
           willChange: "opacity, transform, filter",
         }}
       >
-        {/* Left column */}
+        {/* ── Left stat column (28%) ── */}
         <div
-          className="flex flex-col gap-6"
-          style={{ width: "38%", paddingRight: "4rem", flexShrink: 0 }}
+          className="flex flex-col gap-8"
+          style={{ width: "28%", paddingRight: "3rem", flexShrink: 0 }}
         >
           <div style={vis(0)}>
             <span
               className="label"
-              style={{
-                color: "hsl(var(--data-alert))",
-                display: "block",
-                marginBottom: "0.5rem",
-              }}
+              style={{ color: "hsl(var(--data-alert))", display: "block", marginBottom: "0.6rem" }}
             >
               The Problem
             </span>
             <h2
               className="font-display font-bold leading-tight text-foreground"
-              style={{
-                fontSize: "clamp(2rem, 3vw, 2.75rem)",
-                letterSpacing: "-0.02em",
-              }}
+              style={{ fontSize: "clamp(2.1rem, 2.6vw, 3rem)", letterSpacing: "-0.025em" }}
             >
               Energy burden
               <br />
@@ -105,25 +100,25 @@ export function BurdenChart({ visible }: BurdenChartProps) {
           </div>
 
           <div
-            className="flex flex-col gap-5 border-l-2 border-border pl-5"
-            style={vis(160)}
+            className="flex flex-col gap-6 border-l-2 border-border pl-5"
+            style={vis(180)}
           >
             {[
               {
                 value: highlightStat?.value ?? "113",
-                unit: "/140",
+                unit:  "/140",
                 label: highlightStat?.label ?? "high energy-burden areas",
                 color: "hsl(var(--data-alert))",
               },
               {
                 value: renterStat?.value ?? "46%",
-                unit: "",
+                unit:  "",
                 label: renterStat?.label ?? "of households rent",
                 color: "hsl(var(--foreground))",
               },
               {
                 value: gridStat?.value ?? "38",
-                unit: " gCO₂/kWh",
+                unit:  " gCO₂/kWh",
                 label: gridStat?.label ?? "Ontario grid intensity",
                 color: "hsl(var(--foreground))",
               },
@@ -131,15 +126,12 @@ export function BurdenChart({ visible }: BurdenChartProps) {
               <div key={label}>
                 <div
                   className="font-mono font-semibold leading-none"
-                  style={{ fontSize: "2.5rem", color }}
+                  style={{ fontSize: "2.6rem", color }}
                 >
                   {value}
                   <span className="ml-1 text-base text-muted-foreground">{unit}</span>
                 </div>
-                <div
-                  className="label mt-1"
-                  style={{ color: "hsl(var(--foreground) / 0.55)" }}
-                >
+                <div className="label mt-1.5" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
                   {label}
                 </div>
               </div>
@@ -147,35 +139,36 @@ export function BurdenChart({ visible }: BurdenChartProps) {
           </div>
         </div>
 
-        {/* Right column — bar chart */}
+        {/* ── Right chart column (flex-1 = fills remaining screen) ── */}
         <div
-          className="flex flex-1 flex-col gap-3"
-          style={vis(80)}
+          className="flex flex-1 flex-col gap-4"
+          style={vis(90)}
         >
           {/* Chart */}
           <div style={{ position: "relative", height: CHART_H }}>
-            {/* Dashed threshold */}
+            {/* Dashed threshold line */}
             <div
               style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                bottom: thresholdBottom,
-                height: 0,
-                borderTop: "1.5px dashed hsl(var(--data-alert) / 0.55)",
-                zIndex: 1,
+                position:   "absolute",
+                left:       0,
+                right:      0,
+                bottom:     thresholdBottom,
+                height:     0,
+                borderTop:  "1.5px dashed hsl(var(--data-alert) / 0.5)",
+                zIndex:     1,
               }}
             />
+            {/* Threshold label */}
             <span
               style={{
-                position: "absolute",
-                right: 0,
-                bottom: thresholdBottom + 5,
-                fontSize: 10,
-                fontFamily: "monospace",
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                color: "hsl(var(--data-alert) / 0.65)",
+                position:       "absolute",
+                right:          0,
+                bottom:         thresholdBottom + 6,
+                fontSize:       10,
+                fontFamily:     "monospace",
+                letterSpacing:  "0.05em",
+                textTransform:  "uppercase",
+                color:          "hsl(var(--data-alert) / 0.6)",
               }}
             >
               burden threshold ≥ 0.6
@@ -184,12 +177,12 @@ export function BurdenChart({ visible }: BurdenChartProps) {
             {/* Bars */}
             <div
               style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                display: "flex",
-                alignItems: "flex-end",
-                gap: BAR_GAP,
+                position:    "absolute",
+                bottom:      0,
+                left:        0,
+                display:     "flex",
+                alignItems:  "flex-end",
+                gap:         BAR_GAP,
               }}
             >
               {sorted.map((z, i) => {
@@ -199,14 +192,14 @@ export function BurdenChart({ visible }: BurdenChartProps) {
                   <div
                     key={z.id}
                     style={{
-                      width: BAR_W,
-                      height: h,
-                      background: burdenColor(v),
-                      borderRadius: "1px 1px 0 0",
-                      flexShrink: 0,
+                      width:           BAR_W,
+                      height:          h,
+                      background:      burdenColor(v),
+                      borderRadius:    "1.5px 1.5px 0 0",
+                      flexShrink:      0,
                       transformOrigin: "bottom",
-                      animation: visible
-                        ? `barGrow 0.38s cubic-bezier(0.34,1.56,0.64,1) ${i * 7}ms both`
+                      animation:       visible
+                        ? `barGrow 0.4s cubic-bezier(0.34,1.56,0.64,1) ${i * 6}ms both`
                         : "none",
                     }}
                   />
@@ -215,66 +208,50 @@ export function BurdenChart({ visible }: BurdenChartProps) {
             </div>
           </div>
 
-          {/* Axis labels */}
+          {/* Axis row */}
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span
-              style={{
-                fontSize: 11,
-                fontFamily: "monospace",
-                color: "hsl(var(--foreground) / 0.35)",
-              }}
+              style={{ fontSize: 11, fontFamily: "monospace", color: "hsl(var(--foreground) / 0.35)" }}
             >
               ← lower burden
             </span>
             <span
-              style={{
-                fontSize: 11,
-                fontFamily: "monospace",
-                color: "hsl(var(--data-alert) / 0.65)",
-              }}
+              style={{ fontSize: 11, fontFamily: "monospace", color: "hsl(var(--data-alert) / 0.65)" }}
             >
               higher burden →
             </span>
           </div>
 
           {/* Legend */}
-          <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
                 style={{
-                  width: 28,
-                  height: 7,
+                  width:      32,
+                  height:     8,
                   borderRadius: 2,
                   background: "linear-gradient(to right, #cbd5e1, #fbbf24)",
                 }}
               />
               <span
-                style={{
-                  fontSize: 11,
-                  fontFamily: "monospace",
-                  color: "hsl(var(--foreground) / 0.5)",
-                }}
+                style={{ fontSize: 11, fontFamily: "monospace", color: "hsl(var(--foreground) / 0.45)" }}
               >
-                27 zones below threshold
+                27 zones — below threshold
               </span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
                 style={{
-                  width: 28,
-                  height: 7,
+                  width:      32,
+                  height:     8,
                   borderRadius: 2,
                   background: "linear-gradient(to right, #fbbf24, #ef4444)",
                 }}
               />
               <span
-                style={{
-                  fontSize: 11,
-                  fontFamily: "monospace",
-                  color: "hsl(var(--data-alert) / 0.75)",
-                }}
+                style={{ fontSize: 11, fontFamily: "monospace", color: "hsl(var(--data-alert) / 0.75)" }}
               >
-                113 high-burden zones
+                113 zones — high burden
               </span>
             </div>
           </div>

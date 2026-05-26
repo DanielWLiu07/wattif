@@ -501,28 +501,9 @@ const BLOCKS: { x: number; w: number; d: number; h: number }[] = [
   { x: -7,  w: 1.5, d: 1.5, h: 2.8 },
 ];
 
-function DemandStation({ progress }: { progress: number }) {
-  const reveal = MathUtils.clamp((progress - 0.34) / 0.16, 0, 1);
-  const fade   = MathUtils.clamp((0.56 - progress) / 0.06, 0, 1);
-  const vis    = reveal * fade;
-  if (vis < 0.01) return null;
-
-  return (
-    <group position={[0, 0, -28]}>
-      {BLOCKS.map((b, i) => (
-        <mesh
-          key={i}
-          position={[b.x, (b.h / 2) * vis, 0]}
-          scale={[1, vis, 1]}
-          castShadow
-          receiveShadow
-        >
-          <boxGeometry args={[b.w, b.h, b.d]} />
-          <meshStandardMaterial color="#e8e8e8" roughness={0.6} metalness={0.05} />
-        </mesh>
-      ))}
-    </group>
-  );
+function DemandStation(_props: { progress: number }) {
+  // Replaced by 2D BurdenChart overlay in Landing.tsx
+  return null;
 }
 
 // ── Infrastructure parade ─────────────────────────────────────────────────────
