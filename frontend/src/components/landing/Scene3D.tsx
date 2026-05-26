@@ -483,36 +483,9 @@ function NormalWordmark({ position, rotation, scale }: {
 
 type ZoneEntry = { id: string; name: string; centroid: [number, number]; demographics: { energyBurdenIndex: number } };
 
-function ProblemStation({ progress }: { progress: number }) {
-  const zones = zonesRaw as ZoneEntry[];
-  const reveal = MathUtils.clamp((progress - 0.14) / 0.16, 0, 1);
-
-  const markers = useMemo(() =>
-    zones.map((z) => {
-      const [x, dz] = geoTo3D(z.centroid[0], z.centroid[1], 0.8);
-      const burden = z.demographics.energyBurdenIndex;
-      const isHigh = burden > 0.6;
-      return { x, dz, isHigh, burden };
-    }),
-    [zones]
-  );
-
-  if (reveal < 0.01) return null;
-
-  return (
-    <group position={[0, 0, -14]}>
-      {markers.map((m, i) => (
-        <mesh key={i} position={[m.x, 0.25 * reveal, m.dz]} scale={reveal}>
-          <sphereGeometry args={[m.isHigh ? 0.22 : 0.12, 6, 6]} />
-          <meshStandardMaterial
-            color={m.isHigh ? "#ef4444" : "#d0d0d0"}
-            roughness={0.6}
-            metalness={0}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
+function ProblemStation(_props: { progress: number }) {
+  // Replaced by 2D BurdenChart overlay in Landing.tsx
+  return null;
 }
 
 // ── Demand station ────────────────────────────────────────────────────────────

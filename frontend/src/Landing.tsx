@@ -2,17 +2,12 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Scene3D, SceneEdit } from "@/components/landing/Scene3D";
 import { TorontoMap } from "@/components/landing/TorontoMap";
-import { landingStats } from "@/data/landingStats";
+import { BurdenChart } from "@/components/landing/BurdenChart";
+import { FlowDiagram } from "@/components/landing/FlowDiagram";
 
 const EDIT_MODE =
   typeof window !== "undefined" &&
   new URLSearchParams(window.location.search).has("edit");
-
-// ── Stat helper ──────────────────────────────────────────────────────────────
-
-function stat(key: string) {
-  return landingStats.find((s) => s.key === key);
-}
 
 // ── Overlay — cross-fades the whole station block in/out ──────────────────────
 // Scale (0.97↔1) + blur (3px↔0) + opacity makes exits feel like a retreat
@@ -185,11 +180,6 @@ export function Landing() {
     targetRef.current = STATION_THRESHOLDS[idx];
   }, []);
 
-  const highlightStat = stat("highBurdenZones");
-  const renterStat = stat("renterShare");
-  const gridStat = stat("gridIntensity");
-  const buildingsStat = stat("buildings");
-  const agentsStat = stat("agents");
 
   const atScope = progress > 0.86;
 
@@ -296,112 +286,11 @@ export function Landing() {
             </div>
           </Overlay>
 
-          {/* Station 1: Problem */}
-          <Overlay visible={s1}>
-            <div className="flex flex-col gap-6">
-              <StaggerChild index={0} visible={s1}>
-                <span className="label" style={{ color: "hsl(var(--data-alert))" }}>
-                  The Problem
-                </span>
-              </StaggerChild>
+          {/* Station 1: Problem — 2D burden-distribution chart */}
+          <BurdenChart visible={s1} />
 
-              <StaggerChild index={1} visible={s1}>
-                <h2
-                  className="font-display font-bold leading-tight text-foreground"
-                  style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", letterSpacing: "-0.02em" }}
-                >
-                  Toronto's energy burden
-                  <br />
-                  isn't evenly
-                  <br />
-                  <span style={{ color: "hsl(var(--data-alert))" }}>distributed.</span>
-                </h2>
-              </StaggerChild>
-
-              <StaggerChild index={2} visible={s1}>
-                <div className="flex flex-col gap-5 border-l-2 border-border pl-5">
-                  {[
-                    {
-                      value: highlightStat?.value ?? "113",
-                      unit: "/140",
-                      label: highlightStat?.label ?? "high energy-burden areas",
-                      color: "hsl(var(--data-alert))",
-                    },
-                    {
-                      value: renterStat?.value ?? "46%",
-                      unit: "",
-                      label: renterStat?.label ?? "of households rent",
-                      color: "hsl(var(--foreground))",
-                    },
-                    {
-                      value: gridStat?.value ?? "38",
-                      unit: " gCO₂/kWh",
-                      label: gridStat?.label ?? "Ontario grid intensity",
-                      color: "hsl(var(--foreground))",
-                    },
-                  ].map(({ value, unit, label, color }) => (
-                    <div key={label}>
-                      <div
-                        className="font-mono font-semibold leading-none"
-                        style={{ fontSize: "2.8rem", color }}
-                      >
-                        {value}
-                        <span className="ml-1 text-base text-muted-foreground">{unit}</span>
-                      </div>
-                      <div className="label mt-1" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
-                        {label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </StaggerChild>
-            </div>
-          </Overlay>
-
-          {/* Station 2: Infrastructure */}
-          <Overlay visible={s2}>
-            <div className="flex flex-col gap-6">
-              <StaggerChild index={0} visible={s2}>
-                <span className="label">How WattIf Works</span>
-              </StaggerChild>
-
-              <StaggerChild index={1} visible={s2}>
-                <h2
-                  className="font-display font-bold leading-tight text-foreground"
-                  style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", letterSpacing: "-0.02em" }}
-                >
-                  An AI that sites
-                  <br />
-                  the grid — live.
-                </h2>
-              </StaggerChild>
-
-              <StaggerChild index={2} visible={s2}>
-                <p className="max-w-sm font-sans text-sm leading-relaxed text-muted-foreground">
-                  Multi-agent system proposes solar, wind, battery, and microgrid
-                  placements — optimising for coverage, equity, and budget.
-                </p>
-              </StaggerChild>
-
-              <StaggerChild index={3} visible={s2}>
-                <div className="flex flex-col gap-4 border-l-2 pl-5" style={{ borderColor: "hsl(var(--brand))" }}>
-                  {[
-                    { value: buildingsStat?.value ?? "419,582", label: "buildings mapped (OSM)" },
-                    { value: agentsStat?.value ?? "8,001",      label: "simulated residents" },
-                    { value: "583",                              label: "cooling & relief sites" },
-                    { value: "182",                              label: "existing clean-energy assets" },
-                  ].map(({ value, label }) => (
-                    <div key={label}>
-                      <span className="font-mono text-2xl font-medium text-foreground">{value}</span>
-                      <div className="label mt-0.5" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
-                        {label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </StaggerChild>
-            </div>
-          </Overlay>
+          {/* Station 2: Infrastructure — 2D flow diagram */}
+          <FlowDiagram visible={s2} />
         </div>
 
         {/* ── Scroll hint ──────────────────────────────────────────────── */}
