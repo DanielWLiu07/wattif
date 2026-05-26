@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Check, Database, FolderPlus, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CohortConcernsPanel } from "@/components/CohortConcernsPanel";
+import { DatasetUploadPanel } from "@/components/DatasetUploadPanel";
 import { SnapshotCompare, SnapshotHistory } from "@/components/SnapshotCompare";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
@@ -165,6 +167,9 @@ export function ProjectsTab() {
           ))}
         </div>
       </section>
+
+      {selectedProjectId && <DatasetUploadPanel />}
+      {selectedProjectId && <CohortConcernsPanel />}
 
       {selectedProposalId && (
         <section className="space-y-3">

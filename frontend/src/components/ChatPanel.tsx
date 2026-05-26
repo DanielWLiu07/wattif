@@ -11,11 +11,62 @@ import {
   Zap,
   Wifi,
   WifiOff,
+  ListChecks,
 } from "lucide-react";
 import { useStore } from "@/store";
-import type { ChatItem, PlannerEvent } from "@/types";
+import { CONCERN_IMPROVEMENT_PROMPT } from "@/api/client";
+import type { ChatItem, OperatorRecommendation, PlannerEvent } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+
+function RecommendationBubble({ rec }: { rec: OperatorRecommendation }) {
+  return (
+    <div className="space-y-2 rounded-lg border border-accent/40 bg-accent/5 p-2.5 text-[11px]">
+      <div className="flex items-start gap-2 font-medium text-foreground">
+        <ListChecks className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
+        <span>{rec.summary}</span>
+      </div>
+      {rec.key_concerns_considered.length > 0 && (
+        <div>
+          <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+            Concerns considered
+          </p>
+          <ul className="space-y-1 text-muted-foreground">
+            {rec.key_concerns_considered.slice(0, 4).map((c, i) => (
+              <li key={c.id ?? i} className="leading-snug">
+                <span className="text-foreground/90">
+                  {c.cohortName ?? "Cohort"} · {c.topic}
+                </span>
+                {c.summary ? ` — ${c.summary.slice(0, 120)}` : ""}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {rec.recommended_actions.length > 0 && (
+        <div>
+          <p className="mb-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+            Recommended actions
+          </p>
+          <ol className="list-decimal space-y-1 pl-4 text-foreground/90">
+            {rec.recommended_actions.map((a, i) => (
+              <li key={i}>{a.action}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+      {rec.tradeoffs.length > 0 && (
+        <p className="text-muted-foreground">
+          <span className="text-[10px] uppercase tracking-wide">Tradeoffs: </span>
+          {rec.tradeoffs.slice(0, 2).join(" ")}
+        </p>
+      )}
+      {rec.suggested_next_step && (
+        <p className="italic text-muted-foreground">Next: {rec.suggested_next_step}</p>
+      )}
+    </div>
+  );
+}
 
 function EventBubble({ e }: { e: PlannerEvent }) {
   if (e.type === "thought")
@@ -57,6 +108,8 @@ function EventBubble({ e }: { e: PlannerEvent }) {
         </span>
       </div>
     );
+  if (e.type === "recommendation")
+    return <RecommendationBubble rec={e.recommendation} />;
   return (
     <div className="flex gap-2 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-xs">
       <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
@@ -90,11 +143,15 @@ const SUGGESTIONS = [
   "Prepare the grid for a heatwave",
 ];
 
+const CONCERN_SUGGESTION = CONCERN_IMPROVEMENT_PROMPT;
+
 export function ChatPanel() {
   const chat = useStore((s) => s.chat);
   const chatBusy = useStore((s) => s.chatBusy);
   const chatAwaiting = useStore((s) => s.chatAwaiting);
   const chatConnected = useStore((s) => s.chatConnected);
+  const datasetSummaries = useStore((s) => s.datasetSummaries);
+  const cohortConcerns = useStore((s) => s.cohortConcerns);
   const sendChat = useStore((s) => s.sendChat);
   const clearChat = useStore((s) => s.clearChat);
   const approveStep = useStore((s) => s.approveStep);
@@ -105,6 +162,9 @@ export function ChatPanel() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 1e9, behavior: "smooth" });
   }, [chat.length, chatBusy]);
+
+  const askConcernOperator = () =>
+    sendChat(CONCERN_SUGGESTION, { intent: "concern_recommendation" });
 
   const submit = () => {
     if (!text.trim() || chatBusy) return;
@@ -141,6 +201,35 @@ export function ChatPanel() {
         </div>
       </div>
 
+      {(datasetSummaries.length > 0 || cohortConcerns.length > 0) && (
+        <div className="border-b border-border/60 bg-secondary/20 px-3 py-1.5 text-[10px] text-muted-foreground">
+          Using {datasetSummaries.length} uploaded dataset
+          {datasetSummaries.length === 1 ? "" : "s"}
+          {cohortConcerns.length > 0 && (
+            <>
+              {" "}
+              and {cohortConcerns.length} generated concern
+              {cohortConcerns.length === 1 ? "" : "s"}
+            </>
+          )}
+          {" "}
+          — operator can recommend proposal changes (simulation unchanged).
+        </div>
+      )}
+
+      {cohortConcerns.length > 0 && (
+        <div className="border-b border-border/60 px-3 py-1.5">
+          <button
+            type="button"
+            onClick={askConcernOperator}
+            disabled={chatBusy}
+            className="w-full rounded-md border border-accent/40 bg-accent/10 px-2 py-1 text-left text-[11px] transition-colors hover:bg-accent/20 disabled:opacity-50"
+          >
+            Ask operator to address concerns
+          </button>
+        </div>
+      )}
+
       <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-3">
         {chat.length === 0 && (
           <div className="space-y-3 py-2">
@@ -150,6 +239,14 @@ export function ChatPanel() {
               can fire a scenario mid-conversation to watch it react.
             </p>
             <div className="flex flex-col gap-1.5">
+              {cohortConcerns.length > 0 && (
+                <button
+                  onClick={askConcernOperator}
+                  className="rounded-lg border border-accent/40 bg-accent/10 px-2.5 py-1.5 text-left text-[11px] transition-colors hover:border-accent/60 hover:bg-accent/15"
+                >
+                  “{CONCERN_SUGGESTION}”
+                </button>
+              )}
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}

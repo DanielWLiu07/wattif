@@ -324,8 +324,12 @@ class PlannerTools:
 # ---------------------------------------------------------------------------
 # System prompt
 # ---------------------------------------------------------------------------
-def _system_prompt(goal: str | None, budget: float) -> str:
-    return (
+def _system_prompt(
+    goal: str | None,
+    budget: float,
+    dataset_context: str | None = None,
+) -> str:
+    base = (
         "You are the WattIf siting planner for Toronto. Goal: maximize renewable coverage AND "
         "equity (prioritize high energy-burden neighbourhoods) while staying within budget.\n"
         f"Budget: {budget:,.0f} CAD. {('User goal: ' + goal) if goal else ''}\n"
@@ -334,6 +338,9 @@ def _system_prompt(goal: str | None, budget: float) -> str:
         "and stop when the budget is mostly used or coverage/equity clearly improved. Keep your "
         "thoughts to one short sentence before each tool call. Be decisive — don't loop."
     )
+    if dataset_context:
+        base += f"\n\n{dataset_context}"
+    return base
 
 
 # ---------------------------------------------------------------------------
@@ -545,12 +552,16 @@ async def _maybe_confirm(event: dict, confirm: ConfirmFn | None) -> bool:
 
 
 async def _planner_anthropic(
-    tools: PlannerTools, goal: str | None, budget: float, confirm: ConfirmFn | None
+    tools: PlannerTools,
+    goal: str | None,
+    budget: float,
+    confirm: ConfirmFn | None,
+    dataset_context: str | None = None,
 ) -> AsyncIterator[dict]:
     import anthropic
 
     client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
-    system = _system_prompt(goal, budget)
+    system = _system_prompt(goal, budget, dataset_context)
     messages: list[dict] = [
         {"role": "user", "content": "Plan the city's renewable build-out now."}
     ]
@@ -617,13 +628,17 @@ async def _planner_anthropic(
 
 
 async def _planner_feather(
-    tools: PlannerTools, goal: str | None, budget: float, confirm: ConfirmFn | None
+    tools: PlannerTools,
+    goal: str | None,
+    budget: float,
+    confirm: ConfirmFn | None,
+    dataset_context: str | None = None,
 ) -> AsyncIterator[dict]:
     from openai import OpenAI
 
     client = OpenAI(api_key=config.FEATHER_API_KEY, base_url=config.FEATHER_BASE_URL)
     messages: list[dict] = [
-        {"role": "system", "content": _system_prompt(goal, budget)},
+        {"role": "system", "content": _system_prompt(goal, budget, dataset_context)},
         {"role": "user", "content": "Plan the city's renewable build-out now."},
     ]
     oai_tools = _openai_tools()
@@ -793,10 +808,17 @@ class PlannerChat:
     message history across turns. Scenarios injected mid-turn are observed and reacted to.
     """
 
-    def __init__(self, world, budget_cad: float, goal: str | None = None):
+    def __init__(
+        self,
+        world,
+        budget_cad: float,
+        goal: str | None = None,
+        dataset_context: str | None = None,
+    ):
         self.world = world
         self.tools = PlannerTools(world, budget_cad)
         self.goal = goal
+        self.dataset_context = dataset_context
         self.provider = config.llm_provider()
         self.pending_scenarios: list = []  # Scenario objects injected since last observation
         self.messages: list[dict] = []  # LLM conversation history
@@ -1088,7 +1110,9 @@ class PlannerChat:
         import anthropic
 
         client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
-        system = _system_prompt(self.goal, self.tools.budget_total)
+        system = _system_prompt(
+            self.goal, self.tools.budget_total, self.dataset_context
+        )
         self.messages.append({"role": "user", "content": user_message})
 
         for _ in range(MAX_ITERATIONS):
@@ -1163,7 +1187,9 @@ class PlannerChat:
             self.messages.append(
                 {
                     "role": "system",
-                    "content": _system_prompt(self.goal, self.tools.budget_total),
+                    "content": _system_prompt(
+                        self.goal, self.tools.budget_total, self.dataset_context
+                    ),
                 }
             )
         self.messages.append({"role": "user", "content": user_message})
@@ -1252,11 +1278,29 @@ async def run_planner(
     goal: str | None = None,
     budget_cad: float | None = None,
     confirm: ConfirmFn | None = None,
+    project_id: str | None = None,
+    proposal_id: str | None = None,
 ) -> AsyncIterator[dict]:
     """Yield planner events. step mode uses `confirm` to gate mutating tools (WS only)."""
+    from .cohort_context import build_planner_context, fetch_concern_summaries
+
     budget = budget_cad if budget_cad is not None else DEFAULT_BUDGET_CAD
     tools = PlannerTools(world, budget)
     provider = config.llm_provider()
+    dataset_context = build_planner_context(
+        project_id=project_id, proposal_id=proposal_id
+    )
+    concern_count = len(
+        fetch_concern_summaries(project_id=project_id, proposal_id=proposal_id)
+    )
+    if dataset_context:
+        yield {
+            "type": "thought",
+            "text": (
+                "Noting uploaded datasets and synthetic cohort concerns as planning "
+                f"context ({concern_count} concern(s); simulation unchanged)."
+            ),
+        }
 
     yield {
         "type": "thought",
@@ -1278,7 +1322,9 @@ async def run_planner(
 
     try:
         runner = _planner_anthropic if provider == "anthropic" else _planner_feather
-        async for ev in runner(tools, goal, budget, step_confirm):
+        async for ev in runner(
+            tools, goal, budget, step_confirm, dataset_context=dataset_context
+        ):
             yield ev
     except Exception as exc:  # noqa: BLE001 — fall back to deterministic planner-lite
         log.warning(
