@@ -1,22 +1,22 @@
 import { useRef, useMemo, useEffect, Suspense } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Grid, useGLTF } from "@react-three/drei";
-import { Vector3, Box3, MathUtils, Color, type Group, type Mesh } from "three";
+import {
+  Vector3, Box3, MathUtils, Color,
+  type Group, type Mesh, type Points,
+  BufferGeometry, Float32BufferAttribute,
+} from "three";
 import zonesRaw from "@/data/zonesFixture.json";
 
-// ── Model sizing (configure here) ───────────────────────────────────────────
-// Each model is normalised by its bounding box to a TARGET HEIGHT in world units,
-// so the GLB's intrinsic scale doesn't matter — tune these to resize the scene.
+// ── Model sizing ─────────────────────────────────────────────────────────────
 const MODEL_HEIGHTS = {
-  heroTurbine: 11, // hero: whole turbine (mast + blades) must fit the frame
+  heroTurbine: 11,
   solar: 2.2,
   wind: 6,
   battery: 2.6,
   microgrid: 3.2,
 };
 
-// Returns the uniform scale that makes `obj`'s tallest axis equal `targetH`,
-// plus the y-offset that drops its base onto the grid (y=0).
 function fitToHeight(obj: Group, targetH: number) {
   const box = new Box3().setFromObject(obj);
   const size = new Vector3();
@@ -26,21 +26,17 @@ function fitToHeight(obj: Group, targetH: number) {
   return { scale, yBase: -box.min.y * scale };
 }
 
-// Smoothstep easing — gives reveals/transitions a soft accelerate-decelerate
-// instead of a linear ramp, so things grow/fade in smoothly.
 const ease = (t: number) => {
   const x = MathUtils.clamp(t, 0, 1);
   return x * x * (3 - 2 * x);
 };
 
-// Preload all models up-front so there's no hitch on the infra station
 useGLTF.preload("/models/wind_turbine.glb");
 useGLTF.preload("/models/solar_array.glb");
 useGLTF.preload("/models/battery.glb");
 useGLTF.preload("/models/microgrid_hub.glb");
 
-// ── Toronto geo → 3D world coordinate helpers ──────────────────────────────
-// Toronto lng: -79.65 → -79.10, lat: 43.57 → 43.86
+// ── Toronto geo → 3D world coordinate helpers ────────────────────────────────
 const TORONTO_MID_LNG = -79.375;
 const TORONTO_MID_LAT = 43.715;
 const TORONTO_LNG_SPAN = 0.55;
@@ -52,7 +48,7 @@ function geoTo3D(lng: number, lat: number, spread = 1): [number, number] {
   return [x, z];
 }
 
-// ── Camera rig — drives camera along the Z-axis road ───────────────────────
+// ── Camera rig ───────────────────────────────────────────────────────────────
 
 export function CameraRig({ progress }: { progress: number }) {
   const { camera } = useThree();
@@ -63,22 +59,18 @@ export function CameraRig({ progress }: { progress: number }) {
     const p = progress;
 
     if (p < 0.55) {
-      // Approach: drive forward toward the infrastructure row (hero → problem → demand)
       const d = p / 0.55;
       tPos.current.set(0, 5, MathUtils.lerp(20, -22, d));
       tLook.current.set(0, 1.5, MathUtils.lerp(0, -40, d));
     } else if (p < 0.75) {
-      // Infrastructure: pan LEFT → RIGHT across the row (no fly-through, kept at distance)
       const d = (p - 0.55) / 0.2;
       tPos.current.set(MathUtils.lerp(-14, 14, d), 5, -22);
       tLook.current.set(MathUtils.lerp(-10, 10, d), 1.2, -40);
     } else if (p < 0.86) {
-      // Settle back to centre and advance toward the siting coverage
       const d = (p - 0.75) / 0.11;
       tPos.current.set(MathUtils.lerp(14, 0, d), MathUtils.lerp(5, 6, d), MathUtils.lerp(-22, -50, d));
       tLook.current.set(MathUtils.lerp(10, 0, d), 1.2, -68);
     } else {
-      // Lift to top-down for scope selection
       const l = (p - 0.86) / 0.14;
       tPos.current.set(0, MathUtils.lerp(6, 42, l), MathUtils.lerp(-50, -52, l));
       tLook.current.set(0, 0, MathUtils.lerp(-68, -52, l));
@@ -92,7 +84,7 @@ export function CameraRig({ progress }: { progress: number }) {
   return null;
 }
 
-// ── Lighting ─────────────────────────────────────────────────────────────────
+// ── Lighting ──────────────────────────────────────────────────────────────────
 
 function Lights() {
   return (
@@ -111,52 +103,203 @@ function Lights() {
         shadow-camera-bottom={-50}
         color="#ffffff"
       />
-      {/* Soft fill from opposite side */}
       <directionalLight position={[-8, 10, -8]} intensity={0.4} color="#f0f8ff" />
     </>
   );
 }
 
-// ── Floor: shadow receiver + infinite grid ────────────────────────────────────
+// ── Animated floor grid ───────────────────────────────────────────────────────
+// Wrapping Grid in a group lets us shift its Z each frame so section lines
+// appear to scroll toward the camera — giving the "driving down the road" feel.
+const SECTION_SIZE = 10;
 
-function Floor() {
+function Floor({ progress }: { progress: number }) {
+  const groupRef = useRef<Group>(null);
+  const baseZ = -30;
+  // Each frame accumulate elapsed time to drive the scroll offset
+  const elapsed = useRef(0);
+
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    // Idle drift speed + journey boost when scrolling
+    const speed = 3 + progress * 14;
+    elapsed.current += delta * speed;
+    // Loop within one section so the grid tiles seamlessly
+    const offset = elapsed.current % SECTION_SIZE;
+    groupRef.current.position.z = baseZ + offset;
+  });
+
   return (
     <>
-      {/* Shadow-receiving plane (invisible, just catches shadows) */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, -30]} receiveShadow>
+      {/* Shadow receiver */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, baseZ]} receiveShadow>
         <planeGeometry args={[200, 160]} />
         <shadowMaterial transparent opacity={0.14} />
       </mesh>
-      {/* The visible infinite grid — the "road" texture */}
-      <Grid
-        position={[0, 0, -30]}
-        args={[200, 160]}
-        cellSize={2}
-        cellThickness={0.4}
-        cellColor="#ebebeb"
-        sectionSize={10}
-        sectionThickness={0.8}
-        sectionColor={new Color("#e0e0e0")}
-        fadeDistance={55}
-        fadeStrength={2.5}
-        infiniteGrid
-      />
+
+      {/* Animated grid */}
+      <group ref={groupRef}>
+        <Grid
+          position={[0, 0, 0]}
+          args={[200, 160]}
+          cellSize={2}
+          cellThickness={0.7}
+          cellColor="#cccccc"
+          sectionSize={SECTION_SIZE}
+          sectionThickness={1.5}
+          sectionColor={new Color("#8fad6e")}
+          fadeDistance={90}
+          fadeStrength={1.2}
+          infiniteGrid
+        />
+      </group>
     </>
   );
 }
 
-// ── Volt horizon line ─────────────────────────────────────────────────────────
+// ── Volt horizon glow ─────────────────────────────────────────────────────────
 
 function VoltHorizon() {
   return (
-    <mesh position={[0, 0.8, -65]} rotation={[0, 0, 0]}>
-      <planeGeometry args={[120, 0.025]} />
-      <meshBasicMaterial color="#c8f400" transparent opacity={0.7} />
+    <group position={[0, 0.8, -65]}>
+      {/* Broad diffuse glow band */}
+      <mesh>
+        <planeGeometry args={[120, 1.2]} />
+        <meshBasicMaterial color="#c8f400" transparent opacity={0.08} />
+      </mesh>
+      {/* Crisp line on top */}
+      <mesh position={[0, 0, 0.01]}>
+        <planeGeometry args={[120, 0.028]} />
+        <meshBasicMaterial color="#c8f400" transparent opacity={0.75} />
+      </mesh>
+    </group>
+  );
+}
+
+// ── Floating ambient particles ────────────────────────────────────────────────
+// Sparse motes drifting upward to add depth and life.
+
+const PARTICLE_COUNT = 140;
+
+function Particles() {
+  const pointsRef = useRef<Points>(null);
+
+  const { positions, colors } = useMemo(() => {
+    const pos = new Float32Array(PARTICLE_COUNT * 3);
+    const col = new Float32Array(PARTICLE_COUNT * 3);
+    // Volt green: r=0.784 g=0.957 b=0  Gray: ~0.65,0.65,0.65
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      pos[i * 3]     = (Math.random() - 0.5) * 80;
+      pos[i * 3 + 1] = Math.random() * 14;
+      pos[i * 3 + 2] = -Math.random() * 80;
+      const isVolt = Math.random() < 0.3;
+      col[i * 3]     = isVolt ? 0.784 : 0.65;
+      col[i * 3 + 1] = isVolt ? 0.957 : 0.65;
+      col[i * 3 + 2] = isVolt ? 0.0   : 0.65;
+    }
+    return { positions: pos, colors: col };
+  }, []);
+
+  const geo = useMemo(() => {
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(positions.slice(), 3));
+    g.setAttribute("color", new Float32BufferAttribute(colors, 3));
+    return g;
+  }, [positions, colors]);
+
+  useFrame((_, delta) => {
+    if (!pointsRef.current) return;
+    const attr = pointsRef.current.geometry.attributes.position;
+    const arr = attr.array as Float32Array;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      arr[i * 3 + 1] += delta * (0.08 + Math.random() * 0.04);
+      if (arr[i * 3 + 1] > 14) {
+        arr[i * 3 + 1] = 0;
+        arr[i * 3]     = (Math.random() - 0.5) * 80;
+        arr[i * 3 + 2] = -Math.random() * 80;
+      }
+    }
+    attr.needsUpdate = true;
+  });
+
+  return (
+    <points ref={pointsRef} geometry={geo}>
+      <pointsMaterial
+        size={0.07}
+        vertexColors
+        transparent
+        opacity={0.45}
+        sizeAttenuation
+        depthWrite={false}
+      />
+    </points>
+  );
+}
+
+// ── Volt energy pulses ────────────────────────────────────────────────────────
+// Small glowing volt dots that travel along grid section lines toward the
+// camera (Z increasing toward 0), reinforcing the energy-flow theme.
+
+const PULSE_COUNT = 10;
+// Place pulses on X grid section lines (-20, -10, 0, 10, 20) + some random
+const PULSE_CONFIGS = Array.from({ length: PULSE_COUNT }, (_, i) => ({
+  x: Math.round(((Math.random() - 0.5) * 40) / 10) * 10,
+  startZ: -(Math.random() * 68 + 4),
+  speed: 7 + Math.random() * 8,
+  phase: Math.random() * 68,
+}));
+
+function VoltPulses() {
+  const groupRef = useRef<Group>(null);
+  const timeRef = useRef(0);
+
+  useFrame((_, delta) => {
+    timeRef.current += delta;
+    if (!groupRef.current) return;
+    groupRef.current.children.forEach((child, i) => {
+      const cfg = PULSE_CONFIGS[i];
+      // Travel from startZ toward 0, loop when past camera
+      const z = cfg.startZ + ((timeRef.current * cfg.speed + cfg.phase) % 72);
+      child.position.z = z > 2 ? cfg.startZ : z;
+    });
+  });
+
+  return (
+    <group ref={groupRef}>
+      {PULSE_CONFIGS.map((cfg, i) => (
+        <mesh key={i} position={[cfg.x, 0.06, cfg.startZ]}>
+          <sphereGeometry args={[0.1, 5, 5]} />
+          <meshBasicMaterial color="#c8f400" transparent opacity={0.8} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// ── Volt scan line ────────────────────────────────────────────────────────────
+// A single volt line slowly sweeping forward across the grid — subtle cinematic pulse.
+
+function ScanLine() {
+  const meshRef = useRef<Mesh>(null);
+  const timeRef = useRef(0);
+
+  useFrame((_, delta) => {
+    timeRef.current += delta * 1.8;
+    if (!meshRef.current) return;
+    // Sweep from z=-70 to z=5, loop every ~42s / cycle
+    const z = -70 + (timeRef.current * 2.5) % 75;
+    meshRef.current.position.z = z;
+  });
+
+  return (
+    <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, -70]}>
+      <planeGeometry args={[160, 0.18]} />
+      <meshBasicMaterial color="#c8f400" transparent opacity={0.12} depthWrite={false} />
     </mesh>
   );
 }
 
-// ── GLB model loader with shadow support ──────────────────────────────────────
+// ── GLB model loader ──────────────────────────────────────────────────────────
 
 function GlbModel({
   url,
@@ -185,7 +328,6 @@ function GlbModel({
     return c;
   }, [scene]);
 
-  // Normalise the model to its target height (bbox-based), drop base onto grid.
   const fit = useMemo(() => fitToHeight(cloned, targetH), [cloned, targetH]);
 
   useFrame((_, delta) => {
@@ -207,7 +349,7 @@ function GlbModel({
   );
 }
 
-// ── Hero station — big turbine rotating ──────────────────────────────────────
+// ── Hero station ──────────────────────────────────────────────────────────────
 
 function HeroStation() {
   const { scene } = useGLTF("/models/wind_turbine.glb");
@@ -225,7 +367,6 @@ function HeroStation() {
     return c;
   }, [scene]);
 
-  // Find the rotor group after clone — stored in ref so useFrame can mutate it
   useEffect(() => {
     bladeRef.current = null;
     cloned.traverse((child) => {
@@ -255,13 +396,12 @@ function HeroStation() {
   );
 }
 
-// ── Problem station — energy-burden zone markers ──────────────────────────────
+// ── Problem station ───────────────────────────────────────────────────────────
 
 type ZoneEntry = { id: string; name: string; centroid: [number, number]; demographics: { energyBurdenIndex: number } };
 
 function ProblemStation({ progress }: { progress: number }) {
   const zones = zonesRaw as ZoneEntry[];
-  // How "revealed" the markers are (0-1)
   const reveal = MathUtils.clamp((progress - 0.14) / 0.16, 0, 1);
 
   const markers = useMemo(() =>
@@ -279,11 +419,7 @@ function ProblemStation({ progress }: { progress: number }) {
   return (
     <group position={[0, 0, -14]}>
       {markers.map((m, i) => (
-        <mesh
-          key={i}
-          position={[m.x, 0.25 * reveal, m.dz]}
-          scale={reveal}
-        >
+        <mesh key={i} position={[m.x, 0.25 * reveal, m.dz]} scale={reveal}>
           <sphereGeometry args={[m.isHigh ? 0.22 : 0.12, 6, 6]} />
           <meshStandardMaterial
             color={m.isHigh ? "#ef4444" : "#d0d0d0"}
@@ -296,17 +432,17 @@ function ProblemStation({ progress }: { progress: number }) {
   );
 }
 
-// ── Demand station — stylized city blocks ─────────────────────────────────────
+// ── Demand station ────────────────────────────────────────────────────────────
 
 const BLOCKS: { x: number; w: number; d: number; h: number }[] = [
   { x: -5, w: 1.8, d: 1.8, h: 3.5 },
   { x: -3, w: 1.2, d: 1.5, h: 5.8 },
-  { x: -1, w: 2, d: 1.8, h: 8.2 },
+  { x: -1, w: 2,   d: 1.8, h: 8.2 },
   { x: 1.5, w: 1.5, d: 1.5, h: 12 },
-  { x: 3.5, w: 1.8, d: 2, h: 9 },
+  { x: 3.5, w: 1.8, d: 2,   h: 9 },
   { x: 5.5, w: 1.2, d: 1.2, h: 6.5 },
-  { x: 7, w: 1, d: 1.2, h: 4 },
-  { x: -7, w: 1.5, d: 1.5, h: 2.8 },
+  { x: 7,   w: 1,   d: 1.2, h: 4 },
+  { x: -7,  w: 1.5, d: 1.5, h: 2.8 },
 ];
 
 function DemandStation({ progress }: { progress: number }) {
@@ -326,11 +462,7 @@ function DemandStation({ progress }: { progress: number }) {
           receiveShadow
         >
           <boxGeometry args={[b.w, b.h, b.d]} />
-          <meshStandardMaterial
-            color="#e8e8e8"
-            roughness={0.6}
-            metalness={0.05}
-          />
+          <meshStandardMaterial color="#e8e8e8" roughness={0.6} metalness={0.05} />
         </mesh>
       ))}
     </group>
@@ -355,7 +487,7 @@ function InfraStation({ progress }: { progress: number }) {
   );
 }
 
-// ── Volt siting coverage ──────────────────────────────────────────────────────
+// ── Siting coverage ───────────────────────────────────────────────────────────
 
 function SitingStation({ progress }: { progress: number }) {
   const zones = zonesRaw as ZoneEntry[];
@@ -371,11 +503,7 @@ function SitingStation({ progress }: { progress: number }) {
         return (
           <mesh key={i} position={[x, 0, dz]} rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[1.4, 1.4]} />
-            <meshBasicMaterial
-              color="#c8f400"
-              transparent
-              opacity={0.35 * reveal}
-            />
+            <meshBasicMaterial color="#c8f400" transparent opacity={0.35 * reveal} />
           </mesh>
         );
       })}
@@ -389,11 +517,14 @@ export function Scene3D({ progress }: { progress: number }) {
   return (
     <>
       <color attach="background" args={["#ffffff"]} />
-      <fog attach="fog" args={["#ffffff", 14, 70]} />
+      <fog attach="fog" args={["#ffffff", 18, 80]} />
 
       <Lights />
-      <Floor />
+      <Floor progress={progress} />
       <VoltHorizon />
+      <Particles />
+      <VoltPulses />
+      <ScanLine />
       <CameraRig progress={progress} />
 
       <Suspense fallback={null}>
