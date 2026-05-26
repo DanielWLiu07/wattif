@@ -72,6 +72,36 @@ function hashSeed(s: string): number {
   return h;
 }
 
+// Word-wrap a voice line to <= maxLines lines (~perLine chars each), ellipsizing
+// any overflow. deck.gl TextLayer can't CSS line-clamp, so we pre-wrap with "\n"
+// (and set maxWidth:-1 on the layer) — the bubble sizes to content, no mid-line clip.
+function clampSpeech(raw: string, maxLines: number, perLine = 26): string {
+  const words = raw.trim().split(/\s+/);
+  const lines: string[] = [];
+  let cur = "";
+  let truncated = false;
+  for (let i = 0; i < words.length; i++) {
+    const cand = cur ? cur + " " + words[i] : words[i];
+    if (cand.length <= perLine) {
+      cur = cand;
+    } else if (lines.length < maxLines - 1) {
+      if (cur) lines.push(cur);
+      cur = words[i];
+    } else {
+      // last allowed line is full — stop; remaining words are dropped
+      truncated = true;
+      break;
+    }
+  }
+  if (cur && lines.length < maxLines) lines.push(cur);
+  if (truncated && lines.length) {
+    let last = lines[lines.length - 1];
+    if (last.length > perLine - 1) last = last.slice(0, perLine - 1);
+    lines[lines.length - 1] = last.replace(/[\s.,;:!?]+$/, "") + "…";
+  }
+  return lines.join("\n");
+}
+
 export type LayerInputs = {
   zones: Zone[];
   agents: Agent[];
@@ -967,8 +997,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
     const data = list.map((v) => {
       const z = zoneById.get(v.zoneId);
       const selected = v.id === selectedVoiceId;
-      const cap = selected ? 200 : 120;
-      const text = v.text.length > cap ? v.text.slice(0, cap - 2) + "…" : v.text;
+      // ~2 lines normally, up to 3 when selected — ellipsis on overflow.
+      const text = clampSpeech(v.text, selected ? 3 : 2);
       // pop the bubble on the EXACT agent when the backend gives a position
       const position = (v.position ??
         (z ? z.centroid : [-79.38, 43.65])) as [number, number];
@@ -994,8 +1024,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
         backgroundPadding: [7, 5, 7, 5],
         fontWeight: 600,
         sizeUnits: "pixels",
-        wordBreak: "break-word",
-        maxWidth: 16,
+        // text is pre-wrapped with "\n" (clampSpeech) → disable deck auto-wrap
+        // so the bubble respects exactly those lines and sizes to content.
+        wordBreak: "break-all",
+        maxWidth: -1,
         lineHeight: 1.25,
         billboard: true,
         getTextAnchor: "middle",
