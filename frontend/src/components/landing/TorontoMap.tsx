@@ -552,6 +552,22 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             perspectiveOrigin: "50% 0%",
             transition: "bottom 0.65s cubic-bezier(0.22, 1, 0.36, 1)",
           }}
+          onMouseMove={(e) => {
+            // Geometric hover: pick the card whose center is nearest the cursor's
+            // X — same formula as the center-detection, so it's immune to the 3D
+            // transforms / raised-card overlap that break per-element onMouseEnter.
+            const mx = e.clientX;
+            let best = 0;
+            let bestDist = Infinity;
+            for (let i = 0; i < ALL_CARDS.length; i++) {
+              const cardCx = i * CARD_STRIDE + CARD_W / 2 - offsetRef.current;
+              const d = Math.abs(cardCx - mx);
+              if (d < bestDist) { bestDist = d; best = i; }
+            }
+            hoveringRef.current = true;
+            setHoveredIdx(best);
+            setHoveredRegion(ALL_CARDS[best].name);
+          }}
           onMouseLeave={() => {
             setHoveredRegion(null);
             setHoveredIdx(null);
@@ -625,17 +641,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                   role="option"
                   aria-selected={isActive}
                   aria-label={`${card.name} — ${getZoneCount(card.name)} zones, ${getAgentCount(card.name).toLocaleString()} agents. ${card.desc}`}
-                  onMouseEnter={() => {
-                    setHoveredRegion(card.name);
-                    setHoveredIdx(i);
-                    hoveringRef.current = true;
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredRegion(null);
-                    setHoveredIdx(null);
-                    hoveringRef.current = false;
-                  }}
-                  onClick={() => handleClick(card.name)}
+                  onClick={() => handleClick(ALL_CARDS[hoveredIdx ?? i].name)}
                   style={{
                     width: CARD_W,
                     height: CARD_H,
