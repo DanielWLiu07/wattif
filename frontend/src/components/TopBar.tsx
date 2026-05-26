@@ -90,6 +90,10 @@ export function TopBar() {
   const focusVoices = useStore((s) => s.selectVoiceFromMap);
   const selectedRegion = useStore((s) => s.selectedRegion);
   const openWelcome = () => useStore.setState({ showWelcome: true });
+  const openVoices = () => {
+    useStore.setState({ rightOpen: true });
+    focusVoices("");
+  };
 
   const plannerText = plannerLabel(live, backendHealth);
   const voicesText = voicesLabel();
@@ -117,17 +121,6 @@ export function TopBar() {
           </div>
         </div>
       </div>
-
-      {voicesCount > 0 && (
-        <button
-          onClick={() => focusVoices("")}
-          className="glass pointer-events-auto hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs shadow-lg transition-colors hover:text-foreground md:flex"
-          title="Open the Voices log"
-        >
-          <span className="animate-pulse">💬</span>
-          <b className="tabular-nums">{Math.min(voicesCount, 40)}</b> people talking
-        </button>
-      )}
 
       <div className="glass flex max-w-[min(100vw-2rem,42rem)] flex-wrap items-center justify-end gap-1.5 rounded-xl px-2.5 py-1.5 shadow-lg">
         <Button
@@ -225,6 +218,26 @@ export function TopBar() {
               </TooltipTrigger>
               <TooltipContent>{plannerTooltip(live, backendHealth)}</TooltipContent>
             </Tooltip>
+
+            {voicesCount > 0 && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="hidden h-7 gap-1 border-border/80 bg-secondary/55 text-xs font-normal hover:bg-secondary/80 lg:inline-flex"
+                    onClick={openVoices}
+                  >
+                    <MessageSquare className="h-3 w-3" />
+                    <b className="tabular-nums">
+                      {Math.min(voicesCount, 40)}
+                    </b>{" "}
+                    people talking
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Open the Voices log</TooltipContent>
+              </Tooltip>
+            )}
 
             <Tooltip>
               <TooltipTrigger asChild>

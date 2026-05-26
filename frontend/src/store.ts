@@ -437,6 +437,31 @@ export const getZoneRegion = (zoneName: string, centroid?: [number, number]): st
   return "Downtown";
 };
 
+const TORONTO_VIEW = {
+  target: [-79.385, 43.715] as LngLat,
+  zoom: 11.2,
+  pitch: 40,
+  bearing: -10,
+};
+
+function getRegionFlyTo(region: string, allZones: Zone[]): FlyTo {
+  const isAll = region === "All" || region === "All Toronto";
+  if (isAll) {
+    return { ...TORONTO_VIEW, nonce: Date.now() };
+  }
+
+  const filteredZones = allZones.filter((z) => getZoneRegion(z.name, z.centroid) === region);
+  if (filteredZones.length === 0) return null;
+
+  const avgLng = filteredZones.reduce((sum, z) => sum + z.centroid[0], 0) / filteredZones.length;
+  const avgLat = filteredZones.reduce((sum, z) => sum + z.centroid[1], 0) / filteredZones.length;
+
+  return {
+    target: [avgLng, avgLat],
+    zoom: 12.5,
+    nonce: Date.now(),
+  };
+}
 export const getHaversineDistance = (pos1: [number, number], pos2: [number, number]): number => {
   const R = 6371000; // Earth's radius in meters
   const dLat = ((pos2[1] - pos1[1]) * Math.PI) / 180;
@@ -1560,16 +1585,11 @@ export const useStore = create<State>((set, get) => ({
       });
   },
 
-  resetView: () =>
-    set({
-      flyTo: {
-        target: [-79.385, 43.715],
-        zoom: 11.2,
-        pitch: 40,
-        bearing: -10,
-        nonce: Date.now(),
-      },
-    }),
+  resetView: () => {
+    const { selectedRegion, allZones } = get();
+    const flyTo = getRegionFlyTo(selectedRegion, allZones);
+    if (flyTo) set({ flyTo });
+  },
 
   setSelectedRegion: (region) => {
     const { allZones, allAgents, allSampledAgents, allFacilities, allExistingInfra, allInfra } = get();
@@ -1583,7 +1603,8 @@ export const useStore = create<State>((set, get) => ({
         existingInfra: allExistingInfra,
         infra: allInfra,
       });
-      get().resetView();
+      const flyTo = getRegionFlyTo("All", allZones);
+      if (flyTo) set({ flyTo });
     } else {
       const filteredZones = allZones.filter(z => getZoneRegion(z.name, z.centroid) === region);
       const zIds = new Set(filteredZones.map(z => z.id));
@@ -1598,13 +1619,8 @@ export const useStore = create<State>((set, get) => ({
         infra: allInfra.filter(i => (i.zoneId && zIds.has(i.zoneId)) || onRegionLand(i.position)),
       });
 
-      if (filteredZones.length > 0) {
-        const avgLng = filteredZones.reduce((sum, z) => sum + z.centroid[0], 0) / filteredZones.length;
-        const avgLat = filteredZones.reduce((sum, z) => sum + z.centroid[1], 0) / filteredZones.length;
-        set({
-          flyTo: { target: [avgLng, avgLat], zoom: 12.5, nonce: Date.now() }
-        });
-      }
+      const flyTo = getRegionFlyTo(region, allZones);
+      if (flyTo) set({ flyTo });
     }
   },
 
