@@ -266,7 +266,10 @@ export function Landing() {
                     (e.currentTarget as HTMLButtonElement).style.background = "hsl(var(--foreground))";
                     (e.currentTarget as HTMLButtonElement).style.color = "hsl(var(--primary-foreground))";
                   }}
-                  onClick={() => goToStation(3)}
+                  onClick={() => {
+                    // Jump straight to the scope screen (atScope = progress > 0.86)
+                    targetRef.current = 1;
+                  }}
                 >
                   Start simulating
                 </button>
