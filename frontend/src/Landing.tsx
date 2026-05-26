@@ -240,8 +240,7 @@ export function Landing() {
                   style={{ fontSize: "clamp(4.5rem, 8vw, 8rem)", letterSpacing: "-0.03em" }}
                 >
                   Watt
-                  <span style={{ color: "hsl(var(--brand))" }}>If</span>
-                  <span style={{ color: "hsl(var(--brand))" }}>.</span>
+                  <span style={{ color: "hsl(var(--brand))" }}>If?</span>
                 </h1>
               </StaggerChild>
 

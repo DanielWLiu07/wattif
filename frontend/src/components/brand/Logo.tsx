@@ -130,7 +130,7 @@ export function Logo({
             s.text
           )}
         >
-          Watt<span className="text-brand">If</span>
+          Watt<span className="text-brand">If?</span>
         </span>
       )}
     </span>

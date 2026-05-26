@@ -528,6 +528,38 @@ function HeroStation({ storedModels, progress }: {
 
 const FONT_URL_NORMAL = "/fonts/helvetiker_bold.typeface.json";
 
+/**
+ * "Watt" + "If." in 3D. Measures the rendered width of "Watt" so "If." sits
+ * cleanly AFTER it (no overlap), and uses emissive materials so the mark reads
+ * bright rather than dull under the soft scene lighting.
+ */
+function WattIfText() {
+  const wattRef = useRef<Mesh | null>(null);
+  const [iffX, setIffX] = useState(3.4);
+  useEffect(() => {
+    const m = wattRef.current;
+    if (!m?.geometry) return;
+    m.geometry.computeBoundingBox();
+    const bb = m.geometry.boundingBox;
+    if (!bb) return;
+    const next = bb.max.x - bb.min.x + 0.45; // width of "Watt" + a small gap
+    setIffX((p) => (Math.abs(p - next) > 0.01 ? next : p));
+  });
+  const common = { font: FONT_URL_NORMAL, size: 1.3, height: 0.3, curveSegments: 8, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02 } as const;
+  return (
+    <Suspense fallback={null}>
+      <Text3D ref={wattRef} {...common}>
+        Watt
+        <meshStandardMaterial color="#202020" roughness={0.3} metalness={0.1} emissive="#1c1c1c" emissiveIntensity={0.45} />
+      </Text3D>
+      <Text3D {...common} position={[iffX, 0, 0]}>
+        If?
+        <meshStandardMaterial color="#d6ff3a" roughness={0.22} metalness={0.0} emissive="#c8f400" emissiveIntensity={0.85} />
+      </Text3D>
+    </Suspense>
+  );
+}
+
 function NormalWordmark({ position, rotation, scale }: {
   position: [number, number, number];
   rotation: [number, number, number];
@@ -535,16 +567,7 @@ function NormalWordmark({ position, rotation, scale }: {
 }) {
   return (
     <group position={position} rotation={[rotation[0], rotation[1], rotation[2]]} scale={scale}>
-      <Suspense fallback={null}>
-        <Text3D font={FONT_URL_NORMAL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02}>
-          Watt
-          <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.1} />
-        </Text3D>
-        <Text3D font={FONT_URL_NORMAL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02} position={[3.1, 0, 0]}>
-          If.
-          <meshStandardMaterial color="#c8f400" roughness={0.3} metalness={0.0} />
-        </Text3D>
-      </Suspense>
+      <WattIfText />
     </group>
   );
 }
@@ -763,17 +786,7 @@ function EditWordmark({
         position={[0, 5, -6]}
         onClick={(e) => { e.stopPropagation(); onSelect(); }}
       >
-        <Suspense fallback={null}>
-          <Text3D font={FONT_URL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02}>
-            Watt
-            <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.1} />
-          </Text3D>
-          {/* "If." offset ~3.1 units right — roughly "Watt" width at size 1.3 */}
-          <Text3D font={FONT_URL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02} position={[3.1, 0, 0]}>
-            If.
-            <meshStandardMaterial color="#c8f400" roughness={0.3} metalness={0.0} />
-          </Text3D>
-        </Suspense>
+        <WattIfText />
       </group>
       {selected && (
         <TransformControls
@@ -810,7 +823,7 @@ function EditScene() {
   const wordmarkRef = useRef<Group | null>(null);
 
   // Slider-driven transform of the currently selected object (model or wordmark).
-  const [xf, setXf] = useState({ px: 0, py: 0, pz: 0, rx: 0, ry: 0, rz: 0 });
+  const [xf, setXf] = useState({ px: 0, py: 0, pz: 0, rx: 0, ry: 0, rz: 0, s: 1 });
 
   const selectedGroup = (): Group | null => {
     if (wordmarkSelected) return wordmarkRef.current;
@@ -824,6 +837,7 @@ function EditScene() {
     setXf({
       px: +g.position.x.toFixed(2), py: +g.position.y.toFixed(2), pz: +g.position.z.toFixed(2),
       rx: +g.rotation.x.toFixed(3), ry: +g.rotation.y.toFixed(3), rz: +g.rotation.z.toFixed(3),
+      s: +g.scale.x.toFixed(3),
     });
   };
 
@@ -893,6 +907,7 @@ function EditScene() {
     if (!g) return;
     g.position.set(next.px, next.py, next.pz);
     g.rotation.set(next.rx, next.ry, next.rz);
+    g.scale.setScalar(next.s);
     setXf(next);
     saveToDevice();
   };
@@ -1036,6 +1051,9 @@ function EditScene() {
                   { key: "ry", label: "rY", min: -Math.PI, max: Math.PI, step: 0.01 },
                   { key: "rz", label: "rZ", min: -Math.PI, max: Math.PI, step: 0.01 },
                 ] },
+                { group: "Scale", rows: [
+                  { key: "s", label: "S", min: 0.05, max: 6, step: 0.01 },
+                ] },
               ] as const).map(({ group, rows }) => (
                 <div key={group} style={{ marginBottom: 8 }}>
                   <div style={{ color: "#777", marginBottom: 4, fontSize: 11 }}>{group}</div>
@@ -1050,7 +1068,7 @@ function EditScene() {
                           style={{ flex: 1, accentColor: "#c8f400", height: 14 }}
                         />
                         <span style={{ width: 40, textAlign: "right", color: "#c8f400", fontSize: 11 }}>
-                          {value.toFixed(label.startsWith("r") ? 2 : 1)}
+                          {value.toFixed(step < 0.1 ? 2 : 1)}
                         </span>
                       </div>
                     );
