@@ -234,15 +234,7 @@ export function Landing() {
                 </div>
               </StaggerChild>
 
-              <StaggerChild index={1} visible={s0}>
-                <h1
-                  className="font-display font-bold leading-none text-foreground"
-                  style={{ fontSize: "clamp(4.5rem, 8vw, 8rem)", letterSpacing: "-0.03em" }}
-                >
-                  Watt
-                  <span style={{ color: "hsl(var(--brand))" }}>If?</span>
-                </h1>
-              </StaggerChild>
+              {/* (HTML title removed — the 3D "WattIf?" wordmark is the hero title now) */}
 
               <StaggerChild index={2} visible={s0}>
                 <p className="max-w-md font-sans text-base leading-relaxed text-muted-foreground">

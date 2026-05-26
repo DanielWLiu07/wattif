@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect, Suspense, useState, createRef } from "react";
+import { useRef, useMemo, useEffect, useCallback, Suspense, useState, createRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Grid, useGLTF, OrbitControls, TransformControls, Text3D, Html } from "@react-three/drei";
 import {
@@ -56,6 +56,17 @@ export function CameraRig({ progress }: { progress: number }) {
   const tLook = useRef(new Vector3(0, 1.5, 0));
   // Smoothed look target — lags the position slightly for a cinematic feel
   const currentLook = useRef(new Vector3(0, 1.5, 0));
+  // Normalised pointer position (-1..1) for the subtle hero mouse-parallax.
+  const mouse = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
 
   useFrame(() => {
     const p = progress;
@@ -76,6 +87,15 @@ export function CameraRig({ progress }: { progress: number }) {
       const l = (p - 0.86) / 0.14;
       tPos.current.set(0, MathUtils.lerp(6, 42, l), MathUtils.lerp(-50, -52, l));
       tLook.current.set(0, 0, MathUtils.lerp(-68, -52, l));
+    }
+
+    // Subtle mouse-parallax in the hero only — the camera leans toward the
+    // cursor a little (not freecam). Fades out as you scroll past the hero.
+    const heroK = MathUtils.clamp(1 - p / 0.18, 0, 1);
+    if (heroK > 0) {
+      tPos.current.x += mouse.current.x * 1.7 * heroK;
+      tPos.current.y += -mouse.current.y * 1.0 * heroK;
+      tLook.current.x += mouse.current.x * 0.5 * heroK;
     }
 
     // Distance-adaptive lerp: fast approach when far, eases to a soft settle.
@@ -518,6 +538,7 @@ function HeroStation({ storedModels, progress }: {
     <group ref={groupRef}>
       <HeroTurbine stored={storedModels?.heroTurbine} />
       <HeroGlbModel url="/models/solar_array.glb"   targetH={MODEL_HEIGHTS.solar}     defaultPos={HERO_DEFAULTS.solar}     stored={storedModels?.solar} />
+      <HeroGlbModel url="/models/wind_turbine.glb"  targetH={MODEL_HEIGHTS.wind}      defaultPos={[-4, 0, -40]}            stored={storedModels?.wind} />
       <HeroGlbModel url="/models/battery.glb"        targetH={MODEL_HEIGHTS.battery}   defaultPos={HERO_DEFAULTS.battery}   stored={storedModels?.battery} />
       <HeroGlbModel url="/models/microgrid_hub.glb"  targetH={MODEL_HEIGHTS.microgrid} defaultPos={HERO_DEFAULTS.microgrid} stored={storedModels?.microgrid} />
     </group>
@@ -534,21 +555,21 @@ const FONT_URL_NORMAL = "/fonts/helvetiker_bold.typeface.json";
  * bright rather than dull under the soft scene lighting.
  */
 function WattIfText() {
-  const wattRef = useRef<Mesh | null>(null);
-  const [iffX, setIffX] = useState(3.4);
-  useEffect(() => {
-    const m = wattRef.current;
+  // Safe fallback gap clears "Watt" even before measurement; the callback ref
+  // refines it to the exact rendered width once the geometry exists.
+  const [iffX, setIffX] = useState(4.7);
+  const measure = useCallback((m: Mesh | null) => {
     if (!m?.geometry) return;
     m.geometry.computeBoundingBox();
     const bb = m.geometry.boundingBox;
     if (!bb) return;
-    const next = bb.max.x - bb.min.x + 0.45; // width of "Watt" + a small gap
-    setIffX((p) => (Math.abs(p - next) > 0.01 ? next : p));
-  });
+    const w = bb.max.x - bb.min.x + 0.55; // "Watt" width + a clear gap
+    if (w > 2) setIffX((p) => (Math.abs(p - w) > 0.02 ? w : p));
+  }, []);
   const common = { font: FONT_URL_NORMAL, size: 1.3, height: 0.3, curveSegments: 8, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02 } as const;
   return (
     <Suspense fallback={null}>
-      <Text3D ref={wattRef} {...common}>
+      <Text3D ref={measure} {...common}>
         Watt
         <meshStandardMaterial color="#202020" roughness={0.3} metalness={0.1} emissive="#1c1c1c" emissiveIntensity={0.45} />
       </Text3D>
@@ -617,6 +638,19 @@ interface StoredLayout {
   wordmark: { position: [number, number, number]; rotation: [number, number, number]; scale: number } | null;
 }
 
+// Committed default arrangement (hand-placed in ?edit). Used when the browser
+// has no saved layout, so every visitor sees the curated hero composition.
+const BAKED_LAYOUT: StoredLayout = {
+  models: [
+    { type: "heroTurbine", position: [9.604, 0, 5.1],    rotation: [-0.082, -0.582, 0], scale: 0.29 },
+    { type: "solar",       position: [-8.946, 0, 1.172], rotation: [0, 0.548, 0],       scale: 0.85 },
+    { type: "wind",        position: [-4, 0, -40],       rotation: [0, 0, 0],           scale: 0.152 },
+    { type: "battery",     position: [-0.62, 0, 7.218],  rotation: [0.008, 0.508, 0],   scale: 0.58 },
+    { type: "microgrid",   position: [6.6, 0, -8.29],    rotation: [0, -0.162, 0],      scale: 1.31 },
+  ],
+  wordmark: { position: [-12.457, 4.312, 5.237], rotation: [0, 0.458, 0], scale: 1.83 },
+};
+
 function readStoredLayout(): StoredLayout | null {
   try {
     const raw = typeof localStorage !== "undefined" ? localStorage.getItem(LAYOUT_KEY) : null;
@@ -636,7 +670,7 @@ function writeStoredLayout(layout: StoredLayout) {
 // ── Main exported scene ───────────────────────────────────────────────────────
 
 export function Scene3D({ progress }: { progress: number }) {
-  const stored = useMemo(() => readStoredLayout(), []);
+  const stored = useMemo(() => readStoredLayout() ?? BAKED_LAYOUT, []);
   const storedByType = useMemo(() => {
     if (!stored) return null;
     return stored.models.reduce<Record<string, StoredModelEntry>>((acc, m) => {
