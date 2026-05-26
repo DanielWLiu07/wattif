@@ -281,6 +281,7 @@ def optimize_greedy(
     # multiple kinds compete per zone, and the best kind for the chosen zone is selected.
     served = {c["zone_idx"]: c["current_supply"] for c in candidates}
     chosen: set[int] = set()
+    chosen_kinds: set[str] = set()
     kind_count: dict[str, int] = {}
 
     recs: list[Recommendation] = []
@@ -289,7 +290,8 @@ def optimize_greedy(
         evals = []
         for cand in candidates:
             zi = cand["zone_idx"]
-            if zi in chosen:
+            k = cand["kind"]
+            if zi in chosen or (kind is None and k in chosen_kinds):
                 continue
             burden = float(engine.zone_equity_weight[zi])
             gcov, local, eq, gain = _raw_gains(
@@ -352,6 +354,7 @@ def optimize_greedy(
         zone = cand["zone"]
         served[zi] += gain
         chosen.add(zi)
+        chosen_kinds.add(cand["kind"])
         kind_count[cand["kind"]] = kind_count.get(cand["kind"], 0) + 1
 
         recs.append(
@@ -459,8 +462,8 @@ def optimize_ortools(
         if len(idxs) > 1:
             model.Add(sum(x[i] for i in idxs) <= 1)
     # Portfolio diversity: cap any single kind so the plan isn't one technology (mirrors the
-    # greedy diversity term). For n=6 this allows at most 3 of a kind -> >= 2 kinds.
-    kind_cap = max(2, (n + 1) // 2)
+    # greedy diversity term). If kind is None, we enforce strict uniqueness (max 1 per kind).
+    kind_cap = 1 if kind is None else max(2, (n + 1) // 2)
     by_kind: dict[str, list[int]] = {}
     for i, cand in enumerate(candidates):
         by_kind.setdefault(cand["kind"], []).append(i)
