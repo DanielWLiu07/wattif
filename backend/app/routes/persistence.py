@@ -30,7 +30,7 @@ from ..persistence_models import (
     SimulationSnapshot,
     SimulationSnapshotCreate,
 )
-from ..report_generator import generate_proposal_report
+from ..report_generator import generate_proposal_report, proposal_has_operator_recommendation
 
 log = logging.getLogger("wattif.routes.persistence")
 
@@ -307,6 +307,24 @@ def get_latest_simulation_snapshot(proposal_id: str) -> SimulationSnapshot:
         raise
     except Exception as exc:
         log.warning("GET /api/proposals/%s/snapshots/latest failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.get("/proposals/{proposal_id}/operator-recommendation-status")
+def get_operator_recommendation_status(proposal_id: str) -> dict:
+    """Lightweight check for persisted concern-aware operator recommendations."""
+    try:
+        return {
+            "hasOperatorRecommendation": proposal_has_operator_recommendation(proposal_id)
+        }
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning(
+            "GET /api/proposals/%s/operator-recommendation-status failed: %s",
+            proposal_id,
+            exc,
+        )
         raise HTTPException(status_code=502, detail="Persistence query failed") from exc
 
 
