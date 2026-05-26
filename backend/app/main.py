@@ -632,7 +632,8 @@ async def ws_planner(ws: WebSocket) -> None:
     # The typed instruction may arrive as `text` (frontend) or `goal` (alias).
     first_text = cfg.get("text") or cfg.get("goal")
     chat = PlannerChat(
-        world, budget, goal=first_text, dataset_context=dataset_context
+        world, budget, goal=first_text, dataset_context=dataset_context,
+        project_id=project_id, proposal_id=proposal_id,
     )
 
     user_q: asyncio.Queue = asyncio.Queue()
@@ -645,8 +646,22 @@ async def ws_planner(ws: WebSocket) -> None:
         await ws.send_json({"type": "awaiting_approval", **tool_call})
         return await approval_q.get()
 
+    cfn = confirm if mode == "step" else None
+
     def _extract_text(msg: dict) -> str | None:
         return msg.get("text") or msg.get("message") or msg.get("goal")
+
+    def _apply_message_context(msg: dict) -> str | None:
+        text = _extract_text(msg)
+        pid = msg.get("projectId") or msg.get("project_id")
+        prop = msg.get("proposalId") or msg.get("proposal_id")
+        if pid is not None or prop is not None:
+            chat.sync_context(project_id=pid, proposal_id=prop)
+        nonlocal mode, cfn
+        if msg.get("mode") in ("auto", "step"):
+            mode = msg["mode"]
+            cfn = confirm if mode == "step" else None
+        return text
 
     async def receiver() -> None:
         # On ANY disconnect/receive error, push the stop sentinel so the main loop unblocks
@@ -681,23 +696,31 @@ async def ws_planner(ws: WebSocket) -> None:
                 elif (
                     mtype == "user_message" or action in ("message", "msg")
                 ) and _extract_text(msg):
-                    # Honor the typed instruction (frontend's primary continue-turn shape).
-                    await user_q.put(_extract_text(msg))
+                    text = _apply_message_context(msg)
+                    intent = msg.get("intent")
+                    if intent:
+                        await user_q.put({"text": text, "intent": intent})
+                    else:
+                        await user_q.put(text)
         except (WebSocketDisconnect, RuntimeError, ValueError):
             pass
         finally:
             await user_q.put(None)  # always unblock the main loop
 
     recv_task = asyncio.create_task(receiver())
-    cfn = confirm if mode == "step" else None
     try:
         while True:
             user_msg = await user_q.get()
             if user_msg is None:
                 break
             running["v"] = True
-            await ws.send_json({"type": "turn_start", "message": user_msg})
-            async for ev in chat.turn(user_msg, cfn):
+            turn_text = user_msg
+            turn_intent = None
+            if isinstance(user_msg, dict):
+                turn_text = user_msg.get("text") or user_msg.get("message")
+                turn_intent = user_msg.get("intent")
+            await ws.send_json({"type": "turn_start", "message": turn_text})
+            async for ev in chat.turn(turn_text, cfn, intent=turn_intent):
                 await ws.send_json(ev)
             running["v"] = False
     except (WebSocketDisconnect, RuntimeError):

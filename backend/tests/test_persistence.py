@@ -44,6 +44,7 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots", None),
         ("post", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots", {"tick": 1, "metrics": {}}),
         ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots/latest", None),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/report", None),
         ("get", "/api/assets/definitions", None),
         ("post", "/api/assets/definitions", {"name": "A", "kind": "solar"}),
         ("get", "/api/projects/00000000-0000-0000-0000-000000000001/datasets", None),
