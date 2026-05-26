@@ -33,7 +33,11 @@ CAPACITY_FACTOR: dict[str, float] = {
     "wind": 0.30,
     "battery": 0.0,  # storage: no net generation; provides peak shaving
     "microgrid": 0.20,
+    "ev_charger": 0.0,  # load/service asset, not generation
 }
+
+# Per placed EV charger hub: modest monthly demand uplift (kWh) on local grid load.
+EV_CHARGER_MONTHLY_DEMAND_KWH = 4500.0
 
 # MARGINAL displacement factor (tonnes CO2 / kWh). Ontario's *average* grid is ~38 gCO2/kWh
 # (89% non-emitting per generation_mix.json), but renewables/storage displace GAS PEAKERS at the
@@ -156,20 +160,29 @@ class SimEngine:
             pass
 
         # Existing real installations per zone (existing_infra.json, defensive) — used to avoid
-        # double-placing where the city already has renewables.
+        # double-placing where the city already has renewables / EV chargers.
         self.zone_existing_renewables = np.zeros(self.num_zones)
+        self.zone_existing_ev = np.zeros(self.num_zones)
+        self.zone_ev_propensity = np.full(self.num_zones, 0.25)
         try:
-            from ..data.loader import load_existing_infra
+            from ..data.loader import load_attitudes, load_existing_infra
 
             existing = load_existing_infra()
             if existing:
                 zone_index = {z.id: i for i, z in enumerate(zones)}
                 for item in existing:
-                    if (
-                        item.get("kind") == "renewable_install"
-                        and item.get("zoneId") in zone_index
-                    ):
-                        self.zone_existing_renewables[zone_index[item["zoneId"]]] += 1
+                    zid = item.get("zoneId")
+                    if zid not in zone_index:
+                        continue
+                    zi = zone_index[zid]
+                    if item.get("kind") == "renewable_install":
+                        self.zone_existing_renewables[zi] += 1
+                    elif item.get("kind") == "ev_charger":
+                        self.zone_existing_ev[zi] += 1
+            attitudes = load_attitudes() or {}
+            for i, z in enumerate(zones):
+                zp = attitudes.get(z.id) or {}
+                self.zone_ev_propensity[i] = float(zp.get("evPropensity", 0.25))
         except Exception:  # noqa: BLE001 — existing-infra layer is optional
             pass
 
@@ -279,7 +292,7 @@ class SimEngine:
     _PROGRAMS = {
         "rooftop_solar_rebate": (0.6, 0.0, {"solar": 0.18}),
         "retrofit_grant": (0.4, 0.05, {"solar": 0.1, "battery": 0.1}),
-        "ev_incentive": (0.15, 0.6, {"battery": 0.15}),
+        "ev_incentive": (0.15, 0.6, {"ev_charger": 0.15}),
     }
 
     def launch_program(
@@ -387,9 +400,21 @@ class SimEngine:
                 supportive[zi] += 1
         return supply, battery_kw, supportive, microgrid_supply
 
+    def _ev_chargers_by_zone(self) -> np.ndarray:
+        """Placed + existing read-only EV charger count per zone."""
+        counts = self.zone_existing_ev.copy()
+        for infra in self.infra.values():
+            if infra.status == "damaged" or infra.kind != "ev_charger":
+                continue
+            zi = self._nearest_zone(infra.position)
+            counts[zi] += 1
+        return counts
+
     def _current_zone_demand(self) -> np.ndarray:
         growth = (1.0 + DEMAND_GROWTH_PER_TICK) ** self.tick
-        return self.zone_base_demand * growth * self.zone_demand_mult
+        base = self.zone_base_demand * growth * self.zone_demand_mult
+        charger_demand = self._ev_chargers_by_zone() * EV_CHARGER_MONTHLY_DEMAND_KWH
+        return base + charger_demand
 
     def _compute(self) -> tuple[SimMetrics, list[ZoneDelta]]:
         """Compute metrics + per-zone deltas for the CURRENT state (no advancement)."""
@@ -516,13 +541,16 @@ class SimEngine:
         )
 
         adoption_step(self.agent_arrays, self.tick, zone_infra_boost, self._rng)
-        if (
-            self.zone_ev_incentive.any()
-        ):  # EV adoption only moves when a program is active
+        charger_access = np.clip(self._ev_chargers_by_zone() / 3.0, 0.0, 1.0)
+        if self.zone_ev_incentive.any() or charger_access.any():
             from .agents import ev_adoption_step
 
             ev_adoption_step(
-                self.agent_arrays, self.zone_ev_incentive, self.tick, self._rng
+                self.agent_arrays,
+                self.zone_ev_incentive,
+                self.tick,
+                self._rng,
+                zone_charger_access=charger_access,
             )
         self.sentiment.step()  # drift public opinion toward current targets
 
@@ -546,6 +574,7 @@ class SimEngine:
                 "wind": "Wind installation",
                 "battery": "Battery storage",
                 "microgrid": "Microgrid",
+                "ev_charger": "EV charging hub",
             }.get(p["kind"], p["kind"].title())
             cands.append((120.0, f"{label} online in {p['zone']}"))
         self._recent_placements = []

@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 Coord = tuple[float, float]  # [lng, lat]
-InfraKind = Literal["solar", "wind", "battery", "microgrid"]
+InfraKind = Literal["solar", "wind", "battery", "microgrid", "ev_charger"]
 IncomeBracket = Literal["low", "mid", "high"]
 InfraStatus = Literal["planned", "active", "damaged"]
 ScenarioType = Literal[
@@ -41,6 +41,7 @@ MODEL_URLS: dict[str, str] = {
     "wind": "/models/wind_turbine.glb",
     "battery": "/models/battery.glb",
     "microgrid": "/models/microgrid_hub.glb",
+    "ev_charger": "/models/ev_charger.glb",
 }
 
 

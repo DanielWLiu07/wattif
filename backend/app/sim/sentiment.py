@@ -13,7 +13,7 @@ import numpy as np
 
 from ..models import Agent, AgentSentiment, Zone
 
-KINDS = ["solar", "wind", "battery", "microgrid"]
+KINDS = ["solar", "wind", "battery", "microgrid", "ev_charger"]
 KIND_IDX = {k: i for i, k in enumerate(KINDS)}
 DRIFT_RATE = 0.5  # global multiplier; effective per-tick step = DRIFT_RATE * volatility
 
@@ -50,27 +50,22 @@ def _load_zone_env() -> dict | None:
 # within-zone spread and a defensible direction: renters/highrise lean to community options
 # (microgrid/battery) and away from rooftop solar (can't install); suburban owners like solar
 # but are wind-NIMBY; businesses value storage/reliability.
-#                                        solar,  wind,  battery, microgrid
+#                                        solar,  wind,  battery, microgrid, ev_charger
 _ARCHETYPE_DELTA: dict[str, list[float]] = {
     # data-2 archetypes
-    "owner-detached": [0.13, -0.12, 0.03, -0.06],  # rooftop solar yes, wind-NIMBY
-    "condo-owner": [0.08, -0.04, 0.04, 0.00],  # urban owner
-    "renter-low": [-0.12, -0.05, 0.03, 0.14],  # can't install -> community options
-    "renter-mid": [-0.05, -0.02, 0.02, 0.08],
-    "senior": [
-        0.02,
-        -0.06,
-        0.08,
-        0.06,
-    ],  # reliability / heat-safety -> storage + microgrid
-    "student": [0.10, 0.04, 0.03, 0.10],  # climate-urgency -> pro everything clean
+    "owner-detached": [0.13, -0.12, 0.03, -0.06, 0.10],
+    "condo-owner": [0.08, -0.04, 0.04, 0.00, 0.06],
+    "renter-low": [-0.12, -0.05, 0.03, 0.14, 0.14],
+    "renter-mid": [-0.05, -0.02, 0.02, 0.08, 0.10],
+    "senior": [0.02, -0.06, 0.08, 0.06, 0.06],
+    "student": [0.10, 0.04, 0.03, 0.10, 0.05],
     # legacy archetypes (kept for back-compat / synthetic seed)
-    "renter-lowincome": [-0.12, -0.05, 0.03, 0.14],
-    "renter-midincome": [-0.05, -0.02, 0.02, 0.08],
-    "highrise-tenant": [-0.15, -0.08, 0.05, 0.16],
-    "owner-urban": [0.08, -0.04, 0.04, 0.00],
-    "owner-suburban": [0.13, -0.12, 0.03, -0.06],
-    "small-business": [0.05, 0.00, 0.09, 0.03],
+    "renter-lowincome": [-0.12, -0.05, 0.03, 0.14, 0.14],
+    "renter-midincome": [-0.05, -0.02, 0.02, 0.08, 0.10],
+    "highrise-tenant": [-0.15, -0.08, 0.05, 0.16, 0.16],
+    "owner-urban": [0.08, -0.04, 0.04, 0.00, 0.05],
+    "owner-suburban": [0.13, -0.12, 0.03, -0.06, 0.04],
+    "small-business": [0.05, 0.00, 0.09, 0.03, 0.11],
 }
 
 
@@ -101,7 +96,7 @@ class SentimentModel:
         )
         inc_lo, inc_hi = float(incomes.min()), float(incomes.max())
 
-        zone_kind_base = np.zeros((self.num_zones, 4))
+        zone_kind_base = np.zeros((self.num_zones, 5))
         for zi, z in enumerate(zones):
             burden = z.demographics.energy_burden_index
             renter = z.demographics.renter_pct
@@ -140,6 +135,7 @@ class SentimentModel:
                 )
             )
             sp = float(zp.get("solarPropensity", 0.25))
+            evp = float(zp.get("evPropensity", 0.25))
             # Per-kind baselines branch from affinity (explainable spread by technology):
             zone_kind_base[zi, KIND_IDX["solar"]] = (
                 affinity - 0.08 * renter + 0.06 * (sp - 0.25)
@@ -149,12 +145,15 @@ class SentimentModel:
             zone_kind_base[zi, KIND_IDX["microgrid"]] = (
                 affinity + 0.06 * burden + 0.05 * renter
             )
+            zone_kind_base[zi, KIND_IDX["ev_charger"]] = (
+                affinity + 0.10 * (evp - 0.25) + 0.08 * renter + 0.04 * burden
+            )
 
         # --- Per-agent: zone baseline + archetype delta + variance (within-zone spread) ----
-        self._base_opinion = np.zeros((self.n, 4))
+        self._base_opinion = np.zeros((self.n, 5))
         for i, a in enumerate(agents):
             base = zone_kind_base[self.zone_idx[i]].copy()
-            delta = np.array(_ARCHETYPE_DELTA.get(a.archetype, [0.0, 0.0, 0.0, 0.0]))
+            delta = np.array(_ARCHETYPE_DELTA.get(a.archetype, [0.0, 0.0, 0.0, 0.0, 0.0]))
             self._base_opinion[i] = base + delta
         # Wider per-agent jitter so a zone is a real distribution, not a constant.
         self._base_opinion = np.clip(
@@ -239,6 +238,28 @@ class SentimentModel:
                 zone_idx=zone_idx,
                 archetypes={"owner-suburban", "owner-urban"},
                 weight=0.6,
+            )
+        elif kind == "ev_charger":
+            self.nudge_target("ev_charger", 0.85, zone_idx=zone_idx, weight=0.55)
+            self.nudge_target(
+                "ev_charger",
+                0.92,
+                zone_idx=zone_idx,
+                archetypes={
+                    "owner-detached",
+                    "owner-suburban",
+                    "small-business",
+                    "highrise-tenant",
+                    "renter-low",
+                },
+                weight=0.5,
+            )
+            self.nudge_target(
+                "ev_charger",
+                0.32,
+                zone_idx=zone_idx,
+                archetypes={"owner-suburban"},
+                weight=0.35,
             )
 
     # ------------------------------------------------------------------

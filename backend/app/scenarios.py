@@ -355,6 +355,7 @@ def apply_scenario(
             sentiment(k, 0.08 * imult, "grid confidence")
     elif scenario_type == "ev_surge":
         demand(pick(int(engine.num_zones * 0.5)), 1 + 0.15 * imult, "EV charging load")
+        sentiment("ev_charger", 0.18 * imult, "charging access interest")
         sentiment("battery", 0.15 * imult, "storage interest")
         gather("charging_hub", 0.5 * imult, 6)
     elif scenario_type == "factory_opening":

@@ -48,7 +48,7 @@ First-class Supabase columns:
 type ProposalInfrastructure = {
   id: string;
   proposalId: string;
-  kind: "solar" | "wind" | "battery" | "microgrid" | string;
+  kind: "solar" | "wind" | "battery" | "microgrid" | "ev_charger" | string;
   zoneId?: string | null;
   position?: [number, number] | null;
   capacityKw?: number | null;
@@ -92,6 +92,16 @@ The `metrics` object stores the current `SimMetrics` payload. The `scenarios`
 array stores active scenarios as returned to the frontend. The `infrastructure`
 array stores compact live infra state: `id`, `kind`, `position`, `capacityKw`,
 `costCad`, `status`, `modelUrl`, and `zoneId` when available.
+
+### Phase 5: restore and comparison (frontend)
+
+- `GET /api/proposals/{proposal_id}/snapshots` lists history (newest first).
+- **Restore snapshot** is a frontend-only live-sim action: it resets the in-memory
+  sim, replays `infrastructure` via existing `POST /api/infra` placement, and
+  refreshes sentiment/flows/voices/metrics. It does **not** modify
+  `proposal_infrastructure` rows.
+- **Comparison** reads stored `metrics` from a selected snapshot vs current live
+  `SimMetrics` (coverage, approval, equity, emissions, grid load, cost).
 
 ## Runtime Rules
 

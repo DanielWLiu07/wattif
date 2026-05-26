@@ -28,6 +28,7 @@ DEFAULT_CAPACITY_KW: dict[str, float] = {
     "wind": 3000.0,
     "battery": 6000.0,
     "microgrid": 4000.0,
+    "ev_charger": 350.0,
 }
 
 # Installed cost (CAD per kW).
@@ -36,6 +37,7 @@ COST_PER_KW: dict[str, float] = {
     "wind": 2000.0,
     "battery": 700.0,
     "microgrid": 2500.0,
+    "ev_charger": 1200.0,
 }
 
 # Score weights.
@@ -44,6 +46,9 @@ W_EQUITY = 1.2  # equity is the project differentiator — weight it slightly hi
 W_COST = 0.5
 W_CONSTRAINT = 0.8  # down-weight environmentally-constrained zones (constraints.json)
 W_EXISTING = 0.3  # mild penalty to avoid double-placing where renewables already exist
+W_EXISTING_EV = 0.35  # down-weight zones that already have many EV chargers
+# EV chargers earn a small service credit (not generation) for ranking.
+EV_CHARGER_RANKING_CF = 0.04
 W_DISTRICT = 0.5  # down-weight NEW microgrid in district-energy-served zones (don't double-serve)
 # Portfolio diversity: each additional pick of the same kind is penalized, so a plan doesn't
 # over-concentrate on one technology (resilience). Surfaces the next-best *different* kind.
@@ -104,6 +109,12 @@ def _suitable_kinds(zone: Zone, is_dense: bool) -> list[InfraKind]:
         kinds.append("microgrid")
     if burden >= 0.55:
         kinds.append("battery")
+    ev_prop = getattr(zone, "_ev_propensity", None)
+    if ev_prop is None:
+        ev_prop = 0.25
+    existing_ev = getattr(zone, "_existing_ev", 0.0)
+    if (ev_prop >= 0.30 or is_dense) and existing_ev < 4:
+        kinds.append("ev_charger")
     if not kinds:  # guarantee every zone has at least one option
         kinds.append("microgrid")
     return kinds
@@ -125,6 +136,7 @@ def _rationale(
         "wind": "a wind installation",
         "battery": "battery storage",
         "microgrid": "a community microgrid",
+        "ev_charger": "an EV charging hub",
     }[kind]
     eq_note = ""
     if burden >= 0.6:
@@ -139,6 +151,7 @@ def _rationale(
         "solar": " Solar fits this zone's irradiance and rooftop availability.",
         "microgrid": " A microgrid suits this zone — local reliability plus equity benefit.",
         "battery": " Battery shaves peak load and firms supply where energy burden is high.",
+        "ev_charger": " EV charging access is low here but EV ownership and daily trips are high.",
     }.get(kind, "")
     de_note = ""
     if district_system and kind == "microgrid":
@@ -179,17 +192,34 @@ def _build_candidates(engine: SimEngine, kind: InfraKind | None):
         if bool(engine.zone_no_build[i]):
             continue
         is_dense = densities[i] >= dense_threshold
+        zone._ev_propensity = float(engine.zone_ev_propensity[i])  # type: ignore[attr-defined]
+        placed_ev = sum(
+            1
+            for inf in engine.infra.values()
+            if inf.kind == "ev_charger"
+            and inf.status != "damaged"
+            and engine._nearest_zone(inf.position) == i
+        )
+        zone._existing_ev = float(engine.zone_existing_ev[i] + placed_ev)  # type: ignore[attr-defined]
         kinds = [kind] if kind else _suitable_kinds(zone, is_dense)
         for k in kinds:
             cap = candidate_capacity(k)
-            # Battery gets a small enabling credit; generators use their capacity factor.
-            cf = BATTERY_COVERAGE_CF if k == "battery" else CAPACITY_FACTOR.get(k, 0.0)
-            # Solar/wind candidates scale by the zone's resource quality.
-            quality = 1.0
-            if k == "solar":
-                quality = 0.5 + zone.solar_potential
-            elif k == "wind":
-                quality = 0.5 + zone.wind_potential
+            if k == "ev_charger":
+                cf = EV_CHARGER_RANKING_CF
+                ev_need = float(engine.zone_ev_propensity[i]) * (
+                    1.0 / (1.0 + zone._existing_ev)  # type: ignore[attr-defined]
+                )
+                quality = 0.4 + ev_need + (0.2 if is_dense else 0.0)
+            elif k == "battery":
+                cf = BATTERY_COVERAGE_CF
+                quality = 1.0
+            else:
+                cf = CAPACITY_FACTOR.get(k, 0.0)
+                quality = 1.0
+                if k == "solar":
+                    quality = 0.5 + zone.solar_potential
+                elif k == "wind":
+                    quality = 0.5 + zone.wind_potential
             added_supply = cap * cf * HOURS_PER_MONTH * quality
             candidates.append(
                 {
@@ -282,7 +312,27 @@ def optimize_greedy(
                 * float(engine.zone_siting_penalty[cand["zone_idx"]])  # env constraint
                 - W_EXISTING
                 * min(float(engine.zone_existing_renewables[cand["zone_idx"]]), 3)
-                / 3  # avoid double-placing
+                / 3  # avoid double-placing renewables
+                - (
+                    W_EXISTING_EV
+                    * min(
+                        float(
+                            engine.zone_existing_ev[cand["zone_idx"]]
+                            + sum(
+                                1
+                                for inf in engine.infra.values()
+                                if inf.kind == "ev_charger"
+                                and inf.status != "damaged"
+                                and engine._nearest_zone(inf.position)
+                                == cand["zone_idx"]
+                            )
+                        ),
+                        5,
+                    )
+                    / 5
+                    if cand["kind"] == "ev_charger"
+                    else 0.0
+                )
                 - (
                     W_DISTRICT * float(engine.zone_district_energy[cand["zone_idx"]])
                     if cand["kind"] == "microgrid"
@@ -364,6 +414,25 @@ def optimize_ortools(
             - W_EXISTING
             * min(float(engine.zone_existing_renewables[cand["zone_idx"]]), 3)
             / 3
+            - (
+                W_EXISTING_EV
+                * min(
+                    float(
+                        engine.zone_existing_ev[cand["zone_idx"]]
+                        + sum(
+                            1
+                            for inf in engine.infra.values()
+                            if inf.kind == "ev_charger"
+                            and inf.status != "damaged"
+                            and engine._nearest_zone(inf.position) == cand["zone_idx"]
+                        )
+                    ),
+                    5,
+                )
+                / 5
+                if cand["kind"] == "ev_charger"
+                else 0.0
+            )
             - (
                 W_DISTRICT * float(engine.zone_district_energy[cand["zone_idx"]])
                 if cand["kind"] == "microgrid"
