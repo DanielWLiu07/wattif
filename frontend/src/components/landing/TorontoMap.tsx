@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore, getZoneRegion } from "@/store";
 import zonesRaw from "@/data/zonesFixture.json";
 
@@ -41,7 +41,16 @@ const REGION_CARDS = [
   { name: "West Toronto", desc: "Artistic, creative hubs and transit-oriented corridors." },
 ];
 
-// ── Live zone counts from getZoneRegion ────────────────────────────────────
+// ── Carousel geometry ─────────────────────────────────────────────────────
+// 3 copies for seamless looping. Wrap happens at 1× SET_W.
+const CARD_W = 264;
+const CARD_GAP = 20;
+const CARD_STRIDE = CARD_W + CARD_GAP;
+const COPIES = 3;
+const SET_W = REGION_CARDS.length * CARD_STRIDE; // one full set width in px
+const ALL_CARDS = Array.from({ length: COPIES }, () => REGION_CARDS).flat();
+
+// ── Live zone counts ────────────────────────────────────────────────────────
 type RawZone = {
   id: string;
   name: string;
@@ -74,8 +83,7 @@ type ZoneGeo = {
   centroid: [number, number];
   region: string;
   paths: string[];
-  // 0=left / 1=mid / 2=right — used for draw-in stagger column
-  col: 0 | 1 | 2;
+  col: 0 | 1 | 2; // for left→right draw-in stagger
 };
 
 const processedZones: ZoneGeo[] = rawZones.map((z) => {
@@ -90,25 +98,27 @@ const processedZones: ZoneGeo[] = rawZones.map((z) => {
   };
 });
 
-// Sparse centroid sample for twinkling activity dots (~1 per 6 zones)
 const twinkleZones = processedZones.filter((_, i) => i % 6 === 0);
 
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function TorontoMap({ active = false }: { active?: boolean }) {
   const setSelectedRegion = useStore((s) => s.setSelectedRegion);
+
+  // activeRegion = derived from center-detection each rAF frame
+  // hoveredRegion = set by mouse events; pauses carousel and wins over center
+  const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
-  const [autoCycleRegion, setAutoCycleRegion] = useState<string | null>(null);
-  // `revealed` flips true after active, triggering draw-in CSS animations
   const [revealed, setRevealed] = useState(false);
 
-  const handleSelect = (name: string) => {
-    setSelectedRegion(name);
-    useStore.setState({ showRegionSelector: false });
-  };
+  // Carousel refs — DOM-mutated directly in rAF for zero-jank scrolling
+  const trackRef = useRef<HTMLDivElement>(null);
+  const offsetRef = useRef(0);
+  const pausedRef = useRef(false);
+  const prevActiveRef = useRef<string | null>(null);
+  const rafRef = useRef(0);
 
-  // Draw-in: trigger when scope becomes active; reset when it hides so it
-  // replays if the user scrolls back to scope again.
+  // Draw-in: flip `revealed` 80ms after scope becomes active; reset on hide
   useEffect(() => {
     if (active) {
       const t = setTimeout(() => setRevealed(true), 80);
@@ -117,11 +127,50 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     setRevealed(false);
   }, [active]);
 
-  // When active and nothing is hovered, auto-highlight the WHOLE landmass
-  // (all of Toronto lit) — hovering a card narrows it to that region.
+  // rAF carousel — advances offset, wraps at SET_W, detects center card
   useEffect(() => {
-    setAutoCycleRegion(active && hoveredRegion === null ? "All Toronto" : null);
-  }, [active, hoveredRegion]);
+    if (!active) return;
+
+    const SPEED = 0.9; // px per frame at 60 fps
+
+    const tick = () => {
+      if (!pausedRef.current) {
+        offsetRef.current += SPEED;
+        if (offsetRef.current >= SET_W) offsetRef.current -= SET_W;
+      }
+
+      // Apply transform directly — no React re-render per frame
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translateX(${-offsetRef.current}px)`;
+      }
+
+      // Center detection: find which card is closest to viewport midpoint
+      if (!pausedRef.current) {
+        const vcx = window.innerWidth / 2;
+        let closest: string | null = null;
+        let minDist = Infinity;
+        // Check first two copies so there's always a card near center
+        for (let i = 0; i < REGION_CARDS.length * 2; i++) {
+          const cardCx = i * CARD_STRIDE + CARD_W / 2 - offsetRef.current;
+          const dist = Math.abs(cardCx - vcx);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = REGION_CARDS[i % REGION_CARDS.length].name;
+          }
+        }
+        // Only update React state on actual region change (≤8× per loop)
+        if (closest !== prevActiveRef.current) {
+          prevActiveRef.current = closest;
+          setActiveRegion(closest);
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [active]);
 
   const zonesByRegion = useMemo(() => {
     const map: Record<string, ZoneGeo[]> = {};
@@ -132,17 +181,28 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
     return map;
   }, []);
 
-  // User hover takes priority; fall back to auto-cycle
-  const effectiveHover = hoveredRegion ?? autoCycleRegion;
-  const highlightAll = effectiveHover === "All Toronto";
-  const highlightedRegion = highlightAll ? null : effectiveHover;
+  // Hover wins over center-based detection
+  const effectiveRegion = hoveredRegion ?? activeRegion;
+  const highlightAll = effectiveRegion === "All Toronto";
+  const highlightedRegion = highlightAll ? null : effectiveRegion;
 
-  // Stagger delays per draw-in column group (left first)
   const colDelay = ["0ms", "140ms", "280ms"] as const;
+
+  const handleMouseEnter = (name: string) => {
+    pausedRef.current = true;
+    setHoveredRegion(name);
+  };
+  const handleMouseLeave = () => {
+    pausedRef.current = false;
+    setHoveredRegion(null);
+  };
+  const handleClick = (name: string) => {
+    setSelectedRegion(name);
+    useStore.setState({ showRegionSelector: false });
+  };
 
   return (
     <>
-      {/* Inject keyframes for zone draw-in and dot-grid drift */}
       <style>{`
         @keyframes zoneDrawIn {
           from { opacity: 0; transform: translateY(4px); }
@@ -158,82 +218,23 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
         }
       `}</style>
 
-      <div className="fixed inset-0 z-[90] flex bg-background">
-        {/* ── Left: 2-col card grid ─────────────────────────────────────── */}
-        <aside
-          className="flex shrink-0 flex-col border-r border-border bg-background"
-          style={{ width: 360 }}
-        >
-          <div className="border-b border-border px-6 py-5">
-            <p className="label" style={{ color: "hsl(var(--brand))" }}>
-              Final step
-            </p>
-            <h2 className="mt-1 font-display text-xl font-bold leading-tight text-foreground">
-              Choose your scope.
-            </h2>
-            <p className="mt-1.5 font-sans text-xs leading-relaxed text-muted-foreground">
-              Hover to preview on the map. Click to begin.
-            </p>
+      <div className="fixed inset-0 z-[90] flex flex-col bg-background overflow-hidden">
+
+        {/* ── Header ────────────────────────────────────────────────────── */}
+        <div className="shrink-0 border-b border-border px-8 py-4 flex items-baseline gap-4">
+          <div>
+            <p className="label inline" style={{ color: "hsl(var(--brand))" }}>Final step — </p>
+            <span className="font-display text-lg font-bold text-foreground">Choose your scope.</span>
           </div>
+          <span className="font-sans text-xs text-muted-foreground">
+            Cards scroll automatically · hover to preview · click to begin
+          </span>
+        </div>
 
-          <div className="flex-1 overflow-y-auto p-3">
-            <div className="grid grid-cols-2 gap-2">
-              {REGION_CARDS.map((card) => {
-                const zones = getZoneCount(card.name);
-                const agents = getAgentCount(card.name);
-                const isHovered = hoveredRegion === card.name;
-                const isAutolit = !hoveredRegion && autoCycleRegion === card.name;
+        {/* ── Map — top focal point ──────────────────────────────────────── */}
+        <div className="relative flex flex-1 items-center justify-center overflow-hidden min-h-0">
 
-                return (
-                  <button
-                    key={card.name}
-                    onMouseEnter={() => setHoveredRegion(card.name)}
-                    onMouseLeave={() => setHoveredRegion(null)}
-                    onClick={() => handleSelect(card.name)}
-                    className="group flex flex-col gap-1.5 rounded-xl border bg-white p-3 text-left transition-all duration-150 hover:shadow-md"
-                    style={{
-                      borderColor:
-                        isHovered || isAutolit
-                          ? "hsl(var(--brand))"
-                          : "hsl(var(--border))",
-                      boxShadow:
-                        isHovered
-                          ? "0 4px 16px hsl(var(--brand) / 0.15)"
-                          : isAutolit
-                          ? "0 2px 10px hsl(var(--brand) / 0.08)"
-                          : undefined,
-                      transform: isHovered ? "translateY(-1px)" : undefined,
-                    }}
-                  >
-                    <span
-                      className="font-display text-sm font-semibold leading-tight text-foreground"
-                      style={isHovered || isAutolit ? { color: "hsl(var(--brand-ink, var(--foreground)))" } : {}}
-                    >
-                      {card.name}
-                    </span>
-                    <span className="font-sans text-[10px] leading-snug text-muted-foreground line-clamp-2">
-                      {card.desc}
-                    </span>
-                    <span className="font-mono text-[9px] text-muted-foreground/70 mt-auto pt-1">
-                      {zones} zones · {agents.toLocaleString()} agents
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="border-t border-border px-6 py-4">
-            <p className="font-sans text-[10px] text-muted-foreground">
-              You can change scope at any time from the dashboard header.
-            </p>
-          </div>
-        </aside>
-
-        {/* ── Right: animated map area ──────────────────────────────────── */}
-        <div className="relative flex flex-1 items-center justify-center bg-background p-8 overflow-hidden">
-
-          {/* Background: slow-drifting volt dot grid */}
+          {/* Drifting volt dot-grid */}
           <div
             aria-hidden
             style={{
@@ -246,25 +247,25 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             }}
           />
 
-          {/* Background: breathing radial volt glow (centred right of map) */}
+          {/* Breathing radial volt glow */}
           <div
             aria-hidden
             style={{
               position: "absolute",
               top: "50%",
-              left: "58%",
+              left: "55%",
               transform: "translate(-50%, -50%)",
-              width: 560,
-              height: 560,
+              width: 520,
+              height: 520,
               borderRadius: "50%",
-              background: "radial-gradient(circle, hsl(72 95% 50% / 0.09) 0%, transparent 68%)",
+              background: "radial-gradient(circle, hsl(72 95% 50% / 0.1) 0%, transparent 68%)",
               animation: "voltGlowBreathe 5s ease-in-out infinite",
               pointerEvents: "none",
             }}
           />
 
           {/* SVG map */}
-          <div className="relative w-full h-full max-w-[900px] max-h-[600px]">
+          <div style={{ position: "relative", width: "min(840px, 90%)", aspectRatio: `${SVG_W} / ${SVG_H}` }}>
             <svg
               viewBox={`0 0 ${SVG_W} ${SVG_H}`}
               width="100%"
@@ -273,10 +274,9 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
               style={{ display: "block", overflow: "visible" }}
               aria-label="Toronto neighbourhood map"
             >
-              {/* Transparent bg — map floats on white */}
               <rect width={SVG_W} height={SVG_H} fill="transparent" />
 
-              {/* Zone paths with left→right draw-in stagger */}
+              {/* Zone paths — left→right draw-in stagger */}
               {processedZones.map((zone) => {
                 const isTarget =
                   highlightAll ||
@@ -293,16 +293,14 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                     style={{
                       transition: "fill 0.2s ease, stroke 0.2s ease",
                       opacity: revealed ? 1 : 0,
-                      animation: revealed
-                        ? `zoneDrawIn 0.55s ease both`
-                        : "none",
+                      animation: revealed ? "zoneDrawIn 0.55s ease both" : "none",
                       animationDelay: revealed ? colDelay[zone.col] : "0ms",
                     }}
                   />
                 ));
               })}
 
-              {/* Twinkling activity dots at sampled zone centroids */}
+              {/* Twinkling centroid dots */}
               {revealed &&
                 twinkleZones.map((z, i) => {
                   const cx = lngToX(z.centroid[0]).toFixed(1);
@@ -311,20 +309,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                   const begin = `${(i % 7) * 0.4}s`;
                   return (
                     <circle key={z.id} cx={cx} cy={cy} r="2" fill="hsl(72 95% 50%)">
-                      <animate
-                        attributeName="opacity"
-                        values="0;0.75;0"
-                        dur={dur}
-                        begin={begin}
-                        repeatCount="indefinite"
-                      />
-                      <animate
-                        attributeName="r"
-                        values="1.5;2.8;1.5"
-                        dur={dur}
-                        begin={begin}
-                        repeatCount="indefinite"
-                      />
+                      <animate attributeName="opacity" values="0;0.75;0" dur={dur} begin={begin} repeatCount="indefinite" />
+                      <animate attributeName="r" values="1.5;2.8;1.5" dur={dur} begin={begin} repeatCount="indefinite" />
                     </circle>
                   );
                 })}
@@ -332,12 +318,8 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
               {/* Region centroid labels */}
               {Object.entries(zonesByRegion).map(([region, zones]) => {
                 if (zones.length === 0) return null;
-                const avgX =
-                  zones.reduce((s, z) => s + lngToX(z.centroid[0]), 0) /
-                  zones.length;
-                const avgY =
-                  zones.reduce((s, z) => s + latToY(z.centroid[1]), 0) /
-                  zones.length;
+                const avgX = zones.reduce((s, z) => s + lngToX(z.centroid[0]), 0) / zones.length;
+                const avgY = zones.reduce((s, z) => s + latToY(z.centroid[1]), 0) / zones.length;
                 const isActive = highlightedRegion === region || highlightAll;
                 return (
                   <text
@@ -351,11 +333,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                     fontWeight="600"
                     letterSpacing="0.04em"
                     fill={isActive ? "hsl(80 60% 12%)" : "#999"}
-                    style={{
-                      textTransform: "uppercase",
-                      transition: "fill 0.2s ease",
-                      opacity: revealed ? 1 : 0,
-                    }}
+                    style={{ textTransform: "uppercase", transition: "fill 0.2s ease", opacity: revealed ? 1 : 0 }}
                     pointerEvents="none"
                   >
                     {region}
@@ -363,6 +341,83 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
                 );
               })}
             </svg>
+          </div>
+        </div>
+
+        {/* ── Infinite card carousel — bottom ───────────────────────────── */}
+        <div className="relative shrink-0 border-t border-border" style={{ height: 196 }}>
+          {/* Left/right edge fades */}
+          <div aria-hidden style={{ position: "absolute", left: 0, inset: "0 auto", width: 96, background: "linear-gradient(to right, hsl(var(--background)), transparent)", zIndex: 2, pointerEvents: "none" }} />
+          <div aria-hidden style={{ position: "absolute", right: 0, inset: "0 auto 0 auto", width: 96, background: "linear-gradient(to left, hsl(var(--background)), transparent)", zIndex: 2, pointerEvents: "none" }} />
+
+          {/* Track — transform applied directly by rAF */}
+          <div className="h-full overflow-hidden">
+            <div
+              ref={trackRef}
+              className="flex h-full items-center will-change-transform"
+              style={{ gap: CARD_GAP, paddingInline: CARD_GAP }}
+            >
+              {ALL_CARDS.map((card, i) => {
+                const isHovered = hoveredRegion === card.name;
+                // All copies of the centered region get active styling so the right one is always lit
+                const isCenterActive = !hoveredRegion && activeRegion === card.name;
+                const isActive = isHovered || isCenterActive;
+
+                return (
+                  <button
+                    key={i}
+                    onMouseEnter={() => handleMouseEnter(card.name)}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={() => handleClick(card.name)}
+                    style={{
+                      minWidth: CARD_W,
+                      flexShrink: 0,
+                      height: 156,
+                      borderRadius: 16,
+                      border: `1px solid ${isActive ? "hsl(var(--brand))" : "hsl(var(--border))"}`,
+                      background: "white",
+                      padding: "18px 22px",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 5,
+                      boxShadow: isActive
+                        ? "0 4px 20px hsl(var(--brand) / 0.18)"
+                        : "0 1px 4px rgb(0 0 0 / 0.04)",
+                      transform: isActive ? "translateY(-3px)" : "translateY(0)",
+                      transition: "border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease",
+                    }}
+                  >
+                    <span
+                      className="font-display font-bold leading-tight"
+                      style={{
+                        fontSize: 16,
+                        color: isActive ? "hsl(var(--brand-ink, var(--foreground)))" : "hsl(var(--foreground))",
+                        transition: "color 0.18s ease",
+                      }}
+                    >
+                      {card.name}
+                    </span>
+                    <span
+                      className="font-sans text-muted-foreground leading-snug"
+                      style={{
+                        fontSize: 11,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {card.desc}
+                    </span>
+                    <span className="font-mono text-muted-foreground/60 mt-auto" style={{ fontSize: 10 }}>
+                      {getZoneCount(card.name)} zones · {getAgentCount(card.name).toLocaleString()} agents
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
