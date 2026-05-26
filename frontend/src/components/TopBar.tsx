@@ -45,14 +45,27 @@ function voicesTooltip(live: boolean, health: HealthMeta | null): string {
   return "Resident quotes are template-based, not autonomous LLM agents.";
 }
 
-function persistenceLabel(live: boolean, health: HealthMeta | null): string {
-  if (live && health?.persistenceProvider === "supabase") return "Supabase";
+function persistenceLabel(
+  live: boolean,
+  health: HealthMeta | null,
+  proposalName?: string
+): string {
+  if (live && health?.persistenceProvider === "supabase") {
+    return proposalName ? `Saving to "${proposalName}"` : "Supabase · no proposal";
+  }
   return "In-memory";
 }
 
-function persistenceTooltip(live: boolean, health: HealthMeta | null): string {
+function persistenceTooltip(
+  live: boolean,
+  health: HealthMeta | null,
+  proposalName?: string
+): string {
   if (live && health?.persistenceProvider === "supabase") {
-    return "Projects and proposals can persist in Supabase Postgres (backend writer only). Live sim state is still in-memory.";
+    if (proposalName) {
+      return `Placements and manual snapshots persist to "${proposalName}". Live sim ticks still run in-memory.`;
+    }
+    return "Supabase is connected. Select a proposal in the Saved tab to persist placements and snapshots.";
   }
   if (live) {
     return "No Supabase configured — sessions and sim state are in-memory only.";
@@ -68,6 +81,10 @@ export function TopBar() {
   const zones = useStore((s) => s.zones);
   const demo = useStore((s) => s.demo);
   const backendHealth = useStore((s) => s.backendHealth);
+  const selectedProposalId = useStore((s) => s.selectedProposalId);
+  const selectedProposalName = useStore(
+    (s) => s.proposals.find((p) => p.id === s.selectedProposalId)?.name
+  );
   const runGuidedDemo = useStore((s) => s.runGuidedDemo);
   const stopDemo = useStore((s) => s.stopDemo);
   const voicesCount = useStore((s) => s.voices.length);
@@ -77,9 +94,14 @@ export function TopBar() {
 
   const plannerText = plannerLabel(live, backendHealth);
   const voicesText = voicesLabel(live, backendHealth);
-  const sessionText = persistenceLabel(live, backendHealth);
+  const sessionText = persistenceLabel(live, backendHealth, selectedProposalName);
   const realLlmActive = live && !!backendHealth?.realLlm;
   const supabaseActive = live && backendHealth?.persistenceProvider === "supabase";
+  const compactPersistenceText = supabaseActive
+    ? selectedProposalId
+      ? "Saving"
+      : "Supabase"
+    : "RAM";
 
   return (
     <div className="pointer-events-auto flex items-center justify-between px-4 py-3">
@@ -229,7 +251,7 @@ export function TopBar() {
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                {persistenceTooltip(live, backendHealth)}
+                {persistenceTooltip(live, backendHealth, selectedProposalName)}
               </TooltipContent>
             </Tooltip>
 
@@ -241,12 +263,12 @@ export function TopBar() {
                   className="font-normal lg:hidden"
                 >
                   {realLlmActive ? "LLM" : "Demo"} · Template ·{" "}
-                  {supabaseActive ? "Supabase" : "RAM"}
+                  {compactPersistenceText}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
                 {plannerTooltip(live, backendHealth)} {voicesTooltip(live, backendHealth)}{" "}
-                {persistenceTooltip(live, backendHealth)}
+                {persistenceTooltip(live, backendHealth, selectedProposalName)}
               </TooltipContent>
             </Tooltip>
           </>
