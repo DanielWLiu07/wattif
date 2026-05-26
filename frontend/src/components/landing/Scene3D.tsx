@@ -510,35 +510,9 @@ function DemandStation(_props: { progress: number }) {
 
 type StoredModelEntry = { position: [number, number, number]; rotation: [number, number, number]; scale: number };
 
-function InfraStation({ progress, storedModels }: {
-  progress: number;
-  storedModels?: Record<string, StoredModelEntry>;
-}) {
-  const p0 = MathUtils.clamp((progress - 0.5) / 0.08, 0, 1);
-  const p1 = MathUtils.clamp((progress - 0.57) / 0.08, 0, 1);
-  const p2 = MathUtils.clamp((progress - 0.64) / 0.08, 0, 1);
-  const p3 = MathUtils.clamp((progress - 0.71) / 0.08, 0, 1);
-  const sm = storedModels;
-
-  if (sm) {
-    return (
-      <>
-        {sm.solar    && <StoredGlbModel url="/models/solar_array.glb"   storedPosition={sm.solar.position}    storedRotation={sm.solar.rotation}    storedScale={sm.solar.scale}    reveal={ease(p0)} />}
-        {sm.wind     && <StoredGlbModel url="/models/wind_turbine.glb"  storedPosition={sm.wind.position}     storedRotation={sm.wind.rotation}     storedScale={sm.wind.scale}     reveal={ease(p1)} rotateY={0.3} />}
-        {sm.battery  && <StoredGlbModel url="/models/battery.glb"       storedPosition={sm.battery.position}  storedRotation={sm.battery.rotation}  storedScale={sm.battery.scale}  reveal={ease(p2)} />}
-        {sm.microgrid && <StoredGlbModel url="/models/microgrid_hub.glb" storedPosition={sm.microgrid.position} storedRotation={sm.microgrid.rotation} storedScale={sm.microgrid.scale} reveal={ease(p3)} />}
-      </>
-    );
-  }
-
-  return (
-    <group position={[0, 0, -40]}>
-      <GlbModel url="/models/solar_array.glb"   position={[-11, 0, 0]} targetH={MODEL_HEIGHTS.solar}     reveal={ease(p0)} />
-      <GlbModel url="/models/wind_turbine.glb"  position={[-4, 0, 0]}  targetH={MODEL_HEIGHTS.wind}      reveal={ease(p1)} rotateY={0.3} />
-      <GlbModel url="/models/battery.glb"       position={[3.5, 0, 0]} targetH={MODEL_HEIGHTS.battery}   reveal={ease(p2)} />
-      <GlbModel url="/models/microgrid_hub.glb" position={[10, 0, 0]}  targetH={MODEL_HEIGHTS.microgrid} reveal={ease(p3)} />
-    </group>
-  );
+function InfraStation(_props: { progress: number; storedModels?: Record<string, StoredModelEntry> }) {
+  // Replaced by 2D FlowDiagram bento overlay in Landing.tsx
+  return null;
 }
 
 // ── localStorage layout persistence ──────────────────────────────────────────
