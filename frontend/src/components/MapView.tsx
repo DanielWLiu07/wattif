@@ -22,7 +22,7 @@ import type { Layer, PickingInfo } from "@deck.gl/core";
 import maplibregl from "maplibre-gl";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Compass } from "lucide-react";
+import { Compass } from "@phosphor-icons/react";
 import { useStore, getZoneRegion } from "@/store";
 import { buildLayers } from "@/map/layers";
 import { RecommendationImpact } from "@/components/RecommendationImpact";
@@ -39,7 +39,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 const MAPLIBRE_STYLE =
-  "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+  "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 const MAPBOX_STYLE = "mapbox://styles/mapbox/standard";
 
 const GOOGLE_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY as string | undefined;
@@ -428,9 +428,9 @@ export function MapView() {
     const map = mapRef.current?.getMap() as any;
     if (!map) return;
 
-    // LAND-ONLY: recede water into the dark background so only the land + city
-    // read, and Lake Ontario becomes a dark void at the edges (crisp shoreline).
-    const WATER_VOID = "#060911";
+    // LAND-ONLY on a WHITE base: recede water to a soft light tone so the land +
+    // city read as the focus, with a crisp light-gray shoreline at the lake edge.
+    const WATER_VOID = "#e3e9ee";
     try {
       const layers = map.getStyle().layers ?? [];
       for (const l of layers) {
@@ -479,7 +479,8 @@ export function MapView() {
           type: "fill-extrusion",
           minzoom: 11,
           paint: {
-            "fill-extrusion-color": "#1b2a4a",
+            // Light neutral-gray massing that reads as solid form on the white base.
+            "fill-extrusion-color": "#bcc6d0",
             "fill-extrusion-height": [
               "case",
               ["has", "render_height"],
@@ -487,7 +488,8 @@ export function MapView() {
               12,
             ],
             "fill-extrusion-base": 0,
-            "fill-extrusion-opacity": 0.85,
+            "fill-extrusion-opacity": 0.9,
+            "fill-extrusion-vertical-gradient": true,
           },
         },
         labelLayer?.id
@@ -550,7 +552,7 @@ export function MapView() {
 
       {hover && (
         <div
-          className="pointer-events-none fixed z-50 max-w-[300px] whitespace-normal break-words rounded-md border border-border bg-popover/95 px-3 py-2 text-xs leading-relaxed text-popover-foreground shadow-xl"
+          className="pointer-events-none fixed z-50 max-w-[300px] whitespace-normal break-words rounded-md border border-border bg-popover px-3 py-2 text-xs leading-relaxed text-popover-foreground"
           style={{ left: hover.x + 14, top: hover.y + 14 }}
           dangerouslySetInnerHTML={{ __html: hover.html }}
         />
@@ -574,26 +576,26 @@ export function MapView() {
       )}
 
       {mode === "place" && !scenarioTargeting && (
-        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-primary/40 bg-primary/15 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur">
+        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-primary/40 bg-primary/15 px-4 py-1.5 text-xs font-medium text-primary">
           Click the map to place a <b className="uppercase">{placeKind}</b> ·
           press Esc to exit
         </div>
       )}
       {/* Camera reset + free-roam hint */}
       <div className="pointer-events-auto absolute bottom-4 right-4 z-30 flex flex-col items-end gap-1.5">
-        <span className="rounded-full bg-background/70 px-2 py-0.5 text-[10px] text-muted-foreground backdrop-blur">
+        <span className="rounded-full bg-background/70 px-2 py-0.5 text-[10px] text-muted-foreground">
           drag to pan · right-drag to orbit/tilt · scroll to zoom
         </span>
         <button
           onClick={() => resetView()}
-          className="glass flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium shadow-lg transition-colors hover:text-primary"
+          className="glass flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors hover:text-primary"
         >
           <Compass className="h-3.5 w-3.5" /> Reset view
         </button>
       </div>
 
       {scenarioTargeting && (
-        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-yellow-400/50 bg-yellow-400/15 px-4 py-1.5 text-xs font-medium text-yellow-200 backdrop-blur">
+        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-yellow-400/50 bg-yellow-400/15 px-4 py-1.5 text-xs font-medium text-yellow-200">
           {targetZoneId ? (
             <>
               🎯 Targeting{" "}
@@ -609,7 +611,7 @@ export function MapView() {
       )}
 
       {regionCursorMode && (
-        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-emerald-400/50 bg-emerald-400/15 px-4 py-1.5 text-xs font-semibold text-emerald-200 backdrop-blur shadow-lg">
+        <div className="pointer-events-none absolute left-1/2 top-4 z-40 -translate-x-1/2 rounded-full border border-emerald-400/50 bg-emerald-400/15 px-4 py-1.5 text-xs font-semibold text-emerald-200">
           📍 Hover and click any neighborhood to simulate its region only · Esc to cancel
         </div>
       )}

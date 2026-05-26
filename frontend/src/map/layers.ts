@@ -467,7 +467,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
           const a = f.properties.id === selectedZoneId ? 200 : 120;
           return [r, g, b, a];
         },
-        getLineColor: [255, 255, 255, 50],
+        getLineColor: [51, 65, 85, 70],
         lineWidthMinPixels: 1,
         pickable: true,
         updateTriggers: {
@@ -504,7 +504,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
           const intensity = Math.min(1, Math.abs(a - 0.5) / 0.35);
           return [...approvalColor(a), Math.round(90 + intensity * 90)] as any;
         },
-        getLineColor: [255, 255, 255, 45],
+        getLineColor: [51, 65, 85, 65],
         lineWidthMinPixels: 0.5,
         extruded: false,
         getPolygonOffset: groundOffset,
@@ -640,7 +640,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
         radiusMaxPixels: 6,
         opacity: 0.95,
         stroked: true,
-        getLineColor: [255, 255, 255, 110],
+        getLineColor: [15, 23, 42, 150],
         lineWidthMinPixels: 0.5,
         // billboard + no depth test → people dots always read ON TOP of the
         // 3D city and never get clipped by building extrusions as they move.
@@ -787,13 +787,13 @@ export function buildLayers(input: LayerInputs): Layer[] {
         radius: 75,
         stroked: true,
         getLineColor: (i: Infra) =>
-          (i.id === selectedInfraId ? [255, 255, 255, 255] : [255, 255, 255, 90]) as any,
+          (i.id === selectedInfraId ? [15, 23, 42, 255] : [15, 23, 42, 90]) as any,
         lineWidthMinPixels: (selectedInfraId ? 2 : 0) as any,
         diskResolution: 24,
         extruded: true,
         pickable: true,
         autoHighlight: true,
-        highlightColor: [255, 255, 255, 60],
+        highlightColor: [15, 23, 42, 60],
         updateTriggers: {
           getElevation: [time],
           getFillColor: [time, removalTimes],
