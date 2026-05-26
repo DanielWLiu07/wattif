@@ -1,6 +1,6 @@
-import { useRef, useMemo, useEffect, Suspense } from "react";
+import { useRef, useMemo, useEffect, Suspense, useState, createRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Grid, useGLTF } from "@react-three/drei";
+import { Grid, useGLTF, OrbitControls, TransformControls, Text3D, Html } from "@react-three/drei";
 import {
   Vector3, Box3, MathUtils, Color,
   type Group, type Mesh, type Points,
@@ -520,4 +520,397 @@ export function Scene3D({ progress }: { progress: number }) {
       </Suspense>
     </>
   );
+}
+
+// ── Edit mode (gated by ?edit in URL) ────────────────────────────────────────
+//
+// Accessed at localhost:5175/?edit — never active on the real landing (no ?edit).
+// Provides:
+//   • OrbitControls to free-orbit the scene
+//   • All models visible at once, each with TransformControls on click
+//   • "+" buttons to spawn extra model instances
+//   • WattIf 3D wordmark (Text3D) with rotate/scale/translate controls
+//   • "Copy layout JSON" exports all positions to clipboard + console
+
+const EDIT_MODE =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("edit");
+
+const FONT_URL = "/fonts/helvetiker_bold.typeface.json";
+
+interface EditModelSpec {
+  uid: number;
+  type: string;
+  url: string;
+  targetH: number;
+  initPos: [number, number, number];
+}
+
+const EDIT_DEFAULTS: EditModelSpec[] = [
+  { uid: 0, type: "heroTurbine",  url: "/models/wind_turbine.glb",  targetH: MODEL_HEIGHTS.heroTurbine, initPos: [3.5,  0, -1] },
+  { uid: 1, type: "solar",        url: "/models/solar_array.glb",   targetH: MODEL_HEIGHTS.solar,       initPos: [-11,  0, -40] },
+  { uid: 2, type: "wind",         url: "/models/wind_turbine.glb",  targetH: MODEL_HEIGHTS.wind,        initPos: [-4,   0, -40] },
+  { uid: 3, type: "battery",      url: "/models/battery.glb",       targetH: MODEL_HEIGHTS.battery,     initPos: [3.5,  0, -40] },
+  { uid: 4, type: "microgrid",    url: "/models/microgrid_hub.glb", targetH: MODEL_HEIGHTS.microgrid,   initPos: [10,   0, -40] },
+];
+
+const ADD_CATALOG: { type: string; url: string; targetH: number }[] = [
+  { type: "solar",     url: "/models/solar_array.glb",   targetH: MODEL_HEIGHTS.solar },
+  { type: "wind",      url: "/models/wind_turbine.glb",  targetH: MODEL_HEIGHTS.wind },
+  { type: "battery",   url: "/models/battery.glb",       targetH: MODEL_HEIGHTS.battery },
+  { type: "microgrid", url: "/models/microgrid_hub.glb", targetH: MODEL_HEIGHTS.microgrid },
+];
+
+// ── Editable GLB model ────────────────────────────────────────────────────────
+
+function EditableGlbModel({
+  spec, groupRef, selected, onSelect, tcMode, orbitRef,
+}: {
+  spec: EditModelSpec;
+  groupRef: React.RefObject<Group | null>;
+  selected: boolean;
+  onSelect: () => void;
+  tcMode: "translate" | "rotate" | "scale";
+  orbitRef: React.RefObject<unknown>;
+}) {
+  const { scene } = useGLTF(spec.url);
+
+  const cloned = useMemo(() => {
+    const c = scene.clone(true);
+    c.traverse((child) => {
+      if ((child as Mesh).isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+    return c;
+  }, [scene]);
+
+  const fit = useMemo(() => fitToHeight(cloned, spec.targetH), [cloned, spec.targetH]);
+
+  return (
+    <>
+      <group
+        ref={groupRef}
+        position={[spec.initPos[0], spec.initPos[1] + fit.yBase, spec.initPos[2]]}
+        scale={fit.scale}
+        onClick={(e) => { e.stopPropagation(); onSelect(); }}
+      >
+        <primitive object={cloned} />
+      </group>
+      {selected && (
+        <TransformControls
+          object={groupRef}
+          mode={tcMode}
+          onMouseDown={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = false; }}
+          onMouseUp={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = true; }}
+        />
+      )}
+    </>
+  );
+}
+
+// ── 3D wordmark ───────────────────────────────────────────────────────────────
+
+function EditWordmark({
+  groupRef, selected, onSelect, tcMode, orbitRef,
+}: {
+  groupRef: React.RefObject<Group | null>;
+  selected: boolean;
+  onSelect: () => void;
+  tcMode: "translate" | "rotate" | "scale";
+  orbitRef: React.RefObject<unknown>;
+}) {
+  return (
+    <>
+      <group
+        ref={groupRef}
+        position={[0, 5, -6]}
+        onClick={(e) => { e.stopPropagation(); onSelect(); }}
+      >
+        <Suspense fallback={null}>
+          <Text3D font={FONT_URL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02}>
+            Watt
+            <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.1} />
+          </Text3D>
+          {/* "If." offset ~3.1 units right — roughly "Watt" width at size 1.3 */}
+          <Text3D font={FONT_URL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02} position={[3.1, 0, 0]}>
+            If.
+            <meshStandardMaterial color="#c8f400" roughness={0.3} metalness={0.0} />
+          </Text3D>
+        </Suspense>
+      </group>
+      {selected && (
+        <TransformControls
+          object={groupRef}
+          mode={tcMode}
+          onMouseDown={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = false; }}
+          onMouseUp={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = true; }}
+        />
+      )}
+    </>
+  );
+}
+
+// ── Edit scene ────────────────────────────────────────────────────────────────
+
+function EditScene() {
+  const orbitRef = useRef<unknown>(null);
+
+  const [models, setModels] = useState<EditModelSpec[]>(EDIT_DEFAULTS);
+  const [selectedUid, setSelectedUid] = useState<number | null>(null);
+  const [tcMode, setTcMode] = useState<"translate" | "rotate" | "scale">("translate");
+
+  const [wordmarkSelected, setWordmarkSelected] = useState(false);
+  const [wordmarkMode, setWordmarkMode] = useState<"translate" | "rotate" | "scale">("translate");
+
+  const nextUid = useRef(100);
+  // Stable refs per uid — created once and reused
+  const modelRefs = useRef<Map<number, React.RefObject<Group | null>>>(
+    new Map(EDIT_DEFAULTS.map((m) => [m.uid, createRef<Group | null>()]))
+  );
+  const wordmarkRef = useRef<Group | null>(null);
+
+  const getOrCreateRef = (uid: number) => {
+    if (!modelRefs.current.has(uid)) {
+      modelRefs.current.set(uid, createRef<Group | null>());
+    }
+    return modelRefs.current.get(uid)!;
+  };
+
+  const addModel = (type: string) => {
+    const spec = ADD_CATALOG.find((c) => c.type === type)!;
+    const uid = nextUid.current++;
+    setModels((prev) => [...prev, { uid, type, url: spec.url, targetH: spec.targetH, initPos: [0, 0, -20] }]);
+  };
+
+  const selectModel = (uid: number) => {
+    setSelectedUid(uid);
+    setWordmarkSelected(false);
+  };
+
+  const selectWordmark = () => {
+    setWordmarkSelected(true);
+    setSelectedUid(null);
+  };
+
+  const copyLayout = () => {
+    const modelLayout = models.map((m) => {
+      const g = modelRefs.current.get(m.uid)?.current;
+      return {
+        type: m.type,
+        position: g ? [+g.position.x.toFixed(3), +g.position.y.toFixed(3), +g.position.z.toFixed(3)] : m.initPos,
+        rotation: g ? [+g.rotation.x.toFixed(3), +g.rotation.y.toFixed(3), +g.rotation.z.toFixed(3)] : [0, 0, 0],
+        scale: g ? +g.scale.x.toFixed(3) : 1,
+      };
+    });
+    const wm = wordmarkRef.current;
+    const wordmarkLayout = wm
+      ? {
+          position: [+wm.position.x.toFixed(3), +wm.position.y.toFixed(3), +wm.position.z.toFixed(3)],
+          rotation: [+wm.rotation.x.toFixed(3), +wm.rotation.y.toFixed(3), +wm.rotation.z.toFixed(3)],
+          scale: +wm.scale.x.toFixed(3),
+        }
+      : null;
+    const json = JSON.stringify({ models: modelLayout, wordmark: wordmarkLayout }, null, 2);
+    console.log("=== WattIf Scene Layout ===\n", json);
+    navigator.clipboard.writeText(json).catch(() => {});
+  };
+
+  return (
+    <>
+      <color attach="background" args={["#ffffff"]} />
+      <Lights />
+      <Floor progress={0} />
+      <VoltHorizon />
+      <Particles />
+      <ScanLine />
+
+      <OrbitControls ref={orbitRef as React.RefObject<unknown>} makeDefault />
+
+      {/* Invisible background plane to deselect */}
+      <mesh
+        position={[0, 0, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        visible={false}
+        onClick={() => { setSelectedUid(null); setWordmarkSelected(false); }}
+      >
+        <planeGeometry args={[2000, 2000]} />
+        <meshBasicMaterial />
+      </mesh>
+
+      <Suspense fallback={null}>
+        {models.map((m) => (
+          <EditableGlbModel
+            key={m.uid}
+            spec={m}
+            groupRef={getOrCreateRef(m.uid)}
+            selected={selectedUid === m.uid}
+            onSelect={() => selectModel(m.uid)}
+            tcMode={tcMode}
+            orbitRef={orbitRef}
+          />
+        ))}
+      </Suspense>
+
+      <EditWordmark
+        groupRef={wordmarkRef as React.RefObject<Group | null>}
+        selected={wordmarkSelected}
+        onSelect={selectWordmark}
+        tcMode={wordmarkMode}
+        orbitRef={orbitRef}
+      />
+
+      {/* ── Dev panel ──────────────────────────────────────────────────────── */}
+      <Html fullscreen style={{ pointerEvents: "none" }}>
+        <div
+          style={{
+            position: "absolute", right: 16, top: 16,
+            width: 264,
+            background: "rgba(10,10,10,0.92)",
+            backdropFilter: "blur(10px)",
+            color: "#fff",
+            borderRadius: 12,
+            padding: 16,
+            fontFamily: "monospace",
+            fontSize: 12,
+            pointerEvents: "auto",
+            userSelect: "none",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
+          }}
+        >
+          <div style={{ fontWeight: 700, marginBottom: 14, color: "#c8f400", fontSize: 14 }}>
+            ⚡ Edit Mode
+          </div>
+
+          {/* Model selection + transform mode */}
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ color: "#777", marginBottom: 6, fontSize: 11 }}>
+              {selectedUid !== null
+                ? `Selected: ${models.find((m) => m.uid === selectedUid)?.type ?? "model"} (uid ${selectedUid})`
+                : "Click a model to select"}
+            </div>
+            <div style={{ display: "flex", gap: 4 }}>
+              {(["translate", "rotate", "scale"] as const).map((m) => {
+                const active = tcMode === m && selectedUid !== null;
+                return (
+                  <button
+                    key={m}
+                    onClick={() => setTcMode(m)}
+                    style={{
+                      flex: 1, padding: "4px 0",
+                      background: active ? "#c8f400" : "#242424",
+                      color: active ? "#000" : "#aaa",
+                      border: "1px solid #3a3a3a",
+                      borderRadius: 5, cursor: "pointer", fontSize: 11,
+                    }}
+                  >
+                    {m[0].toUpperCase() + m.slice(1)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Add model */}
+          <div style={{ marginBottom: 12, borderTop: "1px solid #1e1e1e", paddingTop: 12 }}>
+            <div style={{ color: "#777", marginBottom: 6, fontSize: 11 }}>Spawn model:</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+              {ADD_CATALOG.map(({ type }) => (
+                <button
+                  key={type}
+                  onClick={() => addModel(type)}
+                  style={{
+                    padding: "3px 9px",
+                    background: "#1e1e1e", color: "#ccc",
+                    border: "1px solid #3a3a3a",
+                    borderRadius: 4, cursor: "pointer", fontSize: 11,
+                  }}
+                >
+                  + {type}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* WattIf wordmark */}
+          <div style={{ marginBottom: 12, borderTop: "1px solid #1e1e1e", paddingTop: 12 }}>
+            <div style={{ color: "#777", marginBottom: 6, fontSize: 11 }}>
+              WattIf wordmark{wordmarkSelected ? " ✓" : ""}
+            </div>
+            <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
+              {(["translate", "rotate", "scale"] as const).map((m) => {
+                const active = wordmarkMode === m && wordmarkSelected;
+                return (
+                  <button
+                    key={m}
+                    onClick={() => { setWordmarkMode(m); selectWordmark(); }}
+                    style={{
+                      flex: 1, padding: "4px 0",
+                      background: active ? "#c8f400" : "#242424",
+                      color: active ? "#000" : "#aaa",
+                      border: "1px solid #3a3a3a",
+                      borderRadius: 5, cursor: "pointer", fontSize: 11,
+                    }}
+                  >
+                    {m[0].toUpperCase() + m.slice(1)}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              onClick={selectWordmark}
+              style={{
+                width: "100%", padding: "4px",
+                background: wordmarkSelected ? "#1a2200" : "#1e1e1e",
+                color: wordmarkSelected ? "#c8f400" : "#777",
+                border: `1px solid ${wordmarkSelected ? "#c8f400" : "#3a3a3a"}`,
+                borderRadius: 4, cursor: "pointer", fontSize: 11,
+              }}
+            >
+              {wordmarkSelected ? "Wordmark selected — drag gizmo" : "Click to select wordmark"}
+            </button>
+          </div>
+
+          {/* Copy layout */}
+          <button
+            onClick={copyLayout}
+            style={{
+              width: "100%", padding: "9px",
+              background: "#c8f400", color: "#000",
+              border: "none", borderRadius: 6,
+              cursor: "pointer", fontWeight: 700, fontSize: 12,
+              marginBottom: 6,
+            }}
+          >
+            Copy Layout JSON
+          </button>
+          <div style={{ color: "#444", fontSize: 10, textAlign: "center" }}>
+            Also logged to console
+          </div>
+        </div>
+
+        {/* Bottom hint */}
+        <div
+          style={{
+            position: "absolute", bottom: 16, left: "50%",
+            transform: "translateX(-50%)",
+            background: "rgba(10,10,10,0.75)",
+            color: "#666", borderRadius: 8,
+            padding: "5px 14px", fontSize: 11,
+            whiteSpace: "nowrap", pointerEvents: "none",
+          }}
+        >
+          Orbit: left-drag · Pan: right-drag · Zoom: scroll · Click model/wordmark to select
+        </div>
+      </Html>
+    </>
+  );
+}
+
+// ── Edit mode entry point ─────────────────────────────────────────────────────
+
+export function SceneEdit() {
+  if (!EDIT_MODE) return null;
+  return <EditScene />;
 }

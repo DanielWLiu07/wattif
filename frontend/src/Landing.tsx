@@ -1,6 +1,10 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Scene3D } from "@/components/landing/Scene3D";
+import { Scene3D, SceneEdit } from "@/components/landing/Scene3D";
+
+const EDIT_MODE =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("edit");
 import { TorontoMap } from "@/components/landing/TorontoMap";
 import { landingStats } from "@/data/landingStats";
 
@@ -214,12 +218,12 @@ export function Landing() {
           className="absolute inset-0"
         >
           <Suspense fallback={null}>
-            <Scene3D progress={progress} />
+            {EDIT_MODE ? <SceneEdit /> : <Scene3D progress={progress} />}
           </Suspense>
         </Canvas>
 
-        {/* ── HTML overlays ─────────────────────────────────────────────── */}
-        <div className="pointer-events-none absolute inset-0 z-10">
+        {/* ── HTML overlays (hidden in edit mode) ───────────────────────── */}
+        <div className="pointer-events-none absolute inset-0 z-10" style={{ display: EDIT_MODE ? "none" : undefined }}>
 
           {/* Station 0: Hero */}
           <Overlay visible={s0}>
@@ -401,7 +405,7 @@ export function Landing() {
         </div>
 
         {/* ── Scroll hint ──────────────────────────────────────────────── */}
-        {station === 0 && (
+        {!EDIT_MODE && station === 0 && (
           <div
             className="pointer-events-none fixed bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
             style={{ color: "hsl(var(--muted-foreground) / 0.5)", zIndex: 85 }}
@@ -417,12 +421,12 @@ export function Landing() {
         )}
 
         {/* ── Road progress ─────────────────────────────────────────────── */}
-        {!atScope && (
+        {!EDIT_MODE && !atScope && (
           <RoadProgress progress={progress} onDotClick={goToStation} />
         )}
 
         {/* ── Toronto Map scope selector ─────────────────────────────── */}
-        <div
+        {!EDIT_MODE && <div
           style={{
             position: "fixed",
             inset: 0,
@@ -433,7 +437,7 @@ export function Landing() {
           }}
         >
           <TorontoMap active={atScope} />
-        </div>
+        </div>}
       </div>
     </>
   );
