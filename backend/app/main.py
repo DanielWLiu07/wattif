@@ -40,11 +40,13 @@ log = logging.getLogger("wattif")
 async def lifespan(app: FastAPI):
     world = get_world()
     log.info(
-        "WattIf backend ready: %d zones, %d agents (data source=%s), LLM=%s, persistence=%s",
+        "WattIf backend ready: %d zones, %d agents (data source=%s), "
+        "llmProvider=%s realLlm=%s persistence=%s",
         len(world.zones),
         len(world.agents),
         world.source,
-        "on" if config.llm_enabled() else "off (rule-based fallback)",
+        config.llm_provider(),
+        config.real_llm_provider(),
         config.persistence_provider(),
     )
     yield
