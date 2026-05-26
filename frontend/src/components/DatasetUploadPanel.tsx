@@ -118,8 +118,10 @@ export function DatasetUploadPanel() {
 
       <div className="max-h-28 space-y-1 overflow-y-auto">
         {datasets.length === 0 ? (
-          <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] text-muted-foreground">
-            No datasets yet. Select a project and upload a small file.
+          <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] leading-snug text-muted-foreground">
+            <span className="font-medium text-foreground">No datasets yet.</span> Upload
+            Islington CSV/GeoJSON files here — they provide planner context and ground
+            synthetic cohort concerns. They do not rebuild the simulation.
           </p>
         ) : (
           datasets.map((d) => (

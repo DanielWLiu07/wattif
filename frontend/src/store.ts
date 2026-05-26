@@ -26,6 +26,7 @@ import type {
   SitingPriorityZone,
   CohortConcern,
   CohortProfile,
+  ProposalReport,
   UploadedDataset,
   UploadedDatasetSummary,
   Zone,
@@ -39,6 +40,11 @@ import {
 } from "@/types";
 import * as api from "@/api/client";
 import { nearestZone, scenarioImpact } from "@/data/mock";
+import {
+  loadOperatorRecommendationFlag,
+  markOperatorRecommendationReady,
+  noteOperatorRecommendation,
+} from "@/lib/proposalReadiness";
 import { makeLandTest, sampleInside } from "@/lib/geo";
 
 export type LayerKey =
@@ -216,6 +222,10 @@ type State = {
   cohortConcerns: CohortConcern[];
   cohortGenerating: boolean;
   cohortError: string | null;
+  decisionMemo: ProposalReport | null;
+  decisionMemoLoading: boolean;
+  decisionMemoError: string | null;
+  operatorRecommendationReady: boolean;
   loadProjects: () => Promise<void>;
   loadDatasets: () => Promise<void>;
   uploadDataset: (file: File, datasetType?: string) => Promise<void>;
@@ -224,6 +234,8 @@ type State = {
   loadCohortConcerns: () => Promise<void>;
   generateCohortConcerns: () => Promise<void>;
   deleteCohortConcern: (concernId: string) => Promise<void>;
+  generateDecisionMemo: () => Promise<void>;
+  clearDecisionMemo: () => void;
   createProject: (name: string) => Promise<void>;
   selectProject: (projectId: string | null) => Promise<void>;
   createProposal: (name: string) => Promise<void>;
@@ -523,8 +535,20 @@ function attachSession(
       const r = (e.result ?? {}) as { program?: string; zones?: string[] };
       if (r.program) get().launchProgram(r.program, r.zones);
     }
+    if (e.type === "recommendation") {
+      const pid = get().selectedProposalId;
+      if (e.recommendation?.summary?.trim() && noteOperatorRecommendation(pid, e.recommendation)) {
+        set({ operatorRecommendationReady: true });
+      }
+    }
     if (e.type === "done") {
       set({ chatBusy: false, chatAwaiting: false });
+      if (e.recommendation?.summary?.trim()) {
+        const pid = get().selectedProposalId;
+        if (noteOperatorRecommendation(pid, e.recommendation)) {
+          set({ operatorRecommendationReady: true });
+        }
+      }
       get().pushToast(e.summary || "AI planning complete", "good");
       void get().refreshVoices(5, "ai-plan");
     }
@@ -702,6 +726,48 @@ export const useStore = create<State>((set, get) => ({
   cohortConcerns: [],
   cohortGenerating: false,
   cohortError: null,
+  decisionMemo: null,
+  decisionMemoLoading: false,
+  decisionMemoError: null,
+  operatorRecommendationReady: loadOperatorRecommendationFlag(stored(PROPOSAL_KEY) ?? ""),
+
+  clearDecisionMemo: () => {
+    set({ decisionMemo: null, decisionMemoError: null });
+  },
+
+  generateDecisionMemo: async () => {
+    const { selectedProposalId, backendHealth } = get();
+    if (backendHealth?.persistenceProvider !== "supabase" || !selectedProposalId) {
+      set({
+        decisionMemo: null,
+        decisionMemoError: "Supabase persistence is not configured",
+      });
+      return;
+    }
+    set({ decisionMemoLoading: true, decisionMemoError: null });
+    const res = await api.getProposalReport(selectedProposalId);
+    if (!res.ok) {
+      set({
+        decisionMemoLoading: false,
+        decisionMemoError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Could not generate decision memo",
+      });
+      get().pushToast(res.error ?? "Decision memo generation failed", "warn");
+      return;
+    }
+    set({
+      decisionMemo: res.data,
+      decisionMemoLoading: false,
+      decisionMemoError: null,
+      operatorRecommendationReady:
+        get().operatorRecommendationReady || res.data.hasOperatorRecommendation,
+    });
+    if (res.data.hasOperatorRecommendation && selectedProposalId) {
+      markOperatorRecommendationReady(selectedProposalId);
+    }
+    get().pushToast("Decision memo generated", "good");
+  },
 
   loadCohortConcerns: async () => {
     const { selectedProjectId, backendHealth } = get();
@@ -979,6 +1045,11 @@ export const useStore = create<State>((set, get) => ({
       compareSnapshotId: null,
       persistedInfraIds: {},
       persistenceError: null,
+      decisionMemo: null,
+      decisionMemoError: null,
+      operatorRecommendationReady: proposalId
+        ? loadOperatorRecommendationFlag(proposalId)
+        : false,
     });
     if (!proposalId || get().backendHealth?.persistenceProvider !== "supabase") return;
 
@@ -1029,6 +1100,12 @@ export const useStore = create<State>((set, get) => ({
     await get().refreshFlows();
     void get().refreshSitingPriority();
     void get().loadDatasets();
+
+    const statusRes = await api.getOperatorRecommendationStatus(proposalId);
+    if (statusRes.ok && statusRes.data.hasOperatorRecommendation) {
+      markOperatorRecommendationReady(proposalId);
+      set({ operatorRecommendationReady: true });
+    }
   },
 
   saveSnapshot: async () => {

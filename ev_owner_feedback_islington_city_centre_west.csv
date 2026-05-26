@@ -1,0 +1,7 @@
+﻿zone,month,demand_kwh,peak_load_kw,notes
+Islington City Centre West,January,980000,2050,Winter heating and apartment demand
+Islington City Centre West,July,1240000,2650,Cooling peak during heatwave conditions
+Kipling Station Area,January,760000,1600,Transit-adjacent mixed-use demand
+Kipling Station Area,July,910000,1900,Higher commercial and cooling load
+Cloverdale Mall Area,January,840000,1750,Retail and residential demand
+Cloverdale Mall Area,July,1030000,2200,Retail cooling and EV charging demand
