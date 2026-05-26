@@ -163,6 +163,57 @@ export type UploadedDatasetSummary = {
   createdAt?: string | null;
 };
 
+export type CohortType =
+  | "ev_owners"
+  | "renters"
+  | "homeowners"
+  | "small_businesses"
+  | "seniors"
+  | "high_energy_burden_households"
+  | "climate_advocates"
+  | "grid_reliability_concerned"
+  | "generic_residents";
+
+export type ConcernSeverity = "low" | "medium" | "high";
+export type ConcernStance = "support" | "oppose" | "mixed" | "neutral";
+
+export type CohortProfile = {
+  id: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  name: string;
+  cohortType: CohortType | string;
+  zoneId?: string | null;
+  description?: string | null;
+  priorities: string[];
+  datasetIds: string[];
+  confidence?: number | null;
+  metadata: Record<string, unknown>;
+  createdAt?: string | null;
+};
+
+export type CohortConcern = {
+  id: string;
+  cohortId: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  severity: ConcernSeverity | string;
+  stance: ConcernStance | string;
+  topic: string;
+  summary: string;
+  evidence: string[];
+  relatedDatasetIds: string[];
+  relatedInfraIds: string[];
+  metadata: Record<string, unknown>;
+  createdAt?: string | null;
+};
+
+export type CohortGenerateResponse = {
+  cohorts: CohortProfile[];
+  concerns: CohortConcern[];
+  datasetsUsed: number;
+};
+
 export function infraToPersisted(infra: Infra): ProposalInfrastructureCreate {
   return {
     kind: infra.kind,
@@ -340,12 +391,45 @@ export type Flow = {
   powerKwh: number;
 };
 
+export type OperatorRecommendation = {
+  summary: string;
+  key_concerns_considered: {
+    id?: string;
+    topic?: string;
+    cohortName?: string;
+    severity?: string;
+    stance?: string;
+    summary?: string;
+    evidence?: string[];
+  }[];
+  recommended_actions: {
+    action: string;
+    kinds?: string[];
+    priority?: string;
+    sourceTopics?: string[];
+    program?: string;
+  }[];
+  tradeoffs: string[];
+  suggested_next_step: string;
+  optional_tool_actions?: {
+    name: string;
+    args: Record<string, unknown>;
+    rationale?: string;
+  }[];
+  context?: {
+    datasetCount?: number;
+    concernCount?: number;
+    proposalInfra?: Record<string, number>;
+  };
+};
+
 export type PlannerEvent =
   | { type: "thought"; text: string }
   | { type: "tool_call"; name: string; args: Record<string, unknown> }
   | { type: "tool_result"; name: string; result: unknown }
   | { type: "placement"; infra: Infra }
-  | { type: "done"; summary: string };
+  | { type: "recommendation"; recommendation: OperatorRecommendation }
+  | { type: "done"; summary: string; recommendation?: OperatorRecommendation };
 
 export type PlacementMode = "manual" | "auto" | "step";
 

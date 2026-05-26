@@ -24,6 +24,8 @@ import type {
   SimMetrics,
   SimulationSnapshot,
   SitingPriorityZone,
+  CohortConcern,
+  CohortProfile,
   UploadedDataset,
   UploadedDatasetSummary,
   Zone,
@@ -210,11 +212,18 @@ type State = {
   datasetSummaries: UploadedDatasetSummary[];
   datasetUploading: boolean;
   datasetError: string | null;
+  cohorts: CohortProfile[];
+  cohortConcerns: CohortConcern[];
+  cohortGenerating: boolean;
+  cohortError: string | null;
   loadProjects: () => Promise<void>;
   loadDatasets: () => Promise<void>;
   uploadDataset: (file: File, datasetType?: string) => Promise<void>;
   selectDataset: (datasetId: string | null) => void;
   deleteDataset: (datasetId: string) => Promise<void>;
+  loadCohortConcerns: () => Promise<void>;
+  generateCohortConcerns: () => Promise<void>;
+  deleteCohortConcern: (concernId: string) => Promise<void>;
   createProject: (name: string) => Promise<void>;
   selectProject: (projectId: string | null) => Promise<void>;
   createProposal: (name: string) => Promise<void>;
@@ -276,7 +285,10 @@ type State = {
   refreshSitingPriority: () => Promise<void>;
 
   // v3 actions
-  sendChat: (text: string) => void;
+  sendChat: (
+    text: string,
+    opts?: { intent?: "concern_recommendation" }
+  ) => void;
   clearChat: () => void;
   setScenarioTargeting: (on: boolean, type?: ScenarioType | "random") => void;
   setTargetZone: (zoneId: string | null) => void;
@@ -297,6 +309,10 @@ type State = {
 let playTimer: ReturnType<typeof setInterval> | null = null;
 let demoAbort = false;
 let session: api.PlannerSession | null = null;
+function resetPlannerSession() {
+  session?.close();
+  session = null;
+}
 let chatSeq = 0;
 const cid = () => `c${chatSeq++}`;
 let actSeq = 0;
@@ -682,6 +698,81 @@ export const useStore = create<State>((set, get) => ({
   datasetSummaries: [],
   datasetUploading: false,
   datasetError: null,
+  cohorts: [],
+  cohortConcerns: [],
+  cohortGenerating: false,
+  cohortError: null,
+
+  loadCohortConcerns: async () => {
+    const { selectedProjectId, backendHealth } = get();
+    if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
+      set({ cohorts: [], cohortConcerns: [], cohortError: null });
+      return;
+    }
+    const [cohortRes, concernRes] = await Promise.all([
+      api.listProjectCohorts(selectedProjectId),
+      api.listProjectConcerns(selectedProjectId),
+    ]);
+    if (!cohortRes.ok || !concernRes.ok) {
+      const err = !cohortRes.ok ? cohortRes : concernRes;
+      set({
+        cohortError: err.ok
+          ? "Could not load cohort concerns"
+          : err.unavailable
+          ? "Supabase persistence is not configured"
+          : err.error ?? "Could not load cohort concerns",
+      });
+      return;
+    }
+    set({
+      cohorts: cohortRes.data,
+      cohortConcerns: concernRes.data,
+      cohortError: null,
+    });
+  },
+
+  generateCohortConcerns: async () => {
+    const { selectedProjectId, selectedProposalId } = get();
+    if (!selectedProjectId) return;
+    set({ cohortGenerating: true, cohortError: null });
+    const res = await api.generateCohorts(selectedProjectId, selectedProposalId);
+    if (!res.ok) {
+      set({
+        cohortGenerating: false,
+        cohortError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Generation failed",
+      });
+      get().pushToast(res.error ?? "Could not generate concerns", "warn");
+      return;
+    }
+    set({
+      cohorts: res.data.cohorts,
+      cohortConcerns: res.data.concerns,
+      cohortGenerating: false,
+      datasetSummaries: get().datasetSummaries,
+    });
+    get().pushToast(
+      `Generated ${res.data.concerns.length} concern(s) from ${res.data.datasetsUsed} dataset(s)`,
+      "good"
+    );
+    void get().loadCohortConcerns();
+  },
+
+  deleteCohortConcern: async (concernId) => {
+    const res = await api.deleteConcern(concernId);
+    if (!res.ok) {
+      set({
+        cohortError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Delete failed",
+      });
+      return;
+    }
+    set((s) => ({
+      cohortConcerns: s.cohortConcerns.filter((c) => c.id !== concernId),
+    }));
+  },
 
   loadDatasets: async () => {
     const { selectedProjectId, selectedProposalId, backendHealth } = get();
@@ -715,6 +806,7 @@ export const useStore = create<State>((set, get) => ({
       datasetError: null,
       selectedDatasetId: get().selectedDatasetId,
     });
+    void get().loadCohortConcerns();
   },
 
   uploadDataset: async (file, datasetType) => {
@@ -826,6 +918,7 @@ export const useStore = create<State>((set, get) => ({
   selectProject: async (projectId) => {
     persistSelection(PROJECT_KEY, projectId);
     persistSelection(PROPOSAL_KEY, null);
+    resetPlannerSession();
     set({
       selectedProjectId: projectId,
       selectedProposalId: null,
@@ -838,9 +931,12 @@ export const useStore = create<State>((set, get) => ({
       datasets: [],
       selectedDatasetId: null,
       datasetSummaries: [],
+      cohorts: [],
+      cohortConcerns: [],
       persistenceMode: persistenceModeFor(get().backendHealth, null),
       persistenceError: null,
       datasetError: null,
+      cohortError: null,
     });
     if (!projectId || get().backendHealth?.persistenceProvider !== "supabase") return;
     set({ persistenceLoading: true });
@@ -873,6 +969,7 @@ export const useStore = create<State>((set, get) => ({
 
   selectProposal: async (proposalId) => {
     persistSelection(PROPOSAL_KEY, proposalId);
+    resetPlannerSession();
     set({
       selectedProposalId: proposalId,
       persistenceMode: persistenceModeFor(get().backendHealth, proposalId),
@@ -1971,15 +2068,18 @@ export const useStore = create<State>((set, get) => ({
 
   // ---------------- v3 chat / targeting ----------------
 
-  sendChat: (text) => {
-    const t = text.trim();
+  sendChat: (text, opts) => {
+    const t = (typeof text === "string" ? text : "").trim();
     if (!t) return;
     session ??= attachSession(set, get);
     set((s) => ({
       chat: [...s.chat, { id: cid(), role: "user", text: t }],
       chatBusy: true,
     }));
-    session.send(t, { mode: get().placementMode === "step" ? "step" : "auto" });
+    session.send(t, {
+      mode: get().placementMode === "step" ? "step" : "auto",
+      intent: opts?.intent,
+    });
   },
 
   clearChat: () => set({ chat: [], chatAwaiting: false }),

@@ -23,6 +23,9 @@ import type {
   SimMetrics,
   SimulationSnapshot,
   SimulationSnapshotCreate,
+  CohortConcern,
+  CohortGenerateResponse,
+  CohortProfile,
   UploadedDataset,
   UploadedDatasetSummary,
   Zone,
@@ -265,6 +268,42 @@ export async function deleteDataset(
 ): Promise<PersistenceResult<{ ok: boolean; datasetId: string }>> {
   return persistenceFetch<{ ok: boolean; datasetId: string }>(
     `/api/datasets/${datasetId}`,
+    { method: "DELETE" }
+  );
+}
+
+// ---------------- Cohort concerns (Phase 8) ----------------
+
+export async function generateCohorts(
+  projectId: string,
+  proposalId?: string | null
+): Promise<PersistenceResult<CohortGenerateResponse>> {
+  const q = proposalId
+    ? `?${new URLSearchParams({ proposalId }).toString()}`
+    : "";
+  return persistenceFetch<CohortGenerateResponse>(
+    `/api/projects/${projectId}/cohorts/generate${q}`,
+    { method: "POST" }
+  );
+}
+
+export async function listProjectCohorts(
+  projectId: string
+): Promise<PersistenceResult<CohortProfile[]>> {
+  return persistenceFetch<CohortProfile[]>(`/api/projects/${projectId}/cohorts`);
+}
+
+export async function listProjectConcerns(
+  projectId: string
+): Promise<PersistenceResult<CohortConcern[]>> {
+  return persistenceFetch<CohortConcern[]>(`/api/projects/${projectId}/concerns`);
+}
+
+export async function deleteConcern(
+  concernId: string
+): Promise<PersistenceResult<{ ok: boolean; concernId: string }>> {
+  return persistenceFetch<{ ok: boolean; concernId: string }>(
+    `/api/concerns/${concernId}`,
     { method: "DELETE" }
   );
 }
@@ -595,6 +634,40 @@ export async function getGenerationMix(): Promise<GenerationMix | null> {
   return { mix: r.mix ?? {}, marginalGco2PerKwh: r.marginalGco2PerKwh ?? null };
 }
 
+export const CONCERN_IMPROVEMENT_PROMPT =
+  "Improve this proposal based on resident concerns";
+
+const CONCERN_INTENT_RE =
+  /based on (?:resident )?concern|address (?:the )?(?:uploaded )?(?:feedback|concern)|resident concern|uploaded feedback|reduce opposition|heatwave|improve (?:this )?proposal|use (?:the )?(?:resident )?concern|cohort concern|what should i change|how do we reduce opposition/i;
+
+export function isConcernImprovementIntent(text: string): boolean {
+  return CONCERN_INTENT_RE.test((text || "").trim());
+}
+
+export async function runPlannerConcern(opts: {
+  goal: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  budgetCad?: number;
+  mode?: "auto" | "step";
+}): Promise<PlannerEvent[]> {
+  const body = {
+    goal: opts.goal,
+    mode: opts.mode ?? "auto",
+    budgetCad: opts.budgetCad ?? 80_000_000,
+    projectId: opts.projectId ?? undefined,
+    proposalId: opts.proposalId ?? undefined,
+  };
+  const res = await fetch(`${API_URL}/api/planner/run`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`planner/run failed (${res.status})`);
+  const data = (await res.json()) as { events?: PlannerEvent[] };
+  return data.events ?? [];
+}
+
 /**
  * Run the agentic planner. Tries WS /ws/planner; if unreachable, drives the
  * deterministic mock "planner-lite" generator at a realistic cadence so the UI
@@ -728,7 +801,14 @@ export function runPlanner(opts: {
  * when the WS can't be reached, so chat works fully offline.
  */
 export type PlannerSession = {
-  send: (text: string, opts?: { mode?: "auto" | "step"; budgetCad?: number }) => void;
+  send: (
+    text: string,
+    opts?: {
+      mode?: "auto" | "step";
+      budgetCad?: number;
+      intent?: "concern_recommendation";
+    }
+  ) => void;
   approve: () => void;
   reject: () => void;
   // Notify the agent that a scenario fired DURING the chat so it reacts in-character.
@@ -801,11 +881,35 @@ export function createPlannerSession(opts: {
   let gen: Generator<PlannerEvent> | null = null;
   let waiting = false;
   let stepMode = false;
+  let restEvents: PlannerEvent[] | null = null;
+  let restIdx = 0;
 
   const delayFor = (e: PlannerEvent) =>
-    e.type === "thought" ? 800 : e.type === "placement" ? 480 : 420;
+    e.type === "thought" ? 800 : e.type === "placement" ? 480 : e.type === "recommendation" ? 600 : 420;
 
   const advance = () => {
+    if (restEvents) {
+      if (restIdx >= restEvents.length) {
+        onBusy?.(false);
+        restEvents = null;
+        restIdx = 0;
+        return;
+      }
+      const value = restEvents[restIdx++];
+      onEvent(value);
+      if (stepMode && value.type === "tool_call") {
+        waiting = true;
+        return;
+      }
+      if (value.type === "done") {
+        onBusy?.(false);
+        restEvents = null;
+        restIdx = 0;
+        return;
+      }
+      timer = setTimeout(advance, delayFor(value));
+      return;
+    }
     if (!gen) return;
     const { value, done } = gen.next();
     if (done || !value) {
@@ -833,9 +937,59 @@ export function createPlannerSession(opts: {
     send: (text, sopts) => {
       stepMode = sopts?.mode === "step";
       onBusy?.(true);
+      const projectId = projectIdProvider?.() ?? undefined;
+      const proposalId = proposalIdProvider?.() ?? undefined;
+      const concernMode =
+        sopts?.intent === "concern_recommendation" ||
+        isConcernImprovementIntent(text);
+
+      const runConcernViaRest = () => {
+        if (timer) clearTimeout(timer);
+        gen = null;
+        restEvents = null;
+        restIdx = 0;
+        void runPlannerConcern({
+          goal: text,
+          projectId,
+          proposalId,
+          budgetCad: sopts?.budgetCad ?? 8_000_000,
+          mode: sopts?.mode ?? "auto",
+        })
+          .then((events) => {
+            restEvents = events;
+            restIdx = 0;
+            advance();
+          })
+          .catch(() => {
+            onBusy?.(false);
+            onEvent({
+              type: "done",
+              summary:
+                "Could not reach the concern-aware operator. Check backend connection and generate cohort concerns first.",
+            });
+          });
+      };
+
+      if (concernMode) {
+        if (live && ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(
+            JSON.stringify({
+              type: "user_message",
+              text,
+              intent: "concern_recommendation",
+              mode: sopts?.mode ?? "auto",
+              budgetCad: sopts?.budgetCad ?? 8_000_000,
+              ...(projectId ? { projectId } : {}),
+              ...(proposalId ? { proposalId } : {}),
+            })
+          );
+          return;
+        }
+        runConcernViaRest();
+        return;
+      }
+
       if (live && ws && ws.readyState === WebSocket.OPEN) {
-        const projectId = projectIdProvider?.() ?? undefined;
-        const proposalId = proposalIdProvider?.() ?? undefined;
         ws.send(
           JSON.stringify({
             type: "user_message",
@@ -870,6 +1024,18 @@ export function createPlannerSession(opts: {
     reject: () => {
       if (live && ws?.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ action: "reject" }));
+        return;
+      }
+      if (waiting && restEvents) {
+        waiting = false;
+        while (
+          restIdx < restEvents.length &&
+          (restEvents[restIdx]?.type === "tool_result" ||
+            restEvents[restIdx]?.type === "placement")
+        ) {
+          restIdx++;
+        }
+        timer = setTimeout(advance, 360);
         return;
       }
       if (waiting && gen) {
