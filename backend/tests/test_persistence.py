@@ -38,11 +38,19 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("post", "/api/projects", {"name": "Test"}),
         ("get", "/api/proposals", None),
         ("post", "/api/proposals", {"projectId": "00000000-0000-0000-0000-000000000001", "name": "P"}),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/infrastructure", None),
+        ("post", "/api/proposals/00000000-0000-0000-0000-000000000002/infrastructure", {"kind": "solar", "position": [-79.38, 43.65]}),
+        ("delete", "/api/proposals/00000000-0000-0000-0000-000000000002/infrastructure/00000000-0000-0000-0000-000000000003", None),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots", None),
+        ("post", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots", {"tick": 1, "metrics": {}}),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots/latest", None),
         ("get", "/api/assets/definitions", None),
         ("post", "/api/assets/definitions", {"name": "A", "kind": "solar"}),
     ):
         if method == "get":
             r = client.get(path)
+        elif method == "delete":
+            r = client.delete(path)
         else:
             r = client.post(path, json=body)
         assert r.status_code == 503, f"{method} {path} -> {r.status_code}"
