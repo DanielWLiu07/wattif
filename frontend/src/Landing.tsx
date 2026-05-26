@@ -429,7 +429,7 @@ export function Landing() {
             transition: "opacity 0.6s ease",
           }}
         >
-          <TorontoMap />
+          <TorontoMap active={atScope} />
         </div>
       </div>
     </>
