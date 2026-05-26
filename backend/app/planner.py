@@ -19,6 +19,8 @@ import logging
 from typing import AsyncIterator, Awaitable, Callable
 
 from . import config
+from .db.repositories import datasets as dataset_repo
+from .db.repositories.base import PersistenceDisabledError
 from .models import InfraCreate
 from .optimizer import DEFAULT_CAPACITY_KW, candidate_cost, optimize
 
@@ -44,6 +46,11 @@ _TOOLS: list[dict] = [
     {
         "name": "get_metrics",
         "description": "Current simulation metrics (coverage, equity, emissions, cost, approval).",
+        "input_schema": {"type": "object", "properties": {}, "required": []},
+    },
+    {
+        "name": "get_uploaded_datasets",
+        "description": "Metadata summaries for datasets attached to the selected project or proposal. This is context only; uploads do not rebuild the simulator yet.",
         "input_schema": {"type": "object", "properties": {}, "required": []},
     },
     {
@@ -156,12 +163,21 @@ def _openai_tools() -> list[dict]:
 # Tool execution against the World
 # ---------------------------------------------------------------------------
 class PlannerTools:
-    def __init__(self, world, budget_cad: float):
+    def __init__(
+        self,
+        world,
+        budget_cad: float,
+        *,
+        project_id: str | None = None,
+        proposal_id: str | None = None,
+    ):
         self.world = world
         self.engine = world.engine
         self.budget_total = budget_cad
         self.spent = 0.0
         self.placements: list[dict] = []  # infra placed this run (camelCase dicts)
+        self.project_id = project_id
+        self.proposal_id = proposal_id
 
     @property
     def remaining(self) -> float:
@@ -222,6 +238,34 @@ class PlannerTools:
 
     def _t_get_metrics(self, _args: dict) -> dict:
         return self.engine.current_metrics().model_dump(by_alias=True)
+
+    def _t_get_uploaded_datasets(self, _args: dict) -> dict:
+        if not self.project_id and not self.proposal_id:
+            return {
+                "available": False,
+                "reason": "No project or proposal selected for uploaded dataset context.",
+                "datasets": [],
+            }
+        try:
+            rows = dataset_repo.list_datasets(
+                project_id=self.project_id if not self.proposal_id else None,
+                proposal_id=self.proposal_id,
+                limit=12,
+            )
+        except PersistenceDisabledError:
+            return {
+                "available": False,
+                "reason": "Supabase persistence is not configured.",
+                "datasets": [],
+            }
+        return {
+            "available": True,
+            "scope": {
+                "projectId": self.project_id,
+                "proposalId": self.proposal_id,
+            },
+            "datasets": [_dataset_summary(row) for row in rows],
+        }
 
     def _t_get_budget(self, _args: dict) -> dict:
         return {
@@ -336,6 +380,22 @@ def _system_prompt(goal: str | None, budget: float) -> str:
     )
 
 
+def _dataset_summary(row: dict) -> dict:
+    metadata = row.get("metadata") or {}
+    return {
+        "id": row.get("id"),
+        "name": row.get("name"),
+        "datasetType": row.get("dataset_type"),
+        "fileType": row.get("file_type"),
+        "rowCount": row.get("row_count"),
+        "featureCount": row.get("feature_count"),
+        "columns": (row.get("columns") or [])[:12],
+        "summary": metadata.get("summary"),
+        "geometryTypes": metadata.get("geometryTypes"),
+        "createdAt": row.get("created_at"),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Planner-lite (no key): deterministic greedy optimizer as a planner
 # ---------------------------------------------------------------------------
@@ -354,6 +414,14 @@ async def _planner_lite(
     yield {"type": "tool_call", "name": "get_city_state", "args": {}}
     state = tools.execute("get_city_state", {})
     yield {"type": "tool_result", "name": "get_city_state", "result": state}
+    yield {"type": "tool_call", "name": "get_uploaded_datasets", "args": {}}
+    ds = tools.execute("get_uploaded_datasets", {})
+    yield {"type": "tool_result", "name": "get_uploaded_datasets", "result": ds}
+    if ds.get("datasets"):
+        yield {
+            "type": "thought",
+            "text": f"Using {len(ds['datasets'])} uploaded dataset summary record(s) as planning context.",
+        }
     top = state.get("equityTargets", [])[:3]
     if top:
         names = ", ".join(f"{t['name']} (burden {t['energyBurden']:.2f})" for t in top)
@@ -446,6 +514,14 @@ async def _planner_demo(
     yield {"type": "tool_call", "name": "get_metrics", "args": {}}
     m0 = tools.execute("get_metrics", {})
     yield {"type": "tool_result", "name": "get_metrics", "result": m0}
+    yield {"type": "tool_call", "name": "get_uploaded_datasets", "args": {}}
+    ds = tools.execute("get_uploaded_datasets", {})
+    yield {"type": "tool_result", "name": "get_uploaded_datasets", "result": ds}
+    if ds.get("datasets"):
+        yield {
+            "type": "thought",
+            "text": f"I found {len(ds['datasets'])} uploaded dataset summary record(s) for context; they inform planning but do not regenerate the simulation yet.",
+        }
     yield {
         "type": "thought",
         "text": (
@@ -792,9 +868,22 @@ class PlannerChat:
     message history across turns. Scenarios injected mid-turn are observed and reacted to.
     """
 
-    def __init__(self, world, budget_cad: float, goal: str | None = None):
+    def __init__(
+        self,
+        world,
+        budget_cad: float,
+        goal: str | None = None,
+        *,
+        project_id: str | None = None,
+        proposal_id: str | None = None,
+    ):
         self.world = world
-        self.tools = PlannerTools(world, budget_cad)
+        self.tools = PlannerTools(
+            world,
+            budget_cad,
+            project_id=project_id,
+            proposal_id=proposal_id,
+        )
         self.goal = goal
         self.provider = config.llm_provider()
         self.pending_scenarios: list = []  # Scenario objects injected since last observation
@@ -880,6 +969,16 @@ class PlannerChat:
         yield {"type": "tool_call", "name": "get_metrics", "args": {}}
         m0 = self.tools.execute("get_metrics", {})
         yield {"type": "tool_result", "name": "get_metrics", "result": m0}
+        await _sleep()
+
+        yield {"type": "tool_call", "name": "get_uploaded_datasets", "args": {}}
+        ds = self.tools.execute("get_uploaded_datasets", {})
+        yield {"type": "tool_result", "name": "get_uploaded_datasets", "result": ds}
+        if ds.get("datasets"):
+            yield {
+                "type": "thought",
+                "text": f"I found {len(ds['datasets'])} uploaded dataset summary record(s) for context; they inform planning but do not regenerate the simulation yet.",
+            }
         await _sleep()
 
         note = self.tools.protected_note()
@@ -1251,10 +1350,17 @@ async def run_planner(
     goal: str | None = None,
     budget_cad: float | None = None,
     confirm: ConfirmFn | None = None,
+    project_id: str | None = None,
+    proposal_id: str | None = None,
 ) -> AsyncIterator[dict]:
     """Yield planner events. step mode uses `confirm` to gate mutating tools (WS only)."""
     budget = budget_cad if budget_cad is not None else DEFAULT_BUDGET_CAD
-    tools = PlannerTools(world, budget)
+    tools = PlannerTools(
+        world,
+        budget,
+        project_id=project_id,
+        proposal_id=proposal_id,
+    )
     provider = config.llm_provider()
 
     yield {

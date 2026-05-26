@@ -112,6 +112,37 @@ export type SimulationSnapshot = {
   createdAt?: string | null;
 };
 
+export const DATASET_TYPES = [
+  "ev_chargers",
+  "ev_sentiment",
+  "energy_demand",
+  "weather_risk",
+  "grid_infrastructure",
+  "demographic",
+  "zoning_constraints",
+  "public_feedback",
+  "generic",
+] as const;
+
+export type DatasetType = (typeof DATASET_TYPES)[number];
+
+export type UploadedDataset = {
+  id: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  name: string;
+  datasetType: DatasetType | string;
+  fileType?: string | null;
+  rowCount?: number | null;
+  featureCount?: number | null;
+  columns: string[];
+  preview: Record<string, unknown>[];
+  metadata: Record<string, unknown>;
+  uploadedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+};
+
 export function infraToPersisted(infra: Infra): ProposalInfrastructureCreate {
   return {
     kind: infra.kind,

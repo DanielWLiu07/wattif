@@ -565,7 +565,12 @@ async def planner_run(body: PlannerRunRequest | None = None) -> dict:
     events = [
         ev
         async for ev in run_planner(
-            world, mode="auto", goal=body.goal, budget_cad=body.budget_cad
+            world,
+            mode="auto",
+            goal=body.goal,
+            budget_cad=body.budget_cad,
+            project_id=body.project_id,
+            proposal_id=body.proposal_id,
         )
     ]
     return {"events": events}
@@ -603,7 +608,13 @@ async def ws_planner(ws: WebSocket) -> None:
     budget = cfg.get("budgetCad") or DEFAULT_BUDGET_CAD
     # The typed instruction may arrive as `text` (frontend) or `goal` (alias).
     first_text = cfg.get("text") or cfg.get("goal")
-    chat = PlannerChat(world, budget, goal=first_text)
+    chat = PlannerChat(
+        world,
+        budget,
+        goal=first_text,
+        project_id=cfg.get("projectId") or cfg.get("project_id"),
+        proposal_id=cfg.get("proposalId") or cfg.get("proposal_id"),
+    )
 
     user_q: asyncio.Queue = asyncio.Queue()
     approval_q: asyncio.Queue = asyncio.Queue()

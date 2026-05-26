@@ -510,6 +510,10 @@ function attachSession(
         position: f.position,
         name: f.name,
       })),
+    contextProvider: () => ({
+      projectId: get().selectedProjectId,
+      proposalId: get().selectedProposalId,
+    }),
     onEvent: handleEvent,
     onStatus: (open) => set({ chatConnected: open }),
     onBusy: (busy) =>

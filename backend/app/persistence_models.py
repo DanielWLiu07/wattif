@@ -125,3 +125,22 @@ class AssetDefinition(BaseModel):
     spec: dict[str, Any] = Field(default_factory=dict)
     created_at: str | None = None
     updated_at: str | None = None
+
+
+class UploadedDataset(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    project_id: str | None = None
+    proposal_id: str | None = None
+    name: str
+    dataset_type: str
+    file_type: str | None = None
+    row_count: int | None = None
+    feature_count: int | None = None
+    columns: list[str] = Field(default_factory=list)
+    preview: list[dict[str, Any]] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    uploaded_at: str | None = None
+    created_at: str | None = None
+    updated_at: str | None = None

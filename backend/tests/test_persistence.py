@@ -5,7 +5,7 @@ from __future__ import annotations
 import app.config as config
 import app.db.supabase_client as sc
 import app.state as state
-from app.db.repositories import proposal_infrastructure, simulation_snapshots
+from app.db.repositories import datasets, proposal_infrastructure, simulation_snapshots
 from app.db.repositories.base import PersistenceDisabledError
 from app.main import app
 from fastapi.testclient import TestClient
@@ -46,6 +46,10 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/snapshots/latest", None),
         ("get", "/api/assets/definitions", None),
         ("post", "/api/assets/definitions", {"name": "A", "kind": "solar"}),
+        ("get", "/api/projects/00000000-0000-0000-0000-000000000001/datasets", None),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/datasets", None),
+        ("get", "/api/datasets/00000000-0000-0000-0000-000000000004", None),
+        ("delete", "/api/datasets/00000000-0000-0000-0000-000000000004", None),
     ):
         if method == "get":
             r = client.get(path)
@@ -55,6 +59,14 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
             r = client.post(path, json=body)
         assert r.status_code == 503, f"{method} {path} -> {r.status_code}"
         assert r.json()["detail"]["available"] is False
+
+    upload = client.post(
+        "/api/datasets/upload?projectId=00000000-0000-0000-0000-000000000001&filename=test.csv",
+        content=b"name,kwh\nA,10\n",
+        headers={"Content-Type": "text/csv"},
+    )
+    assert upload.status_code == 503
+    assert upload.json()["detail"]["available"] is False
 
 
 def test_proposal_infrastructure_repository_disabled(monkeypatch):
@@ -94,6 +106,27 @@ def test_simulation_snapshots_repository_disabled(monkeypatch):
             scenarios=[],
             infrastructure=[],
         )
+
+
+def test_dataset_repository_disabled(monkeypatch):
+    _disable_supabase(monkeypatch)
+
+    with pytest.raises(PersistenceDisabledError):
+        datasets.list_datasets(project_id="00000000-0000-0000-0000-000000000001")
+
+    with pytest.raises(PersistenceDisabledError):
+        datasets.create_dataset(
+            project_id="00000000-0000-0000-0000-000000000001",
+            name="demand.csv",
+            dataset_type="energy_demand",
+            file_type="csv",
+            row_count=1,
+            columns=["zone", "kwh"],
+            preview=[{"zone": "A", "kwh": "10"}],
+        )
+
+    with pytest.raises(PersistenceDisabledError):
+        datasets.delete_dataset("00000000-0000-0000-0000-000000000004")
 
 
 def test_health_reports_supabase_when_env_set(monkeypatch):

@@ -4,16 +4,18 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request
 
 from ..db.repositories.base import PersistenceDisabledError
 from ..db.repositories import (
     assets,
+    datasets,
     projects,
     proposal_infrastructure,
     proposals,
     simulation_snapshots,
 )
+from ..dataset_ingest import DatasetValidationError, parse_upload
 from ..persistence_models import (
     AssetDefinition,
     AssetDefinitionCreate,
@@ -26,6 +28,7 @@ from ..persistence_models import (
     ProposalInfrastructureCreate,
     SimulationSnapshot,
     SimulationSnapshotCreate,
+    UploadedDataset,
 )
 
 log = logging.getLogger("wattif.routes.persistence")
@@ -74,6 +77,30 @@ def _row_to_asset(row: dict) -> AssetDefinition:
         name=row["name"],
         kind=row["kind"],
         spec=row.get("spec") or {},
+        created_at=row.get("created_at"),
+        updated_at=row.get("updated_at"),
+    )
+
+
+def _row_to_dataset(row: dict) -> UploadedDataset:
+    metadata = row.get("metadata") or {}
+    row_count = row.get("row_count")
+    feature_count = row.get("feature_count")
+    return UploadedDataset(
+        id=row["id"],
+        project_id=row.get("project_id"),
+        proposal_id=row.get("proposal_id"),
+        name=row["name"],
+        dataset_type=row["dataset_type"],
+        file_type=row.get("file_type") or metadata.get("fileType"),
+        row_count=row_count if row_count is not None else metadata.get("rowCount"),
+        feature_count=feature_count
+        if feature_count is not None
+        else metadata.get("featureCount"),
+        columns=row.get("columns") or metadata.get("columns") or [],
+        preview=row.get("preview") or metadata.get("preview") or [],
+        metadata=metadata,
+        uploaded_at=row.get("uploaded_at") or row.get("created_at"),
         created_at=row.get("created_at"),
         updated_at=row.get("updated_at"),
     )
@@ -336,3 +363,108 @@ def create_asset_definition(body: AssetDefinitionCreate) -> AssetDefinition:
     except Exception as exc:
         log.warning("POST /api/assets/definitions failed: %s", exc)
         raise HTTPException(status_code=502, detail="Persistence write failed") from exc
+
+
+@router.post("/datasets/upload", response_model=UploadedDataset, status_code=201)
+async def upload_dataset(
+    request: Request,
+    project_id: str | None = Query(default=None, alias="projectId"),
+    proposal_id: str | None = Query(default=None, alias="proposalId"),
+    filename: str = Query(default="upload.csv", min_length=1, max_length=240),
+    dataset_type: str | None = Query(default=None, alias="datasetType"),
+) -> UploadedDataset:
+    if not project_id and not proposal_id:
+        raise HTTPException(
+            status_code=422,
+            detail="Provide projectId and/or proposalId for dataset upload",
+        )
+    try:
+        body = await request.body()
+        parsed = parse_upload(
+            filename=filename,
+            content_type=request.headers.get("content-type"),
+            body=body,
+            dataset_type=dataset_type,
+        )
+        row = datasets.create_dataset(
+            project_id=project_id,
+            proposal_id=proposal_id,
+            name=parsed.name,
+            dataset_type=parsed.dataset_type,
+            file_type=parsed.file_type,
+            row_count=parsed.row_count,
+            feature_count=parsed.feature_count,
+            columns=parsed.columns,
+            preview=parsed.preview,
+            metadata=parsed.metadata,
+        )
+        return _row_to_dataset(row)
+    except DatasetValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("POST /api/datasets/upload failed: %s", exc)
+        raise HTTPException(status_code=502, detail="Dataset persistence failed") from exc
+
+
+@router.get("/projects/{project_id}/datasets", response_model=list[UploadedDataset])
+def list_project_datasets(
+    project_id: str,
+    limit: int = Query(default=50, ge=1, le=200),
+) -> list[UploadedDataset]:
+    try:
+        rows = datasets.list_datasets(project_id=project_id, limit=limit)
+        return [_row_to_dataset(r) for r in rows]
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("GET /api/projects/%s/datasets failed: %s", project_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.get("/proposals/{proposal_id}/datasets", response_model=list[UploadedDataset])
+def list_proposal_datasets(
+    proposal_id: str,
+    limit: int = Query(default=50, ge=1, le=200),
+) -> list[UploadedDataset]:
+    try:
+        rows = datasets.list_datasets(proposal_id=proposal_id, limit=limit)
+        return [_row_to_dataset(r) for r in rows]
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except Exception as exc:
+        log.warning("GET /api/proposals/%s/datasets failed: %s", proposal_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.get("/datasets/{dataset_id}", response_model=UploadedDataset)
+def get_dataset(dataset_id: str) -> UploadedDataset:
+    try:
+        row = datasets.get_dataset(dataset_id)
+        if row is None:
+            raise HTTPException(status_code=404, detail=f"dataset {dataset_id} not found")
+        return _row_to_dataset(row)
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log.warning("GET /api/datasets/%s failed: %s", dataset_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence query failed") from exc
+
+
+@router.delete("/datasets/{dataset_id}")
+def delete_dataset(dataset_id: str) -> dict:
+    try:
+        ok = datasets.delete_dataset(dataset_id)
+        if not ok:
+            raise HTTPException(status_code=404, detail=f"dataset {dataset_id} not found")
+        return {"ok": True, "datasetId": dataset_id}
+    except PersistenceDisabledError:
+        raise _unavailable() from None
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log.warning("DELETE /api/datasets/%s failed: %s", dataset_id, exc)
+        raise HTTPException(status_code=502, detail="Persistence delete failed") from exc

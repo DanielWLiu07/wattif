@@ -93,6 +93,59 @@ array stores active scenarios as returned to the frontend. The `infrastructure`
 array stores compact live infra state: `id`, `kind`, `position`, `capacityKw`,
 `costCad`, `status`, `modelUrl`, and `zoneId` when available.
 
+## UploadedDataset
+
+Phase 7 adds a metadata/preview registry for designer-uploaded CSV, JSON, and
+GeoJSON datasets. The original file bytes are not retained in this MVP.
+
+```ts
+type UploadedDataset = {
+  id: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  name: string;
+  datasetType:
+    | "ev_chargers"
+    | "ev_sentiment"
+    | "energy_demand"
+    | "weather_risk"
+    | "grid_infrastructure"
+    | "demographic"
+    | "zoning_constraints"
+    | "public_feedback"
+    | "generic"
+    | string;
+  fileType?: "csv" | "json" | "geojson" | string | null;
+  rowCount?: number | null;
+  featureCount?: number | null;
+  columns: string[];
+  preview: Record<string, unknown>[];
+  metadata: Record<string, unknown>;
+  uploadedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+};
+```
+
+Current `metadata` keys include `summary`, `detectedDatasetType`,
+`classificationSignals`, `originalFilename`, `contentType`, `sizeBytes`, and
+for GeoJSON, `geometryTypes`/`bbox` when present.
+
+### Dataset Endpoints
+
+- `POST /api/datasets/upload?projectId=&proposalId=&filename=&datasetType=`
+  accepts raw file bytes with `Content-Type` set to CSV, JSON, or GeoJSON. At
+  least one of `projectId` or `proposalId` is required. `datasetType` is
+  optional; omitted or `auto` uses deterministic filename/column/content
+  heuristics.
+- `GET /api/projects/{projectId}/datasets` lists project-scoped uploads.
+- `GET /api/proposals/{proposalId}/datasets` lists proposal-scoped uploads.
+- `GET /api/datasets/{datasetId}` fetches one dataset metadata/preview record.
+- `DELETE /api/datasets/{datasetId}` removes a dataset registry record.
+
+Validation errors return `400` with a readable message. Supabase-disabled mode
+returns `503` with the shared persistence unavailable payload.
+
 ## Runtime Rules
 
 - The backend is the only Supabase writer.
@@ -100,5 +153,8 @@ array stores compact live infra state: `id`, `kind`, `position`, `capacityKw`,
   role key.
 - If Supabase is not configured, persistence-specific routes return 503 and the
   in-memory simulation continues to work.
+- LLM/planner flows can read uploaded dataset summaries for the selected
+  project/proposal as context, but uploaded datasets do not regenerate the city
+  simulation yet.
 - LLM/planner flows must propose structured actions; they do not directly mutate
   Supabase or simulation state.

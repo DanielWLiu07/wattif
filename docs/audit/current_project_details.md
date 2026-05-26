@@ -29,9 +29,9 @@ The implementation today fits:
 |------|-----|-----|
 | **Hackathon demo audience / judges** | Strong | Polished map UI, guided 6-step tour, works offline |
 | **Energy equity storyteller** | Moderate | Equity-weighted optimizer + burden overlays tell a compelling narrative |
-| **City designer testing arbitrary uploaded datasets** | **None** | No upload, no city picker, Toronto-only fixtures |
+| **City designer testing arbitrary uploaded datasets** | **Early MVP** | CSV/JSON/GeoJSON metadata upload, preview, and planner context; Toronto simulation still fixture-based |
 | **Urban planner needing report-grade outputs** | **Weak** | Metrics are simplified; no export, no PDF, no survey integration |
-| **Infrastructure engineer modeling EV charging** | **None** | EV chargers are display-only; not placeable or simulated |
+| **Infrastructure engineer modeling EV charging** | **Moderate** | EV chargers are placeable and persisted, but charging-network physics remain simplified |
 | **Researcher needing persistent agent populations** | **Weak** | In-memory session only; agents reset on server restart |
 
 **Honest positioning today:** an **explorable digital twin demo** for Toronto renewable siting with equity framing — not a production planning tool.
@@ -49,7 +49,7 @@ The implementation today fits:
 7. **Right dock** — chat with planner agent; read activity log, voices feed, stats charts, inspect placed assets.
 8. **Observe outcomes** — coverage/approval/equity metrics update; agents animate on map (~320 dots); speech bubbles show opinions; outage overlay during blackouts.
 
-**Session ends when:** user resets session, refreshes page, or backend process restarts — **nothing persists**.
+**Session ends when:** user resets session, refreshes page, or backend process restarts. With Supabase configured, projects, proposals, proposal infrastructure, snapshots, and uploaded dataset metadata/previews persist; the live simulator itself remains an in-process session.
 
 ---
 
@@ -76,7 +76,7 @@ The implementation today fits:
 | Wind | Yes | Yes | Yes |
 | Battery | Yes | Yes (peak shave) | Yes |
 | Microgrid | Yes | Yes (outage resilience) | Yes |
-| EV charger | **No** | **No** | Display existing only |
+| EV charger | Yes | Yes (simplified charging + demand effects) | Yes |
 
 Placement modes ([`frontend/src/components/BuildTab.tsx`](../../frontend/src/components/BuildTab.tsx)):
 
@@ -204,6 +204,7 @@ Uses live backend if available; otherwise mock data — demo does not force eith
 | **District energy zones** | Modeled from public knowledge, not open GIS |
 | **Agent voices (default deployment)** | Template library — reads like real opinions but is not survey data |
 | **Demo LLM planner** | Scripted narration mimicking an agentic loop |
+| **Uploaded datasets do not drive simulation** | Uploads are inspected, previewed, summarized, and exposed as planner context only |
 
 ---
 
@@ -233,6 +234,7 @@ Uses live backend if available; otherwise mock data — demo does not force eith
 - "Stress-test scenarios like blackouts and heatwaves to see resilience effects"
 - "Living city visualization with resident opinion feed and animated agents"
 - "Grounded in Toronto open data: boundaries, census, flood, existing renewables, EV chargers"
+- "Upload CSV, JSON, or GeoJSON datasets to attach metadata/previews to a project or proposal"
 - "Works offline for demos; optional live backend and optional LLM enhancement"
 
 **Impressive but qualified claims:**
@@ -247,13 +249,12 @@ Uses live backend if available; otherwise mock data — demo does not force eith
 
 | Do not claim | Reality |
 |--------------|---------|
-| "Upload your city's datasets" | No upload UI or API |
+| "Uploaded datasets fully rebuild the city simulation" | Upload MVP stores/previews/summarizes data only; Toronto fixtures still drive the simulator |
 | "Figma/SimCity-style block-level design" | Zone-level + point placement, not parcel editing |
-| "EV charging infrastructure planning" | EV chargers are read-only dots; not placeable |
 | "Autonomous AI resident agents" | Rule-based sentiment + templates |
 | "Real survey/consultation integration" | Static 2021 attitudes JSON; voices are synthetic |
 | "Weather and snowstorm risk modeling" | Scenario levers only; no weather GIS |
-| "Persistent sessions / saved proposals" | In-memory; lost on restart |
+| "Persistent live simulation state without Supabase" | Supabase persists selected records; memory mode remains ephemeral |
 | "Production-ready planning reports" | No export; simplified metrics |
 | "Full Toronto population simulation" | ~4,001 sample agents scaled by `zone_representation` |
 | "LLM-powered planner out of the box" | Demo script is default |
@@ -280,5 +281,5 @@ Uses live backend if available; otherwise mock data — demo does not force eith
 2. **The "residents" are simulated opinion vectors and template quotes**, not LLM agents with personalities, memory, or independent reasoning.
 3. **The "AI planner" is primarily a scripted demo** unless Anthropic or Feather API keys are configured.
 4. **The frontend mock path is a first-class feature**, not an edge case — always account for it when describing behavior.
-5. **Several vision features (upload, EV planning, block-level design, real surveys) are entirely absent** from the codebase.
-6. **Pitch the equity narrative and interactive simulation honestly**; avoid claiming autonomous agents or dataset upload until built.
+5. **Dataset upload now exists as a foundation**, but uploaded data does not yet regenerate zones, agents, demand, or the full city simulation.
+6. **Pitch the equity narrative and interactive simulation honestly**; avoid claiming autonomous resident agents or universal city import.

@@ -284,3 +284,5 @@ class PlannerRunRequest(CamelModel):
     mode: Literal["auto", "step"] = "auto"
     goal: str | None = None
     budget_cad: float | None = None
+    project_id: str | None = None
+    proposal_id: str | None = None

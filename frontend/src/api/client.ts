@@ -23,6 +23,7 @@ import type {
   SimMetrics,
   SimulationSnapshot,
   SimulationSnapshotCreate,
+  UploadedDataset,
   Zone,
 } from "@/types";
 import {
@@ -170,6 +171,62 @@ export async function getLatestSnapshot(
   return tryFetch<SimulationSnapshot>(
     `/api/proposals/${proposalId}/snapshots/latest`
   );
+}
+
+export async function listProjectDatasets(
+  projectId: string
+): Promise<UploadedDataset[] | null> {
+  return tryFetch<UploadedDataset[]>(`/api/projects/${projectId}/datasets`);
+}
+
+export async function listProposalDatasets(
+  proposalId: string
+): Promise<UploadedDataset[] | null> {
+  return tryFetch<UploadedDataset[]>(`/api/proposals/${proposalId}/datasets`);
+}
+
+export async function deleteDataset(datasetId: string): Promise<boolean> {
+  const r = await tryFetch<{ ok: boolean }>(`/api/datasets/${datasetId}`, {
+    method: "DELETE",
+  });
+  return r?.ok ?? false;
+}
+
+export async function uploadDataset(opts: {
+  file: File;
+  projectId?: string | null;
+  proposalId?: string | null;
+  datasetType?: string;
+}): Promise<{ data: UploadedDataset | null; error?: string; status?: number }> {
+  const q = new URLSearchParams({ filename: opts.file.name });
+  if (opts.projectId) q.set("projectId", opts.projectId);
+  if (opts.proposalId) q.set("proposalId", opts.proposalId);
+  if (opts.datasetType && opts.datasetType !== "auto") {
+    q.set("datasetType", opts.datasetType);
+  }
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    const res = await fetch(`${API_URL}/api/datasets/upload?${q.toString()}`, {
+      method: "POST",
+      body: opts.file,
+      signal: ctrl.signal,
+      headers: { "Content-Type": opts.file.type || "application/octet-stream" },
+    });
+    clearTimeout(t);
+    const payload = await res.json().catch(() => null);
+    if (!res.ok) {
+      const detail = payload?.detail;
+      const error =
+        typeof detail === "string"
+          ? detail
+          : detail?.reason ?? "Dataset upload failed";
+      return { data: null, error, status: res.status };
+    }
+    return { data: payload as UploadedDataset };
+  } catch {
+    return { data: null, error: "Dataset upload service is unavailable" };
+  }
 }
 
 export async function getZones(): Promise<{ data: Zone[]; live: boolean }> {
@@ -643,11 +700,13 @@ export type PlannerSession = {
 export function createPlannerSession(opts: {
   infraProvider: () => Infra[];
   facilitiesProvider?: () => { kind: string; position: [number, number]; name?: string }[];
+  contextProvider?: () => { projectId?: string | null; proposalId?: string | null };
   onEvent: (e: PlannerEvent) => void;
   onStatus?: (open: boolean) => void;
   onBusy?: (busy: boolean) => void;
 }): PlannerSession {
-  const { infraProvider, facilitiesProvider, onEvent, onStatus, onBusy } = opts;
+  const { infraProvider, facilitiesProvider, contextProvider, onEvent, onStatus, onBusy } =
+    opts;
   let ws: WebSocket | null = null;
   let live = false;
   let closed = false;
@@ -718,12 +777,15 @@ export function createPlannerSession(opts: {
       stepMode = sopts?.mode === "step";
       onBusy?.(true);
       if (live && ws && ws.readyState === WebSocket.OPEN) {
+        const context = contextProvider?.() ?? {};
         ws.send(
           JSON.stringify({
             type: "user_message",
             text,
             mode: sopts?.mode ?? "auto",
             budgetCad: sopts?.budgetCad ?? 8_000_000,
+            projectId: context.projectId,
+            proposalId: context.proposalId,
           })
         );
         return;
