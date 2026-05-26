@@ -243,6 +243,26 @@ export type SitingPriorityZone = {
   rationale: string;
 };
 
+// City events — timeline of placements + scenarios with their measured impact.
+export type EventVoice = {
+  text: string;
+  stance: "support" | "oppose" | "neutral";
+  archetype: string;
+  zoneId: string;
+};
+export type CityEvent = {
+  id: string;
+  tick: number;
+  type: string; // "placement" | "scenario" | ...
+  kind: string; // infra kind ("solar"…) or scenario kind ("heatwave"…)
+  label: string;
+  zoneIds: string[];
+  delta: { approval: number; coverage: number };
+  reaction: { support: number; oppose: number; neutral: number };
+  voices: EventVoice[];
+};
+export type EventPoint = { tick: number; approval: number; coverage: number };
+
 // Activity log — chronological narration of what changed each tick.
 export type ActivitySeverity = "info" | "good" | "warn" | "bad";
 export type ActivityItem = {

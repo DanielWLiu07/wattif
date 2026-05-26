@@ -4,6 +4,8 @@ import type {
   ActivityItem,
   Agent,
   AgentVoice,
+  CityEvent,
+  EventPoint,
   ConstraintZone,
   SitingPriorityZone,
   ExistingInfra,
@@ -29,6 +31,7 @@ import {
   mockScenario,
   mockSentiment,
   mockSitingPriority,
+  mockEvents,
   mockVoices,
   seedInfra,
 } from "@/data/mock";
@@ -318,6 +321,19 @@ export async function getSitingPriority(
   if (r?.zones?.length)
     return { equityWeight: r.equityWeight ?? equityWeight, zones: r.zones };
   return mockSitingPriority(equityWeight, infra);
+}
+
+// City events timeline (placements + scenarios with measured impact). Mock fallback.
+export async function getEvents(): Promise<{
+  events: CityEvent[];
+  series: EventPoint[];
+}> {
+  const r = await tryFetch<{ events: CityEvent[]; series: EventPoint[] }>(
+    "/api/events"
+  );
+  if (r && Array.isArray(r.events))
+    return { events: r.events, series: Array.isArray(r.series) ? r.series : [] };
+  return mockEvents();
 }
 
 export async function getActivity(): Promise<ActivityItem[]> {

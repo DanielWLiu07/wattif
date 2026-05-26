@@ -4,6 +4,7 @@ import {
   Brain,
   Stack as Boxes,
   ChartBar as BarChart3,
+  ChartLineUp,
   Newspaper,
 } from "@phosphor-icons/react";
 import { useStore } from "@/store";
@@ -11,6 +12,7 @@ import { Hud } from "@/components/Hud";
 import { VoicesFeed } from "@/components/VoicesFeed";
 import { ChatPanel } from "@/components/ChatPanel";
 import { ActivityLog } from "@/components/ActivityLog";
+import { EventsFeed } from "@/components/EventsFeed";
 import { InfrastructureInspector } from "@/components/InfrastructureInspector";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -147,7 +149,7 @@ export function RightDock() {
 
       <Card className="glass flex min-h-0 flex-1 flex-col overflow-hidden">
         <Tabs value={tab} onValueChange={onTab} className="flex min-h-0 flex-1 flex-col">
-          <TabsList className="m-1.5 grid h-auto shrink-0 grid-cols-5 gap-0.5">
+          <TabsList className="m-1.5 grid h-auto shrink-0 grid-cols-6 gap-0.5">
             <TabsTrigger value="chat" className="flex-col gap-0.5 px-0.5 py-1 text-[9px]">
               <span className="relative">
                 <Brain className="h-3.5 w-3.5" />
@@ -165,6 +167,10 @@ export function RightDock() {
                 </span>
               </span>
               Activity
+            </TabsTrigger>
+            <TabsTrigger value="events" className="flex-col gap-0.5 px-0.5 py-1 text-[9px]">
+              <ChartLineUp className="h-3.5 w-3.5" />
+              Events
             </TabsTrigger>
             <TabsTrigger value="voices" className="flex-col gap-0.5 px-0.5 py-1 text-[9px]">
               <span className="relative">
@@ -189,6 +195,9 @@ export function RightDock() {
           </TabsContent>
           <TabsContent value="activity" className="mt-0 min-h-0 flex-1 overflow-hidden">
             <ActivityLog />
+          </TabsContent>
+          <TabsContent value="events" className="mt-0 min-h-0 flex-1 overflow-hidden">
+            <EventsFeed />
           </TabsContent>
           <TabsContent value="voices" className="mt-0 min-h-0 flex-1 overflow-hidden">
             <VoicesFeed />

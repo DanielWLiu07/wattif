@@ -5,6 +5,8 @@ import type {
   Agent,
   AgentVoice,
   ChatItem,
+  CityEvent,
+  EventPoint,
   ConstraintZone,
   ExistingInfra,
   Facility,
@@ -107,6 +109,8 @@ type State = {
   sbei: api.Sbei | null; // city-wide emissions context
   sitingPriority: SitingPriorityZone[]; // ranked "where to build next"
   equityWeight: number; // 0..1 weight for the build-priority ranking
+  events: CityEvent[]; // city-events timeline (placements + scenarios)
+  eventSeries: EventPoint[]; // approval/coverage over ticks for the sparkline
   gatheringZones: string[]; // zones showing crowds (target + neighbours)
   lastTargetZoneId: string | null; // zone the last scenario hit
 
@@ -227,6 +231,10 @@ type State = {
   // build-priority overlay
   setEquityWeight: (w: number) => void;
   refreshSitingPriority: () => Promise<void>;
+
+  // events timeline
+  loadEvents: () => Promise<void>;
+  traceEvent: (zoneIds: string[]) => void;
 
   // v3 actions
   sendChat: (text: string) => void;
@@ -513,6 +521,8 @@ export const useStore = create<State>((set, get) => ({
   sbei: null,
   sitingPriority: [],
   equityWeight: 0.4,
+  events: [],
+  eventSeries: [],
   gatheringZones: [],
   lastTargetZoneId: null,
 
@@ -640,6 +650,9 @@ export const useStore = create<State>((set, get) => ({
     void api
       .getSitingPriority(infra, get().equityWeight)
       .then((r) => set({ sitingPriority: r.zones, equityWeight: r.equityWeight }));
+
+    // events timeline (placements + scenarios with measured impact)
+    void get().loadEvents();
 
     // v3 real-data layers — degrade gracefully (empty until data-2 lands)
     void Promise.all([
@@ -1397,6 +1410,30 @@ export const useStore = create<State>((set, get) => ({
     const { infra, equityWeight } = get();
     const r = await api.getSitingPriority(infra, equityWeight);
     set({ sitingPriority: r.zones });
+  },
+
+  // ---------------- events timeline ----------------
+
+  loadEvents: async () => {
+    const r = await api.getEvents();
+    set({ events: r.events, eventSeries: r.series });
+  },
+  // Click an event card → highlight its zones on the map + fly to frame them.
+  traceEvent: (zoneIds) => {
+    if (!zoneIds.length) return;
+    set({ flashZones: zoneIds });
+    if (flashTimer) clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => set({ flashZones: [] }), 2600);
+    const z = get().zones.find((zz) => zz.id === zoneIds[0]);
+    if (z) {
+      set({
+        flyTo: {
+          target: z.centroid,
+          zoom: zoneIds.length > 6 ? 11 : 13,
+          nonce: Date.now(),
+        },
+      });
+    }
   },
 
   // ---------------- juice: toasts ----------------

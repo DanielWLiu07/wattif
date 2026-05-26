@@ -23,7 +23,7 @@ export function LeftDock() {
               <Wrench className="h-3.5 w-3.5" /> Build
             </TabsTrigger>
             <TabsTrigger value="events" className="flex-col gap-0.5 px-0.5 py-1 text-[10px]">
-              <Zap className="h-3.5 w-3.5" /> Events
+              <Zap className="h-3.5 w-3.5" /> Scenarios
             </TabsTrigger>
             <TabsTrigger value="priority" className="flex-col gap-0.5 px-0.5 py-1 text-[10px]">
               <Crosshair className="h-3.5 w-3.5" /> Priority
