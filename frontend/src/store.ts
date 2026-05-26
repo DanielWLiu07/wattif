@@ -26,7 +26,13 @@ import type {
   SitingPriorityZone,
   Zone,
 } from "@/types";
-import { INFRA_PRESETS, MODEL_URL, infraToPersisted } from "@/types";
+import {
+  INFRA_PRESETS,
+  MODEL_URL,
+  infraToPersisted,
+  isBuiltInInfraKind,
+  snapshotItemToInfra,
+} from "@/types";
 import * as api from "@/api/client";
 import { nearestZone, scenarioImpact } from "@/data/mock";
 import { makeLandTest, sampleInside } from "@/lib/geo";
@@ -189,7 +195,10 @@ type State = {
   selectedProjectId: string | null;
   selectedProposalId: string | null;
   proposalInfrastructure: ProposalInfrastructure[];
+  snapshots: SimulationSnapshot[];
   latestSnapshot: SimulationSnapshot | null;
+  compareSnapshotId: string | null;
+  restoringSnapshot: boolean;
   persistedInfraIds: Record<string, string>;
   persistenceMode: PersistenceMode;
   persistenceLoading: boolean;
@@ -200,6 +209,8 @@ type State = {
   createProposal: (name: string) => Promise<void>;
   selectProposal: (proposalId: string | null) => Promise<void>;
   saveSnapshot: () => Promise<void>;
+  restoreSnapshot: (snapshotId: string) => Promise<void>;
+  selectCompareSnapshot: (snapshotId: string | null) => void;
 
   // actions
   init: () => Promise<void>;
@@ -295,11 +306,8 @@ const persistenceModeFor = (
   if (health?.persistenceProvider !== "supabase") return "memory";
   return selectedProposalId ? "supabase-proposal" : "supabase-no-proposal";
 };
-const BUILT_IN_KINDS = new Set<InfraKind>(["solar", "wind", "battery", "microgrid"]);
-const isInfraKind = (kind: string): kind is InfraKind =>
-  BUILT_IN_KINDS.has(kind as InfraKind);
 const persistedToInfra = (row: ProposalInfrastructure): Infra | null => {
-  if (!isInfraKind(row.kind) || !row.position) return null;
+  if (!isBuiltInInfraKind(row.kind) || !row.position) return null;
   const meta = row.metadata ?? {};
   const status = typeof meta.status === "string" ? meta.status : "planned";
   return {
@@ -647,7 +655,10 @@ export const useStore = create<State>((set, get) => ({
   selectedProjectId: stored(PROJECT_KEY),
   selectedProposalId: stored(PROPOSAL_KEY),
   proposalInfrastructure: [],
+  snapshots: [],
   latestSnapshot: null,
+  compareSnapshotId: null,
+  restoringSnapshot: false,
   persistedInfraIds: {},
   persistenceMode: "memory",
   persistenceLoading: false,
@@ -713,7 +724,9 @@ export const useStore = create<State>((set, get) => ({
       selectedProposalId: null,
       proposals: [],
       proposalInfrastructure: [],
+      snapshots: [],
       latestSnapshot: null,
+      compareSnapshotId: null,
       persistedInfraIds: {},
       persistenceMode: persistenceModeFor(get().backendHealth, null),
       persistenceError: null,
@@ -752,7 +765,9 @@ export const useStore = create<State>((set, get) => ({
       selectedProposalId: proposalId,
       persistenceMode: persistenceModeFor(get().backendHealth, proposalId),
       proposalInfrastructure: [],
+      snapshots: [],
       latestSnapshot: null,
+      compareSnapshotId: null,
       persistedInfraIds: {},
       persistenceError: null,
     });
@@ -760,7 +775,11 @@ export const useStore = create<State>((set, get) => ({
 
     set({ persistenceLoading: true });
     await get().resetSession();
-    const rows = await api.listProposalInfrastructure(proposalId);
+    const [rows, latestSnapshot, snapshotList] = await Promise.all([
+      api.listProposalInfrastructure(proposalId),
+      api.getLatestSnapshot(proposalId),
+      api.listSnapshots(proposalId),
+    ]);
     if (!rows) {
       set({
         persistenceLoading: false,
@@ -782,13 +801,14 @@ export const useStore = create<State>((set, get) => ({
       restored.push(saved);
       persistedInfraIds[saved.id] = row.id;
     }
-    const latestSnapshot = await api.getLatestSnapshot(proposalId);
 
     set({
       proposalInfrastructure: rows,
       infra: restored,
       allInfra: restored,
+      snapshots: snapshotList ?? [],
       latestSnapshot,
+      compareSnapshotId: latestSnapshot?.id ?? null,
       persistedInfraIds,
       persistenceLoading: false,
       persistenceError: restoreFailed
@@ -820,11 +840,84 @@ export const useStore = create<State>((set, get) => ({
       })),
     });
     if (snapshot) {
-      set({ latestSnapshot: snapshot });
+      const list = await api.listSnapshots(selectedProposalId);
+      set({
+        latestSnapshot: snapshot,
+        snapshots: list ?? [snapshot, ...get().snapshots.filter((s) => s.id !== snapshot.id)],
+        compareSnapshotId: snapshot.id,
+      });
       get().pushToast("Snapshot saved", "good");
     } else {
       get().pushToast("Could not save snapshot", "warn");
     }
+  },
+
+  selectCompareSnapshot: (snapshotId) => {
+    set({ compareSnapshotId: snapshotId });
+  },
+
+  restoreSnapshot: async (snapshotId) => {
+    const { snapshots, selectedProposalId } = get();
+    const snapshot = snapshots.find((s) => s.id === snapshotId);
+    if (!snapshot || !selectedProposalId) return;
+    if (get().backendHealth?.persistenceProvider !== "supabase") {
+      get().pushToast("Snapshot restore requires Supabase persistence", "warn");
+      return;
+    }
+
+    set({ restoringSnapshot: true, persistenceError: null });
+    get().stopPlanner();
+    get().pause();
+    await api.resetSession();
+
+    const restored: Infra[] = [];
+    let restoreFailed = false;
+    for (const item of snapshot.infrastructure) {
+      const draft = snapshotItemToInfra(item);
+      if (!draft) {
+        restoreFailed = true;
+        continue;
+      }
+      const saved = { ...draft, ...(await api.placeInfra(draft)) };
+      restored.push(saved);
+    }
+
+    const { data: sentiment } = await api.getSentiment(restored);
+    const { data: flows } = await api.getFlows(restored);
+    const { data: metrics } = await api.resetSim(restored);
+    const { data: voices } = await api.getVoices(
+      8,
+      restored,
+      sentiment ?? { cityApprovalPct: 0.6, perZone: {} }
+    );
+
+    set({
+      infra: restored,
+      allInfra: restored,
+      persistedInfraIds: {},
+      sentiment,
+      flows,
+      voices: tagVoices(voices),
+      metrics: { ...metrics, approvalPct: sentiment.cityApprovalPct },
+      history: [{ ...metrics, approvalPct: sentiment.cityApprovalPct }],
+      compareSnapshotId: snapshotId,
+      restoringSnapshot: false,
+      persistenceError: restoreFailed
+        ? "Some snapshot placements could not be restored to the live sim."
+        : null,
+      spawnTimes: Object.fromEntries(restored.map((i) => [i.id, Date.now()])),
+      selectedInfraId: null,
+    });
+
+    await get().reset();
+    await get().refreshSentiment();
+    await get().refreshFlows();
+    void get().refreshVoices(6);
+    void get().refreshSitingPriority();
+    get().pushToast(
+      "Snapshot restored to live sim — persisted proposal placements unchanged",
+      "good"
+    );
   },
 
   init: async () => {

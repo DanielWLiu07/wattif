@@ -168,6 +168,57 @@ export const INFRA_PRESETS: Record<
   microgrid: { capacityKw: 1500, costCad: 2_400_000, label: "Microgrid Hub" },
 };
 
+const BUILT_IN_KINDS = new Set<InfraKind>(["solar", "wind", "battery", "microgrid"]);
+
+export const isBuiltInInfraKind = (kind: string): kind is InfraKind =>
+  BUILT_IN_KINDS.has(kind as InfraKind);
+
+/** Convert snapshot JSON infra item → placement draft for live sim restore. */
+export function snapshotItemToInfra(item: Record<string, unknown>): Infra | null {
+  const kind = item.kind;
+  if (typeof kind !== "string" || !isBuiltInInfraKind(kind)) return null;
+  const position = item.position;
+  if (!Array.isArray(position) || position.length < 2) return null;
+  const lng = position[0];
+  const lat = position[1];
+  if (typeof lng !== "number" || typeof lat !== "number") return null;
+  const status = item.status;
+  return {
+    id: typeof item.id === "string" ? item.id : `snap-infra-${Date.now()}`,
+    kind,
+    position: [lng, lat],
+    capacityKw:
+      typeof item.capacityKw === "number" ? item.capacityKw : INFRA_PRESETS[kind].capacityKw,
+    costCad: typeof item.costCad === "number" ? item.costCad : INFRA_PRESETS[kind].costCad,
+    modelUrl: typeof item.modelUrl === "string" ? item.modelUrl : MODEL_URL[kind],
+    status: status === "active" || status === "damaged" ? status : "planned",
+    placedBy: item.placedBy === "ai" ? "ai" : "you",
+    zoneId: typeof item.zoneId === "string" ? item.zoneId : undefined,
+  };
+}
+
+/** Parse stored snapshot metrics into SimMetrics fields when present. */
+export function metricsFromSnapshotRecord(
+  raw: Record<string, unknown>
+): Partial<SimMetrics> {
+  const num = (k: keyof SimMetrics) => {
+    const v = raw[k as string];
+    return typeof v === "number" ? v : undefined;
+  };
+  return {
+    tick: num("tick"),
+    year: num("year"),
+    totalDemandKwh: num("totalDemandKwh"),
+    renewableSupplyKwh: num("renewableSupplyKwh"),
+    coveragePct: num("coveragePct"),
+    gridLoadPct: num("gridLoadPct"),
+    emissionsTonnes: num("emissionsTonnes"),
+    costCumulativeCad: num("costCumulativeCad"),
+    equityScore: num("equityScore"),
+    approvalPct: num("approvalPct"),
+  };
+}
+
 // RGB colors per infra kind (used by deck.gl fallback + UI accents)
 export const INFRA_COLOR: Record<InfraKind, [number, number, number]> = {
   solar: [250, 204, 21],
