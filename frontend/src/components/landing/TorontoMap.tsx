@@ -1,10 +1,8 @@
 import { useMemo, useState } from "react";
-import { ArrowRight } from "@phosphor-icons/react";
 import { useStore, getZoneRegion } from "@/store";
 import zonesRaw from "@/data/zonesFixture.json";
 
 // ── SVG map projection ─────────────────────────────────────────────────────
-// Bounds padded slightly beyond the zone data
 const LNG_MIN = -79.66;
 const LNG_MAX = -79.10;
 const LAT_MIN = 43.565;
@@ -20,7 +18,6 @@ function latToY(lat: number) {
   return ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * SVG_H;
 }
 
-/** Convert one polygon ring to SVG path data, sampling every Nth point. */
 function ringToPath(ring: number[][], step = 5): string {
   const pts: string[] = [];
   for (let i = 0; i < ring.length; i += step) {
@@ -32,20 +29,45 @@ function ringToPath(ring: number[][], step = 5): string {
   return pts.join(" ") + " Z";
 }
 
-// ── Region definitions ──────────────────────────────────────────────────────
-// Zone counts derived from getZoneRegion logic applied to zonesFixture.json
-const REGIONS = [
-  { name: "All Toronto",  key: "All",          zones: 140, agents: "8,001"  },
-  { name: "Etobicoke",    key: "Etobicoke",    zones: 30,  agents: "~1,715" },
-  { name: "North York",   key: "North York",   zones: 27,  agents: "~1,543" },
-  { name: "Scarborough",  key: "Scarborough",  zones: 25,  agents: "~1,429" },
-  { name: "West Toronto", key: "West Toronto", zones: 22,  agents: "~1,257" },
-  { name: "East Toronto", key: "East Toronto", zones: 14,  agents: "~800"   },
-  { name: "Downtown",     key: "Downtown",     zones: 12,  agents: "~686"   },
-  { name: "Midtown",      key: "Midtown",      zones: 10,  agents: "~571"   },
+// ── Region cards — canonical names must match RegionSelector exactly ───────
+const REGION_CARDS = [
+  { name: "All Toronto",  desc: "Simulate the entire city map. Recommended for high-end PCs." },
+  { name: "Downtown",     desc: "Central commercial core, high-density residential and business hubs." },
+  { name: "Midtown",      desc: "Upscale residential neighborhoods and mixed-use corridors." },
+  { name: "North York",   desc: "Rapidly growing suburbs, transit hubs, and commercial centers." },
+  { name: "Scarborough",  desc: "Sprawling suburbs with high solar potential and rooftop space." },
+  { name: "Etobicoke",    desc: "Industrial-residential corridors with high wind power potential." },
+  { name: "East Toronto", desc: "High-equity burden communities, green spaces, and beaches." },
+  { name: "West Toronto", desc: "Artistic, creative hubs and transit-oriented corridors." },
 ];
 
-// ── Processed zone data (memoized outside component) ───────────────────────
+// ── Live zone counts from getZoneRegion ────────────────────────────────────
+type RawZone = {
+  id: string;
+  name: string;
+  centroid: [number, number];
+  polygon: { type: string; coordinates: number[][][][] };
+};
+
+const rawZones = zonesRaw as RawZone[];
+const TOTAL_ZONES = rawZones.length;
+const TOTAL_AGENTS = 8001;
+
+const zoneCounts: Record<string, number> = {};
+for (const z of rawZones) {
+  const r = getZoneRegion(z.name, z.centroid);
+  zoneCounts[r] = (zoneCounts[r] ?? 0) + 1;
+}
+
+function getZoneCount(name: string) {
+  return name === "All Toronto" ? TOTAL_ZONES : (zoneCounts[name] ?? 0);
+}
+function getAgentCount(name: string) {
+  if (name === "All Toronto") return TOTAL_AGENTS;
+  return Math.round((getZoneCount(name) / TOTAL_ZONES) * TOTAL_AGENTS);
+}
+
+// ── Processed zone data (for SVG) ─────────────────────────────────────────
 type ZoneGeo = {
   id: string;
   name: string;
@@ -54,20 +76,11 @@ type ZoneGeo = {
   paths: string[];
 };
 
-// Raw type expected from zonesFixture.json
-type RawZone = {
-  id: string;
-  name: string;
-  centroid: [number, number];
-  polygon: { type: string; coordinates: number[][][][] };
-};
-
-const processedZones: ZoneGeo[] = (zonesRaw as RawZone[]).map((z) => ({
+const processedZones: ZoneGeo[] = rawZones.map((z) => ({
   id: z.id,
   name: z.name,
   centroid: z.centroid,
   region: getZoneRegion(z.name, z.centroid),
-  // Only outer ring of each polygon face, sampled
   paths: z.polygon.coordinates.map((poly) => ringToPath(poly[0], 5)),
 }));
 
@@ -77,12 +90,11 @@ export function TorontoMap() {
   const setSelectedRegion = useStore((s) => s.setSelectedRegion);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
 
-  const handleSelect = (key: string) => {
-    setSelectedRegion(key);
+  const handleSelect = (name: string) => {
+    setSelectedRegion(name);
     useStore.setState({ showRegionSelector: false });
   };
 
-  // Group zones by region for SVG coloring
   const zonesByRegion = useMemo(() => {
     const map: Record<string, ZoneGeo[]> = {};
     for (const z of processedZones) {
@@ -92,19 +104,18 @@ export function TorontoMap() {
     return map;
   }, []);
 
-  // For "All Toronto" hover, highlight everything
-  const highlightedRegion = hoveredRegion === "All" ? null : hoveredRegion;
-  const highlightAll = hoveredRegion === "All";
+  const highlightAll = hoveredRegion === "All Toronto";
+  const highlightedRegion = highlightAll ? null : hoveredRegion;
 
   return (
     <div className="fixed inset-0 z-[90] flex bg-background">
-      {/* Left: region list */}
-      <aside className="flex w-72 shrink-0 flex-col border-r border-border bg-background">
+      {/* ── Left: 2-col card grid ─────────────────────────────────────── */}
+      <aside
+        className="flex shrink-0 flex-col border-r border-border bg-background"
+        style={{ width: 360 }}
+      >
         <div className="border-b border-border px-6 py-5">
-          <p
-            className="label"
-            style={{ color: "hsl(var(--brand))" }}
-          >
+          <p className="label" style={{ color: "hsl(var(--brand))" }}>
             Final step
           </p>
           <h2 className="mt-1 font-display text-xl font-bold leading-tight text-foreground">
@@ -115,35 +126,46 @@ export function TorontoMap() {
           </p>
         </div>
 
-        <div className="flex flex-1 flex-col overflow-y-auto">
-          {REGIONS.map(({ name, key, zones, agents }) => {
-            const isHovered = hoveredRegion === key;
-            return (
-              <button
-                key={key}
-                onMouseEnter={() => setHoveredRegion(key)}
-                onMouseLeave={() => setHoveredRegion(null)}
-                onClick={() => handleSelect(key)}
-                className="group flex items-center justify-between gap-3 border-b border-border px-6 py-4 text-left transition-colors duration-150 hover:bg-muted/50"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="font-display text-sm font-semibold text-foreground">
-                    {name}
-                  </div>
-                  <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
-                    {key === "All"
-                      ? `${zones} zones · ${agents} agents`
-                      : `${zones} zones · ${agents} agents`}
-                  </div>
-                </div>
-                <ArrowRight
-                  weight="bold"
-                  className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-all duration-150 group-hover:translate-x-0.5 group-hover:opacity-100"
-                  style={isHovered ? { color: "hsl(var(--brand))", opacity: 1 } : {}}
-                />
-              </button>
-            );
-          })}
+        <div className="flex-1 overflow-y-auto p-3">
+          <div className="grid grid-cols-2 gap-2">
+            {REGION_CARDS.map((card) => {
+              const zones = getZoneCount(card.name);
+              const agents = getAgentCount(card.name);
+              const isHovered = hoveredRegion === card.name;
+
+              return (
+                <button
+                  key={card.name}
+                  onMouseEnter={() => setHoveredRegion(card.name)}
+                  onMouseLeave={() => setHoveredRegion(null)}
+                  onClick={() => handleSelect(card.name)}
+                  className="group flex flex-col gap-1.5 rounded-xl border bg-white p-3 text-left transition-all duration-150 hover:shadow-md"
+                  style={{
+                    borderColor: isHovered
+                      ? "hsl(var(--brand))"
+                      : "hsl(var(--border))",
+                    boxShadow: isHovered
+                      ? "0 4px 16px hsl(var(--brand) / 0.15)"
+                      : undefined,
+                    transform: isHovered ? "translateY(-1px)" : undefined,
+                  }}
+                >
+                  <span
+                    className="font-display text-sm font-semibold leading-tight text-foreground"
+                    style={isHovered ? { color: "hsl(var(--brand-ink, var(--foreground)))" } : {}}
+                  >
+                    {card.name}
+                  </span>
+                  <span className="font-sans text-[10px] leading-snug text-muted-foreground line-clamp-2">
+                    {card.desc}
+                  </span>
+                  <span className="font-mono text-[9px] text-muted-foreground/70 mt-auto pt-1">
+                    {zones} zones · {agents.toLocaleString()} agents
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="border-t border-border px-6 py-4">
@@ -153,20 +175,21 @@ export function TorontoMap() {
         </div>
       </aside>
 
-      {/* Right: Toronto SVG map */}
-      <div className="flex flex-1 items-center justify-center bg-background">
-        <div className="relative" style={{ width: SVG_W, height: SVG_H }}>
+      {/* ── Right: large SVG map ──────────────────────────────────────── */}
+      <div className="flex flex-1 items-center justify-center bg-background p-8">
+        <div className="relative w-full h-full max-w-[900px] max-h-[600px]">
           <svg
             viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-            width={SVG_W}
-            height={SVG_H}
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid meet"
             style={{ display: "block" }}
             aria-label="Toronto neighbourhood map"
           >
             {/* Background */}
-            <rect width={SVG_W} height={SVG_H} fill="#fafafa" />
+            <rect width={SVG_W} height={SVG_H} fill="#fafafa" rx="4" />
 
-            {/* Zone paths — colored by region on hover */}
+            {/* Zone paths — highlighted by hovered region */}
             {processedZones.map((zone) => {
               const isTarget =
                 highlightAll ||
@@ -185,7 +208,7 @@ export function TorontoMap() {
               ));
             })}
 
-            {/* Region centroids as labels */}
+            {/* Region centroid labels */}
             {Object.entries(zonesByRegion).map(([region, zones]) => {
               if (zones.length === 0) return null;
               const avgX =
