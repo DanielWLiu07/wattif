@@ -87,20 +87,11 @@ function RoadProgress({
   const station = stationFromProgress(progress);
 
   // Even-space the dots (thresholds are uneven: 0/.25/.55/.86, which looks
-  // left-shifted) and align the fill to that even spacing so it reads centered.
+  // left-shifted). The fill snaps to the ACTIVE node so the bar always ends on
+  // a dot — never floating halfway between two of them.
   const N = STATION_THRESHOLDS.length;
   const evenPos = (i: number) => (i / (N - 1)) * 100;
-  let fill = 100;
-  for (let i = 0; i < N; i++) {
-    const lo = STATION_THRESHOLDS[i];
-    const hi = STATION_THRESHOLDS[i + 1] ?? 1;
-    if (progress < hi) {
-      const frac = hi > lo ? (progress - lo) / (hi - lo) : 0;
-      fill = ((i + Math.max(0, Math.min(1, frac))) / (N - 1)) * 100;
-      break;
-    }
-  }
-  fill = Math.min(100, fill);
+  const fill = evenPos(station);
 
   return (
     <div className="fixed top-6 left-1/2 z-[85] -translate-x-1/2 flex flex-col items-center gap-2.5">

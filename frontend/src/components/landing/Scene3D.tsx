@@ -809,6 +809,31 @@ function EditScene() {
   );
   const wordmarkRef = useRef<Group | null>(null);
 
+  // Slider-driven transform of the currently selected object (model or wordmark).
+  const [xf, setXf] = useState({ px: 0, py: 0, pz: 0, rx: 0, ry: 0, rz: 0 });
+
+  const selectedGroup = (): Group | null => {
+    if (wordmarkSelected) return wordmarkRef.current;
+    if (selectedUid !== null) return modelRefs.current.get(selectedUid)?.current ?? null;
+    return null;
+  };
+
+  const syncFromGroup = () => {
+    const g = selectedGroup();
+    if (!g) return;
+    setXf({
+      px: +g.position.x.toFixed(2), py: +g.position.y.toFixed(2), pz: +g.position.z.toFixed(2),
+      rx: +g.rotation.x.toFixed(3), ry: +g.rotation.y.toFixed(3), rz: +g.rotation.z.toFixed(3),
+    });
+  };
+
+  // Re-read the gizmo's transform into the sliders whenever selection changes.
+  useEffect(() => {
+    const id = requestAnimationFrame(syncFromGroup);
+    return () => cancelAnimationFrame(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedUid, wordmarkSelected]);
+
   const getOrCreateRef = (uid: number) => {
     if (!modelRefs.current.has(uid)) {
       modelRefs.current.set(uid, createRef<Group | null>());
@@ -862,6 +887,22 @@ function EditScene() {
     setTimeout(() => setSavedToDevice(false), 1800);
   };
 
+  // Slider → write directly to the selected group, persist, keep state in sync.
+  const applyXf = (next: typeof xf) => {
+    const g = selectedGroup();
+    if (!g) return;
+    g.position.set(next.px, next.py, next.pz);
+    g.rotation.set(next.rx, next.ry, next.rz);
+    setXf(next);
+    saveToDevice();
+  };
+
+  // Gizmo drag end → persist AND refresh the sliders to match.
+  const onTransformEnd = () => {
+    saveToDevice();
+    syncFromGroup();
+  };
+
   const copyLayout = () => {
     const layout = collectLayout();
     const json = JSON.stringify(layout, null, 2);
@@ -901,7 +942,7 @@ function EditScene() {
             onSelect={() => selectModel(m.uid)}
             tcMode={tcMode}
             orbitRef={orbitRef}
-            onDragEnd={saveToDevice}
+            onDragEnd={onTransformEnd}
           />
         ))}
       </Suspense>
@@ -912,7 +953,7 @@ function EditScene() {
         onSelect={selectWordmark}
         tcMode={wordmarkMode}
         orbitRef={orbitRef}
-        onDragEnd={saveToDevice}
+        onDragEnd={onTransformEnd}
       />
 
       {/* ── Dev panel ──────────────────────────────────────────────────────── */}
@@ -965,6 +1006,44 @@ function EditScene() {
               })}
             </div>
           </div>
+
+          {/* Precise position / rotation sliders for the selected object */}
+          {(selectedUid !== null || wordmarkSelected) && (
+            <div style={{ marginBottom: 12, borderTop: "1px solid #1e1e1e", paddingTop: 12 }}>
+              {([
+                { group: "Position", rows: [
+                  { key: "px", label: "X", min: -25, max: 25, step: 0.1 },
+                  { key: "py", label: "Y", min: -5,  max: 25, step: 0.1 },
+                  { key: "pz", label: "Z", min: -60, max: 20, step: 0.1 },
+                ] },
+                { group: "Rotation", rows: [
+                  { key: "rx", label: "rX", min: -Math.PI, max: Math.PI, step: 0.01 },
+                  { key: "ry", label: "rY", min: -Math.PI, max: Math.PI, step: 0.01 },
+                  { key: "rz", label: "rZ", min: -Math.PI, max: Math.PI, step: 0.01 },
+                ] },
+              ] as const).map(({ group, rows }) => (
+                <div key={group} style={{ marginBottom: 8 }}>
+                  <div style={{ color: "#777", marginBottom: 4, fontSize: 11 }}>{group}</div>
+                  {rows.map(({ key, label, min, max, step }) => {
+                    const value = xf[key as keyof typeof xf];
+                    return (
+                      <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                        <span style={{ width: 16, color: "#888" }}>{label}</span>
+                        <input
+                          type="range" min={min} max={max} step={step} value={value}
+                          onChange={(e) => applyXf({ ...xf, [key]: parseFloat(e.target.value) })}
+                          style={{ flex: 1, accentColor: "#c8f400", height: 14 }}
+                        />
+                        <span style={{ width: 40, textAlign: "right", color: "#c8f400", fontSize: 11 }}>
+                          {value.toFixed(label.startsWith("r") ? 2 : 1)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Add model */}
           <div style={{ marginBottom: 12, borderTop: "1px solid #1e1e1e", paddingTop: 12 }}>
