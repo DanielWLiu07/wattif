@@ -12,6 +12,7 @@ export function ProjectsTab() {
   const proposals = useStore((s) => s.proposals);
   const selectedProjectId = useStore((s) => s.selectedProjectId);
   const selectedProposalId = useStore((s) => s.selectedProposalId);
+  const proposalInfrastructure = useStore((s) => s.proposalInfrastructure);
   const persistenceMode = useStore((s) => s.persistenceMode);
   const persistenceLoading = useStore((s) => s.persistenceLoading);
   const persistenceError = useStore((s) => s.persistenceError);
@@ -159,6 +160,43 @@ export function ProjectsTab() {
           ))}
         </div>
       </section>
+
+      {selectedProposalId && (
+        <section className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              Persisted placements
+            </div>
+            <Badge variant="secondary" className="text-[10px]">
+              {proposalInfrastructure.length}
+            </Badge>
+          </div>
+          <div className="max-h-28 space-y-1 overflow-y-auto">
+            {proposalInfrastructure.length === 0 ? (
+              <p className="rounded-lg border border-border/60 bg-secondary/20 p-2 text-[11px] text-muted-foreground">
+                No persisted infrastructure yet. New placements will be saved here.
+              </p>
+            ) : (
+              proposalInfrastructure.map((infra) => (
+                <div
+                  key={infra.id}
+                  className="rounded-lg border border-border/70 bg-secondary/20 px-2 py-1.5 text-xs"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="capitalize">{infra.kind}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {infra.capacityKw ?? "?"} kW
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">
+                    {infra.zoneId ?? "No zone recorded"}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

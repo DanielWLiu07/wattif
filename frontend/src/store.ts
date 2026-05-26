@@ -295,6 +295,28 @@ const persistenceModeFor = (
   if (health?.persistenceProvider !== "supabase") return "memory";
   return selectedProposalId ? "supabase-proposal" : "supabase-no-proposal";
 };
+const BUILT_IN_KINDS = new Set<InfraKind>(["solar", "wind", "battery", "microgrid"]);
+const isInfraKind = (kind: string): kind is InfraKind =>
+  BUILT_IN_KINDS.has(kind as InfraKind);
+const persistedToInfra = (row: ProposalInfrastructure): Infra | null => {
+  if (!isInfraKind(row.kind) || !row.position) return null;
+  const meta = row.metadata ?? {};
+  const status = typeof meta.status === "string" ? meta.status : "planned";
+  return {
+    id: typeof meta.clientId === "string" ? meta.clientId : `proposal-infra-${row.id}`,
+    kind: row.kind,
+    position: row.position,
+    capacityKw:
+      typeof row.capacityKw === "number"
+        ? row.capacityKw
+        : INFRA_PRESETS[row.kind].capacityKw,
+    costCad: typeof meta.costCad === "number" ? meta.costCad : INFRA_PRESETS[row.kind].costCad,
+    modelUrl: typeof meta.modelUrl === "string" ? meta.modelUrl : MODEL_URL[row.kind],
+    status: status === "active" || status === "damaged" ? status : "planned",
+    placedBy: meta.placedBy === "ai" ? "ai" : "you",
+    zoneId: row.zoneId ?? undefined,
+  };
+};
 const hashStr = (s: string) => {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
@@ -652,7 +674,17 @@ export const useStore = create<State>((set, get) => ({
     set({ projects, persistenceLoading: false });
     const selectedProjectId = get().selectedProjectId;
     if (selectedProjectId && projects.some((p) => p.id === selectedProjectId)) {
-      void get().selectProject(selectedProjectId);
+      const proposals = await api.listProposals(selectedProjectId);
+      if (proposals) {
+        set({ proposals });
+        const selectedProposalId = get().selectedProposalId;
+        if (
+          selectedProposalId &&
+          proposals.some((proposal) => proposal.id === selectedProposalId)
+        ) {
+          void get().selectProposal(selectedProposalId);
+        }
+      }
     }
   },
 
@@ -724,6 +756,47 @@ export const useStore = create<State>((set, get) => ({
       persistedInfraIds: {},
       persistenceError: null,
     });
+    if (!proposalId || get().backendHealth?.persistenceProvider !== "supabase") return;
+
+    set({ persistenceLoading: true });
+    await get().resetSession();
+    const rows = await api.listProposalInfrastructure(proposalId);
+    if (!rows) {
+      set({
+        persistenceLoading: false,
+        persistenceError: "Could not load proposal infrastructure",
+      });
+      return;
+    }
+
+    const restored: Infra[] = [];
+    const persistedInfraIds: Record<string, string> = {};
+    let restoreFailed = false;
+    for (const row of rows) {
+      const draft = persistedToInfra(row);
+      if (!draft) {
+        restoreFailed = true;
+        continue;
+      }
+      const saved = { ...draft, ...(await api.placeInfra(draft)) };
+      restored.push(saved);
+      persistedInfraIds[saved.id] = row.id;
+    }
+
+    set({
+      proposalInfrastructure: rows,
+      infra: restored,
+      allInfra: restored,
+      persistedInfraIds,
+      persistenceLoading: false,
+      persistenceError: restoreFailed
+        ? "Some persisted placements are listed only because they are not compatible with the current simulator."
+        : null,
+    });
+    await get().reset();
+    await get().refreshSentiment();
+    await get().refreshFlows();
+    void get().refreshSitingPriority();
   },
 
   saveSnapshot: async () => {
@@ -1118,7 +1191,7 @@ export const useStore = create<State>((set, get) => ({
       allInfra: [...s.allInfra, optimistic] 
     }));
     
-    const saved = await api.placeInfra(optimistic);
+    const saved = { ...optimistic, ...(await api.placeInfra(optimistic)) };
     set((s) => ({
       infra: s.infra.map((i) => (i.id === optimistic.id ? saved : i)),
       allInfra: s.allInfra.map((i) => (i.id === optimistic.id ? saved : i)),
