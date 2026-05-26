@@ -6,6 +6,7 @@ import {
   MapPin,
 } from "@phosphor-icons/react";
 import { useStore } from "@/store";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/Logo";
@@ -27,6 +28,8 @@ export function TopBar() {
   const voicesCount = useStore((s) => s.voices.length);
   const focusVoices = useStore((s) => s.selectVoiceFromMap);
   const selectedRegion = useStore((s) => s.selectedRegion);
+  const mainView = useStore((s) => s.mainView);
+  const setMainView = useStore((s) => s.setMainView);
   const openWelcome = () => useStore.setState({ showWelcome: true });
 
   const connection = !loaded ? (
@@ -82,6 +85,27 @@ export function TopBar() {
         <span className="hidden truncate border-l border-border pl-2.5 text-[11px] text-muted-foreground lg:inline">
           Toronto energy-equity simulator
         </span>
+
+        {/* Navbar-level view switch */}
+        <div className="ml-1.5 flex items-center gap-0.5 rounded-lg border border-border bg-muted/50 p-0.5">
+          {([
+            { v: "map", label: "Simulator" },
+            { v: "events", label: "Events" },
+          ] as const).map(({ v, label }) => (
+            <button
+              key={v}
+              onClick={() => setMainView(v)}
+              className={cn(
+                "rounded-md px-2.5 py-1 text-xs font-medium transition-colors duration-150",
+                mainView === v
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* CENTER — live status */}

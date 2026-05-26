@@ -82,6 +82,7 @@ type State = {
 
   selectedRegion: string;
   showRegionSelector: boolean;
+  mainView: "map" | "events"; // navbar-level view switch
   regionCursorMode: boolean;
   hoveredRegion: string | null;
   setSelectedRegion: (region: string) => void;
@@ -247,6 +248,7 @@ type State = {
 
   // onboarding / layout
   dismissWelcome: () => void;
+  setMainView: (v: "map" | "events") => void;
   toggleLeft: () => void;
   toggleRight: () => void;
   toggleLegend: () => void;
@@ -499,6 +501,7 @@ export const useStore = create<State>((set, get) => ({
 
   selectedRegion: "All",
   showRegionSelector: true,
+  mainView: "map",
   regionCursorMode: false,
   hoveredRegion: null,
 
@@ -1561,6 +1564,7 @@ export const useStore = create<State>((set, get) => ({
   // (the window hook below exposes this store for E2E/screenshot tooling)
 
   dismissWelcome: () => set({ showWelcome: false }),
+  setMainView: (v) => set({ mainView: v }),
   toggleLeft: () => set((s) => ({ leftOpen: !s.leftOpen })),
   toggleRight: () => set((s) => ({ rightOpen: !s.rightOpen })),
   toggleLegend: () => set((s) => ({ showLegend: !s.showLegend })),

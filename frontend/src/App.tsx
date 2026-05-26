@@ -10,6 +10,7 @@ import { Timeline } from "@/components/Timeline";
 import { ScenarioBanner } from "@/components/ScenarioBanner";
 import { Welcome } from "@/components/Welcome";
 import { RegionSelector } from "@/components/RegionSelector";
+import { EventsView } from "@/components/EventsView";
 import { DemoCaption } from "@/components/DemoCaption";
 import { OverlayLegend } from "@/components/OverlayLegend";
 import { Toasts } from "@/components/Toasts";
@@ -45,6 +46,7 @@ function App() {
   const setScenarioTargeting = useStore((s) => s.setScenarioTargeting);
   const leftOpen = useStore((s) => s.leftOpen);
   const rightOpen = useStore((s) => s.rightOpen);
+  const mainView = useStore((s) => s.mainView);
   const toggleLeft = useStore((s) => s.toggleLeft);
   const toggleRight = useStore((s) => s.toggleRight);
   const setRegionCursorMode = useStore((s) => s.setRegionCursorMode);
@@ -105,42 +107,50 @@ function App() {
         <div className="pointer-events-none absolute inset-0 flex flex-col">
           <TopBar />
           <ScenarioBanner />
-          <div className="flex flex-1 items-stretch justify-between overflow-hidden">
-            {/* Left dock + collapse tab */}
-            <div className="flex items-stretch">
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  leftOpen ? "w-[340px] opacity-100" : "w-0 opacity-0"
-                }`}
-              >
-                <LeftDock />
-              </div>
-              <div className="flex items-center self-center pl-1">
-                <CollapseTab side="left" open={leftOpen} onClick={toggleLeft} />
-              </div>
+          {mainView === "events" ? (
+            <div className="min-h-0 flex-1 overflow-hidden">
+              <EventsView />
             </div>
+          ) : (
+            <>
+              <div className="flex flex-1 items-stretch justify-between overflow-hidden">
+                {/* Left dock + collapse tab */}
+                <div className="flex items-stretch">
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      leftOpen ? "w-[340px] opacity-100" : "w-0 opacity-0"
+                    }`}
+                  >
+                    <LeftDock />
+                  </div>
+                  <div className="flex items-center self-center pl-1">
+                    <CollapseTab side="left" open={leftOpen} onClick={toggleLeft} />
+                  </div>
+                </div>
 
-            {/* Right dock + collapse tab */}
-            <div className="flex items-stretch">
-              <div className="flex items-center self-center pr-1">
-                <CollapseTab
-                  side="right"
-                  open={rightOpen}
-                  onClick={toggleRight}
-                />
+                {/* Right dock + collapse tab */}
+                <div className="flex items-stretch">
+                  <div className="flex items-center self-center pr-1">
+                    <CollapseTab
+                      side="right"
+                      open={rightOpen}
+                      onClick={toggleRight}
+                    />
+                  </div>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      rightOpen ? "w-[340px] opacity-100" : "w-0 opacity-0"
+                    }`}
+                  >
+                    <RightDock />
+                  </div>
+                </div>
               </div>
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  rightOpen ? "w-[340px] opacity-100" : "w-0 opacity-0"
-                }`}
-              >
-                <RightDock />
+              <div className="pb-4">
+                <Timeline />
               </div>
-            </div>
-          </div>
-          <div className="pb-4">
-            <Timeline />
-          </div>
+            </>
+          )}
         </div>
 
         <ScenarioFlash />
