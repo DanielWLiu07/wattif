@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import {
   Map as MapLibreMap,
   useControl as useMaplibreControl,
@@ -137,6 +137,8 @@ export function MapView() {
   const setRegionCursorMode = useStore((s) => s.setRegionCursorMode);
 
   const [hover, setHover] = useState<Hover>(null);
+  const [districtHoverHtml, setDistrictHoverHtml] = useState<string | null>(null);
+  const [districtPopup, setDistrictPopup] = useState<Hover>(null);
   const [recCard, setRecCard] = useState<{
     rec: Recommendation;
     x: number;
@@ -276,9 +278,76 @@ export function MapView() {
     hoveredRegion,
   ]);
 
+  const buildDistrictPopupHtml = useCallback(
+    (
+      zone: {
+        id?: string;
+        name?: string;
+        burden?: number;
+        approval?: number;
+      } | null | undefined
+    ) => {
+      if (!zone?.name) return null;
+
+      const zoneId = zone.id;
+      const ap = zone.approval ?? (zoneId ? sentiment?.perZone[zoneId] : undefined);
+      const env = zoneId ? environment[zoneId] : undefined;
+      const heat = zoneId ? heatVuln[zoneId] : undefined;
+      const flood = zoneId ? floodRisk[zoneId] : undefined;
+      const district = zoneId ? districtEnergy[zoneId] : undefined;
+      const sp = zoneId ? sitingPriority.find((s) => s.zoneId === zoneId) : undefined;
+
+      return `<b>${zone.name}</b>${
+        zone.burden != null
+          ? `<br/>Energy burden: ${(zone.burden * 100).toFixed(0)}%`
+          : ""
+      }${
+        ap != null
+          ? `<br/>Approval: ${((ap as number) * 100).toFixed(0)}% <span style="color:#7dd3fc;letter-spacing:1px">${sparkline(
+              zoneId ? approvalHistory[zoneId] : undefined
+            )}</span>`
+          : ""
+      }${
+        env?.greenScore != null
+          ? `<br/>Green score: ${(env.greenScore * 100).toFixed(0)}%`
+          : ""
+      }${
+        env?.pollutionBurden != null
+          ? `<br/>Pollution burden: ${(env.pollutionBurden * 100).toFixed(0)}%`
+          : ""
+      }${
+        heat != null
+          ? `<br/>Heat vulnerability: ${(heat * 100).toFixed(0)}%`
+          : ""
+      }${
+        flood != null
+          ? `<br/>Flood risk: ${(flood * 100).toFixed(0)}%`
+          : ""
+      }${
+        district?.servedFraction > 0.05
+          ? `<br/><span style="color:#2dd4bf">District energy: ${(district.servedFraction * 100).toFixed(0)}% · ${district.systemName}</span>`
+          : ""
+      }${
+        sp
+          ? `<br/><span style="color:#e879f9">Build priority: ${(sp.score * 100).toFixed(0)}/100</span>`
+          : ""
+      }`;
+    },
+    [
+      approvalHistory,
+      districtEnergy,
+      environment,
+      floodRisk,
+      heatVuln,
+      sentiment,
+      sitingPriority,
+    ]
+  );
+
   const handleClick = useCallback(
     (info: PickingInfo) => {
       const obj: any = info.object;
+      setDistrictPopup(null);
       
       // Interactive region selection cursor: click a zone to simulate just its region.
       if (regionCursorMode) {
@@ -318,36 +387,24 @@ export function MapView() {
         setRecCard((c) => (c?.pinned ? null : c)); // click empty → unpin card
       }
     },
-    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion]
+    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion, zones]
   );
 
   const handleHover = useCallback((info: PickingInfo) => {
     const o: any = info.object;
 
-    // Interactive region selection cursor: highlight hovered region and show popup stats
+    // Interactive region selection cursor: highlight hovered region without covering the map.
     if (regionCursorMode) {
       const zoneName = o?.properties?.name;
       if (zoneName) {
         const zoneObj = zones.find(z => z.id === o?.properties?.id || z.name === zoneName);
         const region = getZoneRegion(zoneName, zoneObj?.centroid);
         setHoveredRegion(region);
-        
-        const filtered = zones.filter(z => getZoneRegion(z.name, z.centroid) === region);
-        const pop = filtered.reduce((sum, z) => sum + z.demographics.population, 0);
-        
-        const html = `<div class="p-1">
-          <div class="font-bold text-emerald-400 text-sm mb-0.5">Select ${region}</div>
-          <div class="text-[11px] text-muted-foreground mb-1.5">Click to simulate this region only</div>
-          <div class="text-[11px] text-foreground/90 leading-tight">
-            <b>${filtered.length}</b> neighborhoods<br/>
-            <b>${pop.toLocaleString()}</b> residents
-          </div>
-        </div>`;
-        setHover({ x: info.x ?? 0, y: info.y ?? 0, html });
       } else {
         setHoveredRegion(null);
-        setHover(null);
       }
+      setDistrictHoverHtml(null);
+      setHover(null);
       return;
     }
 
@@ -362,67 +419,72 @@ export function MapView() {
       const x = info.x ?? 0;
       const y = info.y ?? 0;
       setRecCard((c) => (c?.pinned ? c : { rec, x, y, pinned: false }));
+      setDistrictHoverHtml(null);
       setHover(null);
       return;
     }
     setRecCard((c) => (c?.pinned ? c : null)); // left a rec → drop unpinned card
     if (!o || info.x == null) {
+      setDistrictHoverHtml(null);
       setHover(null);
       return;
     }
     let html = "";
     if (o.kind && o.capacityKw) {
+      const zone = o.zoneId ? zones.find((z) => z.id === o.zoneId) : undefined;
+      setDistrictHoverHtml(
+        buildDistrictPopupHtml(
+          zone
+            ? {
+                id: zone.id,
+                name: zone.name,
+                burden: zone.demographics.energyBurdenIndex,
+              }
+            : null
+        )
+      );
       html = `<b>${o.kind.toUpperCase()}</b> · ${o.capacityKw} kW<br/>${o.status}${
         o.placedBy ? ` · placed by ${o.placedBy}` : ""
       }`;
     } else if (o.name && o.position && o.kind && !o.capacityKw && !o.rationale) {
+      setDistrictHoverHtml(null);
       // facility or existing-infra marker
       html = `<b>${o.name}</b><br/>${String(o.kind).replace(/_/g, " ")}`;
     } else if (o.kind && o.rationale) {
+      setDistrictHoverHtml(null);
       html = `<b>Recommend ${o.kind}</b><br/>${o.rationale}`;
     } else if (o.properties?.name) {
-      const ap = o.properties.approval;
-      const env = o.properties.id ? environment[o.properties.id] : undefined;
-      html = `<b>${o.properties.name}</b>${
-        o.properties.burden != null
-          ? `<br/>Energy burden: ${(o.properties.burden * 100).toFixed(0)}%`
-          : ""
-      }${
-        ap != null
-          ? `<br/>Approval: ${((ap as number) * 100).toFixed(0)}% <span style="color:#7dd3fc;letter-spacing:1px">${sparkline(
-              approvalHistory[o.properties.id]
-            )}</span>`
-          : ""
-      }${
-        env?.greenScore != null
-          ? `<br/>Green score: ${(env.greenScore * 100).toFixed(0)}%`
-          : ""
-      }${
-        env?.pollutionBurden != null
-          ? `<br/>Pollution burden: ${(env.pollutionBurden * 100).toFixed(0)}%`
-          : ""
-      }${
-        heatVuln[o.properties.id] != null
-          ? `<br/>Heat vulnerability: ${(heatVuln[o.properties.id] * 100).toFixed(0)}%`
-          : ""
-      }${
-        floodRisk[o.properties.id] != null
-          ? `<br/>Flood risk: ${(floodRisk[o.properties.id] * 100).toFixed(0)}%`
-          : ""
-      }${
-        districtEnergy[o.properties.id]?.servedFraction > 0.05
-          ? `<br/><span style="color:#2dd4bf">District energy: ${(districtEnergy[o.properties.id].servedFraction * 100).toFixed(0)}% · ${districtEnergy[o.properties.id].systemName}</span>`
-          : ""
-      }${(() => {
-        const sp = sitingPriority.find((s) => s.zoneId === o.properties.id);
-        return sp
-          ? `<br/><span style="color:#e879f9">Build priority: ${(sp.score * 100).toFixed(0)}/100</span>`
-          : "";
-      })()}`;
+      setDistrictHoverHtml(buildDistrictPopupHtml(o.properties));
+      setHover(null);
+      return;
+    } else {
+      setDistrictHoverHtml(null);
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones]);
+  }, [buildDistrictPopupHtml, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones]);
+
+  const handleContextMenu = useCallback(
+    (event: MouseEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      if (!districtHoverHtml) return;
+      setDistrictPopup({
+        x: event.clientX,
+        y: event.clientY,
+        html: districtHoverHtml,
+      });
+      setHover(null);
+    },
+    [districtHoverHtml]
+  );
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setDistrictPopup(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;
@@ -512,7 +574,7 @@ export function MapView() {
   };
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0" onContextMenu={handleContextMenu}>
       {USE_MAPBOX ? (
         <MapboxMap
           ref={mapRef as any}
@@ -553,6 +615,17 @@ export function MapView() {
           className="pointer-events-none fixed z-50 max-w-[300px] whitespace-normal break-words rounded-md border border-border bg-popover/95 px-3 py-2 text-xs leading-relaxed text-popover-foreground shadow-xl"
           style={{ left: hover.x + 14, top: hover.y + 14 }}
           dangerouslySetInnerHTML={{ __html: hover.html }}
+        />
+      )}
+
+      {districtPopup && (
+        <div
+          className="pointer-events-auto fixed z-50 max-w-[300px] whitespace-normal break-words rounded-md border border-border bg-popover/95 px-3 py-2 text-xs leading-relaxed text-popover-foreground shadow-xl"
+          style={{
+            left: Math.min(districtPopup.x + 14, window.innerWidth - 316),
+            top: Math.min(districtPopup.y + 14, window.innerHeight - 180),
+          }}
+          dangerouslySetInnerHTML={{ __html: districtPopup.html }}
         />
       )}
 
