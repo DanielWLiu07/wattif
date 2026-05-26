@@ -13,6 +13,7 @@ export function ProjectsTab() {
   const selectedProjectId = useStore((s) => s.selectedProjectId);
   const selectedProposalId = useStore((s) => s.selectedProposalId);
   const proposalInfrastructure = useStore((s) => s.proposalInfrastructure);
+  const latestSnapshot = useStore((s) => s.latestSnapshot);
   const persistenceMode = useStore((s) => s.persistenceMode);
   const persistenceLoading = useStore((s) => s.persistenceLoading);
   const persistenceError = useStore((s) => s.persistenceError);
@@ -20,6 +21,7 @@ export function ProjectsTab() {
   const selectProject = useStore((s) => s.selectProject);
   const createProposal = useStore((s) => s.createProposal);
   const selectProposal = useStore((s) => s.selectProposal);
+  const saveSnapshot = useStore((s) => s.saveSnapshot);
 
   const [projectName, setProjectName] = useState("");
   const [proposalName, setProposalName] = useState("");
@@ -163,6 +165,31 @@ export function ProjectsTab() {
 
       {selectedProposalId && (
         <section className="space-y-2">
+          <div className="rounded-xl border border-border/60 bg-secondary/20 p-2.5">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div className="text-xs font-medium">Simulation snapshot</div>
+              <Button
+                size="sm"
+                className="h-7"
+                disabled={!supabaseActive || !selectedProposalId}
+                onClick={() => void saveSnapshot()}
+              >
+                <Save className="h-3.5 w-3.5" />
+                Save
+              </Button>
+            </div>
+            {latestSnapshot ? (
+              <p className="text-[11px] text-muted-foreground">
+                Latest saved tick {latestSnapshot.tick}
+                {latestSnapshot.createdAt ? ` at ${latestSnapshot.createdAt}` : ""}
+              </p>
+            ) : (
+              <p className="text-[11px] text-muted-foreground">
+                No snapshot saved yet for this proposal.
+              </p>
+            )}
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
               Persisted placements

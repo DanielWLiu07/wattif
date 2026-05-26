@@ -782,11 +782,13 @@ export const useStore = create<State>((set, get) => ({
       restored.push(saved);
       persistedInfraIds[saved.id] = row.id;
     }
+    const latestSnapshot = await api.getLatestSnapshot(proposalId);
 
     set({
       proposalInfrastructure: rows,
       infra: restored,
       allInfra: restored,
+      latestSnapshot,
       persistedInfraIds,
       persistenceLoading: false,
       persistenceError: restoreFailed
