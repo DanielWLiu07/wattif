@@ -7,11 +7,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Repo layout: backend/app/config.py -> backend/ -> repo root
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT = BACKEND_DIR.parent
+
+# Always load backend/.env regardless of process cwd (uvicorn may start from repo root).
+load_dotenv(BACKEND_DIR / ".env")
 DATA_PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 
 # --- LLM provider (reasoning-agent layer) -------------------------------
@@ -22,10 +23,19 @@ DATA_PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 ANTHROPIC_API_KEY: str | None = os.getenv("ANTHROPIC_API_KEY")
 CLAUDE_MODEL: str = os.getenv("WATTIF_CLAUDE_MODEL", "claude-opus-4-7")
 
-# (b) OpenAI-compatible gateway (e.g. "feather" multi-model key)
-FEATHER_API_KEY: str | None = os.getenv("FEATHER_API_KEY")
-FEATHER_BASE_URL: str | None = os.getenv("FEATHER_BASE_URL")
-FEATHER_MODEL: str = os.getenv("FEATHER_MODEL", "gpt-4o-mini")
+# (b) OpenAI-compatible gateway (e.g. Featherless / OpenAI-compatible key)
+# Accept FEATHERLESS_* aliases (common in .env files); FEATHER_* is canonical.
+FEATHER_API_KEY: str | None = os.getenv("FEATHER_API_KEY") or os.getenv(
+    "FEATHERLESS_API_KEY"
+)
+FEATHER_BASE_URL: str | None = os.getenv("FEATHER_BASE_URL") or os.getenv(
+    "FEATHERLESS_BASE_URL"
+)
+FEATHER_MODEL: str = (
+    os.getenv("FEATHER_MODEL")
+    or os.getenv("FEATHERLESS_MODEL")
+    or "gpt-4o-mini"
+)
 
 # (c) Scripted "demo" provider — deterministic, NO network. Default ON when no real key so
 # the full agentic experience (planner tool-calling loop, auto+step) works end-to-end with no

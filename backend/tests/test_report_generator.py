@@ -10,8 +10,10 @@ from app.main import app
 from app.report_generator import (
     build_report_sections,
     collect_report_data,
+    fetch_operator_recommendation,
     generate_proposal_report,
     markdown_to_html,
+    proposal_has_operator_recommendation,
     sections_to_markdown,
 )
 from fastapi.testclient import TestClient
@@ -244,3 +246,38 @@ def test_collect_report_data_monkeypatched(monkeypatch):
     assert report["hasOperatorRecommendation"] is True
     assert "ev_charger" in report["markdown"]
     assert len(report["sections"]) == 10
+
+
+def test_fetch_operator_recommendation_from_planner_runs(monkeypatch):
+    sample = _sample_data(with_recommendation=True)
+    monkeypatch.setattr(
+        "app.report_generator.planner_runs.list_runs",
+        lambda **kw: [
+            {
+                "mode": "concern_recommendation",
+                "output": {"recommendation": sample["recommendation"]},
+            }
+        ],
+    )
+    rec = fetch_operator_recommendation("prop-1")
+    assert rec is not None
+    assert rec["summary"]
+    assert proposal_has_operator_recommendation("prop-1") is True
+
+
+def test_operator_recommendation_status_503_when_supabase_disabled(monkeypatch):
+    _disable_supabase(monkeypatch)
+    client = TestClient(app)
+    res = client.get("/api/proposals/prop-1/operator-recommendation-status")
+    assert res.status_code == 503
+
+
+def test_operator_recommendation_status_endpoint(monkeypatch):
+    monkeypatch.setattr(
+        "app.routes.persistence.proposal_has_operator_recommendation",
+        lambda _pid: True,
+    )
+    client = TestClient(app)
+    res = client.get("/api/proposals/prop-1/operator-recommendation-status")
+    assert res.status_code == 200
+    assert res.json()["hasOperatorRecommendation"] is True

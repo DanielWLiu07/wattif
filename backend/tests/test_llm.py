@@ -47,6 +47,31 @@ def test_provider_selection_feather_when_only_feather(monkeypatch):
     monkeypatch.setattr(config, "FEATHER_API_KEY", "feather-test")
     monkeypatch.setattr(config, "FEATHER_BASE_URL", "https://gateway.example/v1")
     assert config.llm_provider() == "feather"
+    assert config.real_llm_provider() == "feather"
+
+
+def test_provider_selection_featherless_env_aliases(monkeypatch):
+    """FEATHERLESS_* names (common in .env) resolve to the feather provider."""
+    monkeypatch.delenv("FEATHER_API_KEY", raising=False)
+    monkeypatch.delenv("FEATHER_BASE_URL", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setenv("FEATHERLESS_API_KEY", "rc_test_key")
+    monkeypatch.setenv("FEATHERLESS_BASE_URL", "https://api.featherless.ai/v1")
+    monkeypatch.setenv("FEATHERLESS_MODEL", "google/gemma-test")
+
+    import app.config as config
+
+    importlib.reload(config)
+    assert config.FEATHER_API_KEY == "rc_test_key"
+    assert config.FEATHER_BASE_URL == "https://api.featherless.ai/v1"
+    assert config.FEATHER_MODEL == "google/gemma-test"
+    assert config.llm_provider() == "feather"
+    assert config.real_llm_provider() == "feather"
+    # Restore module defaults for later tests (reload without alias env).
+    monkeypatch.delenv("FEATHERLESS_API_KEY", raising=False)
+    monkeypatch.delenv("FEATHERLESS_BASE_URL", raising=False)
+    monkeypatch.delenv("FEATHERLESS_MODEL", raising=False)
+    importlib.reload(config)
 
 
 def test_demo_provider_is_default_without_key(monkeypatch):

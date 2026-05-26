@@ -270,6 +270,22 @@ def _next_steps_section(
     return [f"- {s}" for s in steps]
 
 
+def fetch_operator_recommendation(proposal_id: str) -> dict[str, Any] | None:
+    """Latest persisted concern-recommendation from planner_runs, if any."""
+    runs = planner_runs.list_runs(proposal_id=proposal_id, limit=20)
+    for run in runs:
+        if run.get("mode") == "concern_recommendation":
+            output = run.get("output") or {}
+            rec = output.get("recommendation")
+            if isinstance(rec, dict) and rec.get("summary"):
+                return rec
+    return None
+
+
+def proposal_has_operator_recommendation(proposal_id: str) -> bool:
+    return fetch_operator_recommendation(proposal_id) is not None
+
+
 def collect_report_data(proposal_id: str) -> dict[str, Any]:
     """Fetch all persisted data needed for a proposal report."""
     proposal = proposals.get_proposal(proposal_id)
@@ -293,15 +309,7 @@ def collect_report_data(proposal_id: str) -> dict[str, Any]:
     )
     profiles = agents_repo.list_profiles(project_id=project_id, proposal_id=proposal_id)
 
-    recommendation: dict[str, Any] | None = None
-    runs = planner_runs.list_runs(proposal_id=proposal_id, limit=20)
-    for run in runs:
-        if run.get("mode") == "concern_recommendation":
-            output = run.get("output") or {}
-            rec = output.get("recommendation")
-            if isinstance(rec, dict) and rec.get("summary"):
-                recommendation = rec
-                break
+    recommendation = fetch_operator_recommendation(proposal_id)
 
     return {
         "project": project,
