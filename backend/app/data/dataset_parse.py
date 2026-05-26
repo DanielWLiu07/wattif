@@ -69,6 +69,7 @@ def _parse_csv(text: str) -> dict[str, Any]:
         "feature_count": None,
         "columns": columns,
         "preview": preview,
+        "rows": rows,
         "metadata": {"geometryTypes": []},
     }
 
@@ -86,6 +87,7 @@ def _parse_json_obj(obj: Any) -> dict[str, Any]:
                 "feature_count": None,
                 "columns": [],
                 "preview": [],
+                "rows": [],
                 "metadata": {"root": "array"},
             }
         if all(isinstance(x, dict) for x in obj):
@@ -100,6 +102,7 @@ def _parse_json_obj(obj: Any) -> dict[str, Any]:
                 "feature_count": None,
                 "columns": columns,
                 "preview": obj[:MAX_PREVIEW_ROWS],
+                "rows": obj,
                 "metadata": {"root": "array"},
             }
         raise DatasetParseError("JSON array must contain objects.")
@@ -111,6 +114,7 @@ def _parse_json_obj(obj: Any) -> dict[str, Any]:
             "feature_count": None,
             "columns": columns,
             "preview": [obj],
+            "rows": [obj],
             "metadata": {"root": "object"},
         }
     raise DatasetParseError("JSON must be an object, FeatureCollection, or array of objects.")
@@ -125,6 +129,7 @@ def _parse_geojson(obj: dict) -> dict[str, Any]:
     geom_types: set[str] = set()
     prop_keys: set[str] = set()
     preview: list[dict[str, Any]] = []
+    rows: list[dict[str, Any]] = []
     for i, feat in enumerate(features):
         if not isinstance(feat, dict):
             continue
@@ -135,6 +140,17 @@ def _parse_geojson(obj: dict) -> dict[str, Any]:
         props = feat.get("properties") if isinstance(feat.get("properties"), dict) else {}
         for k in summarize_properties(props, max_keys=MAX_COLUMNS_LISTED):
             prop_keys.add(k)
+        row: dict[str, Any] = {**props, "_source_row_index": i, "_geometry_type": gtype}
+        coords = geom.get("coordinates")
+        if gtype == "Point" and isinstance(coords, (list, tuple)) and len(coords) >= 2:
+            row["_lng"] = coords[0]
+            row["_lat"] = coords[1]
+        elif gtype == "MultiPoint" and isinstance(coords, list) and coords:
+            pt = coords[0]
+            if isinstance(pt, (list, tuple)) and len(pt) >= 2:
+                row["_lng"] = pt[0]
+                row["_lat"] = pt[1]
+        rows.append(row)
         if i < MAX_PREVIEW_FEATURES:
             preview.append(
                 {
@@ -145,10 +161,11 @@ def _parse_geojson(obj: dict) -> dict[str, Any]:
     columns = sorted(prop_keys)[:MAX_COLUMNS_LISTED]
     return {
         "file_type": "geojson",
-        "row_count": None,
+        "row_count": len(rows),
         "feature_count": len(features),
         "columns": columns,
         "preview": preview,
+        "rows": rows,
         "metadata": {
             "geometryTypes": sorted(geom_types),
             "featureCount": len(features),
@@ -200,6 +217,7 @@ def parse_upload(
         "feature_count": parsed.get("feature_count"),
         "columns": parsed.get("columns") or [],
         "preview": parsed.get("preview") or [],
+        "rows": parsed.get("rows") or [],
         "metadata": {
             **(parsed.get("metadata") or {}),
             "detectedType": detected,

@@ -6,9 +6,11 @@ import logging
 
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
 
+from ..data.infra_extract import extract_infrastructure_assets
 from ..data.dataset_parse import DatasetParseError, parse_upload
 from ..dataset_context import fetch_dataset_summaries
 from ..db.repositories import datasets as datasets_repo
+from ..db.repositories import uploaded_infrastructure as uploaded_infra_repo
 from ..db.repositories.base import PersistenceDisabledError
 from ..persistence_models import (
     PersistenceUnavailableResponse,
@@ -30,13 +32,15 @@ def _unavailable() -> HTTPException:
     )
 
 
-def _row_to_dataset(row: dict) -> UploadedDataset:
+def _row_to_dataset(row: dict, extraction: dict | None = None) -> UploadedDataset:
     columns = row.get("columns") or []
     if not isinstance(columns, list):
         columns = []
     preview = row.get("preview") or []
     if not isinstance(preview, list):
         preview = []
+    meta = row.get("metadata") or {}
+    ext = extraction or meta.get("infraExtraction") or {}
     return UploadedDataset(
         id=row["id"],
         project_id=row.get("project_id"),
@@ -48,10 +52,17 @@ def _row_to_dataset(row: dict) -> UploadedDataset:
         feature_count=row.get("feature_count"),
         columns=[str(c) for c in columns],
         preview=preview,
-        metadata=row.get("metadata") or {},
+        metadata=meta,
         created_at=row.get("created_at"),
         updated_at=row.get("updated_at"),
         uploaded_at=row.get("uploaded_at") or row.get("created_at"),
+        extracted_existing_infrastructure_count=int(
+            ext.get("extracted_existing_infrastructure_count", 0)
+        ),
+        invalid_existing_infrastructure_rows=int(
+            ext.get("invalid_existing_infrastructure_rows", 0)
+        ),
+        detected_existing_infrastructure_kind=ext.get("detected_existing_infrastructure_kind"),
     )
 
 
@@ -96,6 +107,14 @@ async def upload_dataset(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     try:
+        assets, extraction = extract_infrastructure_assets(
+            rows=parsed.get("rows") or [],
+            dataset_type=parsed["dataset_type"],
+        )
+        meta = {
+            **(parsed.get("metadata") or {}),
+            "infraExtraction": extraction,
+        }
         row = datasets_repo.create_dataset(
             name=parsed["name"],
             dataset_type=parsed["dataset_type"],
@@ -106,9 +125,16 @@ async def upload_dataset(
             feature_count=parsed.get("feature_count"),
             columns=parsed.get("columns"),
             preview=parsed.get("preview"),
-            metadata=parsed.get("metadata"),
+            metadata=meta,
         )
-        return _row_to_dataset(row)
+        if assets:
+            uploaded_infra_repo.create_assets_batch(
+                assets,
+                project_id=project_id,
+                proposal_id=proposal_id,
+                dataset_id=row["id"],
+            )
+        return _row_to_dataset(row, extraction=extraction)
     except PersistenceDisabledError:
         raise _unavailable() from None
     except Exception as exc:
