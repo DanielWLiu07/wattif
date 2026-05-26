@@ -245,7 +245,10 @@ def place_infra(payload: InfraCreate) -> dict:
     neutralCount} reflecting local support/oppose toward THIS specific installation's kind.
     """
     world = get_world()
-    infra = world.place_infra(payload)
+    try:
+        infra = world.place_infra(payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return {
         **infra.model_dump(by_alias=True),
         **world.proposal_approval_for_infra(infra),

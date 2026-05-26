@@ -253,8 +253,9 @@ def make_solar_array():
     parts = []
     frame_mat = pbr("#4a4f57", metallic=0.7, rough=0.45, name="frame")
     leg_mat = pbr("#3a3e45", metallic=0.6, rough=0.5, name="leg")
-    cell_mat = pbr("#15366e", metallic=0.1, rough=0.25, name="pv_cell")
-    glass_mat = pbr("#0c2247", metallic=0.0, rough=0.15, name="pv_glass")
+    cell_mat = pbr("#102a63", metallic=0.85, rough=0.15, name="pv_cell") # High-grade polycrystalline cells
+    glass_mat = pbr("#0b1a30", metallic=0.3, rough=0.05, name="pv_glass")
+    concrete_mat = pbr("#8a8d94", metallic=0.0, rough=0.95, name="concrete")
 
     tilt = np.radians(28.0)
     panel_w, panel_h = 9.0, 4.6      # overall glazed area (X = width, Y = height)
@@ -298,10 +299,23 @@ def make_solar_array():
     front_y = pivot_y - drop
     back_y = pivot_y + drop
     for sx in (-half_w, half_w):
+        # Legs
         parts.append(box([0.3, front_y, 0.3], leg_mat,
                          translate=(sx, front_y / 2, front_z)))
         parts.append(box([0.3, back_y, 0.3], leg_mat,
                          translate=(sx, back_y / 2, -front_z)))
+        # Diagonal trusses for truss-work detail
+        parts.append(cyl(0.08, front_y * 1.3, leg_mat,
+                         translate=(sx, front_y / 2, front_z * 0.5), axis="y"))
+        # Concrete base foundations
+        parts.append(cyl(0.45, 0.3, concrete_mat,
+                         translate=(sx, 0.15, front_z), axis="y"))
+        parts.append(cyl(0.45, 0.3, concrete_mat,
+                         translate=(sx, 0.15, -front_z), axis="y"))
+
+    # Central rotating drive shaft along X-axis
+    parts.append(cyl(0.18, panel_w + 0.4, frame_mat, translate=(0, pivot_y, 0), axis="x"))
+
     # cross beams along ground
     parts.append(box([panel_w + 0.6, 0.25, 0.25], leg_mat,
                      translate=(0, 0.12, front_z)))
@@ -323,6 +337,8 @@ def make_battery():
     metal = pbr("#c3c7cd", metallic=0.85, rough=0.35, name="vent")
     door = pbr("#3c8a63", metallic=0.3, rough=0.5, name="door")
     accent = pbr("#d7a13a", metallic=0.6, rough=0.4, name="terminal")
+    led_glow = pbr("#0df038", metallic=0.0, rough=0.1, alpha=0.95, name="led")
+    chrome = pbr("#e2e8f0", metallic=0.95, rough=0.1, name="chrome")
 
     L, H, W = 8.0, 5.0, 3.0
     # base pad
@@ -352,6 +368,33 @@ def make_battery():
     for dz in (-0.35, 0.35):
         parts.append((box([0.2, 0.9, 0.1], accent,
                           translate=(xf + 0.08, y0 + H / 2, dz)), "handle"))
+
+    # Glowing green status screen box
+    parts.append((box([0.1, 0.6, 0.8], led_glow, translate=(xf + 0.04, y0 + H - 1.2, 0.0)), "led_status"))
+
+    # External chrome busbar pipeline conduits
+    parts.append((cyl(0.12, 3.5, chrome, translate=(0.0, y0 + H + 0.35, W / 2 + 0.25), axis="x"), "conduit_pipe"))
+
+    # Two circular cooling fans with procedural angled blades on the -X end
+    fan_housing = pbr("#1f242e", metallic=0.8, rough=0.2, name="fan_housing")
+    fan_blade = pbr("#8a8f96", metallic=0.9, rough=0.3, name="fan_blade")
+    for fz in (-0.75, 0.75):
+        # Outer ring
+        parts.append((cyl(0.7, 0.12, fan_housing, translate=(-xf - 0.05, y0 + H / 2, fz), axis="x", sections=16), "fan_ring"))
+        # Hub
+        parts.append((cyl(0.18, 0.16, accent, translate=(-xf - 0.08, y0 + H / 2, fz), axis="x", sections=12), "fan_hub"))
+        # Blades
+        for b_idx in range(6):
+            ang = b_idx * np.pi / 3
+            tf = concatenate_matrices(
+                translation_matrix([-xf - 0.06, y0 + H / 2, fz]),
+                rotation_matrix(ang, [1, 0, 0]),
+                rotation_matrix(np.radians(25), [0, 1, 0]),
+            )
+            blade_mesh = trimesh.creation.box(extents=[0.05, 0.1, 0.5])
+            blade_mesh.apply_transform(tf)
+            parts.append((finish(blade_mesh, fan_blade), "fan_blade"))
+
     # louvered vent on the -X end
     for j in range(5):
         vy = y0 + 1.3 + j * 0.55
@@ -393,12 +436,27 @@ def make_microgrid_hub():
                       "window"))
     parts.append((box([1.6, 3.0, 0.15], door_mat, translate=(0, 1.5, fz)), "door"))
 
+    # support concrete pillars out front for entryway shelter
+    parts.append((cyl(0.22, bh, wall2, translate=(-4.5, bh / 2, fz + 0.6), axis="y"), "entry_pillar_left"))
+    parts.append((cyl(0.22, bh, wall2, translate=(4.5, bh / 2, fz + 0.6), axis="y"), "entry_pillar_right"))
+
+    # Tilted mini solar panel array on the main roof
+    mini_panel = pbr("#102a63", metallic=0.85, rough=0.15, name="roof_cells")
+    mini_frame = pbr("#2a2d34", metallic=0.6, rough=0.4, name="roof_frame")
+    pv_rot = rotation_matrix(np.radians(28.0), [1, 0, 0])
+    parts.append((box([3.0, 0.1, 1.6], mini_frame, translate=(-2.0, bh + 1.2, 1.5), transform=pv_rot), "roof_pv"))
+    parts.append((box([2.8, 0.04, 1.4], mini_panel, translate=(-2.0, bh + 1.26, 1.5), transform=pv_rot), "roof_pv_cells"))
+
     # annex / smaller building
     parts.append((box([5.0, 4.0, 5.0], wall2, translate=(7.0, 2.0, 1.0)),
                   "annex_wall"))
     annex_roof = _gable_roof(5.4, 5.4, 1.6)
     annex_roof.apply_translation([7.0, 4.0, 1.0])
     parts.append((finish(annex_roof, roof), "annex_roof"))
+
+    # HVAC compressor unit on the flat ground / annex flat parts
+    parts.append((box([1.4, 1.2, 1.2], cab, translate=(7.0, 4.6, 1.0)), "hvac_compressor"))
+    parts.append((cyl(0.45, 0.1, pipe, translate=(7.0, 5.25, 1.0), axis="y"), "hvac_fan"))
 
     # equipment cabinets out front (-Z)
     for cx in (-6.0, -3.8, -1.6):
@@ -424,11 +482,28 @@ def make_ev_charger():
     canopy = pbr("#6366f1", metallic=0.35, rough=0.55, name="canopy")
     accent = pbr("#22d3ee", metallic=0.7, rough=0.35, name="plug")
     sign = pbr("#f8fafc", metallic=0.1, rough=0.6, name="sign")
+    cable_mat = pbr("#1e293b", metallic=0.0, rough=0.85, name="cable")
+    screen_glow = pbr("#06b6d4", metallic=0.0, rough=0.1, alpha=0.9, name="screen")
+    green_paint = pbr("#10b981", metallic=0.0, rough=0.4, name="green_paint")
 
+    # Curbside charging base pad
     parts.append((box([3.2, 0.15, 2.4], pad, translate=(0, 0.075, 0)), "pad"))
+
+    # Neon green parking slot outlines painted on ground
+    parts.append((box([0.08, 0.02, 2.2], green_paint, translate=(-1.5, 0.16, 0.0)), "parking_green_left"))
+    parts.append((box([0.08, 0.02, 2.2], green_paint, translate=(1.5, 0.16, 0.0)), "parking_green_right"))
+    parts.append((box([3.0, 0.02, 0.08], pbr("#ffffff", metallic=0.0, rough=0.6), translate=(0.0, 0.16, 1.1)), "parking_white_divider"))
+
     for x in (-1.0, 1.0):
+        # Charger posts
         parts.append((box([0.35, 2.2, 0.35], post, translate=(x, 1.1, 0)), "post"))
+        # Physical plug heads
         parts.append((box([0.5, 0.9, 0.25], accent, translate=(x, 1.0, 0.55)), "plug"))
+        # Integrated glowing display screen kiosks
+        parts.append((box([0.22, 0.45, 0.05], screen_glow, translate=(x, 1.5, 0.19)), "display_screen"))
+        # Dual looped cables connecting posts to connector heads
+        parts.append((box([0.1, 1.2, 0.6], cable_mat, translate=(x - 0.25, 0.7, 0.0)), "charger_cable"))
+
     parts.append((box([3.0, 0.12, 2.0], canopy, translate=(0, 2.25, 0)), "canopy"))
     parts.append((box([1.2, 0.5, 0.08], sign, translate=(0, 1.6, -1.05)), "sign"))
     return parts

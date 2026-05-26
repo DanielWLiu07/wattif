@@ -138,6 +138,7 @@ export function MapView() {
   const setRegionCursorMode = useStore((s) => s.setRegionCursorMode);
 
   const [hover, setHover] = useState<Hover>(null);
+  const [placementHoverCoordinate, setPlacementHoverCoordinate] = useState<[number, number] | null>(null);
   const [recCard, setRecCard] = useState<{
     rec: Recommendation;
     x: number;
@@ -226,6 +227,8 @@ export function MapView() {
       onVoiceClick: selectVoiceFromMap,
       regionCursorMode,
       hoveredRegion,
+      placementHoverCoordinate,
+      placementHoverKind: mode === "place" ? placeKind : null,
     });
     if (GOOGLE_KEY && layerToggles.buildings) {
       base.unshift(
@@ -277,6 +280,9 @@ export function MapView() {
     regionCursorMode,
     hoveredRegion,
     allZones,
+    placementHoverCoordinate,
+    mode,
+    placeKind,
   ]);
 
   const handleClick = useCallback(
@@ -325,6 +331,12 @@ export function MapView() {
   );
 
   const handleHover = useCallback((info: PickingInfo) => {
+    if (mode === "place" && info.coordinate) {
+      setPlacementHoverCoordinate(info.coordinate as [number, number]);
+    } else {
+      setPlacementHoverCoordinate(null);
+    }
+
     const o: any = info.object;
 
     // Interactive region selection cursor: highlight hovered region and show popup stats
@@ -425,7 +437,7 @@ export function MapView() {
     }
     if (html) setHover({ x: info.x, y: info.y, html });
     else setHover(null);
-  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones, allZones]);
+  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones, allZones, mode]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;

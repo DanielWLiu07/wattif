@@ -433,6 +433,28 @@ export const getZoneRegion = (zoneName: string, centroid?: [number, number]): st
   return "Downtown";
 };
 
+export const getHaversineDistance = (pos1: [number, number], pos2: [number, number]): number => {
+  const R = 6371000; // Earth's radius in meters
+  const dLat = ((pos2[1] - pos1[1]) * Math.PI) / 180;
+  const dLng = ((pos2[0] - pos1[0]) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((pos1[1] * Math.PI) / 180) *
+      Math.cos((pos2[1] * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
+export const INFRA_CLEARANCES: Record<string, number> = {
+  wind: 200,
+  microgrid: 120,
+  battery: 60,
+  solar: 40,
+  ev_charger: 30,
+};
+
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 let deltaTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -1555,6 +1577,24 @@ export const useStore = create<State>((set, get) => ({
     const activeZoneIds = new Set(zones.map(zone => zone.id));
     if (selectedRegion !== "All" && z && !activeZoneIds.has(z.id)) {
       get().pushToast(`Cannot place infrastructure outside the active region (${selectedRegion})`, "warn");
+      return;
+    }
+
+    // Enforce programmatic spacing clearances to prevent model overlapping/clipping
+    const placeLimit = INFRA_CLEARANCES[placeKind];
+    const conflicts = get().infra.filter((existing) => {
+      const dist = getHaversineDistance(pos, existing.position);
+      const requiredDist = Math.max(placeLimit, INFRA_CLEARANCES[existing.kind]);
+      return dist < requiredDist;
+    });
+
+    if (conflicts.length > 0) {
+      const nearest = conflicts[0];
+      const maxLimit = Math.max(placeLimit, INFRA_CLEARANCES[nearest.kind]);
+      get().pushToast(
+        `Placement Blocked: Too close to an existing ${nearest.kind} (requires ${maxLimit}m clearance)`,
+        "warn"
+      );
       return;
     }
 
