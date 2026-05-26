@@ -11,10 +11,11 @@ import { ScenarioControls } from "@/components/ScenarioControls";
 import { LayersPanel } from "@/components/LayersPanel";
 import { LegendContent } from "@/components/LegendContent";
 import { BuildPriority } from "@/components/BuildPriority";
+import { OverlayLegendPanel } from "@/components/OverlayLegend";
 
 export function LeftDock() {
   return (
-    <div className="pointer-events-auto flex h-full w-full flex-col p-3">
+    <div className="pointer-events-auto flex h-full w-full flex-col gap-2 p-3">
       <Card className="glass flex min-h-0 flex-1 flex-col overflow-hidden">
         <Tabs defaultValue="build" className="flex min-h-0 flex-1 flex-col">
           <TabsList className="m-1.5 grid grid-cols-4 gap-0.5">
@@ -51,6 +52,9 @@ export function LeftDock() {
           </TabsContent>
         </Tabs>
       </Card>
+
+      {/* Pinned bottom of the left column — overlay switcher, matching dock width. */}
+      <OverlayLegendPanel />
     </div>
   );
 }

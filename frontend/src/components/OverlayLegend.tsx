@@ -1,5 +1,6 @@
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 
 type OverlayKey = "equity" | "sentiment" | "demand" | "flood" | "priority" | "none";
 
@@ -47,11 +48,20 @@ const OVERLAYS: {
   },
 ];
 
-export function OverlayLegend() {
+const CHIPS: { key: OverlayKey; label: string }[] = [
+  ...OVERLAYS.map((o) => ({ key: o.key, label: o.label })),
+  { key: "none", label: "None" },
+];
+
+/**
+ * Map-overlay switcher. Lives as the PINNED BOTTOM SECTION of the LeftDock so the
+ * left side reads as one coherent column (dock content above, overlay control below)
+ * — never floats over the map or overlaps the dock.
+ */
+export function OverlayLegendPanel() {
   const layers = useStore((s) => s.layers);
   const setPrimaryOverlay = useStore((s) => s.setPrimaryOverlay);
 
-  // Active overlay = highest-priority toggled-on choropleth.
   const active =
     (["equity", "sentiment", "demand", "flood", "priority"] as OverlayKey[]).find(
       (k) => layers[k as keyof typeof layers]
@@ -59,57 +69,48 @@ export function OverlayLegend() {
   const meta = OVERLAYS.find((o) => o.key === active);
 
   return (
-    <div className="pointer-events-auto absolute bottom-4 left-4 z-30 w-[230px]">
-      <div className="glass rounded-xl px-3 py-2.5">
-        <div className="mb-1.5 flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-            Map overlay
-          </span>
-          <span className="text-xs font-semibold">
-            {meta ? meta.label : "None"}
-          </span>
+    <Card className="glass shrink-0 px-3 py-2.5">
+      <div className="mb-1.5 flex items-center justify-between">
+        <span className="label">Map overlay</span>
+        <span className="text-xs font-semibold">{meta ? meta.label : "None"}</span>
+      </div>
+
+      {meta ? (
+        <div className="mb-2 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <span className="w-12 text-left">{meta.low}</span>
+          <span className={cn("h-2 flex-1 rounded-full bg-gradient-to-r", meta.ramp)} />
+          <span className="w-12 text-right">{meta.high}</span>
         </div>
+      ) : (
+        <p className="mb-2 text-[10px] text-muted-foreground">
+          No overlay — pick one to colour the zones.
+        </p>
+      )}
 
-        {meta ? (
-          <div className="mb-2 flex items-center gap-1.5 text-[10px] text-muted-foreground">
-            <span>{meta.low}</span>
-            <span className={cn("h-2 flex-1 rounded-full bg-gradient-to-r", meta.ramp)} />
-            <span>{meta.high}</span>
-          </div>
-        ) : (
-          <p className="mb-2 text-[10px] text-muted-foreground">
-            No overlay — pick one to colour the zones.
-          </p>
-        )}
-
-        <div className="flex flex-wrap gap-1">
-          {OVERLAYS.map((o) => (
-            <button
-              key={o.key}
-              onClick={() => setPrimaryOverlay(o.key)}
-              className={cn(
-                "rounded-md border px-1.5 py-0.5 text-[10px] transition-colors",
-                active === o.key
-                  ? "border-primary bg-primary/15 text-primary"
-                  : "border-border bg-secondary/30 hover:bg-secondary"
-              )}
-            >
-              {o.label}
-            </button>
-          ))}
+      <div className="grid grid-cols-3 gap-1">
+        {CHIPS.map((o) => (
           <button
-            onClick={() => setPrimaryOverlay("none")}
+            key={o.key}
+            onClick={() => setPrimaryOverlay(o.key)}
             className={cn(
-              "rounded-md border px-1.5 py-0.5 text-[10px] transition-colors",
-              active === "none"
-                ? "border-primary bg-primary/15 text-primary"
-                : "border-border bg-secondary/30 hover:bg-secondary"
+              "truncate rounded-md border px-1.5 py-1 text-center text-[10px] transition-colors duration-150",
+              active === o.key
+                ? "border-primary bg-primary/10 font-medium text-primary"
+                : "border-border bg-muted hover:bg-secondary"
             )}
           >
-            None
+            {o.label}
           </button>
-        </div>
+        ))}
       </div>
-    </div>
+    </Card>
   );
+}
+
+/**
+ * Standalone mount (App.tsx) is intentionally a no-op — the switcher now renders
+ * inside the LeftDock via <OverlayLegendPanel/>. Kept so App's import stays valid.
+ */
+export function OverlayLegend() {
+  return null;
 }
