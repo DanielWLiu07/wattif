@@ -1,284 +1,339 @@
-# WattIf — Current Project Details (Audit)
+# WattIf Current Project Details Audit
 
-**Audit date:** Based on inspection of the repository as it exists today.  
-**Purpose:** Plain-English description of what the product **actually is and does** — not what it aspires to become.  
-**Technical depth:** See [complete_system_architecture.md](./complete_system_architecture.md).  
-**Vision comparison:** See [vision_gap_analysis.md](./vision_gap_analysis.md).
+Audit date: 2026-05-25
 
----
+Purpose: explain what the product is today from a product perspective, without treating future vision as current behavior.
+
+## Plain-English Project Overview
 
-## Plain-English overview
+WattIf is currently an interactive Toronto clean-energy planning prototype. It lets a user explore a 3D map, place clean-energy infrastructure, run a monthly simulation, trigger disaster/stress scenarios, view metrics, see resident-style opinion snippets, ask a planning agent to recommend/place assets, and save proposal placements/snapshots when Supabase is configured.
 
-WattIf is an **interactive 3D map prototype** for exploring renewable-energy siting across **44 Toronto neighbourhoods**. A user can place solar arrays, wind turbines, battery storage, and microgrid hubs on the map, run a **fast-forward monthly simulation**, trigger **disaster-style scenarios** (blackouts, heatwaves, ice storms, etc.), and watch city metrics change — coverage, public approval, equity score, emissions, and cost.
+The best honest description today is: a polished hackathon-stage digital twin demo for Toronto renewable infrastructure siting, with a real rule-based simulation backend and optional persistence.
 
-The map can show **real Toronto open-data overlays**: flood risk, heat vulnerability, existing solar installations, EV charging station locations (read-only), cooling centres, siting constraints, and district energy service areas.
+It is not yet a full Figma/SimCity-style city-design sandbox. It does not let users upload arbitrary datasets, import arbitrary GIS layers, model individual real humans, or run validated engineering-grade grid studies.
+
+## Current Target User
+
+| User | Fit today | Why |
+|---|---|---|
+| Hackathon judges/demo audience | Strong | Visual, interactive, resilient offline fallback, guided demo |
+| Product discovery with planners | Medium | Communicates the concept and workflows, but results are not validated for decisions |
+| City/energy planning professionals | Early prototype only | Needs uploaded local data, reproducibility, validation, assumptions, auth, and export |
+| Residents/public engagement | Demo only | Voices are simulated/templates, not surveyed or persistent resident inputs |
+| Infrastructure engineers | Weak | No grid power-flow model, interconnection constraints, or engineering validation |
+
+## Current User Journey
+
+The current happy path:
+
+1. Open the frontend.
+2. App loads zones, agents, seeded infrastructure, metrics, sentiment, voices, flows, and optional city data layers.
+3. User explores Toronto on the map.
+4. User places solar, wind, battery, or microgrid assets manually, or asks the planning agent to place assets.
+5. User presses play/step to advance monthly simulation.
+6. User fires scenarios such as blackout, heatwave, ice storm, gas spike, population boom, or policy incentive.
+7. User watches coverage, equity, approval, cost, grid load, emissions, activity, flows, people dots, and voices change.
+8. If Supabase is configured, user creates/selects a project and proposal, persists placements, and saves snapshots.
 
-An **"AI planning agent"** in the chat panel can propose and place infrastructure automatically. **Without API keys, this agent is a scripted demo** — it follows a predetermined tool-calling sequence with keyword-matched chat responses, not a live large language model.
+Evidence: `frontend/src/App.tsx`, `frontend/src/store.ts`, `frontend/src/components/LeftDock.tsx`, `frontend/src/components/RightDock.tsx`, `frontend/src/components/ProjectsTab.tsx`.
+
+## Implemented Features
+
+| Feature | Current status | Evidence |
+|---|---|---|
+| 3D map shell | Implemented | `frontend/src/components/MapView.tsx` |
+| Toronto zones | Implemented via processed/fixture/seed data | `backend/app/data/loader.py`, `frontend/src/data/mock.ts` |
+| Infrastructure placement | Implemented for 4 kinds | `frontend/src/store.ts`, `backend/app/main.py`, `backend/app/models.py` |
+| Simulation metrics | Implemented, rule-based | `backend/app/sim/engine.py`, `frontend/src/components/Hud.tsx` |
+| Scenarios/disasters | Implemented, rule-based | `backend/app/scenarios.py`, `frontend/src/components/ScenarioControls.tsx` |
+| Public sentiment | Implemented, simulated | `backend/app/sim/sentiment.py`, `backend/app/sim/voices.py` |
+| Resident voices | Implemented as sampled generated posts | `backend/app/sim/voices.py`, `frontend/src/components/VoicesFeed.tsx` |
+| Planning agent UI | Implemented | `frontend/src/components/ChatPanel.tsx`, `backend/app/planner.py` |
+| Optimizer | Implemented, greedy default | `backend/app/optimizer.py` |
+| Supabase projects/proposals | Implemented when env configured | `backend/app/routes/persistence.py`, `frontend/src/components/ProjectsTab.tsx` |
+| Proposal infrastructure persistence | Implemented | `backend/app/routes/persistence.py`, `frontend/src/store.ts` |
+| Snapshot metrics/scenarios/infrastructure persistence | Implemented | `supabase/migrations/20250526120000_snapshot_extras.sql`, `frontend/src/store.ts` |
+| Upload datasets | Missing | No upload route or frontend upload component |
+| Arbitrary GIS import | Missing | No file import/layer schema pipeline |
+| EV charger placement | Missing as placeable kind | `InfraKind` is `solar | wind | battery | microgrid` in `frontend/src/types.ts` and `backend/app/models.py` |
 
-**Resident "voices"** appear as short opinion posts during simulation. These are **generated from a large template library** keyed off agent archetype, stance, and scenario — not from individual AI agents reasoning about proposals.
+## Demo Flow
 
-The app **works fully offline** using built-in mock data if the backend is not running.
+There is a guided demo in `frontend/src/store.ts` via `runGuidedDemo()`.
+
+Current scripted flow:
+
+| Step | What it shows |
+|---|---|
+| 1 | Energy-equity gap overlay |
+| 2 | Demand concentration |
+| 3 | AI planner sites solar, wind, battery, and microgrids |
+| 4 | Play simulation and show flows/adoption |
+| 5 | Trigger city-wide blackout |
+| 6 | Show microgrid resilience moment |
+
+This is a strong demo flow. It should not be described as a validated planning workflow.
 
----
+## Map Functionality
 
-## Target user (based on current implementation)
+What is real today:
 
-The implementation today fits:
+| Capability | Status |
+|---|---|
+| Pan/zoom/tilt/orbit map | Real |
+| MapLibre dark base map | Real |
+| Optional Mapbox Standard | Real when `VITE_MAPBOX_TOKEN` exists |
+| Optional Google 3D Tiles | Real when `VITE_GOOGLE_MAPS_KEY` exists |
+| Zone hover/click tooltips | Real |
+| Region filtering | Real, heuristic region grouping in frontend |
+| Layer toggles | Real |
+| Infrastructure model rendering | Real GLB models referenced from `/models/...` |
+| Animated flows, people dots, speech bubbles | Real visualization driven by simulated data |
+| User-uploaded GIS layers | Missing |
+| Export/share map state | Missing |
 
-| User | Fit | Why |
-|------|-----|-----|
-| **Hackathon demo audience / judges** | Strong | Polished map UI, guided 6-step tour, works offline |
-| **Energy equity storyteller** | Moderate | Equity-weighted optimizer + burden overlays tell a compelling narrative |
-| **City designer testing arbitrary uploaded datasets** | **None** | No upload, no city picker, Toronto-only fixtures |
-| **Urban planner needing report-grade outputs** | **Weak** | Metrics are simplified; no export, no PDF, no survey integration |
-| **Infrastructure engineer modeling EV charging** | **None** | EV chargers are display-only; not placeable or simulated |
-| **Researcher needing persistent agent populations** | **Weak** | In-memory session only; agents reset on server restart |
+Evidence: `frontend/src/components/MapView.tsx`, `frontend/src/map/layers.ts`, `frontend/src/store.ts`.
 
-**Honest positioning today:** an **explorable digital twin demo** for Toronto renewable siting with equity framing — not a production planning tool.
+## Infrastructure Placement Functionality
 
----
+Implemented placeable asset kinds:
 
-## Current user journey
+| Kind | Current behavior |
+|---|---|
+| `solar` | Place manually or via planner; generates monthly supply with solar capacity factor |
+| `wind` | Place manually or via planner; generates monthly supply with wind capacity factor |
+| `battery` | Place manually or via planner; peak shaving/enabling credit, not net generation |
+| `microgrid` | Place manually or via planner; generation plus resilience during outages |
+
+Placement flow:
+
+1. User selects kind and clicks map.
+2. Frontend creates optimistic `Infra`.
+3. Frontend calls `/api/infra`.
+4. Backend adds it to the in-memory engine and returns subject approval counts.
+5. If Supabase proposal is selected, frontend also calls `/api/proposals/{proposal_id}/infrastructure`.
+6. Metrics, sentiment, flows, siting priority, and voices refresh.
+
+Limitations:
+
+| Limitation | Current truth |
+|---|---|
+| No EV charger placement | EV chargers may appear as existing infra data, but not as a placeable `InfraKind` |
+| No custom asset upload | `asset_definitions` exists but is metadata-only in the current UI/API |
+| No construction phasing | Status is simple `planned`, `active`, `damaged` |
+| No interconnection queue/capacity | Grid load is simplified, not a utility interconnection model |
+| No detailed cost model | Costs are fixed presets/heuristics |
+
+## Saved Proposal and Snapshot Functionality
 
-1. **Land on welcome modal** ([`frontend/src/components/Welcome.tsx`](../../frontend/src/components/Welcome.tsx)) — choose guided demo or free exploration.
-2. **See Toronto map** — 44 zone polygons; optional Mapbox/Google 3D buildings.
-3. **Left dock → Build tab** — pick Manual, AI Auto, or AI Step placement mode; select infra kind; click map to place OR run optimizer recommendations.
-4. **Left dock → Events tab** — pick scenario (blackout, heatwave, etc.); click a zone or run city-wide.
-5. **Left dock → Map tab** — toggle overlays (equity, demand, sentiment, flood, existing infra, etc.).
-6. **Timeline** — play/pause/step simulation months forward.
-7. **Right dock** — chat with planner agent; read activity log, voices feed, stats charts, inspect placed assets.
-8. **Observe outcomes** — coverage/approval/equity metrics update; agents animate on map (~320 dots); speech bubbles show opinions; outage overlay during blackouts.
-
-**Session ends when:** user resets session, refreshes page, or backend process restarts — **nothing persists**.
-
----
-
-## Implemented features (what actually works)
-
-### Map functionality
-
-| Feature | Status | Evidence |
-|---------|--------|----------|
-| 44 Toronto zone polygons | **Real** (processed data) | `data/processed/zones.json`, `/api/zones` |
-| 3D infrastructure GLB models | **Real** | `frontend/public/models/*.glb`, `layers.ts` ScenegraphLayer |
-| Choropleth overlays (equity, sentiment, flood) | **Real** | `layers.ts` + backend layer endpoints |
-| Demand hexbin layer | **Real** | Uses agent demand fields |
-| ~320 animated agent dots | **Visual sample only** | `store.ts` subsamples from ~4,001 agents |
-| Existing solar/wind/hydro/EV points | **Real (read-only)** | `existing_infra.json`, 82 EV chargers |
-| Google/Mapbox 3D buildings | **Optional** | Env tokens in `MapView.tsx` |
-| Per-building rooftop placement | **Not implemented** | Placement is zone-level + map click coordinate |
-
-### Infrastructure placement
-
-| Kind | Placeable | Simulated | 3D model |
-|------|-----------|-----------|----------|
-| Solar | Yes | Yes | Yes |
-| Wind | Yes | Yes | Yes |
-| Battery | Yes | Yes (peak shave) | Yes |
-| Microgrid | Yes | Yes (outage resilience) | Yes |
-| EV charger | **No** | **No** | Display existing only |
-
-Placement modes ([`frontend/src/components/BuildTab.tsx`](../../frontend/src/components/BuildTab.tsx)):
-
-- **Manual** — user picks kind, clicks map
-- **AI Auto** — triggers planner WebSocket with auto goal; scripted or LLM depending on keys
-- **AI Step** — same but pauses for approve/reject on each placement
-
-Optimizer ([`POST /api/optimize`](../../backend/app/main.py)) returns ranked recommendations with rationales from the greedy scorer — **works without LLM**.
-
-### Scenario / disaster functionality
-
-**7 UI presets** in [`ScenarioControls.tsx`](../../frontend/src/components/ScenarioControls.tsx) plus Random; backend supports **16+ scenario types** in [`scenarios.py`](../../backend/app/scenarios.py).
-
-What scenarios actually do:
-
-| Effect | Examples |
-|--------|----------|
-| Zone demand multiplier | Heatwave (+demand in high-HVI zones), gas spike |
-| Zone outage (grid down) | Blackout, flood, ice storm — microgrids keep supply |
-| Grid capacity shrink | Blackout (−40% capacity) |
-| Infra damage | Earthquake, flood — zero supply from damaged installs |
-| Sentiment target shifts | Per-kind opinion nudges by archetype |
-| Agent mobilization hints | Frontend moves ~320 sampled agents toward facilities |
-
-**Not implemented:** real weather feeds, snowstorm geodata (ice storm is a sim lever, not weather data), structural damage modeling beyond flipping infra status.
-
-### Metrics / dashboard
-
-**Always visible strip** ([`RightDock.tsx`](../../frontend/src/components/RightDock.tsx) `MiniStats`): coverage %, approval %, tick/year.
-
-**Stats tab** ([`Hud.tsx`](../../frontend/src/components/Hud.tsx)):
-
-| Metric | Source |
-|--------|--------|
-| Coverage | `SimMetrics.coveragePct` |
-| Approval | `SimMetrics.approvalPct` |
-| Equity | `SimMetrics.equityScore` |
-| Clean kWh/month | `renewableSupplyKwh` |
-| Grid load | `gridLoadPct` |
-| Emissions/month | `emissionsTonnes` (unmet demand × gas peaker factor) |
-| Capital spent | `costCumulativeCad` |
-| History chart | Last 120 ticks in store |
-| Ontario grid carbon intensity | `/api/generation-mix` (if backend up) |
-| Toronto SBEI headline | `/api/sbei` (display context only) |
-
-**Not shown:** detailed cost breakdown per zone, LCOE, jobs impact, noise contours for wind, EV charging utilization.
-
-### AI planner functionality
-
-| Capability | With API keys | Default (no keys) |
-|------------|---------------|-------------------|
-| Chat UI | Yes | Yes |
-| Tool-calling loop appearance | Yes | Yes (scripted) |
-| Interprets free-form designer intent | LLM parsing | **Keyword matching** (`parse_intent()` in `planner.py`) |
-| Recommends sites | Optimizer + LLM narration | Optimizer + fixed narration |
-| Explains tradeoffs | LLM-generated | Template strings |
-| Reacts to mid-chat scenarios | Demo/LLM turn | Scripted pivot in `_demo_turn()` |
-| Step-mode approval | Yes | Yes |
-
-Evidence: `PlannerChat.turn()` at `planner.py` L760–761 routes `(None, "demo")` to `_demo_turn()`. Default config: `WATTIF_DEMO_LLM=1` in `config.py`.
-
-### Resident agents / voices functionality
-
-**This is not a multi-agent AI system.** Here is what exists:
-
-| Layer | What it is |
-|-------|------------|
-| **Agent records** | ~4,001 JSON rows with archetype, income, demand, rooftop, `ev_owner` boolean |
-| **Sentiment model** | NumPy matrix: each agent has 4 opinion values (solar/wind/battery/microgrid) that drift toward targets |
-| **Voices** | Short text posts sampled from templates in `voices.py` (~500+ lines of template pools) |
-| **Rationales** | Optional LLM or rule-based one-liners via `/api/rationales` (not shown in main UI flow) |
-| **Map animation** | ~320 agent dots colored by sentiment; mobilize to facilities during scenarios |
-
-Voices on the **sim tick hot path** (`main.py` L623–627): **always templated, never LLM**.
-
-REST `/api/agents/voices?enrich=true` (default) calls `enrich_voices()` only when `real_llm_provider()` is set — **demo mode does not enrich**.
-
----
-
-## Guided demo flow
-
-[`store.ts` `runGuidedDemo()`](../../frontend/src/store.ts) — 6 scripted steps:
-
-| Step | Duration | Action |
-|------|----------|--------|
-| 1 | 4.2s | Show equity choropleth |
-| 2 | 4.2s | Show demand hexbins |
-| 3 | 9s | `setPlacementMode("auto")` — triggers AI planner |
-| 4 | 7s | Play sim with flows + agents visible |
-| 5 | 4.5s | City-wide blackout scenario |
-| 6 | 5s | Pause; resilience caption |
-
-Uses live backend if available; otherwise mock data — demo does not force either mode.
-
----
-
-## What is real
-
-| Item | Details |
-|------|---------|
-| Toronto zone boundaries | From Toronto Open Data (via `build.py`) |
-| Census-derived demographics | Population, tenure, income on zones |
-| 4,001 simulation agents | Committed in `agents.json` |
-| Real existing renewables + EV chargers | 100 renewable + 82 EV in `existing_infra.json` |
-| Flood, constraints, facilities layers | From open data where raw cache existed at build time |
-| Equity-weighted optimizer | Implemented in `optimizer.py`, exposed on REST |
-| Monthly tick simulation | `SimEngine` with adoption, sentiment, flows, metrics |
-| Scenario engine | 16 types mutating demand, outages, sentiment |
-| 3D map with infra models | deck.gl + GLB assets |
-| Offline frontend | Full mock path in `mock.ts` |
-| Optional real LLM | Anthropic/Feather when keys configured |
-| ML training pipeline | `ml/train.py` complete; artifacts not shipped |
-
----
-
-## What is mocked
-
-| Item | Details |
-|------|---------|
-| **Entire backend when offline** | `mock.ts` provides zones, agents, metrics, voices, planner events |
-| **Initial seed infra (4 items)** | `mock.seedInfra()` always runs client-side in `store.init()` — not fetched from backend |
-| **Frontend planner when WS fails** | `mockPlannerEvents()` deterministic generator |
-| **Per-endpoint failures while "live"** | Any REST timeout → that endpoint's mock; badge still says Live |
-| **Heat vulnerability index** | Modeled composite in `build.py`, not official city HVI dataset |
-| **District energy zones** | Modeled from public knowledge, not open GIS |
-| **Agent voices (default deployment)** | Template library — reads like real opinions but is not survey data |
-| **Demo LLM planner** | Scripted narration mimicking an agentic loop |
-
----
-
-## What is fallback-only
-
-| Feature | Fallback behavior |
-|---------|-------------------|
-| ML demand forecast | Zone baseline `demandKwhMonthly` |
-| ML zone clusters | `{available: false}` |
-| ML scenario adoption nudge | Heuristic multipliers in `inference.py` |
-| LLM voice enrichment | Unchanged template text |
-| LLM rationales | `_fallback_rationale()` by archetype |
-| LLM planner | `_planner_demo()` or `_planner_lite()` |
-| Processed data missing | `seed.build_world()` synthetic Toronto |
-| OR-Tools optimizer | Greedy always used on REST API |
-| Attitudes.json missing | Model-computed sentiment priors |
-
----
-
-## What can honestly be pitched today
-
-**Safe claims:**
-
-- "Interactive 3D map of Toronto neighbourhoods for exploring renewable siting trade-offs"
-- "Equity-weighted site recommendation engine prioritizing high energy-burden zones"
-- "Fast-forward simulation showing coverage, approval, emissions, and grid load over time"
-- "Stress-test scenarios like blackouts and heatwaves to see resilience effects"
-- "Living city visualization with resident opinion feed and animated agents"
-- "Grounded in Toronto open data: boundaries, census, flood, existing renewables, EV chargers"
-- "Works offline for demos; optional live backend and optional LLM enhancement"
-
-**Impressive but qualified claims:**
-
-- "AI planning agent" → **must disclose** default is scripted demo without API keys
-- "Machine learning demand forecasting" → **must disclose** models not shipped; heuristics run
-- "4,000+ resident agents" → **must disclose** they are simulation records with template voices, not autonomous AI
-
----
-
-## What should NOT be claimed yet
-
-| Do not claim | Reality |
-|--------------|---------|
-| "Upload your city's datasets" | No upload UI or API |
-| "Figma/SimCity-style block-level design" | Zone-level + point placement, not parcel editing |
-| "EV charging infrastructure planning" | EV chargers are read-only dots; not placeable |
-| "Autonomous AI resident agents" | Rule-based sentiment + templates |
-| "Real survey/consultation integration" | Static 2021 attitudes JSON; voices are synthetic |
-| "Weather and snowstorm risk modeling" | Scenario levers only; no weather GIS |
-| "Persistent sessions / saved proposals" | In-memory; lost on restart |
-| "Production-ready planning reports" | No export; simplified metrics |
-| "Full Toronto population simulation" | ~4,001 sample agents scaled by `zone_representation` |
-| "LLM-powered planner out of the box" | Demo script is default |
-
----
-
-## Comparison to prior project docs
-
-[`docs/OVERVIEW.md`](../OVERVIEW.md) and [`docs/ARCHITECTURE.md`](../ARCHITECTURE.md) describe the system generously. Specific corrections:
-
-| Prior doc claim | Audit finding |
-|-----------------|---------------|
-| "16 processed files loaded at boot" | **13 loaded**; `demand.json`, `solar.json`, `buildings.json` ignored at runtime |
-| "AI planner" without qualification | Default path is **scripted demo**, not LLM |
-| "LLM-generated rationales/voices" | Only with real API keys; demo mode uses rules/templates |
-| "Optional ML models" implied trained | **No `.joblib` in repo**; heuristics always run |
-| "Works without backend" | True for frontend; backend voices/planner differ from mock behavior |
-
----
+Phase 3 persistence is real when Supabase is configured.
+
+What works:
+
+| Capability | Status | Evidence |
+|---|---|---|
+| Create/select projects | Implemented | `ProjectsTab`, `/api/projects` |
+| Create/select proposals | Implemented | `ProjectsTab`, `/api/proposals` |
+| Persist new placements under selected proposal | Implemented | `frontend/src/store.ts`, `/api/proposals/{id}/infrastructure` |
+| Reload proposal placements after refresh/reselect | Implemented | `selectProposal()` in `frontend/src/store.ts` |
+| Save snapshots with metrics/scenarios/infrastructure | Implemented | `saveSnapshot()` in `frontend/src/store.ts`, snapshot migration |
+| Get latest snapshot | Implemented | `/api/proposals/{id}/snapshots/latest` |
+
+What does not yet work:
+
+| Capability | Current truth |
+|---|---|
+| Full simulation restore from snapshot | Latest snapshot is displayed and stored, but not replayed into the engine as a complete state restore |
+| Multi-user isolation/auth | Not implemented |
+| Dataset-per-project persistence | `uploaded_datasets` is schema only |
+| Versioned proposal diff/review workflow | Not implemented |
+
+## Scenario and Disaster Functionality
+
+Implemented scenarios are rule-based events that mutate the session engine.
+
+Backend-supported scenario types include:
+
+| Type | Example effects |
+|---|---|
+| `earthquake` | Damages infra, outages zones, reduces grid capacity |
+| `heatwave` | Increases demand, gathers residents at cooling centers, shifts sentiment to solar/battery |
+| `ice_storm` | Increases heating demand, damages infra, outages zones |
+| `blackout` | Outages many zones, reduces grid capacity, boosts microgrid/battery sentiment |
+| `gas_spike` | Increases adoption incentive and solar sentiment |
+| `population_boom` | Increases demand |
+| `policy_incentive` | Increases adoption and solar/battery sentiment |
+| `flood` | Hits high flood-risk zones when data exists |
+| Additional backend types | `cold_snap`, `drought`, `wind_lull`, `grid_upgrade`, `ev_surge`, `factory_opening`, `turbine_noise_complaint`, `solar_approved`, `custom` |
+
+Frontend presets currently expose an older subset in `frontend/src/types.ts` and `frontend/src/components/ScenarioControls.tsx`.
+
+Truth: scenarios are useful visual stress tests, not calibrated disaster models.
+
+## Metrics and Dashboard Functionality
+
+The dashboard shows:
+
+| Metric | Current source |
+|---|---|
+| Coverage | `SimEngine._compute()` |
+| Approval | Sentiment model aggregate |
+| Equity | Coverage weighted by energy burden/environment/heat vulnerability |
+| Clean kWh/mo | Simulated supply |
+| Grid load | Simplified peak load vs capacity with battery shaving |
+| Emissions/mo | Unmet demand times marginal gas factor |
+| Capital | Sum of current infrastructure costs |
+
+Evidence: `backend/app/sim/engine.py`, `frontend/src/components/Hud.tsx`.
+
+Truth: these are directional simulation metrics. They should not be pitched as engineering-grade financial, grid, or emissions estimates.
+
+## AI Planner Functionality
+
+There are two planner realities.
+
+| Mode | Current truth |
+|---|---|
+| Real LLM configured | Planner can use Anthropic or Feather function/tool calling |
+| Default/no keys | Planner is scripted/demo or deterministic planner-lite |
+
+The planner can:
+
+| Capability | Status |
+|---|---|
+| Inspect city state and metrics | Implemented |
+| Run optimizer | Implemented |
+| Place infrastructure | Implemented |
+| Run simulation | Implemented |
+| Launch adoption programs | Implemented as simulated incentive levers |
+| Respond to scenarios during chat | Implemented in demo and LLM paths |
+| Ask for approval in step mode | Implemented over WebSocket |
+
+It does not yet:
+
+| Missing behavior | Why |
+|---|---|
+| Ground recommendations in uploaded user data | No upload/project data pipeline |
+| Interpret persistent resident concern records | Concern tables exist but are not wired in |
+| Persist planner memory across app sessions | WebSocket session only |
+| Provide validated tradeoff reports | Chat events are transient UI outputs |
+
+Evidence: `backend/app/planner.py`, `frontend/src/components/ChatPanel.tsx`, `frontend/src/api/client.ts`.
+
+## Resident Agents and Voices Functionality
+
+Current resident-like layer:
+
+| Question | Answer |
+|---|---|
+| Are individual humans currently modeled? | No. The app models representative agents generated/sampled from zone data. They are not real humans. |
+| Are they actual LLM-powered agents? | No. The runtime resident layer is arrays plus rule-based sentiment/voices. |
+| Are they persistent? | No. Agent state is in-memory and resettable; SQL `agent_profiles` is not wired into runtime. |
+| Do they reason independently? | No. Sentiment is vectorized and templated, not autonomous reasoning. |
+| Do they have memory? | No durable individual memory. Opinion can drift during a session, but no persistent per-agent memory. |
+| Do they react to infrastructure changes? | Yes, through rule-based sentiment shifts and reaction voice templates. |
+| Are voices templated, rule-based, LLM-generated, or mock data? | Primarily rule-templated. Optional LLM rewriting exists only with real provider keys. Frontend also has mock voices when backend is unavailable. |
+| Where does this happen? | `backend/app/sim/sentiment.py`, `backend/app/sim/voices.py`, `backend/app/sim/llm.py`, `frontend/src/data/mock.ts`. |
+
+What is real:
+
+- Agents have `id`, `zoneId`, `position`, archetype, demand, income, rooftop, EV, and solar adoption fields.
+- Sentiment changes in response to placement, programs, scenarios, and time.
+- Voices are tied to sampled agent ids and positions.
+- Voices can reference renters, owners, businesses, wind noise, bills, heatwaves, blackouts, and programs.
+
+What is not real:
+
+- No resident has an LLM loop.
+- No resident stores memory or a private history.
+- No resident independently reads the proposal and reasons.
+- No resident is grounded in uploaded household records.
+- No resident concerns are saved to `agent_concerns`.
+
+## What Is Real
+
+These can be claimed carefully:
+
+| Claim | Honest status |
+|---|---|
+| Interactive 3D Toronto energy-planning prototype | Real |
+| Rule-based agent/population simulation | Real |
+| Manual placement of solar, wind, battery, and microgrid assets | Real |
+| Scenario stress tests with visual impacts | Real |
+| Equity-weighted siting recommendations | Real as heuristic optimizer |
+| Optional LLM-backed planner | Real when keys are configured |
+| Scripted no-key planning demo | Real |
+| Supabase project/proposal/placement/snapshot persistence | Real when env and migrations are configured |
+| Existing city/context layers from committed data | Real for included processed datasets |
+
+## What Is Mocked
+
+| Surface | Mock behavior |
+|---|---|
+| Frontend offline zones/agents | `frontend/src/data/mock.ts` |
+| Frontend offline metrics | `metricsForTick()` in `mock.ts` |
+| Frontend offline scenarios | `mockScenario()` and `scenarioImpact()` |
+| Frontend offline voices | `mockVoices()` |
+| Frontend offline planner | `mockPlannerEvents()` |
+| Seed infra | `seedInfra()` creates starter assets in both live/offline flows |
+
+## What Is Fallback-Only
+
+| Surface | Fallback trigger | Result |
+|---|---|---|
+| REST calls | Backend unavailable or non-OK | Mock data/local behavior |
+| `/ws/sim` | Socket unavailable | Local step/play loop |
+| `/ws/planner` | Socket unavailable | Mock planner session |
+| Supabase | Env missing | Memory mode and disabled UI |
+| ML | `ml.inference` absent/fails | Baseline/heuristic logic |
+| LLM | No real provider | Rule-based rationales/voices and scripted planner |
+
+## What Can Honestly Be Pitched Today
+
+Safe pitch:
+
+> WattIf is an interactive Toronto clean-energy planning prototype that lets users place renewable and resilience infrastructure, run a simplified monthly simulation, test scenario stressors, view equity/coverage/approval metrics, receive heuristic siting recommendations, and optionally persist proposals and snapshots with Supabase. It includes an agentic planner interface that can run with real LLM providers or a scripted demo fallback.
+
+Good demo claims:
+
+| Claim | Safe wording |
+|---|---|
+| AI planner | "Agentic planner interface with real LLM support and a no-key scripted fallback" |
+| Resident voices | "Simulated resident/cohort voices generated from representative agents and sentiment rules" |
+| Persistence | "Supabase-backed saved proposals, placements, and snapshots when configured" |
+| Disaster scenarios | "Rule-based stress-test scenarios for exploring resilience tradeoffs" |
+| Equity | "Heuristic equity-weighted scoring using energy burden and contextual layers" |
+
+## What Should Not Be Claimed Yet
+
+Avoid these claims:
+
+| Do not claim | Why |
+|---|---|
+| "Models real residents" | Agents are representative synthetic/sampled records, not real humans |
+| "Resident AI agents reason independently" | Voices are rule/template generated, not autonomous LLM agents |
+| "Upload any city dataset" | No upload flow or runtime project data binding |
+| "Supports EV charger planning" | EV chargers are existing/context data only, not placeable infrastructure |
+| "Engineering-grade grid impact" | Grid load is simplified and not power-flow/interconnection analysis |
+| "Validated cost estimates" | Costs are presets/heuristics |
+| "Production multi-user platform" | No auth, RLS, tenant isolation, or durable sim sessions |
+| "Planner is always LLM-powered" | Default provider is scripted demo |
+| "Snapshots fully restore simulations" | Snapshot payloads are saved but not full engine replay/restore |
+
+## Recommended Phase 5 Direction
+
+The most valuable Phase 5 is to make the project truly data-grounded and proposal-centric:
+
+1. Add project-scoped dataset upload/import for small CSV/GeoJSON files.
+2. Bind uploaded data to map layers and simulation inputs with explicit schema mapping.
+3. Make snapshots restorable, not just saved.
+4. Upgrade resident voices into persistent cohort agents tied to datasets and proposals.
+5. Add an honest capability/status panel so users can see live backend, Supabase, real LLM, ML, and fallback state.
 
 ## Key Takeaways
 
-1. **WattIf today is a compelling Toronto-specific energy-equity demo** with a real simulation core and rich map UX — not a general-purpose city designer sandbox.
-2. **The "residents" are simulated opinion vectors and template quotes**, not LLM agents with personalities, memory, or independent reasoning.
-3. **The "AI planner" is primarily a scripted demo** unless Anthropic or Feather API keys are configured.
-4. **The frontend mock path is a first-class feature**, not an edge case — always account for it when describing behavior.
-5. **Several vision features (upload, EV planning, block-level design, real surveys) are entirely absent** from the codebase.
-6. **Pitch the equity narrative and interactive simulation honestly**; avoid claiming autonomous agents or dataset upload until built.
+- WattIf today is a strong interactive prototype, not a production planning tool.
+- Phase 3 persistence is real for projects, proposals, infrastructure placements, and snapshots, but persistence is still partial.
+- The map/simulation/optimizer are meaningful and demonstrable, but they are heuristic.
+- Resident agents are currently simulated cohorts plus templated voices, not independent AI agents.
+- The best next product move is to ground proposals in uploaded/project data and make saved snapshots fully restorable.
