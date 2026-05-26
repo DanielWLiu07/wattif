@@ -831,14 +831,19 @@ export const useStore = create<State>((set, get) => ({
       api.listProjectCohorts(selectedProjectId),
       api.listProjectConcerns(selectedProjectId),
     ]);
-    if (cohortRes.ok === false || concernRes.ok === false) {
-      const isCohortErr = cohortRes.ok === false;
-      const unavailable = isCohortErr ? cohortRes.unavailable : concernRes.unavailable;
-      const error = isCohortErr ? cohortRes.error : concernRes.error;
+    if (!cohortRes.ok) {
       set({
-        cohortError: unavailable
+        cohortError: cohortRes.unavailable
           ? "Supabase persistence is not configured"
-          : error ?? "Could not load cohort concerns",
+          : cohortRes.error ?? "Could not load cohort concerns",
+      });
+      return;
+    }
+    if (!concernRes.ok) {
+      set({
+        cohortError: concernRes.unavailable
+          ? "Supabase persistence is not configured"
+          : concernRes.error ?? "Could not load cohort concerns",
       });
       return;
     }
