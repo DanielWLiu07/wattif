@@ -112,7 +112,12 @@ export function TopBar() {
       <div className="flex flex-1 items-center justify-center gap-2">
         {voicesCount > 0 && (
           <button
-            onClick={() => focusVoices("")}
+            onClick={() => {
+              // Make sure the Voices feed is actually visible: leave the Events
+              // view, open the right dock, then focus the Voices tab.
+              useStore.setState({ mainView: "map", rightOpen: true });
+              focusVoices("");
+            }}
             className="flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs transition-colors duration-150 hover:bg-secondary"
             title="Open the Voices log"
           >

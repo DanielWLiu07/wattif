@@ -1032,8 +1032,10 @@ export function buildLayers(input: LayerInputs): Layer[] {
     const sel = selectedVoiceId
       ? voices.find((v) => v.id === selectedVoiceId)
       : undefined;
-    const list =
-      sel && !recent.some((v) => v.id === sel.id) ? [sel, ...recent] : recent;
+    // Render the selected bubble LAST so it paints ON TOP of its neighbours
+    // (clicked → brought to front in z). dedupe first.
+    const base = recent.filter((v) => v.id !== selectedVoiceId);
+    const list = sel ? [...base, sel] : base;
     const data = list.map((v) => {
       const z = zoneById.get(v.zoneId);
       const selected = v.id === selectedVoiceId;
@@ -1076,6 +1078,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         onClick: (info: any) => info.object?.id && onVoiceClick(info.object.id),
         characterSet: "auto",
         parameters: { depthTest: false } as any,
+        // Animate the size change so a clicked bubble "pops" to the front.
+        transitions: { getSize: { duration: 240 } },
         updateTriggers: {
           getSize: [selectedVoiceId],
           getBackgroundColor: [selectedVoiceId],

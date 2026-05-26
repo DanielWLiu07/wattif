@@ -1,12 +1,32 @@
 import {
-  Lightning as Zap,
   Play,
   CursorClick as MousePointerClick,
   Sparkle as Sparkles,
   Scales as Scale,
+  CellSignalFull as Activity,
+  ArrowRight,
 } from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/brand/Logo";
+
+const FEATURES = [
+  {
+    icon: Scale,
+    label: "Equity overlays",
+    desc: "See who carries the energy burden.",
+  },
+  {
+    icon: Sparkles,
+    label: "AI site planner",
+    desc: "Let an agent propose sitings.",
+  },
+  {
+    icon: Activity,
+    label: "Live scenarios",
+    desc: "Coverage, cost & approval in 3D.",
+  },
+] as const;
 
 export function Welcome() {
   const showWelcome = useStore((s) => s.showWelcome);
@@ -15,52 +35,69 @@ export function Welcome() {
   if (!showWelcome) return null;
 
   return (
-    <div className="absolute inset-0 z-[60] flex items-center justify-center bg-foreground/30">
-      <div className="glass animate-in fade-in zoom-in-95 mx-4 w-full max-w-md rounded-2xl p-6 duration-300">
-        <div className="mb-3 flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Zap className="h-5 w-5" />
-          </div>
-          <div>
-            <h1 className="text-lg font-semibold leading-none">WattIf</h1>
-            <p className="text-xs text-muted-foreground">
-              Toronto energy-equity simulator
+    <div className="absolute inset-0 z-[60] flex items-center justify-center bg-foreground/30 animate-in fade-in duration-200">
+      <div className="animate-in fade-in zoom-in-95 mx-4 w-full max-w-md overflow-hidden rounded-[var(--radius)] border border-border bg-card duration-200">
+        {/* Header — brand lockup over a hairline rule */}
+        <div className="flex flex-col items-start gap-5 border-b border-border px-7 pb-6 pt-7">
+          <Logo size="lg" />
+          <div className="space-y-1.5">
+            <p className="font-display text-2xl font-bold leading-tight tracking-tight text-foreground">
+              Toronto's energy future,
+              <br />
+              one scenario at a time.
+            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Plan renewable infrastructure across the city and watch coverage,
+              cost, public approval, and{" "}
+              <span className="font-semibold text-foreground">
+                energy equity
+              </span>{" "}
+              play out in 3D — by hand or with an AI planning agent.
             </p>
           </div>
         </div>
 
-        <p className="text-sm leading-relaxed text-foreground/90">
-          Plan renewable infrastructure across Toronto and watch coverage, cost,
-          public approval, and <b>energy equity</b> play out in 3D — by hand or
-          with an AI planning agent.
-        </p>
+        {/* Feature list — aligned volt-tinted icon tiles + descriptor */}
+        <ul className="divide-y divide-border">
+          {FEATURES.map(({ icon: Icon, label, desc }) => (
+            <li key={label} className="flex items-center gap-3.5 px-7 py-3.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius)] bg-brand/10 text-brand">
+                <Icon className="h-[18px] w-[18px]" weight="regular" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold leading-tight text-foreground">
+                  {label}
+                </span>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {desc}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
 
-        <div className="my-4 grid grid-cols-3 gap-2 text-center text-[11px] text-muted-foreground">
-          <div className="rounded-lg border border-border/60 bg-secondary/30 p-2">
-            <Scale className="mx-auto mb-1 h-4 w-4 text-emerald-400" />
-            Equity overlays
-          </div>
-          <div className="rounded-lg border border-border/60 bg-secondary/30 p-2">
-            <Sparkles className="mx-auto mb-1 h-4 w-4 text-accent" />
-            AI site planner
-          </div>
-          <div className="rounded-lg border border-border/60 bg-secondary/30 p-2">
-            <Play className="mx-auto mb-1 h-4 w-4 text-primary" />
-            Live scenarios
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <Button className="w-full" onClick={() => void runGuidedDemo()}>
-            <Play /> Run guided demo
+        {/* Actions */}
+        <div className="flex flex-col gap-2.5 border-t border-border px-7 pb-6 pt-5">
+          <Button
+            className="group w-full justify-center hover:bg-brand hover:text-brand-ink"
+            onClick={() => void runGuidedDemo()}
+          >
+            <Play weight="fill" />
+            Run guided demo
+            <ArrowRight className="transition-transform duration-150 group-hover:translate-x-0.5" />
           </Button>
-          <Button variant="outline" className="w-full" onClick={dismissWelcome}>
-            <MousePointerClick /> Explore on my own
+          <Button
+            variant="outline"
+            className="w-full justify-center"
+            onClick={dismissWelcome}
+          >
+            <MousePointerClick />
+            Explore on my own
           </Button>
+          <p className="pt-1 text-center font-mono text-[11px] leading-relaxed text-muted-foreground">
+            Runs fully on built-in data — no backend or API key required.
+          </p>
         </div>
-        <p className="mt-3 text-center text-[10px] text-muted-foreground">
-          Works fully on built-in data — no backend or API key required.
-        </p>
       </div>
     </div>
   );
