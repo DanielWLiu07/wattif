@@ -1,12 +1,12 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Scene3D, SceneEdit } from "@/components/landing/Scene3D";
+import { TorontoMap } from "@/components/landing/TorontoMap";
+import { landingStats } from "@/data/landingStats";
 
 const EDIT_MODE =
   typeof window !== "undefined" &&
   new URLSearchParams(window.location.search).has("edit");
-import { TorontoMap } from "@/components/landing/TorontoMap";
-import { landingStats } from "@/data/landingStats";
 
 // ── Stat helper ──────────────────────────────────────────────────────────────
 

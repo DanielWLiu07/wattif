@@ -358,9 +358,50 @@ function GlbModel({
   );
 }
 
+// ── Stored-layout model (uses saved position/rotation/scale exactly) ──────────
+// Used when a localStorage layout is present — bypasses fitToHeight/yBase math
+// since those were already baked into the saved values at drag-time.
+
+function StoredGlbModel({
+  url, storedPosition, storedRotation, storedScale, reveal = 1, rotateY = 0,
+}: {
+  url: string;
+  storedPosition: [number, number, number];
+  storedRotation: [number, number, number];
+  storedScale: number;
+  reveal?: number;
+  rotateY?: number;
+}) {
+  const { scene } = useGLTF(url);
+  const groupRef = useRef<Group>(null);
+  const cloned = useMemo(() => {
+    const c = scene.clone(true);
+    c.traverse((child) => {
+      if ((child as Mesh).isMesh) { child.castShadow = true; child.receiveShadow = true; }
+    });
+    return c;
+  }, [scene]);
+  useFrame((_, delta) => {
+    if (groupRef.current) groupRef.current.rotation.y += delta * rotateY;
+  });
+  if (reveal < 0.01) return null;
+  return (
+    <group
+      ref={groupRef}
+      position={[storedPosition[0], storedPosition[1] * reveal, storedPosition[2]]}
+      rotation={[storedRotation[0], storedRotation[1], storedRotation[2]]}
+      scale={storedScale * reveal}
+    >
+      <primitive object={cloned} />
+    </group>
+  );
+}
+
 // ── Hero station ──────────────────────────────────────────────────────────────
 
-function HeroStation() {
+function HeroStation({ stored }: {
+  stored?: { position: [number, number, number]; rotation: [number, number, number]; scale: number };
+}) {
   const { scene } = useGLTF("/models/wind_turbine.glb");
   const groupRef = useRef<Group>(null);
   const bladeRef = useRef<Group | null>(null);
@@ -398,9 +439,42 @@ function HeroStation() {
     }
   });
 
+  if (stored) {
+    return (
+      <group ref={groupRef} position={stored.position} rotation={stored.rotation} scale={stored.scale} castShadow>
+        <primitive object={cloned} />
+      </group>
+    );
+  }
+
   return (
     <group ref={groupRef} position={[3.5, fit.yBase, -1]} scale={fit.scale} castShadow>
       <primitive object={cloned} />
+    </group>
+  );
+}
+
+// ── Normal-scene wordmark (rendered when localStorage layout has wordmark) ─────
+
+const FONT_URL_NORMAL = "/fonts/helvetiker_bold.typeface.json";
+
+function NormalWordmark({ position, rotation, scale }: {
+  position: [number, number, number];
+  rotation: [number, number, number];
+  scale: number;
+}) {
+  return (
+    <group position={position} rotation={[rotation[0], rotation[1], rotation[2]]} scale={scale}>
+      <Suspense fallback={null}>
+        <Text3D font={FONT_URL_NORMAL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02}>
+          Watt
+          <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.1} />
+        </Text3D>
+        <Text3D font={FONT_URL_NORMAL} size={1.3} height={0.3} curveSegments={8} bevelEnabled bevelThickness={0.02} bevelSize={0.02} position={[3.1, 0, 0]}>
+          If.
+          <meshStandardMaterial color="#c8f400" roughness={0.3} metalness={0.0} />
+        </Text3D>
+      </Suspense>
     </group>
   );
 }
@@ -480,11 +554,28 @@ function DemandStation({ progress }: { progress: number }) {
 
 // ── Infrastructure parade ─────────────────────────────────────────────────────
 
-function InfraStation({ progress }: { progress: number }) {
+type StoredModelEntry = { position: [number, number, number]; rotation: [number, number, number]; scale: number };
+
+function InfraStation({ progress, storedModels }: {
+  progress: number;
+  storedModels?: Record<string, StoredModelEntry>;
+}) {
   const p0 = MathUtils.clamp((progress - 0.5) / 0.08, 0, 1);
   const p1 = MathUtils.clamp((progress - 0.57) / 0.08, 0, 1);
   const p2 = MathUtils.clamp((progress - 0.64) / 0.08, 0, 1);
   const p3 = MathUtils.clamp((progress - 0.71) / 0.08, 0, 1);
+  const sm = storedModels;
+
+  if (sm) {
+    return (
+      <>
+        {sm.solar    && <StoredGlbModel url="/models/solar_array.glb"   storedPosition={sm.solar.position}    storedRotation={sm.solar.rotation}    storedScale={sm.solar.scale}    reveal={ease(p0)} />}
+        {sm.wind     && <StoredGlbModel url="/models/wind_turbine.glb"  storedPosition={sm.wind.position}     storedRotation={sm.wind.rotation}     storedScale={sm.wind.scale}     reveal={ease(p1)} rotateY={0.3} />}
+        {sm.battery  && <StoredGlbModel url="/models/battery.glb"       storedPosition={sm.battery.position}  storedRotation={sm.battery.rotation}  storedScale={sm.battery.scale}  reveal={ease(p2)} />}
+        {sm.microgrid && <StoredGlbModel url="/models/microgrid_hub.glb" storedPosition={sm.microgrid.position} storedRotation={sm.microgrid.rotation} storedScale={sm.microgrid.scale} reveal={ease(p3)} />}
+      </>
+    );
+  }
 
   return (
     <group position={[0, 0, -40]}>
@@ -496,9 +587,43 @@ function InfraStation({ progress }: { progress: number }) {
   );
 }
 
+// ── localStorage layout persistence ──────────────────────────────────────────
+
+const LAYOUT_KEY = "wattif:scene-layout";
+
+interface StoredLayout {
+  models: { type: string; position: [number, number, number]; rotation: [number, number, number]; scale: number }[];
+  wordmark: { position: [number, number, number]; rotation: [number, number, number]; scale: number } | null;
+}
+
+function readStoredLayout(): StoredLayout | null {
+  try {
+    const raw = typeof localStorage !== "undefined" ? localStorage.getItem(LAYOUT_KEY) : null;
+    if (!raw) return null;
+    return JSON.parse(raw) as StoredLayout;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredLayout(layout: StoredLayout) {
+  try {
+    localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout));
+  } catch { /* ignore private browsing */ }
+}
+
 // ── Main exported scene ───────────────────────────────────────────────────────
 
 export function Scene3D({ progress }: { progress: number }) {
+  const stored = useMemo(() => readStoredLayout(), []);
+  const storedByType = useMemo(() => {
+    if (!stored) return null;
+    return stored.models.reduce<Record<string, StoredModelEntry>>((acc, m) => {
+      acc[m.type] = { position: m.position, rotation: m.rotation, scale: m.scale };
+      return acc;
+    }, {});
+  }, [stored]);
+
   return (
     <>
       <color attach="background" args={["#ffffff"]} />
@@ -513,10 +638,17 @@ export function Scene3D({ progress }: { progress: number }) {
       <CameraRig progress={progress} />
 
       <Suspense fallback={null}>
-        <HeroStation />
+        <HeroStation stored={storedByType?.heroTurbine} />
         <ProblemStation progress={progress} />
         <DemandStation progress={progress} />
-        <InfraStation progress={progress} />
+        <InfraStation progress={progress} storedModels={storedByType ?? undefined} />
+        {stored?.wordmark && (
+          <NormalWordmark
+            position={stored.wordmark.position}
+            rotation={stored.wordmark.rotation}
+            scale={stored.wordmark.scale}
+          />
+        )}
       </Suspense>
     </>
   );
@@ -564,7 +696,7 @@ const ADD_CATALOG: { type: string; url: string; targetH: number }[] = [
 // ── Editable GLB model ────────────────────────────────────────────────────────
 
 function EditableGlbModel({
-  spec, groupRef, selected, onSelect, tcMode, orbitRef,
+  spec, groupRef, selected, onSelect, tcMode, orbitRef, onDragEnd,
 }: {
   spec: EditModelSpec;
   groupRef: React.RefObject<Group | null>;
@@ -572,6 +704,7 @@ function EditableGlbModel({
   onSelect: () => void;
   tcMode: "translate" | "rotate" | "scale";
   orbitRef: React.RefObject<unknown>;
+  onDragEnd?: () => void;
 }) {
   const { scene } = useGLTF(spec.url);
 
@@ -603,7 +736,10 @@ function EditableGlbModel({
           object={groupRef}
           mode={tcMode}
           onMouseDown={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = false; }}
-          onMouseUp={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = true; }}
+          onMouseUp={() => {
+            if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = true;
+            onDragEnd?.();
+          }}
         />
       )}
     </>
@@ -613,13 +749,14 @@ function EditableGlbModel({
 // ── 3D wordmark ───────────────────────────────────────────────────────────────
 
 function EditWordmark({
-  groupRef, selected, onSelect, tcMode, orbitRef,
+  groupRef, selected, onSelect, tcMode, orbitRef, onDragEnd,
 }: {
   groupRef: React.RefObject<Group | null>;
   selected: boolean;
   onSelect: () => void;
   tcMode: "translate" | "rotate" | "scale";
   orbitRef: React.RefObject<unknown>;
+  onDragEnd?: () => void;
 }) {
   return (
     <>
@@ -645,7 +782,10 @@ function EditWordmark({
           object={groupRef}
           mode={tcMode}
           onMouseDown={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = false; }}
-          onMouseUp={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = true; }}
+          onMouseUp={() => {
+            if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = true;
+            onDragEnd?.();
+          }}
         />
       )}
     </>
@@ -694,25 +834,39 @@ function EditScene() {
     setSelectedUid(null);
   };
 
-  const copyLayout = () => {
+  const collectLayout = (): StoredLayout => {
     const modelLayout = models.map((m) => {
       const g = modelRefs.current.get(m.uid)?.current;
       return {
         type: m.type,
-        position: g ? [+g.position.x.toFixed(3), +g.position.y.toFixed(3), +g.position.z.toFixed(3)] : m.initPos,
-        rotation: g ? [+g.rotation.x.toFixed(3), +g.rotation.y.toFixed(3), +g.rotation.z.toFixed(3)] : [0, 0, 0],
+        position: (g ? [+g.position.x.toFixed(3), +g.position.y.toFixed(3), +g.position.z.toFixed(3)] : m.initPos) as [number, number, number],
+        rotation: (g ? [+g.rotation.x.toFixed(3), +g.rotation.y.toFixed(3), +g.rotation.z.toFixed(3)] : [0, 0, 0]) as [number, number, number],
         scale: g ? +g.scale.x.toFixed(3) : 1,
       };
     });
     const wm = wordmarkRef.current;
     const wordmarkLayout = wm
       ? {
-          position: [+wm.position.x.toFixed(3), +wm.position.y.toFixed(3), +wm.position.z.toFixed(3)],
-          rotation: [+wm.rotation.x.toFixed(3), +wm.rotation.y.toFixed(3), +wm.rotation.z.toFixed(3)],
+          position: [+wm.position.x.toFixed(3), +wm.position.y.toFixed(3), +wm.position.z.toFixed(3)] as [number, number, number],
+          rotation: [+wm.rotation.x.toFixed(3), +wm.rotation.y.toFixed(3), +wm.rotation.z.toFixed(3)] as [number, number, number],
           scale: +wm.scale.x.toFixed(3),
         }
       : null;
-    const json = JSON.stringify({ models: modelLayout, wordmark: wordmarkLayout }, null, 2);
+    return { models: modelLayout, wordmark: wordmarkLayout };
+  };
+
+  const [savedToDevice, setSavedToDevice] = useState(false);
+
+  const saveToDevice = () => {
+    const layout = collectLayout();
+    writeStoredLayout(layout);
+    setSavedToDevice(true);
+    setTimeout(() => setSavedToDevice(false), 1800);
+  };
+
+  const copyLayout = () => {
+    const layout = collectLayout();
+    const json = JSON.stringify(layout, null, 2);
     console.log("=== WattIf Scene Layout ===\n", json);
     navigator.clipboard.writeText(json).catch(() => {});
   };
@@ -749,6 +903,7 @@ function EditScene() {
             onSelect={() => selectModel(m.uid)}
             tcMode={tcMode}
             orbitRef={orbitRef}
+            onDragEnd={saveToDevice}
           />
         ))}
       </Suspense>
@@ -759,6 +914,7 @@ function EditScene() {
         onSelect={selectWordmark}
         tcMode={wordmarkMode}
         orbitRef={orbitRef}
+        onDragEnd={saveToDevice}
       />
 
       {/* ── Dev panel ──────────────────────────────────────────────────────── */}
@@ -872,7 +1028,22 @@ function EditScene() {
             </button>
           </div>
 
-          {/* Copy layout */}
+          {/* Persist / copy layout */}
+          <button
+            onClick={saveToDevice}
+            style={{
+              width: "100%", padding: "9px",
+              background: savedToDevice ? "#4ade80" : "#1e2e00",
+              color: savedToDevice ? "#000" : "#c8f400",
+              border: `1px solid ${savedToDevice ? "#4ade80" : "#c8f400"}`,
+              borderRadius: 6,
+              cursor: "pointer", fontWeight: 700, fontSize: 12,
+              marginBottom: 6,
+              transition: "background 0.3s, color 0.3s",
+            }}
+          >
+            {savedToDevice ? "✓ Saved to device!" : "Save to Device"}
+          </button>
           <button
             onClick={copyLayout}
             style={{
@@ -886,7 +1057,7 @@ function EditScene() {
             Copy Layout JSON
           </button>
           <div style={{ color: "#444", fontSize: 10, textAlign: "center" }}>
-            Also logged to console
+            Save → normal scene reads layout · Copy → logs to console
           </div>
         </div>
 
