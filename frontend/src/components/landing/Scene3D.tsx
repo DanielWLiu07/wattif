@@ -273,15 +273,17 @@ const BLOCKS: { x: number; w: number; d: number; h: number }[] = [
 
 function DemandStation({ progress }: { progress: number }) {
   const reveal = MathUtils.clamp((progress - 0.34) / 0.16, 0, 1);
-  if (reveal < 0.01) return null;
+  const fade   = MathUtils.clamp((0.56 - progress) / 0.06, 0, 1);
+  const vis    = reveal * fade;
+  if (vis < 0.01) return null;
 
   return (
     <group position={[0, 0, -28]}>
       {BLOCKS.map((b, i) => (
         <mesh
           key={i}
-          position={[b.x, (b.h / 2) * reveal, 0]}
-          scale={[1, reveal, 1]}
+          position={[b.x, (b.h / 2) * vis, 0]}
+          scale={[1, vis, 1]}
           castShadow
           receiveShadow
         >
