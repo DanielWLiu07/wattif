@@ -106,6 +106,32 @@ const processedZones: ZoneGeo[] = rawZones.map((z) => {
 
 const twinkleZones = processedZones.filter((_, i) => i % 6 === 0);
 
+// ── Side-panel stat row ───────────────────────────────────────────────────
+function StatItem({ label, value, accent = false, align = "left" }: {
+  label: string; value: string; accent?: boolean; align?: "left" | "right";
+}) {
+  return (
+    <div style={{ marginBottom: 16, textAlign: align }}>
+      <div style={{
+        fontFamily: "monospace", fontSize: 9, letterSpacing: "0.14em",
+        textTransform: "uppercase", color: "hsl(var(--foreground) / 0.4)",
+        marginBottom: 3,
+      }}>
+        {label}
+      </div>
+      <div style={{
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: accent ? 30 : 22, fontWeight: 700, lineHeight: 1,
+        letterSpacing: "-0.02em",
+        color: accent ? "hsl(var(--brand))" : "hsl(var(--foreground) / 0.82)",
+        transition: "color 0.2s ease",
+      }}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function TorontoMap({ active = false }: { active?: boolean }) {
@@ -254,6 +280,14 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
   const highlightAll      = effectiveRegion === "All Toronto";
   const highlightedRegion = highlightAll ? null : effectiveRegion;
 
+  // Live area statistics for the flanking panels — all derived from real
+  // fixture data, recomputed for whichever region is hovered/centered.
+  const statRegion = effectiveRegion ?? "All Toronto";
+  const sZones   = getZoneCount(statRegion);
+  const sAgents  = getAgentCount(statRegion);
+  const sShare   = (sZones / TOTAL_ZONES) * 100;
+  const sDensity = sZones > 0 ? Math.round(sAgents / sZones) : 0;
+
   const colDelay = ["0ms", "140ms", "280ms"] as const;
 
   const handleClick = (name: string) => {
@@ -338,7 +372,7 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             position: "absolute", top: "50%", left: 0,
             transform: "translateY(-50%)",
             width: 260, height: 420,
-            background: "radial-gradient(ellipse at left center, hsl(72 95% 50% / 0.07) 0%, transparent 72%)",
+            background: "radial-gradient(ellipse at left center, hsl(72 95% 50% / 0.06) 0%, transparent 72%)",
             pointerEvents: "none",
           }} />
           {/* Right margin ambient glow */}
@@ -346,11 +380,54 @@ export function TorontoMap({ active = false }: { active?: boolean }) {
             position: "absolute", top: "50%", right: 0,
             transform: "translateY(-50%)",
             width: 260, height: 420,
-            background: "radial-gradient(ellipse at right center, hsl(72 95% 50% / 0.07) 0%, transparent 72%)",
+            background: "radial-gradient(ellipse at right center, hsl(72 95% 50% / 0.06) 0%, transparent 72%)",
             pointerEvents: "none",
           }} />
 
-          <div style={{ position: "relative", width: "min(1060px, 96%)", aspectRatio: `${SVG_W} / ${SVG_H}` }}>
+          {/* ── Left stat panel — fills the flank with live area numbers ── */}
+          <div style={{
+            position: "absolute", top: "50%", left: "clamp(40px, 5vw, 110px)",
+            transform: "translateY(-50%)",
+            width: 178, textAlign: "left",
+            borderLeft: "1.5px solid hsl(var(--brand) / 0.45)", paddingLeft: 16,
+            opacity: revealed ? 1 : 0,
+            transition: "opacity 0.55s ease 0.32s",
+            pointerEvents: "none", zIndex: 2,
+          }}>
+            <div style={{
+              fontFamily: "Space Grotesk, sans-serif", fontWeight: 700, fontSize: 16,
+              letterSpacing: "-0.015em", color: "hsl(var(--foreground))",
+              marginBottom: 16, lineHeight: 1.1,
+            }}>
+              {statRegion}
+            </div>
+            <StatItem label="Zones"         value={sZones.toString()}        accent />
+            <StatItem label="Share of city" value={`${sShare.toFixed(1)}%`} />
+          </div>
+
+          {/* ── Right stat panel ── */}
+          <div style={{
+            position: "absolute", top: "50%", right: "clamp(40px, 5vw, 110px)",
+            transform: "translateY(-50%)",
+            width: 178, textAlign: "right",
+            borderRight: "1.5px solid hsl(var(--brand) / 0.45)", paddingRight: 16,
+            opacity: revealed ? 1 : 0,
+            transition: "opacity 0.55s ease 0.42s",
+            pointerEvents: "none", zIndex: 2,
+          }}>
+            <div style={{
+              fontFamily: "monospace", fontWeight: 600, fontSize: 10,
+              letterSpacing: "0.14em", textTransform: "uppercase",
+              color: "hsl(var(--foreground) / 0.42)",
+              marginBottom: 16, lineHeight: 1.1,
+            }}>
+              Simulation load
+            </div>
+            <StatItem label="Agents modelled" value={sAgents.toLocaleString()} accent align="right" />
+            <StatItem label="Avg / zone"      value={sDensity.toString()}      align="right" />
+          </div>
+
+          <div style={{ position: "relative", width: "min(780px, 60%)", aspectRatio: `${SVG_W} / ${SVG_H}` }}>
             <svg
               viewBox={`0 0 ${SVG_W} ${SVG_H}`}
               width="100%" height="100%"
