@@ -20,6 +20,26 @@ from .optimizer import DEFAULT_CAPACITY_KW, candidate_cost
 from .sim.engine import SimEngine
 
 
+INFRA_CLEARANCES = {
+    "wind": 200.0,
+    "microgrid": 120.0,
+    "battery": 60.0,
+    "solar": 40.0,
+    "ev_charger": 30.0
+}
+
+def haversine_distance(pos1: tuple[float, float], pos2: tuple[float, float]) -> float:
+    import math
+    R = 6371000.0  # meters
+    lon1, lat1 = math.radians(pos1[0]), math.radians(pos1[1])
+    lon2, lat2 = math.radians(pos2[0]), math.radians(pos2[1])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+    c = 2 * math.asin(math.sqrt(a))
+    return R * c
+
+
 class World:
     def __init__(self) -> None:
         self.zones, self.agents, self.source = load_world()
@@ -213,6 +233,18 @@ class World:
     # -- infra ---------------------------------------------------------
     def place_infra(self, payload: InfraCreate) -> Infra:
         kind = payload.kind
+        # Enforce spatial clearance to prevent model overlap/clipping
+        place_limit = INFRA_CLEARANCES.get(kind, 30.0)
+        for existing in self.engine.infra.values():
+            if existing.status == "damaged":
+                continue
+            dist = haversine_distance(payload.position, existing.position)
+            req_dist = max(place_limit, INFRA_CLEARANCES.get(existing.kind, 30.0))
+            if dist < req_dist:
+                raise ValueError(
+                    f"Placement Blocked: Too close to an existing {existing.kind} (requires {req_dist:.0f}m clearance, currently {dist:.1f}m)"
+                )
+
         capacity_kw = (
             payload.capacity_kw
             if payload.capacity_kw is not None

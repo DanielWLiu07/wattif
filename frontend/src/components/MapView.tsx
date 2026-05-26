@@ -24,7 +24,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Compass } from "lucide-react";
 import { useStore, getZoneRegion } from "@/store";
-import { buildLayers } from "@/map/layers";
+import { buildLayers, uploadedAssetsToMapPoints } from "@/map/layers";
 import { RecommendationImpact } from "@/components/RecommendationImpact";
 import type { Infra, LngLat, Recommendation } from "@/types";
 
@@ -88,6 +88,7 @@ function MapboxDeckOverlay(props: MapboxOverlayProps) {
 
 export function MapView() {
   const zones = useStore((s) => s.zones);
+  const allZones = useStore((s) => s.allZones);
   const agents = useStore((s) => s.agents);
   const infra = useStore((s) => s.infra);
   const recommendations = useStore((s) => s.recommendations);
@@ -104,6 +105,7 @@ export function MapView() {
   const voices = useStore((s) => s.voices);
   const facilities = useStore((s) => s.facilities);
   const existingInfra = useStore((s) => s.existingInfra);
+  const existingInfrastructureAssets = useStore((s) => s.existingInfrastructureAssets);
   const constraints = useStore((s) => s.constraints);
   const scenarioTargeting = useStore((s) => s.scenarioTargeting);
   const setTargetZone = useStore((s) => s.setTargetZone);
@@ -139,6 +141,7 @@ export function MapView() {
   const [hover, setHover] = useState<Hover>(null);
   const [districtHoverHtml, setDistrictHoverHtml] = useState<string | null>(null);
   const [districtPopup, setDistrictPopup] = useState<Hover>(null);
+  const [placementHoverCoordinate, setPlacementHoverCoordinate] = useState<[number, number] | null>(null);
   const [recCard, setRecCard] = useState<{
     rec: Recommendation;
     x: number;
@@ -189,9 +192,15 @@ export function MapView() {
     [selectInfra]
   );
 
+  const uploadedExistingInfra = useMemo(
+    () => uploadedAssetsToMapPoints(existingInfrastructureAssets),
+    [existingInfrastructureAssets]
+  );
+
   const layers = useMemo<Layer[]>(() => {
     const base = buildLayers({
       zones,
+      allZones,
       agents,
       infra,
       recommendations,
@@ -206,6 +215,7 @@ export function MapView() {
       voices,
       facilities,
       existingInfra,
+      uploadedExistingInfra,
       constraints,
       floodRisk,
       districtEnergy,
@@ -227,6 +237,8 @@ export function MapView() {
       onVoiceClick: selectVoiceFromMap,
       regionCursorMode,
       hoveredRegion,
+      placementHoverCoordinate,
+      placementHoverKind: mode === "place" ? placeKind : null,
     });
     if (GOOGLE_KEY && layerToggles.buildings) {
       base.unshift(
@@ -256,6 +268,7 @@ export function MapView() {
     voices,
     facilities,
     existingInfra,
+    uploadedExistingInfra,
     constraints,
     floodRisk,
     districtEnergy,
@@ -277,6 +290,10 @@ export function MapView() {
     selectVoiceFromMap,
     regionCursorMode,
     hoveredRegion,
+    allZones,
+    placementHoverCoordinate,
+    mode,
+    placeKind,
   ]);
 
   const buildDistrictPopupHtml = useCallback(
@@ -354,7 +371,7 @@ export function MapView() {
       if (regionCursorMode) {
         const zoneName = obj?.properties?.name;
         if (zoneName) {
-          const zoneObj = zones.find(z => z.id === obj?.properties?.id || z.name === zoneName);
+          const zoneObj = allZones.find(z => z.id === obj?.properties?.id || z.name === zoneName);
           const region = getZoneRegion(zoneName, zoneObj?.centroid);
           setSelectedRegion(region);
           setRegionCursorMode(false);
@@ -381,7 +398,9 @@ export function MapView() {
         return;
       }
       if (obj?.kind && obj?.capacityKw) selectInfra(obj.id);
-      else if (obj?.properties?.id) selectZone(obj.properties.id);
+      else if (obj?._uploadedExisting) {
+        // read-only overlay — no selection
+      } else if (obj?.properties?.id) selectZone(obj.properties.id);
       else if (!obj) {
         selectZone(null);
         selectInfra(null);
@@ -389,18 +408,38 @@ export function MapView() {
       }
     },
     [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion, zones]
+    [mode, scenarioTargeting, fireScenarioAtZone, addInfraAt, selectZone, selectInfra, regionCursorMode, setSelectedRegion, setRegionCursorMode, setHoveredRegion, allZones]
   );
 
   const handleHover = useCallback((info: PickingInfo) => {
+    if (mode === "place" && info.coordinate) {
+      setPlacementHoverCoordinate(info.coordinate as [number, number]);
+    } else {
+      setPlacementHoverCoordinate(null);
+    }
+
     const o: any = info.object;
 
     // Interactive region selection cursor: highlight hovered region without covering the map.
     if (regionCursorMode) {
       const zoneName = o?.properties?.name;
       if (zoneName) {
-        const zoneObj = zones.find(z => z.id === o?.properties?.id || z.name === zoneName);
+        const zoneObj = allZones.find(z => z.id === o?.properties?.id || z.name === zoneName);
         const region = getZoneRegion(zoneName, zoneObj?.centroid);
         setHoveredRegion(region);
+        
+        const filtered = allZones.filter(z => getZoneRegion(z.name, z.centroid) === region);
+        const pop = filtered.reduce((sum, z) => sum + z.demographics.population, 0);
+        
+        const html = `<div class="p-1">
+          <div class="font-bold text-emerald-400 text-sm mb-0.5">Select ${region}</div>
+          <div class="text-[11px] text-muted-foreground mb-1.5">Click to simulate this region only</div>
+          <div class="text-[11px] text-foreground/90 leading-tight">
+            <b>${filtered.length}</b> neighborhoods<br/>
+            <b>${pop.toLocaleString()}</b> residents
+          </div>
+        </div>`;
+        setHover({ x: info.x ?? 0, y: info.y ?? 0, html });
       } else {
         setHoveredRegion(null);
       }
@@ -447,6 +486,11 @@ export function MapView() {
       html = `<b>${o.kind.toUpperCase()}</b> · ${o.capacityKw} kW<br/>${o.status}${
         o.placedBy ? ` · placed by ${o.placedBy}` : ""
       }`;
+    } else if (o._uploadedExisting) {
+      const label = o.name || `Uploaded ${String(o.kind).replace(/_/g, " ")}`;
+      html = `<b>${label}</b><br/><span style="color:#fbbf24">Existing inventory (uploaded)</span>`;
+      if (o.status) html += `<br/>Status: ${o.status}`;
+      if (o.powerKw != null) html += `<br/>Power: ${o.powerKw} kW`;
     } else if (o.name && o.position && o.kind && !o.capacityKw && !o.rationale) {
       setDistrictHoverHtml(null);
       // facility or existing-infra marker
@@ -506,6 +550,7 @@ export function MapView() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
+  }, [environment, approvalHistory, heatVuln, floodRisk, districtEnergy, sitingPriority, scenarioTargeting, setTargetZone, regionCursorMode, setHoveredRegion, zones, allZones, mode]);
 
   const onMapLoad = useCallback(() => {
     const map = mapRef.current?.getMap() as any;

@@ -9,6 +9,7 @@ from . import (
     proposal_infrastructure,
     proposals,
     simulation_snapshots,
+    uploaded_infrastructure,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "planner_runs",
     "proposal_infrastructure",
     "simulation_snapshots",
+    "uploaded_infrastructure",
 ]

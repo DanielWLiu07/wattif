@@ -144,6 +144,33 @@ class UploadedDataset(BaseModel):
     created_at: str | None = None
     updated_at: str | None = None
     uploaded_at: str | None = None
+    extracted_existing_infrastructure_count: int = 0
+    invalid_existing_infrastructure_rows: int = 0
+    detected_existing_infrastructure_kind: str | None = None
+
+
+class UploadedInfrastructureAsset(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    project_id: str | None = None
+    proposal_id: str | None = None
+    dataset_id: str
+    asset_kind: str
+    source_type: str = "upload"
+    name: str | None = None
+    address: str | None = None
+    latitude: float
+    longitude: float
+    zone_id: str | None = None
+    status: str | None = None
+    operator: str | None = None
+    capacity_kw: float | None = None
+    power_kw: float | None = None
+    charger_type: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    source_row_index: int | None = None
+    created_at: str | None = None
 
 
 class UploadedDatasetSummary(BaseModel):
