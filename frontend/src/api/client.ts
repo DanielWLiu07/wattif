@@ -12,11 +12,17 @@ import type {
   Infra,
   InfraKind,
   PlannerEvent,
+  Project,
+  Proposal,
+  ProposalInfrastructure,
+  ProposalInfrastructureCreate,
   Recommendation,
   Scenario,
   ScenarioType,
   Sentiment,
   SimMetrics,
+  SimulationSnapshot,
+  SimulationSnapshotCreate,
   Zone,
 } from "@/types";
 import {
@@ -75,6 +81,95 @@ export type HealthMeta = {
 
 export async function getHealthMeta(): Promise<HealthMeta | null> {
   return tryFetch<HealthMeta>("/api/health");
+}
+
+// ---------------- Supabase-backed persistence routes (via FastAPI) ----------------
+
+export async function listProjects(): Promise<Project[] | null> {
+  return tryFetch<Project[]>("/api/projects");
+}
+
+export async function createProject(
+  name: string,
+  description?: string,
+  city = "Toronto"
+): Promise<Project | null> {
+  return tryFetch<Project>("/api/projects", {
+    method: "POST",
+    body: JSON.stringify({ name, description, city }),
+  });
+}
+
+export async function listProposals(projectId: string): Promise<Proposal[] | null> {
+  const q = new URLSearchParams({ projectId });
+  return tryFetch<Proposal[]>(`/api/proposals?${q.toString()}`);
+}
+
+export async function createProposal(
+  projectId: string,
+  name: string,
+  description?: string
+): Promise<Proposal | null> {
+  return tryFetch<Proposal>("/api/proposals", {
+    method: "POST",
+    body: JSON.stringify({ projectId, name, description }),
+  });
+}
+
+export async function listProposalInfrastructure(
+  proposalId: string
+): Promise<ProposalInfrastructure[] | null> {
+  return tryFetch<ProposalInfrastructure[]>(
+    `/api/proposals/${proposalId}/infrastructure`
+  );
+}
+
+export async function createProposalInfrastructure(
+  proposalId: string,
+  body: ProposalInfrastructureCreate
+): Promise<ProposalInfrastructure | null> {
+  return tryFetch<ProposalInfrastructure>(
+    `/api/proposals/${proposalId}/infrastructure`,
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    }
+  );
+}
+
+export async function deleteProposalInfrastructure(
+  proposalId: string,
+  id: string
+): Promise<boolean> {
+  const r = await tryFetch<{ ok: boolean }>(
+    `/api/proposals/${proposalId}/infrastructure/${id}`,
+    { method: "DELETE" }
+  );
+  return r?.ok ?? false;
+}
+
+export async function listSnapshots(
+  proposalId: string
+): Promise<SimulationSnapshot[] | null> {
+  return tryFetch<SimulationSnapshot[]>(`/api/proposals/${proposalId}/snapshots`);
+}
+
+export async function createSnapshot(
+  proposalId: string,
+  body: SimulationSnapshotCreate
+): Promise<SimulationSnapshot | null> {
+  return tryFetch<SimulationSnapshot>(`/api/proposals/${proposalId}/snapshots`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function getLatestSnapshot(
+  proposalId: string
+): Promise<SimulationSnapshot | null> {
+  return tryFetch<SimulationSnapshot>(
+    `/api/proposals/${proposalId}/snapshots/latest`
+  );
 }
 
 export async function getZones(): Promise<{ data: Zone[]; live: boolean }> {
