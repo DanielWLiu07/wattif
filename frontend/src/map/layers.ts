@@ -5,7 +5,6 @@ import {
   ScatterplotLayer,
   TextLayer,
 } from "@deck.gl/layers";
-import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import { TripsLayer } from "@deck.gl/geo-layers";
 import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 import type { Layer } from "@deck.gl/core";
@@ -51,6 +50,29 @@ export function approvalColor(a: number): RGB {
   }
   const k = t; // 0..1 toward support
   return [Math.round(148 - k * 96), Math.round(163 + k * 48), Math.round(184 + k * 16)];
+}
+
+// blue (low) → cyan → amber → orange (high) — demand heat; deeper stops read on white.
+const DEMAND_STOPS: RGB[] = [
+  [13, 71, 161],
+  [3, 132, 199],
+  [6, 182, 212],
+  [250, 204, 21],
+  [245, 124, 0],
+  [216, 67, 21],
+];
+export function demandColor(t: number): RGB {
+  const c = Math.max(0, Math.min(1, t));
+  const seg = c * (DEMAND_STOPS.length - 1);
+  const i = Math.min(DEMAND_STOPS.length - 2, Math.floor(seg));
+  const f = seg - i;
+  const a = DEMAND_STOPS[i];
+  const b = DEMAND_STOPS[i + 1];
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * f),
+    Math.round(a[1] + (b[1] - a[1]) * f),
+    Math.round(a[2] + (b[2] - a[2]) * f),
+  ];
 }
 
 const incomeColor: Record<Agent["incomeBracket"], RGB> = {
@@ -606,29 +628,41 @@ export function buildLayers(input: LayerInputs): Layer[] {
   }
 
   // ---- Demand heat ----
-  if (layers.demand && agents.length) {
+  // Per-zone demand choropleth (NOT a hex layer): renders flat in the same ground
+  // depth band as the approval/burden choropleths (getPolygonOffset) so it never
+  // z-fights the basemap/3D buildings. Extrude toggle lifts it into 3D columns.
+  if (layers.demand && zones.length && agents.length) {
+    const byZone: Record<string, number> = {};
+    for (const a of agents) {
+      byZone[a.zoneId] = (byZone[a.zoneId] ?? 0) + (a.demandKwh ?? 0);
+    }
+    const maxDemand = Math.max(1, ...Object.values(byZone));
+    const fc: FeatureCollection = {
+      type: "FeatureCollection",
+      features: zones.map((z) => ({
+        type: "Feature",
+        geometry: z.polygon,
+        properties: { id: z.id, t: (byZone[z.id] ?? 0) / maxDemand },
+      })),
+    };
     out.push(
-      new HexagonLayer({
+      new GeoJsonLayer({
         id: "demand",
-        data: agents,
-        getPosition: (a: Agent) => a.position,
-        getElevationWeight: (a: Agent) => a.demandKwh,
-        getColorWeight: (a: Agent) => a.demandKwh,
-        elevationScale: extrude ? 6 : 0,
+        data: fc,
+        filled: true,
+        stroked: true,
         extruded: extrude,
-        radius: 220,
-        coverage: 0.85,
-        opacity: extrude ? 0.5 : 0.6,
-        updateTriggers: { getElevationWeight: [extrude] },
-        colorRange: [
-          [13, 71, 161],
-          [2, 119, 189],
-          [0, 172, 193],
-          [255, 193, 7],
-          [245, 124, 0],
-          [216, 67, 21],
-        ],
+        getElevation: (f: any) => (extrude ? f.properties.t * 1800 : 0),
+        getFillColor: (f: any) =>
+          [...demandColor(f.properties.t), extrude ? 210 : 150] as any,
+        getLineColor: [51, 65, 85, 55],
+        lineWidthMinPixels: 0.5,
+        getPolygonOffset: groundOffset,
         pickable: false,
+        updateTriggers: {
+          getElevation: [extrude],
+          getFillColor: [extrude],
+        },
       })
     );
   }
