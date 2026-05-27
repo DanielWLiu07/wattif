@@ -53,6 +53,10 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("post", "/api/projects/00000000-0000-0000-0000-000000000001/cohorts/generate", None),
         ("get", "/api/projects/00000000-0000-0000-0000-000000000001/cohorts", None),
         ("get", "/api/projects/00000000-0000-0000-0000-000000000001/concerns", None),
+        ("get", "/api/projects/00000000-0000-0000-0000-000000000001/resident-reactions", None),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/resident-reactions", None),
+        ("post", "/api/proposals/00000000-0000-0000-0000-000000000002/resident-reactions/generate", None),
+        ("delete", "/api/resident-reactions/00000000-0000-0000-0000-000000000005", None),
     ):
         if method == "get":
             r = client.get(path)

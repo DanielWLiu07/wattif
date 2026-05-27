@@ -299,3 +299,56 @@ def test_repository_disabled(monkeypatch):
 
     with pytest.raises(PersistenceDisabledError):
         repo.list_by_project("p1")
+
+
+def test_resident_reaction_api_generate(monkeypatch):
+    import app.state as state
+    from app.main import app
+    from fastapi.testclient import TestClient
+
+    saved_specs = [
+        {
+            "persona_label": "EV owners",
+            "stance": "mixed",
+            "summary": "Synthetic reaction text.",
+            "caveat": REACTION_CAVEAT,
+            "provider": "deterministic",
+            "model": "fallback_v1",
+            "reaction_type": "llm_synthetic_reaction",
+            "source_context": {},
+        }
+    ]
+
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.proposals_repo.get_proposal",
+        lambda pid: {"id": pid, "project_id": "proj-1"},
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.delete_by_proposal",
+        lambda pid: 0,
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.generate_synthetic_resident_reactions",
+        lambda **kw: (saved_specs, {"provider": "deterministic", "model": "fallback_v1", "count": 1}),
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.create",
+        lambda **fields: {"id": "r1", **fields},
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.list_by_proposal",
+        lambda pid, **kw: [{"id": "r1", "project_id": "proj-1", "proposal_id": pid, **saved_specs[0], "caveat": REACTION_CAVEAT}],
+    )
+
+    state.reset_world()
+    client = TestClient(app)
+    r = client.post("/api/proposals/prop-1/resident-reactions/generate")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["count"] == 1
+    assert body["reactions"][0]["summary"] == "Synthetic reaction text."
+    assert body["reactions"][0]["caveat"] == REACTION_CAVEAT
+
+    listed = client.get("/api/proposals/prop-1/resident-reactions")
+    assert listed.status_code == 200
+    assert len(listed.json()) == 1
