@@ -117,6 +117,15 @@ def build_reaction_context_pack(
 
         recommendation = fetch_operator_recommendation(proposal_id)
 
+    from .evidence_retrieval import retrieve_evidence_for_context
+
+    evidence = retrieve_evidence_for_context(
+        project_id=project_id,
+        proposal_id=proposal_id,
+        user_message="resident concern feedback parking charger proposal design",
+        limit=6,
+    )
+
     return {
         "projectId": project_id,
         "proposalId": proposal_id,
@@ -144,6 +153,7 @@ def build_reaction_context_pack(
         "operatorRecommendationSummary": (
             (recommendation or {}).get("summary")[:400] if recommendation else None
         ),
+        "evidenceSnippets": evidence,
     }
 
 
@@ -176,6 +186,7 @@ def generate_deterministic_reactions(
     type_by_id = {c.get("id"): c.get("cohortType") for c in cohorts}
 
     source_rows = concerns[:4] if concerns else []
+    evidence = context.get("evidenceSnippets") or []
 
     if not source_rows:
         generic_label = "Generic residents"
@@ -234,7 +245,10 @@ def generate_deterministic_reactions(
             stance = "mixed"
         summary = concern.get("summary") or "Synthetic cohort has planning concerns."
         evidence_list = concern.get("evidence") or []
-        evidence = evidence_list[0] if evidence_list else concern.get("topic")
+        evidence_text = evidence_list[0] if evidence_list else concern.get("topic")
+        if not evidence_list and evidence:
+            snip = evidence[min(len(reactions), len(evidence) - 1)]
+            evidence_text = (snip.get("chunkText") or snip.get("chunk_text") or "")[:240]
 
         reactions.append(
             {
@@ -243,7 +257,7 @@ def generate_deterministic_reactions(
                 "summary": summary[:320],
                 "key_concern": concern.get("topic") or "planning",
                 "suggested_change": _suggested_change_from_concern(concern),
-                "evidence": str(evidence)[:240] if evidence else None,
+                "evidence": str(evidence_text)[:240] if evidence_text else None,
                 "confidence": 0.65,
                 "cohort_id": cohort_id,
                 "concern_id": concern.get("id"),
