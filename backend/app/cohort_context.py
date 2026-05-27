@@ -171,4 +171,15 @@ def build_planner_context(
     )
     if ui:
         parts.append(ui)
+    from .synthetic_resident_reactions import (
+        fetch_reaction_summaries,
+        format_reactions_for_prompt,
+    )
+
+    reactions = fetch_reaction_summaries(
+        project_id=project_id, proposal_id=proposal_id, limit=12
+    )
+    rr = format_reactions_for_prompt(reactions)
+    if rr:
+        parts.append(rr)
     return "\n\n".join(parts) if parts else None

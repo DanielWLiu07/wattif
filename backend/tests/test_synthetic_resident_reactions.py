@@ -278,7 +278,7 @@ def test_build_context_pack_monkeypatched(monkeypatch):
         lambda pid: {"tick": 10, "metrics": {"coverage": 0.5}},
     )
     monkeypatch.setattr(
-        "app.synthetic_resident_reactions.fetch_operator_recommendation",
+        "app.report_generator.fetch_operator_recommendation",
         lambda pid: {"summary": "Add batteries first."},
     )
 

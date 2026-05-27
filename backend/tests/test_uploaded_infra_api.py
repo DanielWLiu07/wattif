@@ -98,6 +98,44 @@ def test_planner_context_includes_uploaded_ev_summary(monkeypatch):
     assert "average power 75 kW" in ctx
 
 
+def test_planner_context_includes_synthetic_reactions(monkeypatch):
+    monkeypatch.setattr(
+        "app.cohort_context.fetch_concern_summaries",
+        lambda **kw: [],
+    )
+    monkeypatch.setattr(
+        "app.cohort_context.fetch_proposal_infra_summary",
+        lambda **kw: [],
+    )
+    monkeypatch.setattr(
+        "app.dataset_context.fetch_dataset_summaries",
+        lambda **kw: [],
+    )
+    monkeypatch.setattr(
+        "app.existing_infra_context.fetch_uploaded_infrastructure",
+        lambda **kw: [],
+    )
+    monkeypatch.setattr(
+        "app.synthetic_resident_reactions.fetch_reaction_summaries",
+        lambda **kw: [
+            {
+                "stance": "mixed",
+                "summary": "Worried about peak load.",
+                "suggestedChange": "Add storage before new EV load.",
+            },
+            {
+                "stance": "support",
+                "summary": "Likes transit-adjacent chargers.",
+                "suggestedChange": "Expand off-street charger pilot.",
+            },
+        ],
+    )
+    ctx = build_planner_context(project_id="p1", proposal_id="prop1")
+    assert ctx is not None
+    assert "Synthetic resident reactions: 2 generated" in ctx
+    assert "Add storage before new EV load" in ctx
+
+
 def test_summarize_empty_returns_empty():
     assert summarize_uploaded_existing_infra([]) == ""
     assert format_uploaded_existing_infra_for_prompt(project_id="p1") == ""

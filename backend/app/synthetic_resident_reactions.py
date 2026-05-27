@@ -19,7 +19,6 @@ from .db.repositories import proposal_infrastructure as infra_repo
 from .db.repositories import proposals as proposals_repo
 from .db.repositories import simulation_snapshots as snapshots_repo
 from .existing_infra_context import fetch_uploaded_infrastructure
-from .report_generator import fetch_operator_recommendation
 
 log = logging.getLogger("wattif.synthetic_resident_reactions")
 
@@ -112,9 +111,11 @@ def build_reaction_context_pack(
         project_id=project_id, proposal_id=proposal_id, limit=100
     )
     snapshot = snapshots_repo.get_latest(proposal_id) if proposal_id else None
-    recommendation = (
-        fetch_operator_recommendation(proposal_id) if proposal_id else None
-    )
+    recommendation = None
+    if proposal_id:
+        from .report_generator import fetch_operator_recommendation
+
+        recommendation = fetch_operator_recommendation(proposal_id)
 
     return {
         "projectId": project_id,
@@ -422,6 +423,8 @@ def format_reactions_for_prompt(reactions: list[dict[str, Any]]) -> str:
         stance_counts[st] = stance_counts.get(st, 0) + 1
         if r.get("suggested_change"):
             changes.append(str(r["suggested_change"])[:120])
+        elif r.get("suggestedChange"):
+            changes.append(str(r["suggestedChange"])[:120])
         if r.get("summary"):
             summaries.append(str(r["summary"])[:160])
 
