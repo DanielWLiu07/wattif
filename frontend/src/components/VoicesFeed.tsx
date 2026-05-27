@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search } from "lucide-react";
+import { MagnifyingGlass as Search } from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { avatarDataUri } from "@/lib/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -66,7 +66,7 @@ export function VoicesFeed() {
       <div className="border-b border-border px-3 py-2">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">City approval</span>
-          <span className="font-semibold tabular-nums">
+          <span className="font-semibold num">
             {(approval * 100).toFixed(0)}%
           </span>
         </div>

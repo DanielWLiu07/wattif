@@ -158,7 +158,7 @@ export function RegionSelector() {
           </div>
         </div>
 
-        {selectedRegion !== "All" && (
+        {selectedRegion !== "All" && selectedRegion !== "All Toronto" && (
           <div className="flex justify-end border-t border-border/40 pt-4">
             <Button
               variant="outline"

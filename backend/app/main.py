@@ -15,6 +15,9 @@ from .models import (
     Agent,
     AgentVoice,
     Flow,
+    ForecastPoint,
+    ForecastRequest,
+    ForecastResponse,
     Infra,
     InfraCreate,
     OptimizeRequest,
@@ -145,6 +148,74 @@ def get_forecast(
     }
 
 
+def _forecast_series(sim, ticks: int) -> list[ForecastPoint]:
+    """Snapshot metrics at t0, then after each step — horizon+1 points total."""
+    points: list[ForecastPoint] = []
+
+    def snap() -> ForecastPoint:
+        m = sim.current_metrics()
+        return ForecastPoint(
+            tick=m.tick,
+            approval=round(float(m.approval_pct), 4),
+            coverage=round(float(m.coverage_pct), 4),
+            equity=round(float(m.equity_score), 4),
+            emissions=round(float(m.emissions_tonnes), 2),
+        )
+
+    points.append(snap())  # t0 (current tick, before stepping)
+    for _ in range(ticks):
+        sim.step()
+        points.append(snap())
+    return points
+
+
+@app.post("/api/forecast", response_model=ForecastResponse)
+def post_forecast(body: ForecastRequest | None = None) -> ForecastResponse:
+    """Forward-simulate the live world `ticks` months and return the projected metric
+    series (approval/coverage/equity/emissions). With `proposed` builds, also returns a
+    `projected` series = current world + those builds, stepped forward — the "what-if I
+    build here" overlay. Never mutates the live world (operates on deepcopy clones)."""
+    import copy
+
+    body = body or ForecastRequest()
+    ticks = max(1, min(int(body.ticks), 36))
+    world = get_world()
+
+    # Baseline: clone the live engine and step it forward untouched.
+    baseline_sim = copy.deepcopy(world.engine)
+    baseline = _forecast_series(baseline_sim, ticks)
+
+    projected: list[ForecastPoint] | None = None
+    if body.proposed:
+        proj_sim = copy.deepcopy(world.engine)
+        for p in body.proposed:
+            proj_sim.add_infra(_build_proposed_infra(p.kind, p.position))
+        projected = _forecast_series(proj_sim, ticks)
+
+    return ForecastResponse(horizon=ticks, baseline=baseline, projected=projected)
+
+
+def _build_proposed_infra(kind: str, position) -> Infra:
+    """Construct an Infra from a {kind, position} proposal, mirroring World.place_infra
+    (default capacity + cost + model URL). For forecast clones only — does NOT place."""
+    import uuid
+
+    from .models import MODEL_URLS
+    from .optimizer import DEFAULT_CAPACITY_KW, candidate_cost
+
+    capacity_kw = DEFAULT_CAPACITY_KW.get(kind, 4000.0)
+    cost_cad = candidate_cost(kind, capacity_kw)
+    return Infra(
+        id=f"infra-{uuid.uuid4().hex[:8]}",
+        kind=kind,
+        position=position,
+        capacity_kw=capacity_kw,
+        cost_cad=round(cost_cad, 2),
+        model_url=MODEL_URLS.get(kind, ""),
+        status="planned",
+    )
+
+
 @app.get("/api/siting-priority")
 def get_siting_priority(
     equity_weight: float = Query(default=0.4, ge=0.0, le=1.0, alias="equityWeight"),
@@ -249,10 +320,19 @@ def place_infra(payload: InfraCreate) -> dict:
     neutralCount} reflecting local support/oppose toward THIS specific installation's kind.
     """
     world = get_world()
+    before = world._snapshot()
     try:
         infra = world.place_infra(payload)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    # Reaction voices tagged to this placement + a measured before/after event.
+    voices = world.reaction_voices(trigger=f"placement:{infra.kind}", kind=infra.kind)
+    after = world._snapshot()
+    zi = world.engine._nearest_zone(infra.position)
+    zone = world.zones[zi] if 0 <= zi < len(world.zones) else None
+    label = f"{infra.kind.title()}" + (f" · {zone.name}" if zone else "")
+    world.record_event("placement", infra.kind, label,
+                       [zone.id] if zone else [], before, after, voices)
     return {
         **infra.model_dump(by_alias=True),
         **world.proposal_approval_for_infra(infra),
@@ -278,7 +358,10 @@ def sim_reset() -> SimMetrics:
 @app.post("/api/sim/step", response_model=SimMetrics)
 def sim_step(body: StepRequest | None = None) -> SimMetrics:
     ticks = body.ticks if body else 1
-    return get_world().engine.step_many(ticks)
+    world = get_world()
+    metrics = world.engine.step_many(ticks)
+    world._append_series()
+    return metrics
 
 
 @app.get("/api/sim/metrics", response_model=SimMetrics)
@@ -318,13 +401,33 @@ def session_reset() -> SimMetrics:
 @app.post("/api/scenario", response_model=Scenario)
 def post_scenario(body: ScenarioRequest | None = None) -> Scenario:
     body = body or ScenarioRequest()
-    return get_world().apply_scenario(
+    world = get_world()
+    before = world._snapshot()
+    scn = world.apply_scenario(
         body.type or "random",
         body.intensity,
         zone_id=body.zone_id,
         center=body.center,
         radius_km=body.radius_km,
     )
+    voices = world.scenario_reaction_voices(scn)
+    after = world._snapshot()
+    zone_ids: list[str] = []
+    for e in getattr(scn, "effects", []) or []:
+        zid = getattr(e, "zone_id", None) or (e.get("zoneId") if isinstance(e, dict) else None)
+        if zid and zid not in zone_ids:
+            zone_ids.append(zid)
+    world.record_event("scenario", scn.type, getattr(scn, "label", None) or scn.type,
+                       zone_ids, before, after, voices)
+    return scn
+
+
+@app.get("/api/events")
+def get_events() -> dict:
+    """Causal timeline: each change/event with its measured before/after impact +
+    the reaction voices it triggered, plus the per-tick approval/coverage series."""
+    world = get_world()
+    return {"events": world.events, "series": world.approval_series}
 
 
 @app.get("/api/scenarios", response_model=list[Scenario])

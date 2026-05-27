@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MessageSquare, Brain, Boxes, BarChart3, Newspaper } from "lucide-react";
+import {
+  ChatCircle as MessageSquare,
+  Brain,
+  Stack as Boxes,
+  ChartBar as BarChart3,
+  Newspaper,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { Hud } from "@/components/Hud";
 import { VoicesFeed } from "@/components/VoicesFeed";
@@ -16,7 +22,7 @@ function Delta({ d, unit = "%" }: { d: number; unit?: string }) {
   const up = d > 0;
   return (
     <span
-      className={`ml-1 text-[9px] font-semibold ${up ? "text-emerald-400" : "text-red-400"}`}
+      className={`ml-1 text-[9px] font-semibold ${up ? "text-emerald-600" : "text-red-500"}`}
     >
       {up ? "▲" : "▼"}
       {Math.abs(d).toFixed(1)}
@@ -47,7 +53,7 @@ function MiniStats() {
     {
       label: "Approval",
       value: `${app.toFixed(0)}%`,
-      tint: "text-sky-300",
+      tint: "text-data-info",
       delta: appD,
     },
     {
@@ -64,7 +70,7 @@ function MiniStats() {
           <div className="text-[9px] uppercase tracking-wide text-muted-foreground">
             {c.label}
           </div>
-          <div className={`text-sm font-semibold tabular-nums ${c.tint}`}>
+          <div className={`text-sm font-semibold num ${c.tint}`}>
             {c.value}
             <Delta d={c.delta} />
           </div>
@@ -134,7 +140,7 @@ export function RightDock() {
   };
 
   return (
-    <div className="pointer-events-auto flex h-full w-[340px] flex-col gap-2 overflow-hidden p-3">
+    <div className="pointer-events-auto flex h-full w-full flex-col gap-2 overflow-hidden p-3">
       <div className="shrink-0">
         <MiniStats />
       </div>

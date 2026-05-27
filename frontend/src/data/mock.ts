@@ -4,6 +4,8 @@
 import type {
   Agent,
   AgentVoice,
+  CityEvent,
+  EventPoint,
   Flow,
   Infra,
   InfraKind,
@@ -688,4 +690,59 @@ export function mockSitingPriority(
     };
   }).sort((a, b) => b.score - a.score);
   return { equityWeight, zones };
+}
+
+// Mock city-events timeline (used when /api/events is unavailable).
+export function mockEvents(): { events: CityEvent[]; series: EventPoint[] } {
+  const z = (i: number) => ZONES[i % ZONES.length]?.id ?? "z001";
+  const series: EventPoint[] = Array.from({ length: 12 }, (_, i) => ({
+    tick: i,
+    approval: +(0.45 + Math.sin(i / 2.6) * 0.05 + i * 0.004).toFixed(4),
+    coverage: +(0.02 + i * 0.006).toFixed(4),
+  }));
+  const events: CityEvent[] = [
+    {
+      id: "mock-evt-1",
+      tick: 2,
+      type: "placement",
+      kind: "solar",
+      label: "Solar · " + (ZONES[74]?.name ?? "Downtown"),
+      zoneIds: [z(74)],
+      delta: { approval: 0.011, coverage: 0.004 },
+      reaction: { support: 7, oppose: 2, neutral: 3 },
+      voices: [
+        { text: "Finally clean power reaching our block.", stance: "support", archetype: "renter", zoneId: z(74) },
+        { text: "Great — as long as it doesn't raise my hydro bill.", stance: "oppose", archetype: "renter-low", zoneId: z(74) },
+        { text: "Good first step for the neighbourhood.", stance: "support", archetype: "owner", zoneId: z(74) },
+      ],
+    },
+    {
+      id: "mock-evt-2",
+      tick: 6,
+      type: "scenario",
+      kind: "heatwave",
+      label: "Heatwave",
+      zoneIds: [z(74), z(75), z(76), z(80), z(88)],
+      delta: { approval: -0.028, coverage: 0 },
+      reaction: { support: 2, oppose: 9, neutral: 4 },
+      voices: [
+        { text: "The grid had better hold through this week.", stance: "oppose", archetype: "senior", zoneId: z(75) },
+        { text: "We need cooling centres, not promises.", stance: "oppose", archetype: "parent", zoneId: z(76) },
+      ],
+    },
+    {
+      id: "mock-evt-3",
+      tick: 9,
+      type: "placement",
+      kind: "battery",
+      label: "Battery · " + (ZONES[88]?.name ?? "Midtown"),
+      zoneIds: [z(88)],
+      delta: { approval: 0.019, coverage: 0.007 },
+      reaction: { support: 11, oppose: 1, neutral: 2 },
+      voices: [
+        { text: "Storage means fewer outages — yes please.", stance: "support", archetype: "owner", zoneId: z(88) },
+      ],
+    },
+  ];
+  return { events, series };
 }
