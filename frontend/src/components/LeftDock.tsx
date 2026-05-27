@@ -13,7 +13,6 @@ import { LayersPanel } from "@/components/LayersPanel";
 import { LegendContent } from "@/components/LegendContent";
 import { BuildPriority } from "@/components/BuildPriority";
 import { ProjectsTab } from "@/components/ProjectsTab";
-import { OverlayLegendPanel } from "@/components/OverlayLegend";
 
 export function LeftDock() {
   return (
@@ -65,9 +64,6 @@ export function LeftDock() {
           </TabsContent>
         </Tabs>
       </Card>
-
-      {/* Pinned bottom of the left column — overlay switcher, matching dock width. */}
-      <OverlayLegendPanel />
     </div>
   );
 }

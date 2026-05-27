@@ -20,7 +20,7 @@ import type { CityEvent, EventPoint, InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";
 import { cn } from "@/lib/utils";
 
-const KIND_ICON: Partial<Record<string, React.ElementType>> = {
+const KIND_ICON: Partial<Record<string, React.ComponentType<any>>> = {
   solar: Sun,
   wind: Wind,
   battery: BatteryCharging,
@@ -28,7 +28,7 @@ const KIND_ICON: Partial<Record<string, React.ElementType>> = {
 };
 const rgb = ([r, g, b]: [number, number, number]) => `rgb(${r},${g},${b})`;
 
-export function eventVisual(e: CityEvent): { Icon: React.ElementType; color: string } {
+export function eventVisual(e: CityEvent): { Icon: React.ComponentType<any>; color: string } {
   const ic = KIND_ICON[e.kind];
   if (e.type === "placement" && ic) {
     return { Icon: ic, color: rgb(INFRA_COLOR[e.kind as InfraKind]) };
@@ -110,7 +110,7 @@ export function EventDetail({ event, series, related, onSelect, onTrace }: Props
           className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
           style={{ background: `${color}22` }}
         >
-          <Icon weight="bold" className="h-6 w-6" style={{ color }} />
+          <Icon weight="bold" size={24} style={{ color }} />
         </span>
         <span className="min-w-0 flex-1">
           <h2 className="font-display text-lg font-bold leading-tight tracking-tight text-foreground">

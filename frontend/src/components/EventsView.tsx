@@ -176,8 +176,8 @@ export function EventsView() {
                       fontFamily: "JetBrains Mono, ui-monospace, monospace",
                     }}
                     labelStyle={{ color: "hsl(0 0% 42%)" }}
-                    formatter={(v: number) => [`${(v * 100).toFixed(0)}%`, "approval"]}
-                    labelFormatter={(t: number) => `tick ${t}`}
+                    formatter={(v) => [`${(Number(v ?? 0) * 100).toFixed(0)}%`, "approval"]}
+                    labelFormatter={(t) => `tick ${Number(t ?? 0)}`}
                   />
                   <Area
                     type="monotone"
@@ -217,7 +217,6 @@ export function EventsView() {
                       fill="hsl(72 95% 45%)"
                       stroke="hsl(0 0% 100%)"
                       strokeWidth={2}
-                      isFront
                       onClick={() => select(e.id)}
                       style={{ cursor: "pointer" }}
                     />
@@ -251,7 +250,9 @@ export function EventsView() {
                   return (
                     <button
                       key={e.id}
-                      ref={(el) => (rowRefs.current[e.id] = el)}
+                      ref={(el) => {
+                        rowRefs.current[e.id] = el;
+                      }}
                       onClick={() => select(e.id)}
                       className={cn(
                         "flex w-full items-center gap-3 rounded-lg border p-2.5 text-left transition-colors",
@@ -264,7 +265,7 @@ export function EventsView() {
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md"
                         style={{ background: `${color}22` }}
                       >
-                        <Icon weight="bold" className="h-4 w-4" style={{ color }} />
+                        <Icon weight="bold" size={16} style={{ color }} />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between gap-2">

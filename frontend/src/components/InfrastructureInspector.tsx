@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { SubjectSentiment } from "@/components/SubjectSentiment";
 import { cn, fmtCompact } from "@/lib/utils";
 
-const KIND_ICON: Record<InfraKind, React.ElementType> = {
+const KIND_ICON: Record<InfraKind, React.ComponentType<any>> = {
   solar: Sun,
   wind: Wind,
   battery: BatteryCharging,
@@ -83,7 +83,7 @@ export function InfrastructureInspector() {
             >
               <div className="flex items-center gap-2">
                 <Icon
-                  className="h-4 w-4 shrink-0"
+                  size={16}
                   style={{ color: rgb(INFRA_COLOR[i.kind]) }}
                 />
                 <span className="flex-1 truncate text-xs font-medium capitalize">

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
@@ -53,12 +55,7 @@ const CHIPS: { key: OverlayKey; label: string }[] = [
   { key: "none", label: "None" },
 ];
 
-/**
- * Map-overlay switcher. Lives as the PINNED BOTTOM SECTION of the LeftDock so the
- * left side reads as one coherent column (dock content above, overlay control below)
- * — never floats over the map or overlaps the dock.
- */
-export function OverlayLegendPanel() {
+export function OverlayLegendPanel({ className }: { className?: string }) {
   const layers = useStore((s) => s.layers);
   const setPrimaryOverlay = useStore((s) => s.setPrimaryOverlay);
 
@@ -69,7 +66,7 @@ export function OverlayLegendPanel() {
   const meta = OVERLAYS.find((o) => o.key === active);
 
   return (
-    <Card className="glass shrink-0 px-3 py-2.5">
+    <Card className={cn("glass px-3 py-2.5", className)}>
       <div className="mb-1.5 flex items-center justify-between">
         <span className="label">Map overlay</span>
         <span className="text-xs font-semibold">{meta ? meta.label : "None"}</span>
@@ -108,9 +105,42 @@ export function OverlayLegendPanel() {
 }
 
 /**
- * Standalone mount (App.tsx) is intentionally a no-op — the switcher now renders
- * inside the LeftDock via <OverlayLegendPanel/>. Kept so App's import stays valid.
+ * Bottom-left drawer: a tab flush with the viewport bottom toggles the overlay
+ * switcher, which slides up from the bottom edge of the screen.
  */
 export function OverlayLegend() {
-  return null;
+  const [open, setOpen] = useState(false);
+  const mainView = useStore((s) => s.mainView);
+
+  if (mainView === "events") return null;
+
+  return (
+    <div className="pointer-events-none fixed bottom-0 left-4 z-30 flex w-[280px] flex-col items-stretch">
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300 ease-out",
+          open
+            ? "pointer-events-auto max-h-[220px] translate-y-0 opacity-100"
+            : "pointer-events-none max-h-0 translate-y-2 opacity-0"
+        )}
+        aria-hidden={!open}
+      >
+        <OverlayLegendPanel className="rounded-b-none border-b-0 shadow-lg" />
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-label={open ? "Hide map overlay menu" : "Show map overlay menu"}
+        className="pointer-events-auto glass flex h-6 w-full items-center justify-center rounded-t-md border border-b-0 text-muted-foreground shadow-lg transition-colors hover:text-foreground"
+      >
+        {open ? (
+          <ChevronDown className="h-4 w-4" />
+        ) : (
+          <ChevronUp className="h-4 w-4" />
+        )}
+      </button>
+    </div>
+  );
 }

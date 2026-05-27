@@ -6,12 +6,10 @@ import { MapView } from "@/components/MapView";
 import { TopBar } from "@/components/TopBar";
 import { LeftDock } from "@/components/LeftDock";
 import { RightDock } from "@/components/RightDock";
-import { Timeline } from "@/components/Timeline";
 import { ScenarioBanner } from "@/components/ScenarioBanner";
 import { Welcome } from "@/components/Welcome";
 import { RegionSelector } from "@/components/RegionSelector";
 import { EventsView } from "@/components/EventsView";
-import { DemoCaption } from "@/components/DemoCaption";
 import { OverlayLegend } from "@/components/OverlayLegend";
 import { Toasts } from "@/components/Toasts";
 import { ScenarioFlash } from "@/components/ScenarioFlash";
@@ -149,9 +147,6 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className="pb-4">
-                <Timeline />
-              </div>
             </>
           )}
         </div>
@@ -159,7 +154,6 @@ function App() {
         <ScenarioFlash />
         <OverlayLegend />
         <Toasts />
-        <DemoCaption />
         <Welcome />
         <RegionSelector />
 

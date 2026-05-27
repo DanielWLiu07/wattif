@@ -761,7 +761,7 @@ function EditableGlbModel({
   selected: boolean;
   onSelect: () => void;
   tcMode: "translate" | "rotate" | "scale";
-  orbitRef: React.RefObject<unknown>;
+  orbitRef: React.RefObject<React.ElementRef<typeof OrbitControls> | null>;
   onDragEnd?: () => void;
 }) {
   const { scene } = useGLTF(spec.url);
@@ -791,7 +791,7 @@ function EditableGlbModel({
       </group>
       {selected && (
         <TransformControls
-          object={groupRef}
+          object={groupRef.current ?? undefined}
           mode={tcMode}
           onMouseDown={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = false; }}
           onMouseUp={() => {
@@ -813,7 +813,7 @@ function EditWordmark({
   selected: boolean;
   onSelect: () => void;
   tcMode: "translate" | "rotate" | "scale";
-  orbitRef: React.RefObject<unknown>;
+  orbitRef: React.RefObject<React.ElementRef<typeof OrbitControls> | null>;
   onDragEnd?: () => void;
 }) {
   return (
@@ -827,7 +827,7 @@ function EditWordmark({
       </group>
       {selected && (
         <TransformControls
-          object={groupRef}
+          object={groupRef.current ?? undefined}
           mode={tcMode}
           onMouseDown={() => { if (orbitRef.current) (orbitRef.current as { enabled: boolean }).enabled = false; }}
           onMouseUp={() => {
@@ -843,7 +843,7 @@ function EditWordmark({
 // ── Edit scene ────────────────────────────────────────────────────────────────
 
 function EditScene() {
-  const orbitRef = useRef<unknown>(null);
+  const orbitRef = useRef<React.ElementRef<typeof OrbitControls> | null>(null);
   const [freecam, setFreecam] = useState(false);
 
   // Snap the camera back to the exact landing-page hero framing.
@@ -1001,7 +1001,7 @@ function EditScene() {
           disabled so moving objects never drifts the view — it always reads as
           the real landing page. */}
       <OrbitControls
-        ref={orbitRef as React.RefObject<unknown>}
+        ref={orbitRef}
         makeDefault
         target={[0, 1.5, 0]}
         enableRotate={freecam}

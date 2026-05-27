@@ -63,20 +63,20 @@ export function BuildPriority() {
           <button
             key={z.zoneId}
             onClick={() => selectZone(z.zoneId)}
-            className="block w-full rounded-[var(--radius)] border border-border bg-muted/50 p-2 text-left transition-colors hover:border-fuchsia-400/60 hover:bg-muted"
+            className="block w-full rounded-[var(--radius)] border border-border bg-muted/50 p-2 text-left transition-colors hover:border-primary/40 hover:bg-muted"
           >
             <div className="flex items-center gap-1.5">
               <span className="num w-4 shrink-0 text-[10px] font-semibold text-muted-foreground">
                 {i + 1}
               </span>
               <span className="flex-1 truncate text-xs font-medium">{z.name}</span>
-              <span className="num text-[11px] font-semibold text-fuchsia-500">
+              <span className="num text-[11px] font-semibold text-foreground">
                 {(z.score * 100).toFixed(0)}
               </span>
             </div>
             <div className="mt-1 ml-5 h-1.5 overflow-hidden rounded-full bg-muted">
               <div
-                className="h-full rounded-full bg-fuchsia-500"
+                className="h-full rounded-full bg-foreground"
                 style={{ width: `${z.score * 100}%` }}
               />
             </div>
