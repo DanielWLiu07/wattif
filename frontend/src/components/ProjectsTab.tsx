@@ -3,6 +3,7 @@ import { Check, Database, FolderPlus, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CohortConcernsPanel } from "@/components/CohortConcernsPanel";
+import { SyntheticResidentReactionsPanel } from "@/components/SyntheticResidentReactionsPanel";
 import { DecisionMemoPanel } from "@/components/DecisionMemoPanel";
 import { DatasetUploadPanel } from "@/components/DatasetUploadPanel";
 import { UploadedExistingInfraPanel } from "@/components/UploadedExistingInfraPanel";
@@ -196,6 +197,7 @@ export function ProjectsTab() {
       {selectedProjectId && <DatasetUploadPanel />}
       {selectedProjectId && <UploadedExistingInfraPanel />}
       {selectedProjectId && <CohortConcernsPanel />}
+      {selectedProjectId && <SyntheticResidentReactionsPanel />}
 
       {selectedProposalId && (
         <section className="space-y-3">

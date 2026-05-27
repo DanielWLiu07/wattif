@@ -31,6 +31,8 @@ import type {
   CohortConcern,
   CohortGenerateResponse,
   CohortProfile,
+  SyntheticResidentReaction,
+  SyntheticResidentReactionGenerateResponse,
   UploadedDataset,
   UploadedInfrastructureAsset,
   UploadedDatasetSummary,
@@ -327,6 +329,42 @@ export async function deleteConcern(
 ): Promise<PersistenceResult<{ ok: boolean; concernId: string }>> {
   return persistenceFetch<{ ok: boolean; concernId: string }>(
     `/api/concerns/${concernId}`,
+    { method: "DELETE" }
+  );
+}
+
+// ---------------- Synthetic resident reactions (Phase 16) ----------------
+
+export async function fetchProjectResidentReactions(
+  projectId: string
+): Promise<PersistenceResult<SyntheticResidentReaction[]>> {
+  return persistenceFetch<SyntheticResidentReaction[]>(
+    `/api/projects/${projectId}/resident-reactions`
+  );
+}
+
+export async function fetchProposalResidentReactions(
+  proposalId: string
+): Promise<PersistenceResult<SyntheticResidentReaction[]>> {
+  return persistenceFetch<SyntheticResidentReaction[]>(
+    `/api/proposals/${proposalId}/resident-reactions`
+  );
+}
+
+export async function generateProposalResidentReactions(
+  proposalId: string
+): Promise<PersistenceResult<SyntheticResidentReactionGenerateResponse>> {
+  return persistenceFetch<SyntheticResidentReactionGenerateResponse>(
+    `/api/proposals/${proposalId}/resident-reactions/generate`,
+    { method: "POST" }
+  );
+}
+
+export async function deleteResidentReaction(
+  reactionId: string
+): Promise<PersistenceResult<{ ok: boolean; reactionId: string }>> {
+  return persistenceFetch<{ ok: boolean; reactionId: string }>(
+    `/api/resident-reactions/${reactionId}`,
     { method: "DELETE" }
   );
 }

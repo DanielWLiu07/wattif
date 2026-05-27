@@ -239,6 +239,41 @@ export type CohortGenerateResponse = {
   datasetsUsed: number;
 };
 
+export type ReactionStance =
+  | "support"
+  | "oppose"
+  | "mixed"
+  | "concern"
+  | "neutral";
+
+export type SyntheticResidentReaction = {
+  id: string;
+  projectId: string;
+  proposalId?: string | null;
+  cohortId?: string | null;
+  concernId?: string | null;
+  reactionType: string;
+  personaLabel?: string | null;
+  stance: ReactionStance | string;
+  summary: string;
+  keyConcern?: string | null;
+  suggestedChange?: string | null;
+  evidence?: string | null;
+  confidence?: number | null;
+  caveat: string;
+  sourceContext: Record<string, unknown>;
+  provider?: string | null;
+  model?: string | null;
+  createdAt?: string | null;
+};
+
+export type SyntheticResidentReactionGenerateResponse = {
+  reactions: SyntheticResidentReaction[];
+  provider: string;
+  model: string;
+  count: number;
+};
+
 export type ProposalReportSection = {
   id: string;
   title: string;

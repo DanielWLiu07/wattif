@@ -18,10 +18,16 @@ from .db.repositories import (
     proposal_infrastructure,
     proposals,
     simulation_snapshots,
+    synthetic_resident_reactions as reactions_repo,
 )
 from .db.repositories.base import PersistenceDisabledError
 
 REPORT_TITLE = "Proposal Impact Report / Decision Memo (Draft)"
+
+REACTION_CAVEAT = (
+    "Synthetic reaction generated for decision support only — "
+    "not a real resident response or public consultation."
+)
 
 
 def _utc_now_iso() -> str:
@@ -171,6 +177,15 @@ def _recommendation_section(rec: dict[str, Any] | None) -> tuple[list[str], list
     return lines, tradeoffs
 
 
+def _reaction_line(row: dict[str, Any]) -> str:
+    persona = row.get("persona_label") or row.get("personaLabel") or "Synthetic cohort"
+    stance = row.get("stance") or "neutral"
+    summary = row.get("summary") or ""
+    change = row.get("suggested_change") or row.get("suggestedChange")
+    suffix = f" Suggested change: {change[:120]}." if change else ""
+    return f"- **{persona}** ({stance}): {summary[:220]}{suffix}"
+
+
 def _executive_summary(
     *,
     project: dict[str, Any],
@@ -178,6 +193,7 @@ def _executive_summary(
     infra: list[dict[str, Any]],
     datasets: list[dict[str, Any]],
     concerns: list[dict[str, Any]],
+    reactions: list[dict[str, Any]],
     has_recommendation: bool,
     snapshot: dict[str, Any] | None,
 ) -> list[str]:
@@ -210,6 +226,7 @@ def _executive_summary(
         f"- **Persisted infrastructure:** {infra_summary}",
         f"- **Uploaded datasets:** {len(datasets)} file(s) on record (metadata/preview only)",
         f"- **Synthetic cohort concerns:** {len(concerns)} generated concern(s)",
+        f"- **Synthetic resident reactions:** {len(reactions)} on-demand reaction(s)",
         f"- **Snapshot:** {snap_note}",
         f"- **Operator guidance:** {rec_note}",
         "",
@@ -227,6 +244,8 @@ def _caveats_section() -> list[str]:
         "- **Synthetic concerns are not real consultation:** Cohort concerns are deterministically "
         "generated from dataset previews. They do not represent surveyed residents or validated "
         "public feedback.",
+        "- **Synthetic resident reactions are decision-support only:** On-demand LLM or fallback "
+        f"persona reactions are not real residents or public consultation ({REACTION_CAVEAT}).",
         "- **Not engineering-grade grid validation:** Headroom, feeder constraints, and outage "
         "impacts are illustrative.",
         "- **Not final municipal approval evidence:** This report must not be used as official "
@@ -311,6 +330,11 @@ def collect_report_data(proposal_id: str) -> dict[str, Any]:
 
     recommendation = fetch_operator_recommendation(proposal_id)
 
+    try:
+        reactions = reactions_repo.list_by_proposal(proposal_id, limit=50)
+    except Exception:
+        reactions = []
+
     return {
         "project": project,
         "proposal": proposal,
@@ -319,6 +343,7 @@ def collect_report_data(proposal_id: str) -> dict[str, Any]:
         "datasets": datasets,
         "cohorts": profiles,
         "concerns": concerns,
+        "reactions": reactions,
         "recommendation": recommendation,
     }
 
@@ -332,6 +357,7 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
     datasets = data["datasets"]
     cohorts = data["cohorts"]
     concerns = data["concerns"]
+    reactions = data.get("reactions") or []
     recommendation = data["recommendation"]
 
     rec_lines, rec_tradeoffs = _recommendation_section(recommendation)
@@ -343,6 +369,7 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
             infra=infra,
             datasets=datasets,
             concerns=concerns,
+            reactions=reactions,
             has_recommendation=recommendation is not None,
             snapshot=snapshot,
         ),
@@ -409,6 +436,16 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
             "",
             "Upload datasets and run **Generate resident concerns** from the Saved tab.",
         ]
+
+    if reactions:
+        if not sections["synthetic_concerns"]:
+            sections["synthetic_concerns"] = []
+        sections["synthetic_concerns"].append("")
+        sections["synthetic_concerns"].append("**Synthetic resident reactions (on-demand):**")
+        sections["synthetic_concerns"].append(
+            f"> {REACTION_CAVEAT}"
+        )
+        sections["synthetic_concerns"].extend(_reaction_line(r) for r in reactions[:12])
 
     tradeoffs = list(rec_tradeoffs)
     if not tradeoffs and recommendation:

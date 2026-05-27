@@ -114,6 +114,7 @@ def _sample_data(*, with_recommendation: bool = True) -> dict:
             }
         ],
         "recommendation": recommendation if with_recommendation else None,
+        "reactions": [],
     }
 
 
@@ -136,6 +137,26 @@ def test_build_report_includes_concerns():
     body = "\n".join(sections["synthetic_concerns"])
     assert "parking_and_congestion" in body
     assert "EV owners" in body
+
+
+def test_build_report_includes_synthetic_reactions():
+    data = _sample_data()
+    data["reactions"] = [
+        {
+            "persona_label": "EV owners",
+            "stance": "mixed",
+            "summary": "Mixed on curbside charger clustering.",
+            "suggested_change": "Add storage before new EV load.",
+            "caveat": "Synthetic reaction generated for decision support only — not a real resident response or public consultation.",
+        }
+    ]
+    sections = build_report_sections(data)
+    body = "\n".join(sections["synthetic_concerns"])
+    assert "Synthetic resident reactions" in body
+    assert "Add storage before new EV load" in body
+    assert "decision support only" in body.lower()
+    exec_body = "\n".join(sections["executive_summary"])
+    assert "Synthetic resident reactions:** 1" in exec_body
 
 
 def test_build_report_missing_recommendation():

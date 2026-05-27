@@ -29,6 +29,7 @@ import type {
   CohortConcern,
   CohortProfile,
   ProposalReport,
+  SyntheticResidentReaction,
   UploadedDataset,
   UploadedInfrastructureAsset,
   UploadedDatasetSummary,
@@ -230,6 +231,9 @@ type State = {
   cohortConcerns: CohortConcern[];
   cohortGenerating: boolean;
   cohortError: string | null;
+  syntheticResidentReactions: SyntheticResidentReaction[];
+  residentReactionsGenerating: boolean;
+  residentReactionsError: string | null;
   decisionMemo: ProposalReport | null;
   decisionMemoLoading: boolean;
   decisionMemoError: string | null;
@@ -243,6 +247,9 @@ type State = {
   loadCohortConcerns: () => Promise<void>;
   generateCohortConcerns: () => Promise<void>;
   deleteCohortConcern: (concernId: string) => Promise<void>;
+  loadSyntheticResidentReactions: () => Promise<void>;
+  generateSyntheticResidentReactions: () => Promise<void>;
+  deleteResidentReaction: (reactionId: string) => Promise<void>;
   generateDecisionMemo: () => Promise<void>;
   clearDecisionMemo: () => void;
   createProject: (name: string) => Promise<void>;
@@ -838,6 +845,9 @@ export const useStore = create<State>((set, get) => ({
   cohortConcerns: [],
   cohortGenerating: false,
   cohortError: null,
+  syntheticResidentReactions: [],
+  residentReactionsGenerating: false,
+  residentReactionsError: null,
   decisionMemo: null,
   decisionMemoLoading: false,
   decisionMemoError: null,
@@ -954,6 +964,73 @@ export const useStore = create<State>((set, get) => ({
     }
     set((s) => ({
       cohortConcerns: s.cohortConcerns.filter((c) => c.id !== concernId),
+    }));
+  },
+
+  loadSyntheticResidentReactions: async () => {
+    const { selectedProjectId, selectedProposalId, backendHealth } = get();
+    if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
+      set({ syntheticResidentReactions: [], residentReactionsError: null });
+      return;
+    }
+    const res = selectedProposalId
+      ? await api.fetchProposalResidentReactions(selectedProposalId)
+      : await api.fetchProjectResidentReactions(selectedProjectId);
+    if (!res.ok) {
+      set({
+        residentReactionsError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Could not load synthetic resident reactions",
+      });
+      return;
+    }
+    set({
+      syntheticResidentReactions: res.data,
+      residentReactionsError: null,
+    });
+  },
+
+  generateSyntheticResidentReactions: async () => {
+    const { selectedProposalId } = get();
+    if (!selectedProposalId) return;
+    set({ residentReactionsGenerating: true, residentReactionsError: null });
+    const res = await api.generateProposalResidentReactions(selectedProposalId);
+    if (!res.ok) {
+      set({
+        residentReactionsGenerating: false,
+        residentReactionsError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Generation failed",
+      });
+      get().pushToast(res.error ?? "Could not generate reactions", "warn");
+      return;
+    }
+    set({
+      syntheticResidentReactions: res.data.reactions,
+      residentReactionsGenerating: false,
+      residentReactionsError: null,
+    });
+    get().pushToast(
+      `Generated ${res.data.count} synthetic reaction(s) via ${res.data.provider}`,
+      "good"
+    );
+    void get().loadSyntheticResidentReactions();
+  },
+
+  deleteResidentReaction: async (reactionId) => {
+    const res = await api.deleteResidentReaction(reactionId);
+    if (res.ok === false) {
+      set({
+        residentReactionsError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Delete failed",
+      });
+      return;
+    }
+    set((s) => ({
+      syntheticResidentReactions: s.syntheticResidentReactions.filter(
+        (r) => r.id !== reactionId
+      ),
     }));
   },
 
@@ -1149,10 +1226,12 @@ export const useStore = create<State>((set, get) => ({
       datasetSummaries: [],
       cohorts: [],
       cohortConcerns: [],
+      syntheticResidentReactions: [],
       persistenceMode: persistenceModeFor(get().backendHealth, null),
       persistenceError: null,
       datasetError: null,
       cohortError: null,
+      residentReactionsError: null,
       existingInfrastructureAssets: [],
       existingInfrastructureError: null,
     });
@@ -1166,6 +1245,8 @@ export const useStore = create<State>((set, get) => ({
     set({ proposals, persistenceLoading: false });
     void get().loadDatasets();
     void get().loadExistingInfrastructure();
+    void get().loadCohortConcerns();
+    void get().loadSyntheticResidentReactions();
   },
 
   createProposal: async (name) => {
@@ -1254,6 +1335,8 @@ export const useStore = create<State>((set, get) => ({
     void get().refreshSitingPriority();
     void get().loadDatasets();
     void get().loadExistingInfrastructure();
+    void get().loadCohortConcerns();
+    void get().loadSyntheticResidentReactions();
 
     const statusRes = await api.getOperatorRecommendationStatus(proposalId);
     if (statusRes.ok && statusRes.data.hasOperatorRecommendation) {
