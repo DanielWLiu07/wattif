@@ -185,9 +185,22 @@ def allows_tool(intent: PlannerIntent, tool_name: str) -> bool:
     """Mutation guard for planner tool execution."""
     if tool_name in MUTATING_TOOL_NAMES:
         return allows_mutation(intent)
-    if tool_name == "optimize" and intent != "explicit_placement":
-        return intent == "recommendation"
+    if tool_name == "optimize":
+        return intent in ("explicit_placement", "recommendation")
     return True
+
+
+def is_deterministic_intent(intent: PlannerIntent) -> bool:
+    """Intents that must never call Featherless/LLM."""
+    return intent in {
+        "read_uploaded_infrastructure",
+        "summarize_datasets",
+        "explain_concerns",
+        "critique_design",
+        "resilience_scenario",
+        "general_wattif_question",
+        "recommendation",
+    }
 
 
 def intent_label(intent: PlannerIntent) -> str:

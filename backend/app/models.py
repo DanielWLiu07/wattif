@@ -288,3 +288,12 @@ class PlannerRunRequest(CamelModel):
     budget_cad: float | None = None
     project_id: str | None = None
     proposal_id: str | None = None
+
+
+class PlannerTurnRequest(CamelModel):
+    text: str
+    intent: str | None = None
+    budget_cad: float | None = None
+    project_id: str | None = None
+    proposal_id: str | None = None
+    turn_id: str | None = None

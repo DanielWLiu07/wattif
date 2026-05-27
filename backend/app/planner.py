@@ -185,15 +185,23 @@ class PlannerTools:
         )
 
     def execute(self, name: str, args: dict) -> dict:
-        from .planner_intent import allows_tool
+        from .planner_intent import MUTATING_TOOL_NAMES, allows_tool
 
         if self.guard_intent is not None and not allows_tool(self.guard_intent, name):
+            from .planner_dispatch import BLOCKED_MUTATION_ANSWER
+
+            msg = (
+                BLOCKED_MUTATION_ANSWER
+                if name in MUTATING_TOOL_NAMES
+                else (
+                    f"Tool '{name}' is not allowed for '{self.guard_intent}' intent. "
+                    "Only explicit placement requests may run the optimizer to place assets."
+                )
+            )
             return {
                 "blocked": True,
-                "error": (
-                    f"Tool '{name}' is not allowed for '{self.guard_intent}' intent. "
-                    "Only explicit placement requests may mutate infrastructure."
-                ),
+                "error": msg,
+                "userMessage": msg,
             }
         try:
             fn = getattr(self, f"_t_{name}", None)
@@ -873,65 +881,24 @@ class PlannerChat:
         user_message: str,
         confirm: ConfirmFn | None = None,
         intent: str | None = None,
+        turn_id: str | None = None,
     ):
         """Run one planning turn for a user message, streaming events."""
-        from .planner_copilot import (
-            is_copilot_intent,
-            run_copilot_turn,
-            run_recommendation_turn,
+        from .planner_dispatch import dispatch_planner_turn
+
+        async for ev in dispatch_planner_turn(
+            self, user_message, confirm, intent, turn_id=turn_id
+        ):
+            yield ev
+
+    def _blocked_tool_abort(self, result: dict) -> dict | None:
+        """If a disallowed tool was blocked, return a terminal answer payload."""
+        if not result.get("blocked"):
+            return None
+        msg = result.get("userMessage") or result.get("error") or (
+            "That action is not allowed for this request."
         )
-        from .planner_intent import classify_planner_intent
-
-        self.turn_count += 1
-        bucket = classify_planner_intent(user_message, intent)
-        self.tools.guard_intent = bucket
-
-        try:
-            if is_copilot_intent(bucket):
-                async for ev in run_copilot_turn(bucket, self, user_message):
-                    yield ev
-                return
-
-            if bucket == "recommendation":
-                async for ev in run_recommendation_turn(self, user_message, confirm):
-                    yield ev
-                return
-
-            if bucket == "explicit_placement":
-                self.tools.guard_intent = "explicit_placement"
-                parsed = parse_intent(user_message)
-                if parsed.get("program"):
-                    async for ev in self._demo_program_turn(parsed, confirm):
-                        yield ev
-                    return
-                if self.provider in (None, "demo") or self.provider is None:
-                    async for ev in self._demo_turn(user_message, confirm):
-                        yield ev
-                else:
-                    try:
-                        async for ev in self._llm_turn(user_message, confirm):
-                            yield ev
-                    except Exception as exc:  # noqa: BLE001
-                        log.warning("LLM chat turn failed (%s); using demo turn", exc)
-                        async for ev in self._demo_turn(user_message, confirm):
-                            yield ev
-                return
-
-            async for ev in run_copilot_turn(
-                "general_wattif_question", self, user_message
-            ):
-                yield ev
-        except Exception as exc:  # noqa: BLE001 — always terminate cleanly for UI
-            log.exception("planner turn failed")
-            yield {
-                "type": "error",
-                "message": str(exc),
-            }
-            yield {
-                "type": "done",
-                "placements": self.tools.placements,
-                "spentCad": round(self.tools.spent, 2),
-            }
+        return {"type": "answer", "text": msg}
 
     async def _concern_recommendation_turn(
         self, user_message: str, confirm: ConfirmFn | None, auto_place: bool = True
@@ -1425,12 +1392,29 @@ class PlannerChat:
         for _ in range(MAX_ITERATIONS):
             for ev in self._scenario_observations_for_llm():
                 yield ev
-            resp = client.chat.completions.create(
-                model=config.FEATHER_MODEL,
-                max_tokens=1024,
-                messages=self.messages,
-                tools=oai_tools,
-            )
+            try:
+                resp = client.chat.completions.create(
+                    model=config.FEATHER_MODEL,
+                    max_tokens=1024,
+                    messages=self.messages,
+                    tools=oai_tools,
+                )
+            except Exception as exc:  # noqa: BLE001
+                err = str(exc)
+                log.warning("Feather planner call failed: %s", err)
+                summary = (
+                    "The LLM provider is temporarily unavailable (503/timeout). "
+                    "Please retry in a moment."
+                )
+                if "503" in err or "timeout" in err.lower():
+                    yield {"type": "error", "message": summary}
+                    yield {
+                        "type": "done",
+                        "placements": self.tools.placements,
+                        "spentCad": round(self.tools.spent, 2),
+                    }
+                    return
+                raise
             msg = resp.choices[0].message
             merged_calls, clean_content = merge_tool_calls(
                 msg.tool_calls, msg.content
@@ -1487,6 +1471,14 @@ class PlannerChat:
                     result = {"rejected": True}
                 else:
                     result = self.tools.execute(name, args)
+                    if result.get("blocked"):
+                        abort = self._blocked_tool_abort(result)
+                        if abort:
+                            from .planner_events import terminal_done
+
+                            yield abort
+                            yield terminal_done(self, final_message_sent=True)
+                            return
                     if "placed" in result:
                         yield {"type": "placement", "infra": result["placed"]}
                 yield {"type": "tool_result", "name": name, "result": result}
