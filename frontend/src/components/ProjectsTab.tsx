@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CohortConcernsPanel } from "@/components/CohortConcernsPanel";
 import { SyntheticResidentReactionsPanel } from "@/components/SyntheticResidentReactionsPanel";
+import { UploadedEvidencePanel } from "@/components/UploadedEvidencePanel";
 import { DecisionMemoPanel } from "@/components/DecisionMemoPanel";
 import { DatasetUploadPanel } from "@/components/DatasetUploadPanel";
 import { UploadedExistingInfraPanel } from "@/components/UploadedExistingInfraPanel";
@@ -195,6 +196,7 @@ export function ProjectsTab() {
       {selectedProjectId && <ProposalReviewPanel />}
 
       {selectedProjectId && <DatasetUploadPanel />}
+      {selectedProjectId && <UploadedEvidencePanel />}
       {selectedProjectId && <UploadedExistingInfraPanel />}
       {selectedProjectId && <CohortConcernsPanel />}
       {selectedProjectId && <SyntheticResidentReactionsPanel />}

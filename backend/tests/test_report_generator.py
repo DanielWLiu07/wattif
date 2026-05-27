@@ -115,6 +115,7 @@ def _sample_data(*, with_recommendation: bool = True) -> dict:
         ],
         "recommendation": recommendation if with_recommendation else None,
         "reactions": [],
+        "evidence": [],
     }
 
 
@@ -157,6 +158,24 @@ def test_build_report_includes_synthetic_reactions():
     assert "decision support only" in body.lower()
     exec_body = "\n".join(sections["executive_summary"])
     assert "Synthetic resident reactions:** 1" in exec_body
+
+
+def test_build_report_includes_evidence_signals():
+    data = _sample_data()
+    data["evidence"] = [
+        {
+            "dataset_type": "public_feedback",
+            "source_field": "comment",
+            "source_row_index": 2,
+            "chunk_text": "comment: curb parking congestion near chargers",
+        }
+    ]
+    sections = build_report_sections(data)
+    body = "\n".join(sections["uploaded_evidence_signals"])
+    assert "parking congestion" in body
+    assert "decision-support context" in body.lower()
+    exec_body = "\n".join(sections["executive_summary"])
+    assert "Uploaded evidence snippets:** 1" in exec_body
 
 
 def test_build_report_missing_recommendation():
@@ -260,13 +279,21 @@ def test_collect_report_data_monkeypatched(monkeypatch):
             }
         ],
     )
+    monkeypatch.setattr(
+        "app.report_generator.reactions_repo.list_by_proposal",
+        lambda pid, **kw: [],
+    )
+    monkeypatch.setattr(
+        "app.report_generator.evidence_repo.list_by_proposal",
+        lambda pid, **kw: [],
+    )
 
     data = collect_report_data("prop-1")
     assert data["recommendation"] is not None
     report = generate_proposal_report("prop-1")
     assert report["hasOperatorRecommendation"] is True
     assert "ev_charger" in report["markdown"]
-    assert len(report["sections"]) == 10
+    assert len(report["sections"]) == 11
 
 
 def test_fetch_operator_recommendation_from_planner_runs(monkeypatch):

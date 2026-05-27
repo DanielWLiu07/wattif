@@ -191,6 +191,12 @@ function DatasetRow({
               {(dataset.extractedExistingInfrastructureCount ?? 0) === 1 ? "" : "s"}
             </span>
           )}
+          {(dataset.extractedEvidenceChunkCount ?? 0) > 0 && (
+            <span className="text-sky-400">
+              · {dataset.extractedEvidenceChunkCount} evidence snippet
+              {(dataset.extractedEvidenceChunkCount ?? 0) === 1 ? "" : "s"}
+            </span>
+          )}
         </div>
       </button>
       <Button
@@ -232,6 +238,12 @@ function DatasetPreview({ dataset }: { dataset: UploadedDataset }) {
             : ""}
           {(dataset.invalidExistingInfrastructureRows ?? 0) > 0 &&
             ` — ${dataset.invalidExistingInfrastructureRows} row(s) skipped (invalid coordinates)`}
+        </p>
+      )}
+      {(dataset.extractedEvidenceChunkCount ?? 0) > 0 && (
+        <p className="mb-1 text-sky-400/90">
+          Extracted {dataset.extractedEvidenceChunkCount} evidence snippet(s) from text
+          fields in this upload.
         </p>
       )}
       <pre className="max-h-32 overflow-auto whitespace-pre-wrap break-all rounded border border-border/50 bg-secondary/30 p-1.5 text-[10px]">

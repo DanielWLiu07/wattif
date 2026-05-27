@@ -164,8 +164,8 @@ function ReactionCard({
         </p>
       )}
       {reaction.evidence && (
-        <p className="mt-0.5 line-clamp-2 text-[10px] italic text-muted-foreground">
-          {reaction.evidence}
+        <p className="mt-0.5 text-[10px] text-sky-400/90">
+          Evidence from uploaded dataset: {reaction.evidence}
         </p>
       )}
       <p className="mt-1 text-[9px] leading-snug text-amber-600/90 dark:text-amber-400/90">

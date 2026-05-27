@@ -29,6 +29,8 @@ import type {
   CohortProfile,
   SyntheticResidentReaction,
   SyntheticResidentReactionGenerateResponse,
+  DatasetEvidenceChunk,
+  EvidenceSearchResult,
   UploadedDataset,
   UploadedInfrastructureAsset,
   UploadedDatasetSummary,
@@ -361,6 +363,54 @@ export async function deleteResidentReaction(
   return persistenceFetch<{ ok: boolean; reactionId: string }>(
     `/api/resident-reactions/${reactionId}`,
     { method: "DELETE" }
+  );
+}
+
+// ---------------- Uploaded evidence snippets (Phase 17) ----------------
+
+export async function fetchProjectEvidenceChunks(
+  projectId: string
+): Promise<PersistenceResult<DatasetEvidenceChunk[]>> {
+  return persistenceFetch<DatasetEvidenceChunk[]>(
+    `/api/projects/${projectId}/evidence-chunks`
+  );
+}
+
+export async function fetchProposalEvidenceChunks(
+  proposalId: string
+): Promise<PersistenceResult<DatasetEvidenceChunk[]>> {
+  return persistenceFetch<DatasetEvidenceChunk[]>(
+    `/api/proposals/${proposalId}/evidence-chunks`
+  );
+}
+
+export async function searchProjectEvidence(
+  projectId: string,
+  query: string,
+  limit = 5
+): Promise<PersistenceResult<EvidenceSearchResult[]>> {
+  return persistenceFetch<EvidenceSearchResult[]>(
+    `/api/projects/${projectId}/evidence-search`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, limit }),
+    }
+  );
+}
+
+export async function searchProposalEvidence(
+  proposalId: string,
+  query: string,
+  limit = 5
+): Promise<PersistenceResult<EvidenceSearchResult[]>> {
+  return persistenceFetch<EvidenceSearchResult[]>(
+    `/api/proposals/${proposalId}/evidence-search`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, limit }),
+    }
   );
 }
 
