@@ -27,7 +27,7 @@ import { getZoneRegion } from "@/store";
 import type { LngLat } from "@/types";
 import { cn, fmtCad } from "@/lib/utils";
 
-const KIND_ICON: Record<InfraKind, React.ElementType> = {
+const KIND_ICON: Record<InfraKind, React.ComponentType<any>> = {
   solar: Sun,
   wind: Wind,
   battery: BatteryCharging,
@@ -38,7 +38,7 @@ const KINDS: InfraKind[] = ["solar", "wind", "battery", "microgrid", "ev_charger
 const MODES: {
   key: PlacementMode;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<any>;
   tip: string;
 }[] = [
   { key: "manual", label: "Manual", icon: Hand, tip: "Place infrastructure yourself: pick a kind, then click the map." },
@@ -107,7 +107,7 @@ export function BuildTab() {
                         : "border-border hover:border-primary/50 hover:bg-muted"
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon size={16} />
                     {m.label}
                   </button>
                 </TooltipTrigger>
@@ -158,7 +158,7 @@ export function BuildTab() {
                         : "border-border hover:border-primary/50 hover:bg-muted"
                     )}
                   >
-                    <Icon className="h-5 w-5" style={{ color: rgb(INFRA_COLOR[k]) }} />
+                    <Icon size={20} style={{ color: rgb(INFRA_COLOR[k]) }} />
                     <span className="text-xs font-medium">
                       {INFRA_PRESETS[k].label}
                     </span>
@@ -223,7 +223,7 @@ export function BuildTab() {
                 <div key={i} className="rounded-lg border border-border bg-card p-2">
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-xs font-medium capitalize">
-                      <Icon className="h-3.5 w-3.5" style={{ color: rgb(INFRA_COLOR[r.kind]) }} />
+                      <Icon size={14} style={{ color: rgb(INFRA_COLOR[r.kind]) }} />
                       {r.kind}
                     </span>
                     <Badge variant="accent" className="num">{(r.score * 100).toFixed(0)}</Badge>

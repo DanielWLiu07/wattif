@@ -27,7 +27,7 @@ import {
 type Metric = {
   key: keyof SimMetrics;
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<any>;
   raw: (m: SimMetrics) => number; // tweened value
   format: (n: number) => string; // display
   tint: string;

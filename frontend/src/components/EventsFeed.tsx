@@ -29,7 +29,7 @@ import type { CityEvent, EventPoint, Forecast, InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";
 import { cn } from "@/lib/utils";
 
-const KIND_ICON: Partial<Record<string, React.ElementType>> = {
+const KIND_ICON: Partial<Record<string, React.ComponentType<any>>> = {
   solar: Sun,
   wind: Wind,
   battery: BatteryCharging,
@@ -37,7 +37,7 @@ const KIND_ICON: Partial<Record<string, React.ElementType>> = {
 };
 const rgb = ([r, g, b]: [number, number, number]) => `rgb(${r},${g},${b})`;
 
-function eventVisual(e: CityEvent): { Icon: React.ElementType; color: string } {
+function eventVisual(e: CityEvent): { Icon: React.ComponentType<any>; color: string } {
   const ic = KIND_ICON[e.kind];
   if (e.type === "placement" && ic) {
     return { Icon: ic, color: rgb(INFRA_COLOR[e.kind as InfraKind]) };
@@ -202,8 +202,8 @@ export function EventsFeed() {
                   fontFamily: "JetBrains Mono, ui-monospace, monospace",
                 }}
                 labelStyle={{ color: "hsl(0 0% 42%)" }}
-                formatter={(v: number) => [`${(v * 100).toFixed(0)}%`, "approval"]}
-                labelFormatter={(t: number) => `tick ${t}`}
+                formatter={(v) => [`${(Number(v ?? 0) * 100).toFixed(0)}%`, "approval"]}
+                labelFormatter={(t) => `tick ${Number(t ?? 0)}`}
               />
               <Area
                 type="monotone"
@@ -244,7 +244,6 @@ export function EventsFeed() {
                   fill="hsl(72 95% 45%)"
                   stroke="hsl(0 0% 100%)"
                   strokeWidth={1.5}
-                  isFront
                 />
               ))}
             </AreaChart>
@@ -291,7 +290,9 @@ export function EventsFeed() {
             return (
               <div
                 key={e.id}
-                ref={(el) => (cardRefs.current[e.id] = el)}
+                ref={(el) => {
+                  cardRefs.current[e.id] = el;
+                }}
                 className={cn(
                   "rounded-lg border bg-card p-2.5 transition-colors",
                   isOpen ? "border-brand/60" : "border-border"
@@ -306,7 +307,7 @@ export function EventsFeed() {
                     className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
                     style={{ background: `${color}22` }}
                   >
-                    <Icon weight="bold" className="h-3.5 w-3.5" style={{ color }} />
+                    <Icon weight="bold" size={14} style={{ color }} />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center justify-between gap-2">

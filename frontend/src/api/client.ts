@@ -532,7 +532,7 @@ export async function optimize(
     return { data: r, live: true };
   }
   let mockData = mockOptimize(n, infra);
-  if (zoneIds) {
+  if (zoneIds?.length) {
     const zoneSet = new Set(zoneIds);
     mockData = mockOptimize(200, infra)
       .filter((rec) => {

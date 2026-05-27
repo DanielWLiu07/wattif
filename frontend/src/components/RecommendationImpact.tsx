@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ForecastPreview } from "@/components/ForecastPreview";
 import { fmt } from "@/lib/utils";
 
-const KIND_ICON: Record<InfraKind, React.ElementType> = {
+const KIND_ICON: Record<InfraKind, React.ComponentType<any>> = {
   solar: Sun,
   wind: Wind,
   battery: BatteryCharging,
@@ -69,7 +69,7 @@ export function RecommendationImpact({
             className="flex h-7 w-7 items-center justify-center rounded-lg"
             style={{ background: `${color}22` }}
           >
-            <Icon className="h-4 w-4" style={{ color }} />
+            <Icon size={16} style={{ color }} />
           </div>
           <div className="leading-tight">
             <div className="flex items-center gap-1.5 text-sm font-semibold capitalize">

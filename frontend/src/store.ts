@@ -2128,7 +2128,8 @@ export const useStore = create<State>((set, get) => ({
     const { infra, selectedRegion, zones } = get();
 
     let zoneIds: string[] | undefined = undefined;
-    if (selectedRegion !== "All") {
+    // "All Toronto" means whole city — same as "All" (must not send an empty filter).
+    if (selectedRegion !== "All" && selectedRegion !== "All Toronto") {
       zoneIds = zones
         .filter((z) => getZoneRegion(z.name, z.centroid) === selectedRegion)
         .map((z) => z.id);

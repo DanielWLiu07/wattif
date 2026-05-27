@@ -203,11 +203,11 @@ function MiniChart({
               fontFamily: "JetBrains Mono, ui-monospace, monospace",
             }}
             labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-            formatter={(v: number, name) => [
-              `${(v * 100).toFixed(1)}%`,
+            formatter={(v, name) => [
+              `${(Number(v ?? 0) * 100).toFixed(1)}%`,
               name === baseKey ? "baseline" : "with build",
             ]}
-            labelFormatter={(t: number) => `month ${t}`}
+            labelFormatter={(t) => `month ${Number(t ?? 0)}`}
           />
           {/* Baseline — dashed, muted */}
           <Line

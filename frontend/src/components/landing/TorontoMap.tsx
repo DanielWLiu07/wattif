@@ -67,7 +67,7 @@ const WHEEL_MAX      = 45;    // clamp scrub velocity
 type RawZone = {
   id: string;
   name: string;
-  centroid: [number, number];
+  centroid: number[];
   polygon: { type: string; coordinates: number[][][][] };
 };
 
@@ -77,7 +77,7 @@ const TOTAL_AGENTS = 8001;
 
 const zoneCounts: Record<string, number> = {};
 for (const z of rawZones) {
-  const r = getZoneRegion(z.name, z.centroid);
+  const r = getZoneRegion(z.name, z.centroid as [number, number]);
   zoneCounts[r] = (zoneCounts[r] ?? 0) + 1;
 }
 
@@ -107,7 +107,7 @@ function ringAreaKm2(ring: number[][]): number {
 const areaByRegion: Record<string, number> = {};
 let TOTAL_AREA = 0;
 for (const z of rawZones) {
-  const r = getZoneRegion(z.name, z.centroid);
+  const r = getZoneRegion(z.name, z.centroid as [number, number]);
   let a = 0;
   for (const poly of z.polygon.coordinates) a += ringAreaKm2(poly[0]);
   areaByRegion[r] = (areaByRegion[r] ?? 0) + a;
@@ -123,10 +123,11 @@ type ZoneGeo = {
 };
 
 const processedZones: ZoneGeo[] = rawZones.map((z) => {
-  const x = lngToX(z.centroid[0]);
+  const centroid = z.centroid as [number, number];
+  const x = lngToX(centroid[0]);
   return {
-    id: z.id, name: z.name, centroid: z.centroid,
-    region: getZoneRegion(z.name, z.centroid),
+    id: z.id, name: z.name, centroid,
+    region: getZoneRegion(z.name, centroid),
     paths: z.polygon.coordinates.map((poly) => ringToPath(poly[0], 5)),
     col: (x < SVG_W / 3 ? 0 : x < (SVG_W * 2) / 3 ? 1 : 2) as 0 | 1 | 2,
   };

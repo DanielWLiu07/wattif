@@ -25,6 +25,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Compass } from "@phosphor-icons/react";
 import { useStore, getZoneRegion } from "@/store";
 import { buildLayers, uploadedAssetsToMapPoints } from "@/map/layers";
+import { MAP_BACKGROUND_COLOR, MAP_WATER_COLOR, MAP_WATER_LAYER_IDS } from "@/map/waterTheme";
 import { RecommendationImpact } from "@/components/RecommendationImpact";
 import type { Infra, LngLat, Recommendation } from "@/types";
 
@@ -422,6 +423,7 @@ export function MapView() {
     // Interactive region selection cursor: highlight hovered region without covering the map.
     if (regionCursorMode) {
       const zoneName = o?.properties?.name;
+      setDistrictHoverHtml(null);
       if (zoneName) {
         const zoneObj = allZones.find(z => z.id === o?.properties?.id || z.name === zoneName);
         const region = getZoneRegion(zoneName, zoneObj?.centroid);
@@ -441,9 +443,8 @@ export function MapView() {
         setHover({ x: info.x ?? 0, y: info.y ?? 0, html });
       } else {
         setHoveredRegion(null);
+        setHover(null);
       }
-      setDistrictHoverHtml(null);
-      setHover(null);
       return;
     }
 
@@ -554,37 +555,28 @@ export function MapView() {
     const map = mapRef.current?.getMap() as any;
     if (!map) return;
 
-    // LAND-ONLY on a WHITE base: recede water to a soft light tone so the land +
-    // city read as the focus, with a crisp light-gray shoreline at the lake edge.
-    const WATER_VOID = "#e3e9ee";
+    // Land base stays light gray; only CARTO water geometry gets MAP_WATER_COLOR
+    // (see map/waterTheme.ts — background ≠ water, or the whole map tints blue).
     try {
       const layers = map.getStyle().layers ?? [];
       for (const l of layers) {
-        const id = String(l.id).toLowerCase();
-        const sl = String(l["source-layer"] ?? "").toLowerCase();
-        const isWater =
-          sl === "water" ||
-          sl === "waterway" ||
-          /water|ocean|sea|river|lake|bathym|marine/.test(id);
-        if (!isWater) continue;
+        const id = String(l.id);
+        if (!MAP_WATER_LAYER_IDS.has(id)) continue;
         try {
           if (l.type === "fill") {
-            map.setPaintProperty(l.id, "fill-color", WATER_VOID);
-            map.setPaintProperty(l.id, "fill-opacity", 1);
+            map.setPaintProperty(id, "fill-color", MAP_WATER_COLOR);
+            map.setPaintProperty(id, "fill-opacity", 1);
           } else if (l.type === "line") {
-            map.setPaintProperty(l.id, "line-color", WATER_VOID);
+            map.setPaintProperty(id, "line-color", MAP_WATER_COLOR);
           } else if (l.type === "fill-extrusion") {
-            map.setPaintProperty(l.id, "fill-extrusion-color", WATER_VOID);
-          } else {
-            map.setLayoutProperty(l.id, "visibility", "none");
+            map.setPaintProperty(id, "fill-extrusion-color", MAP_WATER_COLOR);
           }
         } catch {
           /* layer not stylable — skip */
         }
       }
-      // also push the map background itself to the void colour
       const bg = layers.find((l: any) => l.type === "background");
-      if (bg) map.setPaintProperty(bg.id, "background-color", WATER_VOID);
+      if (bg) map.setPaintProperty(bg.id, "background-color", MAP_BACKGROUND_COLOR);
     } catch {
       /* style introspection failed — baseline still works */
     }
@@ -725,9 +717,6 @@ export function MapView() {
       )}
       {/* Camera reset */}
       <div className="pointer-events-auto absolute bottom-4 right-4 z-30 flex flex-col items-end gap-1.5">
-        <span className="rounded-full bg-background/70 px-2 py-0.5 text-[10px] text-muted-foreground">
-          drag to pan · right-drag to orbit/tilt · scroll to zoom
-        </span>
         <button
           onClick={() => resetView()}
           className="glass flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors hover:text-primary"
