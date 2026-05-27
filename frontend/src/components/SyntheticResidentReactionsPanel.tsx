@@ -22,6 +22,7 @@ export function SyntheticResidentReactionsPanel() {
   const syntheticResidentReactions = useStore((s) => s.syntheticResidentReactions);
   const residentReactionsGenerating = useStore((s) => s.residentReactionsGenerating);
   const residentReactionsError = useStore((s) => s.residentReactionsError);
+  const residentReactionsWarning = useStore((s) => s.residentReactionsWarning);
   const generateSyntheticResidentReactions = useStore(
     (s) => s.generateSyntheticResidentReactions
   );
@@ -54,6 +55,12 @@ export function SyntheticResidentReactionsPanel() {
       {residentReactionsError && (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 p-2 text-[11px] text-destructive">
           {residentReactionsError}
+        </p>
+      )}
+
+      {residentReactionsWarning && !residentReactionsError && (
+        <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-2 text-[11px] text-amber-700 dark:text-amber-300">
+          {residentReactionsWarning}
         </p>
       )}
 

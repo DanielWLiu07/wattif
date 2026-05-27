@@ -27,6 +27,11 @@ REACTION_CAVEAT = (
     "not a real resident response or public consultation."
 )
 
+LLM_REACTION_TIMEOUT_SEC = 20.0
+FALLBACK_WARNING = (
+    "LLM provider unavailable; deterministic fallback reactions generated."
+)
+
 VALID_STANCES = frozenset({"support", "oppose", "mixed", "concern", "neutral"})
 
 _SYSTEM_PROMPT = """You generate synthetic cohort resident reactions for WattIf, a Toronto \
@@ -300,7 +305,10 @@ def _call_llm_for_reactions(context: dict[str, Any]) -> list[dict[str, Any]]:
     if provider == "anthropic":
         import anthropic
 
-        client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+        client = anthropic.Anthropic(
+            api_key=config.ANTHROPIC_API_KEY,
+            timeout=LLM_REACTION_TIMEOUT_SEC,
+        )
         resp = client.messages.create(
             model=config.CLAUDE_MODEL,
             max_tokens=2048,
@@ -312,7 +320,11 @@ def _call_llm_for_reactions(context: dict[str, Any]) -> list[dict[str, Any]]:
     else:
         from openai import OpenAI
 
-        client = OpenAI(api_key=config.FEATHER_API_KEY, base_url=config.FEATHER_BASE_URL)
+        client = OpenAI(
+            api_key=config.FEATHER_API_KEY,
+            base_url=config.FEATHER_BASE_URL,
+            timeout=LLM_REACTION_TIMEOUT_SEC,
+        )
         resp = client.chat.completions.create(
             model=config.FEATHER_MODEL,
             max_tokens=2048,
@@ -387,19 +399,25 @@ def generate_synthetic_resident_reactions(
     model_used = "fallback_v1"
 
     reactions: list[dict[str, Any]] = []
+    llm_attempted = False
+    llm_failed = False
     if use_llm and config.real_llm_provider():
+        llm_attempted = True
         try:
             reactions = _call_llm_for_reactions(context)
             provider_used = reactions[0].get("provider") or config.real_llm_provider()
             model_used = reactions[0].get("model") or "unknown"
         except Exception as exc:
             log.warning("LLM synthetic reactions failed, using fallback: %s", exc)
+            llm_failed = True
             reactions = []
 
     if not reactions:
         reactions = generate_deterministic_reactions(context)
         provider_used = "deterministic"
         model_used = "fallback_v1"
+        if not reactions:
+            raise RuntimeError("fallback_reaction_generation_failed")
 
     _attach_cohort_ids(reactions, context)
 
@@ -420,6 +438,8 @@ def generate_synthetic_resident_reactions(
         "model": model_used,
         "count": len(reactions),
         "usedLlm": provider_used not in ("deterministic",),
+        "fallbackUsed": llm_attempted and llm_failed,
+        "warning": FALLBACK_WARNING if llm_attempted and llm_failed else None,
     }
     return reactions, meta
 

@@ -303,6 +303,8 @@ export type SyntheticResidentReactionGenerateResponse = {
   provider: string;
   model: string;
   count: number;
+  fallbackUsed?: boolean;
+  warning?: string | null;
 };
 
 export type ProposalReportSection = {

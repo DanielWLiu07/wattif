@@ -103,6 +103,11 @@ def test_llm_failure_falls_back(monkeypatch):
     )
     assert len(reactions) >= 2
     assert meta["provider"] == "deterministic"
+    assert meta["model"] == "fallback_v1"
+    assert meta["fallbackUsed"] is True
+    assert meta["warning"]
+    assert all(r["provider"] == "deterministic" for r in reactions)
+    assert all(r["model"] == "fallback_v1" for r in reactions)
     assert all(r["caveat"] == REACTION_CAVEAT for r in reactions)
 
 
@@ -352,3 +357,170 @@ def test_resident_reaction_api_generate(monkeypatch):
     listed = client.get("/api/proposals/prop-1/resident-reactions")
     assert listed.status_code == 200
     assert len(listed.json()) == 1
+
+
+def _api_client_with_mocks(monkeypatch, *, llm_side_effect=None, create_side_effect=None):
+    import app.state as state
+    from app.main import app
+    from fastapi.testclient import TestClient
+
+    saved_specs = [
+        {
+            "persona_label": "EV owners",
+            "stance": "mixed",
+            "summary": "Synthetic reaction text.",
+            "caveat": REACTION_CAVEAT,
+            "provider": "deterministic",
+            "model": "fallback_v1",
+            "reaction_type": "llm_synthetic_reaction",
+            "source_context": {},
+        }
+    ]
+
+    def _generate(**kw):
+        if llm_side_effect:
+            return llm_side_effect(**kw)
+        return (
+            saved_specs,
+            {
+                "provider": "deterministic",
+                "model": "fallback_v1",
+                "count": 1,
+                "fallbackUsed": False,
+                "warning": None,
+            },
+        )
+
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.proposals_repo.get_proposal",
+        lambda pid: {"id": pid, "project_id": "proj-1"},
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.delete_by_proposal",
+        lambda pid: 0,
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.generate_synthetic_resident_reactions",
+        _generate,
+    )
+
+    def _create(**fields):
+        if create_side_effect:
+            return create_side_effect(**fields)
+        return {"id": "r1", **fields}
+
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.create",
+        _create,
+    )
+    state.reset_world()
+    return TestClient(app)
+
+
+def test_api_provider_500_returns_fallback_success(monkeypatch):
+    from app.synthetic_resident_reactions import FALLBACK_WARNING
+
+    monkeypatch.setattr(config, "ANTHROPIC_API_KEY", "sk-test")
+    monkeypatch.setattr(config, "FEATHER_API_KEY", None)
+    monkeypatch.setattr(
+        "app.synthetic_resident_reactions.build_reaction_context_pack",
+        lambda **kw: _sample_context(),
+    )
+
+    def _boom(_ctx):
+        raise RuntimeError("Error code: 500 - Internal Server Error")
+
+    monkeypatch.setattr(
+        "app.synthetic_resident_reactions._call_llm_for_reactions", _boom
+    )
+    client = _api_client_with_mocks(monkeypatch)
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.generate_synthetic_resident_reactions",
+        generate_synthetic_resident_reactions,
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.create",
+        lambda **fields: {"id": "r1", **fields},
+    )
+    r = client.post("/api/proposals/prop-1/resident-reactions/generate")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["fallbackUsed"] is True
+    assert "LLM provider unavailable" in body["warning"]
+    assert body["provider"] == "deterministic"
+    assert body["model"] == "fallback_v1"
+    assert len(body["reactions"]) >= 1
+
+
+def test_api_provider_timeout_returns_fallback_success(monkeypatch):
+    from app.synthetic_resident_reactions import FALLBACK_WARNING
+
+    monkeypatch.setattr(config, "ANTHROPIC_API_KEY", "sk-test")
+    monkeypatch.setattr(config, "FEATHER_API_KEY", None)
+    monkeypatch.setattr(
+        "app.synthetic_resident_reactions.build_reaction_context_pack",
+        lambda **kw: _sample_context(),
+    )
+
+    def _timeout(_ctx):
+        raise TimeoutError("request timed out")
+
+    monkeypatch.setattr(
+        "app.synthetic_resident_reactions._call_llm_for_reactions", _timeout
+    )
+    client = _api_client_with_mocks(monkeypatch)
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.generate_synthetic_resident_reactions",
+        generate_synthetic_resident_reactions,
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.create",
+        lambda **fields: {"id": "r1", **fields},
+    )
+    r = client.post("/api/proposals/prop-1/resident-reactions/generate")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["fallbackUsed"] is True
+    assert body["warning"] == FALLBACK_WARNING
+    assert body["reactions"][0]["provider"] == "deterministic"
+    assert body["reactions"][0]["model"] == "fallback_v1"
+
+
+def test_api_returns_error_when_fallback_and_persistence_fail(monkeypatch):
+    def _generate(**kw):
+        return (
+            [
+                {
+                    "persona_label": "EV owners",
+                    "stance": "mixed",
+                    "summary": "Synthetic reaction text.",
+                    "caveat": REACTION_CAVEAT,
+                    "provider": "deterministic",
+                    "model": "fallback_v1",
+                    "reaction_type": "llm_synthetic_reaction",
+                    "source_context": {},
+                }
+            ],
+            {
+                "provider": "deterministic",
+                "model": "fallback_v1",
+                "count": 1,
+                "fallbackUsed": True,
+                "warning": "LLM provider unavailable; deterministic fallback reactions generated.",
+            },
+        )
+
+    def _create_fail(**_fields):
+        raise RuntimeError("insert failed")
+
+    client = _api_client_with_mocks(monkeypatch)
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.generate_synthetic_resident_reactions",
+        _generate,
+    )
+    monkeypatch.setattr(
+        "app.routes.resident_reactions.reactions_repo.create",
+        _create_fail,
+    )
+    r = client.post("/api/proposals/prop-1/resident-reactions/generate")
+    assert r.status_code == 502

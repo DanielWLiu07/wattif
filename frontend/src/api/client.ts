@@ -60,6 +60,7 @@ export const API_URL =
   "http://localhost:8000";
 
 const TIMEOUT_MS = 2500;
+const GENERATE_REACTIONS_TIMEOUT_MS = 120_000;
 
 async function tryFetch<T>(path: string, init?: RequestInit): Promise<T | null> {
   try {
@@ -196,11 +197,12 @@ export type PersistenceResult<T> =
 
 async function persistenceFetch<T>(
   path: string,
-  init?: RequestInit
+  init?: RequestInit,
+  timeoutMs = TIMEOUT_MS
 ): Promise<PersistenceResult<T>> {
   try {
     const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
     const res = await fetch(`${API_URL}${path}`, {
       ...init,
       signal: ctrl.signal,
@@ -358,7 +360,8 @@ export async function generateProposalResidentReactions(
 ): Promise<PersistenceResult<SyntheticResidentReactionGenerateResponse>> {
   return persistenceFetch<SyntheticResidentReactionGenerateResponse>(
     `/api/proposals/${proposalId}/resident-reactions/generate`,
-    { method: "POST" }
+    { method: "POST" },
+    GENERATE_REACTIONS_TIMEOUT_MS
   );
 }
 
