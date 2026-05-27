@@ -3,6 +3,7 @@
 from . import (
     agents,
     assets,
+    dataset_evidence_chunks,
     datasets,
     planner_runs,
     projects,
@@ -18,6 +19,7 @@ __all__ = [
     "proposals",
     "assets",
     "datasets",
+    "dataset_evidence_chunks",
     "agents",
     "planner_runs",
     "proposal_infrastructure",

@@ -147,6 +147,50 @@ class UploadedDataset(BaseModel):
     extracted_existing_infrastructure_count: int = 0
     invalid_existing_infrastructure_rows: int = 0
     detected_existing_infrastructure_kind: str | None = None
+    extracted_evidence_chunk_count: int = 0
+
+
+class DatasetEvidenceChunk(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    project_id: str
+    proposal_id: str | None = None
+    dataset_id: str
+    source_type: str = "uploaded_dataset"
+    chunk_text: str
+    chunk_summary: str | None = None
+    dataset_type: str | None = None
+    source_row_index: int | None = None
+    source_field: str | None = None
+    topic_tags: list[str] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    created_at: str | None = None
+
+
+class EvidenceSearchResult(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    dataset_id: str
+    dataset_name: str | None = None
+    dataset_type: str | None = None
+    chunk_text: str
+    chunk_summary: str | None = None
+    source_row_index: int | None = None
+    source_field: str | None = None
+    topic_tags: list[str] = Field(default_factory=list)
+    score: float
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class EvidenceSearchRequest(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    query: str = Field(min_length=1, max_length=500)
+    limit: int = Field(default=5, ge=1, le=50)
+    dataset_type: str | None = None
+    topic: str | None = None
 
 
 class UploadedInfrastructureAsset(BaseModel):
