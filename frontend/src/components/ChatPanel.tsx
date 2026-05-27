@@ -2,17 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import {
   Brain,
   Wrench,
-  CheckCircle2,
+  CheckCircle as CheckCircle2,
   MapPin,
-  Sparkles,
-  Send,
+  Sparkle as Sparkles,
+  PaperPlaneTilt as Send,
   Check,
   X,
-  Zap,
-  Wifi,
-  WifiOff,
+  Lightning as Zap,
+  WifiHigh as Wifi,
+  WifiSlash as WifiOff,
   ListChecks,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import { CONCERN_IMPROVEMENT_PROMPT } from "@/api/client";
 import type { ChatItem, OperatorRecommendation, PlannerEvent } from "@/types";
@@ -129,7 +129,7 @@ function Item({ item }: { item: ChatItem }) {
     );
   if (item.role === "system")
     return (
-      <div className="flex items-center gap-1.5 rounded-md border border-yellow-400/30 bg-yellow-400/10 px-2 py-1.5 text-[11px] text-yellow-100">
+      <div className="flex items-center gap-1.5 rounded-md border border-yellow-500/30 bg-yellow-400/10 px-2 py-1.5 text-[11px] text-yellow-700">
         <Zap className="h-3.5 w-3.5 shrink-0 text-yellow-400" />
         {item.text}
       </div>

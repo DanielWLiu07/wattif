@@ -1,5 +1,15 @@
 import { useMemo } from "react";
-import { Sun, Wind, BatteryCharging, Network, PlugZap, Crosshair, Trash2, Bot, User } from "lucide-react";
+import {
+  Sun,
+  Wind,
+  BatteryCharging,
+  Network,
+  PlugCharging as PlugZap,
+  Crosshair,
+  Trash as Trash2,
+  Robot as Bot,
+  User,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import type { InfraKind } from "@/types";
 import { INFRA_COLOR } from "@/types";

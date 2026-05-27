@@ -5,7 +5,6 @@ import {
   ScatterplotLayer,
   TextLayer,
 } from "@deck.gl/layers";
-import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import { TripsLayer } from "@deck.gl/geo-layers";
 import { ScenegraphLayer } from "@deck.gl/mesh-layers";
 import type { Layer } from "@deck.gl/core";
@@ -79,6 +78,29 @@ export function approvalColor(a: number): RGB {
   return [Math.round(148 - k * 96), Math.round(163 + k * 48), Math.round(184 + k * 16)];
 }
 
+// blue (low) → cyan → amber → orange (high) — demand heat; deeper stops read on white.
+const DEMAND_STOPS: RGB[] = [
+  [13, 71, 161],
+  [3, 132, 199],
+  [6, 182, 212],
+  [250, 204, 21],
+  [245, 124, 0],
+  [216, 67, 21],
+];
+export function demandColor(t: number): RGB {
+  const c = Math.max(0, Math.min(1, t));
+  const seg = c * (DEMAND_STOPS.length - 1);
+  const i = Math.min(DEMAND_STOPS.length - 2, Math.floor(seg));
+  const f = seg - i;
+  const a = DEMAND_STOPS[i];
+  const b = DEMAND_STOPS[i + 1];
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * f),
+    Math.round(a[1] + (b[1] - a[1]) * f),
+    Math.round(a[2] + (b[2] - a[2]) * f),
+  ];
+}
+
 const incomeColor: Record<Agent["incomeBracket"], RGB> = {
   low: [248, 113, 113],
   mid: [250, 204, 21],
@@ -97,6 +119,36 @@ function hashSeed(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
   return h;
+}
+
+// Word-wrap a voice line to <= maxLines lines (~perLine chars each), ellipsizing
+// any overflow. deck.gl TextLayer can't CSS line-clamp, so we pre-wrap with "\n"
+// (and set maxWidth:-1 on the layer) — the bubble sizes to content, no mid-line clip.
+function clampSpeech(raw: string, maxLines: number, perLine = 26): string {
+  const words = raw.trim().split(/\s+/);
+  const lines: string[] = [];
+  let cur = "";
+  let truncated = false;
+  for (let i = 0; i < words.length; i++) {
+    const cand = cur ? cur + " " + words[i] : words[i];
+    if (cand.length <= perLine) {
+      cur = cand;
+    } else if (lines.length < maxLines - 1) {
+      if (cur) lines.push(cur);
+      cur = words[i];
+    } else {
+      // last allowed line is full — stop; remaining words are dropped
+      truncated = true;
+      break;
+    }
+  }
+  if (cur && lines.length < maxLines) lines.push(cur);
+  if (truncated && lines.length) {
+    let last = lines[lines.length - 1];
+    if (last.length > perLine - 1) last = last.slice(0, perLine - 1);
+    lines[lines.length - 1] = last.replace(/[\s.,;:!?]+$/, "") + "…";
+  }
+  return lines.join("\n");
 }
 
 export type LayerInputs = {
@@ -533,7 +585,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
           const a = f.properties.id === selectedZoneId ? 200 : 120;
           return [r, g, b, a];
         },
-        getLineColor: [255, 255, 255, 50],
+        getLineColor: [51, 65, 85, 70],
         lineWidthMinPixels: 1,
         pickable: true,
         updateTriggers: {
@@ -570,7 +622,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
           const intensity = Math.min(1, Math.abs(a - 0.5) / 0.35);
           return [...approvalColor(a), Math.round(90 + intensity * 90)] as any;
         },
-        getLineColor: [255, 255, 255, 45],
+        getLineColor: [51, 65, 85, 65],
         lineWidthMinPixels: 0.5,
         extruded: false,
         getPolygonOffset: groundOffset,
@@ -642,29 +694,41 @@ export function buildLayers(input: LayerInputs): Layer[] {
   }
 
   // ---- Demand heat ----
-  if (layers.demand && agents.length) {
+  // Per-zone demand choropleth (NOT a hex layer): renders flat in the same ground
+  // depth band as the approval/burden choropleths (getPolygonOffset) so it never
+  // z-fights the basemap/3D buildings. Extrude toggle lifts it into 3D columns.
+  if (layers.demand && zones.length && agents.length) {
+    const byZone: Record<string, number> = {};
+    for (const a of agents) {
+      byZone[a.zoneId] = (byZone[a.zoneId] ?? 0) + (a.demandKwh ?? 0);
+    }
+    const maxDemand = Math.max(1, ...Object.values(byZone));
+    const fc: FeatureCollection = {
+      type: "FeatureCollection",
+      features: zones.map((z) => ({
+        type: "Feature",
+        geometry: z.polygon,
+        properties: { id: z.id, t: (byZone[z.id] ?? 0) / maxDemand },
+      })),
+    };
     out.push(
-      new HexagonLayer({
+      new GeoJsonLayer({
         id: "demand",
-        data: agents,
-        getPosition: (a: Agent) => a.position,
-        getElevationWeight: (a: Agent) => a.demandKwh,
-        getColorWeight: (a: Agent) => a.demandKwh,
-        elevationScale: extrude ? 6 : 0,
+        data: fc,
+        filled: true,
+        stroked: true,
         extruded: extrude,
-        radius: 220,
-        coverage: 0.85,
-        opacity: extrude ? 0.5 : 0.6,
-        updateTriggers: { getElevationWeight: [extrude] },
-        colorRange: [
-          [13, 71, 161],
-          [2, 119, 189],
-          [0, 172, 193],
-          [255, 193, 7],
-          [245, 124, 0],
-          [216, 67, 21],
-        ],
+        getElevation: (f: any) => (extrude ? f.properties.t * 1800 : 0),
+        getFillColor: (f: any) =>
+          [...demandColor(f.properties.t), extrude ? 210 : 150] as any,
+        getLineColor: [51, 65, 85, 55],
+        lineWidthMinPixels: 0.5,
+        getPolygonOffset: groundOffset,
         pickable: false,
+        updateTriggers: {
+          getElevation: [extrude],
+          getFillColor: [extrude],
+        },
       })
     );
   }
@@ -706,7 +770,7 @@ export function buildLayers(input: LayerInputs): Layer[] {
         radiusMaxPixels: 6,
         opacity: 0.95,
         stroked: true,
-        getLineColor: [255, 255, 255, 110],
+        getLineColor: [15, 23, 42, 150],
         lineWidthMinPixels: 0.5,
         // billboard + no depth test → people dots always read ON TOP of the
         // 3D city and never get clipped by building extrusions as they move.
@@ -999,7 +1063,9 @@ export function buildLayers(input: LayerInputs): Layer[] {
       if (key.includes("solar")) return INFRA_COLOR.solar;
       if (key.includes("wind")) return INFRA_COLOR.wind;
       if (key.includes("hydro")) return [56, 189, 248];
-      if (key.includes("ev") || key.includes("charg")) return [129, 140, 248];
+      // EV chargers: muted slate-blue (was bright indigo, which clashed with the
+      // battery accent and made the city read as a field of purple circles).
+      if (key.includes("ev") || key.includes("charg")) return [125, 145, 170];
       return [148, 163, 184];
     };
     out.push(
@@ -1007,15 +1073,17 @@ export function buildLayers(input: LayerInputs): Layer[] {
         id: "existing-infra",
         data: existingInfra,
         getPosition: (d: ExistingInfra) => d.position,
-        getFillColor: (d: ExistingInfra) => [...colorFor(d.kind), 60] as any,
-        getLineColor: (d: ExistingInfra) => colorFor(d.kind) as any,
+        // Quiet context dots: low-alpha fill, thin ring, capped small so the
+        // hundreds of existing assets don't visually clip across everything.
+        getFillColor: (d: ExistingInfra) => [...colorFor(d.kind), 26] as any,
+        getLineColor: (d: ExistingInfra) => [...colorFor(d.kind), 150] as any,
         stroked: true,
         filled: true,
-        getRadius: 55,
-        radiusMinPixels: 3,
-        radiusMaxPixels: 9,
-        lineWidthMinPixels: 1.5,
-        opacity: 0.9,
+        getRadius: 40,
+        radiusMinPixels: 1.5,
+        radiusMaxPixels: 4.5,
+        lineWidthMinPixels: 1,
+        opacity: 0.5,
         billboard: true,
         parameters: { depthTest: false } as any,
         pickable: true,
@@ -1129,13 +1197,13 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getText: (d: any) =>
           `${d.delta > 0 ? "▲" : "▼"}${Math.abs(d.delta * 100).toFixed(0)}%`,
         getColor: (d: any) =>
-          (d.delta > 0 ? [52, 211, 153, 255] : [248, 113, 113, 255]) as any,
+          (d.delta > 0 ? [5, 150, 105, 255] : [220, 38, 38, 255]) as any,
         getSize: 15,
         sizeUnits: "pixels",
         fontWeight: 700,
         getPixelOffset: [0, 8],
         background: true,
-        getBackgroundColor: [10, 14, 26, 220],
+        getBackgroundColor: [255, 255, 255, 235],
         backgroundPadding: [4, 2, 4, 2],
         billboard: true,
         getTextAnchor: "middle",
@@ -1154,13 +1222,15 @@ export function buildLayers(input: LayerInputs): Layer[] {
     const sel = selectedVoiceId
       ? voices.find((v) => v.id === selectedVoiceId)
       : undefined;
-    const list =
-      sel && !recent.some((v) => v.id === sel.id) ? [sel, ...recent] : recent;
+    // Render the selected bubble LAST so it paints ON TOP of its neighbours
+    // (clicked → brought to front in z). dedupe first.
+    const base = recent.filter((v) => v.id !== selectedVoiceId);
+    const list = sel ? [...base, sel] : base;
     const data = list.map((v) => {
       const z = zoneById.get(v.zoneId);
       const selected = v.id === selectedVoiceId;
-      const cap = selected ? 200 : 120;
-      const text = v.text.length > cap ? v.text.slice(0, cap - 2) + "…" : v.text;
+      // ~2 lines normally, up to 3 when selected — ellipsis on overflow.
+      const text = clampSpeech(v.text, selected ? 3 : 2);
       // pop the bubble on the EXACT agent when the backend gives a position
       const position = (v.position ??
         (z ? z.centroid : [-79.38, 43.65])) as [number, number];
@@ -1173,21 +1243,23 @@ export function buildLayers(input: LayerInputs): Layer[] {
         getPosition: (d: any) => d.position,
         getText: (d: any) => d.text,
         getSize: (d: any) => (d.selected ? 15 : 12),
-        getColor: (d: any) => [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255] as any,
+        // Ink text on a solid white card → reads cleanly over the white map.
+        getColor: () => [15, 23, 42, 255] as any,
         getPixelOffset: [0, -30],
         background: true,
         getBackgroundColor: (d: any) =>
-          (d.selected ? [30, 41, 75, 245] : [10, 14, 26, 225]) as any,
+          (d.selected ? [255, 255, 255, 255] : [255, 255, 255, 235]) as any,
+        // Stance is carried by an always-on colored border (green/red/slate).
         getBorderColor: (d: any) =>
-          (d.selected
-            ? [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255]
-            : [0, 0, 0, 0]) as any,
-        getBorderWidth: (d: any) => (d.selected ? 1.5 : 0),
+          [...STANCE_COLOR[d.stance as AgentVoice["stance"]], 255] as any,
+        getBorderWidth: (d: any) => (d.selected ? 2 : 1),
         backgroundPadding: [7, 5, 7, 5],
         fontWeight: 600,
         sizeUnits: "pixels",
-        wordBreak: "break-word",
-        maxWidth: 16,
+        // text is pre-wrapped with "\n" (clampSpeech) → disable deck auto-wrap
+        // so the bubble respects exactly those lines and sizes to content.
+        wordBreak: "break-all",
+        maxWidth: -1,
         lineHeight: 1.25,
         billboard: true,
         getTextAnchor: "middle",
@@ -1196,6 +1268,8 @@ export function buildLayers(input: LayerInputs): Layer[] {
         onClick: (info: any) => info.object?.id && onVoiceClick(info.object.id),
         characterSet: "auto",
         parameters: { depthTest: false } as any,
+        // Animate the size change so a clicked bubble "pops" to the front.
+        transitions: { getSize: { duration: 240 } },
         updateTriggers: {
           getSize: [selectedVoiceId],
           getBackgroundColor: [selectedVoiceId],

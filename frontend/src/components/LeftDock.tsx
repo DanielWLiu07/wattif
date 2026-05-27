@@ -1,4 +1,10 @@
-import { Wrench, Zap, Map as MapIcon, Crosshair, FolderOpen } from "lucide-react";
+import {
+  Wrench,
+  Lightning as Zap,
+  MapTrifold as MapIcon,
+  Crosshair,
+  FolderOpen,
+} from "@phosphor-icons/react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { BuildTab } from "@/components/BuildTab";
@@ -7,10 +13,11 @@ import { LayersPanel } from "@/components/LayersPanel";
 import { LegendContent } from "@/components/LegendContent";
 import { BuildPriority } from "@/components/BuildPriority";
 import { ProjectsTab } from "@/components/ProjectsTab";
+import { OverlayLegendPanel } from "@/components/OverlayLegend";
 
 export function LeftDock() {
   return (
-    <div className="pointer-events-auto flex h-full w-[300px] flex-col p-3">
+    <div className="pointer-events-auto flex h-full w-full flex-col gap-2 p-3">
       <Card className="glass flex min-h-0 flex-1 flex-col overflow-hidden">
         <Tabs defaultValue="build" className="flex min-h-0 flex-1 flex-col">
           <TabsList className="m-1.5 grid h-auto shrink-0 grid-cols-5 gap-0.5">
@@ -58,6 +65,9 @@ export function LeftDock() {
           </TabsContent>
         </Tabs>
       </Card>
+
+      {/* Pinned bottom of the left column — overlay switcher, matching dock width. */}
+      <OverlayLegendPanel />
     </div>
   );
 }

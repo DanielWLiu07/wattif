@@ -5,6 +5,8 @@ import type {
   Agent,
   AgentVoice,
   ChatItem,
+  CityEvent,
+  EventPoint,
   ConstraintZone,
   ExistingInfra,
   Facility,
@@ -102,6 +104,7 @@ type State = {
 
   selectedRegion: string;
   showRegionSelector: boolean;
+  mainView: "map" | "events"; // navbar-level view switch
   regionCursorMode: boolean;
   hoveredRegion: string | null;
   setSelectedRegion: (region: string) => void;
@@ -129,6 +132,8 @@ type State = {
   sbei: api.Sbei | null; // city-wide emissions context
   sitingPriority: SitingPriorityZone[]; // ranked "where to build next"
   equityWeight: number; // 0..1 weight for the build-priority ranking
+  events: CityEvent[]; // city-events timeline (placements + scenarios)
+  eventSeries: EventPoint[]; // approval/coverage over ticks for the sparkline
   gatheringZones: string[]; // zones showing crowds (target + neighbours)
   lastTargetZoneId: string | null; // zone the last scenario hit
 
@@ -300,6 +305,10 @@ type State = {
   setEquityWeight: (w: number) => void;
   refreshSitingPriority: () => Promise<void>;
 
+  // events timeline
+  loadEvents: () => Promise<void>;
+  traceEvent: (zoneIds: string[]) => void;
+
   // v3 actions
   sendChat: (
     text: string,
@@ -314,6 +323,7 @@ type State = {
 
   // onboarding / layout
   dismissWelcome: () => void;
+  setMainView: (v: "map" | "events") => void;
   toggleLeft: () => void;
   toggleRight: () => void;
   toggleLegend: () => void;
@@ -666,6 +676,7 @@ export const useStore = create<State>((set, get) => ({
 
   selectedRegion: "All",
   showRegionSelector: true,
+  mainView: "map",
   regionCursorMode: false,
   hoveredRegion: null,
 
@@ -688,6 +699,8 @@ export const useStore = create<State>((set, get) => ({
   sbei: null,
   sitingPriority: [],
   equityWeight: 0.4,
+  events: [],
+  eventSeries: [],
   gatheringZones: [],
   lastTargetZoneId: null,
 
@@ -1368,6 +1381,9 @@ export const useStore = create<State>((set, get) => ({
       .getSitingPriority(infra, get().equityWeight)
       .then((r) => set({ sitingPriority: r.zones, equityWeight: r.equityWeight }));
 
+    // events timeline (placements + scenarios with measured impact)
+    void get().loadEvents();
+
     // v3 real-data layers — degrade gracefully (empty until data-2 lands)
     void Promise.all([
       api.getFacilities(),
@@ -1599,7 +1615,8 @@ export const useStore = create<State>((set, get) => ({
   setSelectedRegion: (region) => {
     const { allZones, allAgents, allSampledAgents, allFacilities, allExistingInfra, allInfra } = get();
     set({ selectedRegion: region });
-    if (region === "All") {
+    // "All" and "All Toronto" both mean the whole city (no region filter).
+    if (region === "All" || region === "All Toronto") {
       set({
         zones: allZones,
         agents: allAgents,
@@ -1639,7 +1656,7 @@ export const useStore = create<State>((set, get) => ({
 
     // Enforce region-locked placement: reject placing outside active filtered zones
     const activeZoneIds = new Set(zones.map(zone => zone.id));
-    if (selectedRegion !== "All" && z && !activeZoneIds.has(z.id)) {
+    if (selectedRegion !== "All" && selectedRegion !== "All Toronto" && z && !activeZoneIds.has(z.id)) {
       get().pushToast(`Cannot place infrastructure outside the active region (${selectedRegion})`, "warn");
       return;
     }
@@ -2173,6 +2190,30 @@ export const useStore = create<State>((set, get) => ({
     set({ sitingPriority: r.zones });
   },
 
+  // ---------------- events timeline ----------------
+
+  loadEvents: async () => {
+    const r = await api.getEvents();
+    set({ events: r.events, eventSeries: r.series });
+  },
+  // Click an event card → highlight its zones on the map + fly to frame them.
+  traceEvent: (zoneIds) => {
+    if (!zoneIds.length) return;
+    set({ flashZones: zoneIds });
+    if (flashTimer) clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => set({ flashZones: [] }), 2600);
+    const z = get().zones.find((zz) => zz.id === zoneIds[0]);
+    if (z) {
+      set({
+        flyTo: {
+          target: z.centroid,
+          zoom: zoneIds.length > 6 ? 11 : 13,
+          nonce: Date.now(),
+        },
+      });
+    }
+  },
+
   // ---------------- juice: toasts ----------------
 
   pushToast: (text, kind = "info") => {
@@ -2301,6 +2342,7 @@ export const useStore = create<State>((set, get) => ({
   // (the window hook below exposes this store for E2E/screenshot tooling)
 
   dismissWelcome: () => set({ showWelcome: false }),
+  setMainView: (v) => set({ mainView: v }),
   toggleLeft: () => set((s) => ({ leftOpen: !s.leftOpen })),
   toggleRight: () => set((s) => ({ rightOpen: !s.rightOpen })),
   toggleLegend: () => set((s) => ({ showLegend: !s.showLegend })),
