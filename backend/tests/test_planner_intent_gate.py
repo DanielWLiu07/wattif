@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 
 import pytest
 
 from app.planner import PlannerChat, PlannerTools
 from app.planner_dispatch import BLOCKED_MUTATION_ANSWER, dispatch_planner_turn
 from app.planner_intent import classify_planner_intent
+from app.planner_simple_placement import parse_simple_explicit_placement
 from app.state import World
+
+log = logging.getLogger("wattif.planner")
 
 
 @pytest.fixture
@@ -137,14 +141,110 @@ def test_explicit_placement_allows_optimize(demo_llm):
     w = World()
     w.session_reset()
     chat = PlannerChat(w, 80_000_000)
-    events = _collect(chat, "Add solar to the highest-burden neighbourhoods")
-    assert classify_planner_intent("Add solar to the highest-burden neighbourhoods") == (
-        "explicit_placement"
-    )
+    msg = "Add solar to the highest-burden neighbourhoods"
+    assert classify_planner_intent(msg) == "explicit_placement"
+    assert parse_simple_explicit_placement(msg) is not None
+    events = _collect(chat, msg)
     assert "optimize" in _tool_names(events)
     assert "place_infrastructure" in _tool_names(events)
     blob = _all_text(events)
     assert "<|tool_call>" not in blob
+    assert any(e["type"] == "answer" for e in events)
+    assert any(e["type"] == "done" for e in events)
+    assert len(w.engine.infra) > 0
+
+
+def test_simple_placement_top_three_burdened_zones(demo_llm):
+    w = World()
+    w.session_reset()
+    chat = PlannerChat(w, 80_000_000)
+    msg = "Place solar in the top 3 burdened zones"
+    spec = parse_simple_explicit_placement(msg)
+    assert spec is not None
+    assert spec["n"] == 3
+    assert spec["kind"] == "solar"
+    events = _collect(chat, msg)
+    placements = [e for e in events if e.get("type") == "placement"]
+    assert len(placements) == 3
+    assert "optimize" in _tool_names(events)
+
+
+def test_simple_ev_charger_low_coverage_deterministic(demo_llm):
+    w = World()
+    w.session_reset()
+    chat = PlannerChat(w, 80_000_000)
+    msg = "Add EV chargers where coverage is missing"
+    assert parse_simple_explicit_placement(msg) is not None
+    events = _collect(chat, msg)
+    assert "optimize" in _tool_names(events)
+    assert "place_infrastructure" in _tool_names(events)
+    assert any(e["type"] == "answer" for e in events)
+
+
+def test_simple_placement_skips_featherless(demo_llm, monkeypatch, caplog):
+    import app.config as config
+
+    monkeypatch.setattr(config, "FEATHER_API_KEY", "test-key")
+    monkeypatch.setattr(config, "FEATHER_BASE_URL", "https://example.test/v1")
+    monkeypatch.setattr(config, "DEMO_LLM", False)
+
+    called = {"n": 0}
+
+    class FakeClient:
+        class chat:
+            class completions:
+                @staticmethod
+                def create(**_kwargs):
+                    called["n"] += 1
+                    raise RuntimeError("should not call feather for simple placement")
+
+    monkeypatch.setattr("openai.OpenAI", lambda **_kw: FakeClient())
+
+    w = World()
+    w.session_reset()
+    chat = PlannerChat(w, 80_000_000)
+    msg = "Add solar to the highest-burden neighbourhoods"
+    with caplog.at_level(logging.INFO, logger="wattif.planner"):
+        events = _collect(chat, msg)
+    assert called["n"] == 0
+    assert any(
+        "deterministic=True provider=backend" in r.message for r in caplog.records
+    )
+    assert len(w.engine.infra) > 0
+    assert any(e["type"] == "answer" for e in events)
+
+
+def test_ambiguous_explicit_placement_feather_503(demo_llm, monkeypatch):
+    import app.config as config
+
+    monkeypatch.setattr(config, "FEATHER_API_KEY", "test-key")
+    monkeypatch.setattr(config, "FEATHER_BASE_URL", "https://example.test/v1")
+    monkeypatch.setattr(config, "DEMO_LLM", False)
+
+    ambiguous = (
+        "Place renewable infrastructure optimally across the city "
+        "considering budget and equity tradeoffs"
+    )
+    assert parse_simple_explicit_placement(ambiguous) is None
+
+    class FakeClient:
+        class chat:
+            class completions:
+                @staticmethod
+                def create(**_kwargs):
+                    raise RuntimeError("Error code: 503 - Service Unavailable")
+
+    monkeypatch.setattr("openai.OpenAI", lambda **_kw: FakeClient())
+
+    w = World()
+    w.session_reset()
+    chat = PlannerChat(w, 80_000_000)
+    events = _collect(chat, ambiguous)
+    answers = [e for e in events if e["type"] == "answer"]
+    assert len(answers) == 1
+    assert "LLM provider is temporarily unavailable" in answers[0]["text"]
+    assert any(e["type"] == "done" for e in events)
+    assert len(w.engine.infra) == 0
 
 
 def test_feather_503_emits_terminal(demo_llm, monkeypatch):
@@ -166,7 +266,14 @@ def test_feather_503_emits_terminal(demo_llm, monkeypatch):
     w = World()
     w.session_reset()
     chat = PlannerChat(w, 80_000_000)
-    events = _collect(chat, "Add solar to the highest-burden neighbourhoods")
-    assert any(e["type"] == "error" for e in events)
+    # Simple commands bypass Featherless; use ambiguous prompt for 503 path.
+    ambiguous = (
+        "Place renewable infrastructure optimally across the city "
+        "considering budget and equity tradeoffs"
+    )
+    events = _collect(chat, ambiguous)
+    answers = [e for e in events if e["type"] == "answer"]
+    assert len(answers) == 1
+    assert "LLM provider is temporarily unavailable" in answers[0]["text"]
     assert any(e["type"] == "done" for e in events)
     assert len(w.engine.infra) == 0

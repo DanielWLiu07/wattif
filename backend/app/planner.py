@@ -1402,17 +1402,13 @@ class PlannerChat:
             except Exception as exc:  # noqa: BLE001
                 err = str(exc)
                 log.warning("Feather planner call failed: %s", err)
-                summary = (
-                    "The LLM provider is temporarily unavailable (503/timeout). "
-                    "Please retry in a moment."
-                )
+                from .planner_simple_placement import LLM_PLACEMENT_UNAVAILABLE
+                from .planner_events import terminal_done
+
+                summary = LLM_PLACEMENT_UNAVAILABLE
                 if "503" in err or "timeout" in err.lower():
-                    yield {"type": "error", "message": summary}
-                    yield {
-                        "type": "done",
-                        "placements": self.tools.placements,
-                        "spentCad": round(self.tools.spent, 2),
-                    }
+                    yield {"type": "answer", "text": summary}
+                    yield terminal_done(self, final_message_sent=True)
                     return
                 raise
             msg = resp.choices[0].message

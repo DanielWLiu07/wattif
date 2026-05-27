@@ -236,6 +236,7 @@ type State = {
   syntheticResidentReactions: SyntheticResidentReaction[];
   residentReactionsGenerating: boolean;
   residentReactionsError: string | null;
+  residentReactionsWarning: string | null;
   evidenceChunks: DatasetEvidenceChunk[];
   evidenceSearchResults: EvidenceSearchResult[];
   evidenceLoading: boolean;
@@ -856,6 +857,7 @@ export const useStore = create<State>((set, get) => ({
   syntheticResidentReactions: [],
   residentReactionsGenerating: false,
   residentReactionsError: null,
+  residentReactionsWarning: null,
   evidenceChunks: [],
   evidenceSearchResults: [],
   evidenceLoading: false,
@@ -982,7 +984,7 @@ export const useStore = create<State>((set, get) => ({
   loadSyntheticResidentReactions: async () => {
     const { selectedProjectId, selectedProposalId, backendHealth } = get();
     if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
-      set({ syntheticResidentReactions: [], residentReactionsError: null });
+      set({ syntheticResidentReactions: [], residentReactionsError: null, residentReactionsWarning: null });
       return;
     }
     const res = selectedProposalId
@@ -999,13 +1001,18 @@ export const useStore = create<State>((set, get) => ({
     set({
       syntheticResidentReactions: res.data,
       residentReactionsError: null,
+      residentReactionsWarning: null,
     });
   },
 
   generateSyntheticResidentReactions: async () => {
     const { selectedProposalId } = get();
     if (!selectedProposalId) return;
-    set({ residentReactionsGenerating: true, residentReactionsError: null });
+    set({
+      residentReactionsGenerating: true,
+      residentReactionsError: null,
+      residentReactionsWarning: null,
+    });
     const res = await api.generateProposalResidentReactions(selectedProposalId);
     if (!res.ok) {
       set({
@@ -1013,18 +1020,26 @@ export const useStore = create<State>((set, get) => ({
         residentReactionsError: res.unavailable
           ? "Supabase persistence is not configured"
           : res.error ?? "Generation failed",
+        residentReactionsWarning: null,
       });
       get().pushToast(res.error ?? "Could not generate reactions", "warn");
       return;
     }
+    const warning =
+      res.data.warning ??
+      (res.data.fallbackUsed
+        ? "LLM provider unavailable; deterministic fallback reactions generated."
+        : null);
     set({
       syntheticResidentReactions: res.data.reactions,
       residentReactionsGenerating: false,
       residentReactionsError: null,
+      residentReactionsWarning: warning,
     });
     get().pushToast(
-      `Generated ${res.data.count} synthetic reaction(s) via ${res.data.provider}`,
-      "good"
+      warning ??
+        `Generated ${res.data.count} synthetic reaction(s) via ${res.data.provider}`,
+      warning ? "warn" : "good"
     );
     void get().loadSyntheticResidentReactions();
   },
@@ -1300,6 +1315,7 @@ export const useStore = create<State>((set, get) => ({
       datasetError: null,
       cohortError: null,
       residentReactionsError: null,
+      residentReactionsWarning: null,
       evidenceChunks: [],
       evidenceSearchResults: [],
       evidenceError: null,

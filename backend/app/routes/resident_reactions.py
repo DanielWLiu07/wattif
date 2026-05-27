@@ -140,6 +140,8 @@ def generate_proposal_resident_reactions(
             provider=meta["provider"],
             model=meta["model"],
             count=meta["count"],
+            fallback_used=bool(meta.get("fallbackUsed")),
+            warning=meta.get("warning"),
         )
     except PersistenceDisabledError:
         raise _unavailable() from None

@@ -325,3 +325,5 @@ class SyntheticResidentReactionGenerateResponse(BaseModel):
     provider: str
     model: str
     count: int
+    fallback_used: bool = False
+    warning: str | None = None
