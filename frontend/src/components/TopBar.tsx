@@ -1,16 +1,19 @@
 import {
-  Zap,
-  Wifi,
-  FlaskConical,
-  HelpCircle,
-  Bot,
-  MessageSquare,
-  HardDrive,
-} from "lucide-react";
+  WifiHigh as Wifi,
+  Flask as FlaskConical,
+  Play,
+  Question as HelpCircle,
+  MapPin,
+  Robot as Bot,
+  ChatCircle as MessageSquare,
+  HardDrives as HardDrive,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import type { HealthMeta } from "@/api/client";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/brand/Logo";
 import {
   Tooltip,
   TooltipContent,
@@ -85,6 +88,8 @@ export function TopBar() {
   const voicesCount = useStore((s) => s.voices.length);
   const focusVoices = useStore((s) => s.selectVoiceFromMap);
   const selectedRegion = useStore((s) => s.selectedRegion);
+  const mainView = useStore((s) => s.mainView);
+  const setMainView = useStore((s) => s.setMainView);
   const openWelcome = () => useStore.setState({ showWelcome: true });
   const openVoices = () => {
     useStore.setState({ rightOpen: true });
@@ -102,32 +107,121 @@ export function TopBar() {
       : "Supabase"
     : "RAM";
 
+  const connection = !loaded ? (
+    <Badge variant="secondary" className="gap-1">
+      <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-500" />
+      Connecting…
+    </Badge>
+  ) : wsReconnecting ? (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge variant="secondary" className="gap-1">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-500" />
+          Reconnecting…
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>
+        Lost the live stream — retrying. The app keeps running.
+      </TooltipContent>
+    </Tooltip>
+  ) : live ? (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge variant="good" className="gap-1">
+          <Wifi className="h-3 w-3" />
+          {wsConnected ? "Live + WS" : "Live API"}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>Connected to the backend</TooltipContent>
+    </Tooltip>
+  ) : (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge variant="accent" className="gap-1">
+          <FlaskConical className="h-3 w-3" /> Mock data
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>Backend offline — running on built-in data</TooltipContent>
+    </Tooltip>
+  );
+
   return (
-    <div className="pointer-events-auto flex items-center justify-between px-4 py-3">
-      <div className="glass flex items-center gap-2.5 rounded-xl px-3.5 py-2 shadow-lg">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <Zap className="h-4 w-4" />
-        </div>
-        <div className="leading-tight">
-          <div className="flex items-center gap-1.5 text-sm font-semibold">
-            WattIf
-            <span className="hidden text-[10px] font-normal text-muted-foreground sm:inline">
-              Toronto energy-equity simulator
-            </span>
-          </div>
+    <header className="pointer-events-auto flex h-[52px] w-full shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4">
+      {/* LEFT — brand (click → back to landing / scope select) */}
+      <div className="flex min-w-0 flex-1 items-center gap-2.5">
+        <button
+          onClick={() => useStore.setState({ showRegionSelector: true })}
+          className="-mx-1 flex items-center rounded-md px-1 py-0.5 transition-colors duration-150 hover:bg-muted"
+          aria-label="Back to start"
+          title="Back to start"
+        >
+          <Logo size="sm" />
+        </button>
+        <span className="hidden truncate border-l border-border pl-2.5 text-[11px] text-muted-foreground lg:inline">
+          Toronto energy-equity simulator
+        </span>
+
+        {/* Navbar-level view switch */}
+        <div className="ml-1.5 flex items-center gap-0.5 rounded-lg border border-border bg-muted/50 p-0.5">
+          {([
+            { v: "map", label: "Simulator" },
+            { v: "events", label: "Events" },
+          ] as const).map(({ v, label }) => (
+            <button
+              key={v}
+              onClick={() => setMainView(v)}
+              className={cn(
+                "rounded-md px-2.5 py-1 text-xs font-medium transition-colors duration-150",
+                mainView === v
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="glass flex max-w-[min(100vw-2rem,42rem)] flex-wrap items-center justify-end gap-1.5 rounded-xl px-2.5 py-1.5 shadow-lg">
+      {/* CENTER — live status */}
+      <div className="flex flex-1 items-center justify-center gap-2">
+        {voicesCount > 0 && (
+          <button
+            onClick={() => {
+              // Make sure the Voices feed is actually visible: leave the Events
+              // view, open the right dock, then focus the Voices tab.
+              useStore.setState({ mainView: "map", rightOpen: true });
+              focusVoices("");
+            }}
+            className="flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs transition-colors duration-150 hover:bg-secondary"
+            title="Open the Voices log"
+          >
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
+            </span>
+            <b className="num">{Math.min(voicesCount, 40)}</b>
+            <span className="text-muted-foreground">people talking</span>
+          </button>
+        )}
+        {connection}
+      </div>
+
+      {/* RIGHT — controls */}
+      <div className="flex flex-1 flex-wrap items-center justify-end gap-2">
+        <Button
+          size="sm"
+          variant={demo.running ? "secondary" : "default"}
+          onClick={() => (demo.running ? stopDemo() : void runGuidedDemo())}
+        >
+          <Play weight="fill" />
+          {demo.running ? "Stop demo" : "Guided demo"}
+        </Button>
+
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-7 w-7"
-              onClick={openWelcome}
-            >
-              <HelpCircle className="h-4 w-4" />
+            <Button size="icon-sm" variant="ghost" onClick={openWelcome}>
+              <HelpCircle />
             </Button>
           </TooltipTrigger>
           <TooltipContent>What is WattIf?</TooltipContent>
@@ -137,59 +231,20 @@ export function TopBar() {
 
         <Button
           size="sm"
-          variant="secondary"
-          className="h-7 gap-1 font-normal text-xs border border-border/80 bg-secondary/55 hover:bg-secondary/80 transition-all active:scale-95"
+          variant="outline"
+          className="gap-1.5 font-normal"
           onClick={() => useStore.setState({ showRegionSelector: true })}
           title="Change active simulation region"
         >
-          <span>📍</span>
-          <span className="font-semibold text-primary">{selectedRegion === "All" ? "All Toronto" : selectedRegion}</span>
+          <MapPin className="text-brand" />
+          <span className="font-semibold">
+            {selectedRegion === "All" ? "All Toronto" : selectedRegion}
+          </span>
         </Button>
 
-        <Badge variant="secondary" className="hidden font-normal sm:inline-flex">
+        <Badge variant="outline" className="hidden font-normal num sm:inline-flex">
           {zones.length} zones
         </Badge>
-
-        {!loaded ? (
-          <Badge variant="secondary" className="gap-1">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
-            Connecting…
-          </Badge>
-        ) : wsReconnecting ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Badge variant="secondary" className="gap-1">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
-                Reconnecting…
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>
-              Lost the live stream — retrying. The app keeps running.
-            </TooltipContent>
-          </Tooltip>
-        ) : live ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Badge variant="default" className="gap-1">
-                <Wifi className="h-3 w-3" />
-                {wsConnected ? "Live + WS" : "Live API"}
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>Connected to the backend</TooltipContent>
-          </Tooltip>
-        ) : (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Badge variant="accent" className="gap-1">
-                <FlaskConical className="h-3 w-3" /> Mock data
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>
-              Backend offline — running on built-in data
-            </TooltipContent>
-          </Tooltip>
-        )}
-
         {loaded && (
           <>
             <Tooltip>
@@ -272,6 +327,6 @@ export function TopBar() {
           </>
         )}
       </div>
-    </div>
+    </header>
   );
 }

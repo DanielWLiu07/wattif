@@ -4,7 +4,22 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Manrope", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "Manrope", "ui-sans-serif", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+      },
       colors: {
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          ink: "hsl(var(--brand-ink))",
+        },
+        data: {
+          good: "hsl(var(--data-good))",
+          warn: "hsl(var(--data-warn))",
+          alert: "hsl(var(--data-alert))",
+          info: "hsl(var(--data-info))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

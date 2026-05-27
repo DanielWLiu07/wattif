@@ -1,9 +1,22 @@
-import { Sun, Wind, BatteryCharging, Network, PlugZap, Sparkles, Check, X, Users, Leaf, Scale } from "lucide-react";
+import {
+  Sun,
+  Wind,
+  BatteryCharging,
+  Network,
+  PlugCharging as PlugZap,
+  Sparkle as Sparkles,
+  Check,
+  X,
+  Users,
+  Leaf,
+  Scales as Scale,
+} from "@phosphor-icons/react";
 import { useStore } from "@/store";
 import type { InfraKind, Recommendation } from "@/types";
 import { INFRA_PRESETS, INFRA_COLOR } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ForecastPreview } from "@/components/ForecastPreview";
 import { fmt } from "@/lib/utils";
 
 const KIND_ICON: Record<InfraKind, React.ElementType> = {
@@ -49,7 +62,7 @@ export function RecommendationImpact({
   );
 
   return (
-    <div className="glass w-[260px] rounded-xl p-3 shadow-2xl">
+    <div className="glass w-[260px] rounded-xl p-3">
       <div className="mb-2 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <div
@@ -85,9 +98,9 @@ export function RecommendationImpact({
       <div className="grid grid-cols-3 gap-1.5">
         <div className="rounded-lg border border-border/60 bg-secondary/30 p-1.5">
           <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
-            <Users className="h-3 w-3 text-sky-300" /> served
+            <Users className="h-3 w-3 text-sky-600" /> served
           </div>
-          <div className="mt-0.5 text-sm font-semibold tabular-nums">
+          <div className="mt-0.5 text-sm font-semibold num">
             ~{fmt(served)}
           </div>
         </div>
@@ -95,7 +108,7 @@ export function RecommendationImpact({
           <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
             <Leaf className="h-3 w-3 text-primary" /> coverage
           </div>
-          <div className="mt-0.5 text-sm font-semibold tabular-nums text-primary">
+          <div className="mt-0.5 text-sm font-semibold num text-primary">
             +{(rec.expectedCoverageGain * 100).toFixed(1)}%
           </div>
         </div>
@@ -103,7 +116,7 @@ export function RecommendationImpact({
           <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
             <Scale className="h-3 w-3 text-emerald-400" /> equity
           </div>
-          <div className="mt-0.5 text-sm font-semibold tabular-nums text-emerald-400">
+          <div className="mt-0.5 text-sm font-semibold num text-emerald-400">
             +{(rec.equityGain * 100).toFixed(1)}
           </div>
         </div>
@@ -112,6 +125,15 @@ export function RecommendationImpact({
       <p className="mt-2 text-[11px] leading-snug text-foreground/90">
         {rec.rationale}
       </p>
+
+      {/* What-if projection: how this exact site moves the city over time. */}
+      {pinned && (
+        <ForecastPreview
+          kind={rec.kind}
+          position={rec.position}
+          className="mt-2"
+        />
+      )}
 
       {pinned && (
         <Button

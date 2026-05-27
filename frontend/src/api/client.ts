@@ -4,6 +4,10 @@ import type {
   ActivityItem,
   Agent,
   AgentVoice,
+  CityEvent,
+  EventPoint,
+  Forecast,
+  ProposedBuild,
   ConstraintZone,
   SitingPriorityZone,
   ExistingInfra,
@@ -42,6 +46,7 @@ import {
   mockScenario,
   mockSentiment,
   mockSitingPriority,
+  mockEvents,
   mockVoices,
   seedInfra,
 } from "@/data/mock";
@@ -611,6 +616,41 @@ export async function getSitingPriority(
   if (r?.zones?.length)
     return { equityWeight: r.equityWeight ?? equityWeight, zones: r.zones };
   return mockSitingPriority(equityWeight, infra);
+}
+
+// City events timeline (placements + scenarios with measured impact). Mock fallback.
+export async function getEvents(): Promise<{
+  events: CityEvent[];
+  series: EventPoint[];
+}> {
+  const r = await tryFetch<{ events: CityEvent[]; series: EventPoint[] }>(
+    "/api/events"
+  );
+  if (r && Array.isArray(r.events))
+    return { events: r.events, series: Array.isArray(r.series) ? r.series : [] };
+  return mockEvents();
+}
+
+// POST /api/forecast → projected city trajectory over `ticks` horizon.
+// The backend uses its own live world; we just send {ticks, proposed}. When
+// `proposed` is omitted/null the response carries only the `baseline` series
+// (where the city is heading); when a proposed build set is given the response
+// also includes `projected` (current world + those builds). Returns null when
+// the endpoint isn't live so callers can show a graceful empty/loading state.
+export async function getForecast(
+  ticks: number,
+  proposed?: ProposedBuild[] | null
+): Promise<Forecast | null> {
+  const r = await tryFetch<Forecast>("/api/forecast", {
+    method: "POST",
+    body: JSON.stringify({ ticks, proposed: proposed ?? null }),
+  });
+  if (!r || !Array.isArray(r.baseline)) return null;
+  return {
+    horizon: r.horizon ?? ticks,
+    baseline: r.baseline,
+    projected: Array.isArray(r.projected) ? r.projected : null,
+  };
 }
 
 export async function getActivity(): Promise<ActivityItem[]> {

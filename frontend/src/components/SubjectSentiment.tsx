@@ -8,7 +8,7 @@ export function SubjectSentiment() {
   return (
     <div className="rounded-lg border border-border/60 bg-secondary/30 p-2.5">
       <div className="mb-1 text-[11px]">
-        <b className="text-primary tabular-nums">{subj.support}%</b> support{" "}
+        <b className="text-primary num">{subj.support}%</b> support{" "}
         <b className="capitalize">{subj.label}</b> here
       </div>
       <div className="flex h-2 w-full overflow-hidden rounded-full">
