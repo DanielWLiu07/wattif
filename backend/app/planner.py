@@ -162,6 +162,7 @@ class PlannerTools:
         self.budget_total = budget_cad
         self.spent = 0.0
         self.placements: list[dict] = []  # infra placed this run (camelCase dicts)
+        self.guard_intent: str | None = None
 
     @property
     def remaining(self) -> float:
@@ -184,6 +185,24 @@ class PlannerTools:
         )
 
     def execute(self, name: str, args: dict) -> dict:
+        from .planner_intent import MUTATING_TOOL_NAMES, allows_tool
+
+        if self.guard_intent is not None and not allows_tool(self.guard_intent, name):
+            from .planner_dispatch import BLOCKED_MUTATION_ANSWER
+
+            msg = (
+                BLOCKED_MUTATION_ANSWER
+                if name in MUTATING_TOOL_NAMES
+                else (
+                    f"Tool '{name}' is not allowed for '{self.guard_intent}' intent. "
+                    "Only explicit placement requests may run the optimizer to place assets."
+                )
+            )
+            return {
+                "blocked": True,
+                "error": msg,
+                "userMessage": msg,
+            }
         try:
             fn = getattr(self, f"_t_{name}", None)
             if fn is None:
@@ -330,13 +349,18 @@ def _system_prompt(
     dataset_context: str | None = None,
 ) -> str:
     base = (
-        "You are the WattIf siting planner for Toronto. Goal: maximize renewable coverage AND "
-        "equity (prioritize high energy-burden neighbourhoods) while staying within budget.\n"
+        "You are the WattIf planning copilot for Toronto. Reason broadly; act narrowly.\n"
+        "Answer project/planning questions directly from context when possible.\n"
+        "Uploaded existing infrastructure is read-only context — not proposed infrastructure.\n"
+        "Synthetic cohort concerns are synthetic, not real residents or public consultation.\n"
+        "Do NOT place, build, remove, launch programs, or auto-optimize-to-place unless the user "
+        "explicitly asks to place/build/add/auto-place infrastructure.\n"
+        "For recommendation questions, suggest actions first; wait for explicit placement "
+        "instruction before mutating the proposal.\n"
         f"Budget: {budget:,.0f} CAD. {('User goal: ' + goal) if goal else ''}\n"
-        "Workflow: inspect city state + metrics, call optimize for candidate sites, place a few "
-        "high-value installations (favor high-burden zones), run the simulation to verify gains, "
-        "and stop when the budget is mostly used or coverage/equity clearly improved. Keep your "
-        "thoughts to one short sentence before each tool call. Be decisive — don't loop."
+        "When explicitly asked to place infrastructure: inspect city state + metrics, call optimize "
+        "for candidate sites, place high-value installations (favor high-burden zones), optionally "
+        "run simulation to verify. Keep thoughts to one short sentence before each tool call."
     )
     if dataset_context:
         base += f"\n\n{dataset_context}"
@@ -857,29 +881,27 @@ class PlannerChat:
         user_message: str,
         confirm: ConfirmFn | None = None,
         intent: str | None = None,
+        turn_id: str | None = None,
     ):
         """Run one planning turn for a user message, streaming events."""
-        from .concern_recommendations import is_concern_improvement_intent
+        from .planner_dispatch import dispatch_planner_turn
 
-        self.turn_count += 1
-        if is_concern_improvement_intent(user_message, intent):
-            async for ev in self._concern_recommendation_turn(user_message, confirm):
-                yield ev
-            return
-        if self.provider in (None, "demo") or self.provider is None:
-            async for ev in self._demo_turn(user_message, confirm):
-                yield ev
-        else:
-            try:
-                async for ev in self._llm_turn(user_message, confirm):
-                    yield ev
-            except Exception as exc:  # noqa: BLE001
-                log.warning("LLM chat turn failed (%s); using demo turn", exc)
-                async for ev in self._demo_turn(user_message, confirm):
-                    yield ev
+        async for ev in dispatch_planner_turn(
+            self, user_message, confirm, intent, turn_id=turn_id
+        ):
+            yield ev
+
+    def _blocked_tool_abort(self, result: dict) -> dict | None:
+        """If a disallowed tool was blocked, return a terminal answer payload."""
+        if not result.get("blocked"):
+            return None
+        msg = result.get("userMessage") or result.get("error") or (
+            "That action is not allowed for this request."
+        )
+        return {"type": "answer", "text": msg}
 
     async def _concern_recommendation_turn(
-        self, user_message: str, confirm: ConfirmFn | None
+        self, user_message: str, confirm: ConfirmFn | None, auto_place: bool = True
     ):
         """Structured operator recommendations grounded in cohort concerns."""
         from .cohort_context import (
@@ -935,7 +957,7 @@ class PlannerChat:
         yield {"type": "recommendation", "recommendation": rec}
 
         placed = 0
-        if concerns and rec.get("optional_tool_actions"):
+        if auto_place and concerns and rec.get("optional_tool_actions"):
             for action in rec.get("optional_tool_actions") or []:
                 if action.get("name") != "place_infrastructure":
                     continue
@@ -987,13 +1009,13 @@ class PlannerChat:
 
         self._maybe_persist_recommendation(rec, user_message)
 
-        yield {
-            "type": "done",
-            "summary": rec.get("summary", "Concern-aware recommendations ready."),
-            "recommendation": rec,
-            "placements": self.tools.placements,
-            "spentCad": round(self.tools.spent, 2),
-        }
+        from .planner_events import terminal_done
+
+        yield terminal_done(
+            self,
+            recommendation=rec,
+            final_message_sent=True,
+        )
 
     def _maybe_persist_recommendation(self, rec: dict, user_message: str) -> None:
         if not self.proposal_id:
@@ -1347,6 +1369,11 @@ class PlannerChat:
     async def _llm_turn_feather(self, user_message: str, confirm: ConfirmFn | None):
         from openai import OpenAI
 
+        from .planner_tool_parse import (
+            contains_raw_tool_call,
+            merge_tool_calls,
+        )
+
         client = OpenAI(
             api_key=config.FEATHER_API_KEY, base_url=config.FEATHER_BASE_URL
         )
@@ -1365,17 +1392,51 @@ class PlannerChat:
         for _ in range(MAX_ITERATIONS):
             for ev in self._scenario_observations_for_llm():
                 yield ev
-            resp = client.chat.completions.create(
-                model=config.FEATHER_MODEL,
-                max_tokens=1024,
-                messages=self.messages,
-                tools=oai_tools,
-            )
+            try:
+                resp = client.chat.completions.create(
+                    model=config.FEATHER_MODEL,
+                    max_tokens=1024,
+                    messages=self.messages,
+                    tools=oai_tools,
+                )
+            except Exception as exc:  # noqa: BLE001
+                err = str(exc)
+                log.warning("Feather planner call failed: %s", err)
+                summary = (
+                    "The LLM provider is temporarily unavailable (503/timeout). "
+                    "Please retry in a moment."
+                )
+                if "503" in err or "timeout" in err.lower():
+                    yield {"type": "error", "message": summary}
+                    yield {
+                        "type": "done",
+                        "placements": self.tools.placements,
+                        "spentCad": round(self.tools.spent, 2),
+                    }
+                    return
+                raise
             msg = resp.choices[0].message
-            if msg.content and msg.content.strip():
-                yield {"type": "thought", "text": msg.content.strip()}
-            tool_calls = msg.tool_calls or []
-            if not tool_calls:
+            merged_calls, clean_content = merge_tool_calls(
+                msg.tool_calls, msg.content
+            )
+            raw_in_content = contains_raw_tool_call(msg.content or "")
+
+            if clean_content:
+                yield {"type": "thought", "text": clean_content}
+
+            if not merged_calls:
+                if raw_in_content:
+                    summary = (
+                        "I tried to call the optimizer, but the model returned malformed "
+                        "tool syntax. Please retry or ask me to recommend without placing."
+                    )
+                    yield {
+                        "type": "done",
+                        "summary": summary,
+                        "placements": self.tools.placements,
+                        "spentCad": round(self.tools.spent, 2),
+                    }
+                    return
                 yield {
                     "type": "done",
                     "summary": msg.content or "Done. What next?",
@@ -1383,13 +1444,26 @@ class PlannerChat:
                     "spentCad": round(self.tools.spent, 2),
                 }
                 return
-            self.messages.append(msg.model_dump())
-            for tc in tool_calls:
-                name = tc.function.name
-                try:
-                    args = json.loads(tc.function.arguments or "{}")
-                except json.JSONDecodeError:
-                    args = {}
+
+            assistant_msg = msg.model_dump()
+            if merged_calls and not msg.tool_calls:
+                assistant_msg["tool_calls"] = [
+                    {
+                        "id": f"parsed_{c['name']}_{i}",
+                        "type": "function",
+                        "function": {
+                            "name": c["name"],
+                            "arguments": json.dumps(c["args"]),
+                        },
+                    }
+                    for i, c in enumerate(merged_calls)
+                ]
+            self.messages.append(assistant_msg)
+
+            for i, call in enumerate(merged_calls):
+                name = call["name"]
+                args = call.get("args") or {}
+                tool_id = f"parsed_{name}_{i}"
                 yield {"type": "tool_call", "name": name, "args": args}
                 if name in MUTATING_TOOLS and not await _maybe_confirm(
                     {"name": name, "args": args}, confirm
@@ -1397,16 +1471,25 @@ class PlannerChat:
                     result = {"rejected": True}
                 else:
                     result = self.tools.execute(name, args)
+                    if result.get("blocked"):
+                        abort = self._blocked_tool_abort(result)
+                        if abort:
+                            from .planner_events import terminal_done
+
+                            yield abort
+                            yield terminal_done(self, final_message_sent=True)
+                            return
                     if "placed" in result:
                         yield {"type": "placement", "infra": result["placed"]}
                 yield {"type": "tool_result", "name": name, "result": result}
                 self.messages.append(
                     {
                         "role": "tool",
-                        "tool_call_id": tc.id,
+                        "tool_call_id": tool_id,
                         "content": json.dumps(result),
                     }
                 )
+
         yield {
             "type": "done",
             "summary": "Reached the iteration limit for this turn.",
@@ -1450,7 +1533,6 @@ async def run_planner(
 ) -> AsyncIterator[dict]:
     """Yield planner events. step mode uses `confirm` to gate mutating tools (WS only)."""
     from .cohort_context import build_planner_context, fetch_concern_summaries
-    from .concern_recommendations import is_concern_improvement_intent
 
     budget = budget_cad if budget_cad is not None else DEFAULT_BUDGET_CAD
     tools = PlannerTools(world, budget)
@@ -1477,7 +1559,7 @@ async def run_planner(
 
     step_confirm = confirm if mode == "step" else None
 
-    if goal and is_concern_improvement_intent(goal):
+    if goal:
         chat = PlannerChat(
             world,
             budget,
@@ -1486,7 +1568,7 @@ async def run_planner(
             project_id=project_id,
             proposal_id=proposal_id,
         )
-        async for ev in chat._concern_recommendation_turn(goal, step_confirm):
+        async for ev in chat.turn(goal, step_confirm):
             yield ev
         return
 

@@ -559,8 +559,24 @@ function attachSession(
   set: (partial: Partial<State> | ((s: State) => Partial<State>)) => void,
   get: () => State
 ): api.PlannerSession {
-  const handleEvent = (e: PlannerEvent) => {
+  type TurnTrack = { id: string | null; finalAppended: boolean };
+  let turn: TurnTrack = { id: null, finalAppended: false };
+
+  const resetTurn = () => {
+    turn = { id: null, finalAppended: false };
+  };
+
+  const appendEvent = (e: PlannerEvent) => {
     set((s) => ({ chat: [...s.chat, { id: cid(), role: "event", event: e }] }));
+  };
+
+  const handleEvent = (e: PlannerEvent) => {
+    if (e.type === "turn_start") {
+      turn = { id: e.turnId ?? null, finalAppended: false };
+      return;
+    }
+
+    // Side effects that must run even when we skip chat append.
     if (e.type === "tool_call" && get().placementMode === "step") {
       set({ chatAwaiting: true });
     }
@@ -590,7 +606,6 @@ function attachSession(
       void get().refreshSentiment();
       void get().refreshSitingPriority();
     }
-    // Agent launched an incentive program (rooftop rebate / EV / retrofit).
     if (e.type === "tool_result" && e.name === "launch_program") {
       const r = (e.result ?? {}) as { program?: string; zones?: string[] };
       if (r.program) get().launchProgram(r.program, r.zones);
@@ -601,6 +616,7 @@ function attachSession(
         set({ operatorRecommendationReady: true });
       }
     }
+
     if (e.type === "done") {
       set({ chatBusy: false, chatAwaiting: false });
       if (e.recommendation?.summary?.trim()) {
@@ -609,10 +625,40 @@ function attachSession(
           set({ operatorRecommendationReady: true });
         }
       }
-      get().pushToast(e.summary || "AI planning complete", "good");
+      if (!turn.finalAppended && e.summary?.trim()) {
+        appendEvent(e);
+        turn.finalAppended = true;
+        get().pushToast(e.summary, "good");
+      } else if (!turn.finalAppended) {
+        get().pushToast("AI planning complete", "good");
+      }
       void get().refreshVoices(5, "ai-plan");
+      return;
     }
+
+    if (e.type === "error") {
+      set({ chatBusy: false, chatAwaiting: false });
+      if (!turn.finalAppended) {
+        appendEvent(e);
+        turn.finalAppended = true;
+      }
+      get().pushToast(e.message || "Planner error", "warn");
+      return;
+    }
+
+    if (e.type === "answer" || e.type === "recommendation") {
+      if (turn.finalAppended) return;
+      turn.finalAppended = true;
+      appendEvent(e);
+      return;
+    }
+
+    // Hide low-level tool JSON from chat; keep status/thought/placement traces.
+    if (e.type === "tool_result") return;
+
+    appendEvent(e);
   };
+
   return api.createPlannerSession({
     infraProvider: () => get().infra,
     facilitiesProvider: () =>
@@ -627,6 +673,7 @@ function attachSession(
     onStatus: (open) => set({ chatConnected: open }),
     onBusy: (busy) =>
       set((s) => ({ chatBusy: busy, chatAwaiting: busy ? s.chatAwaiting : false })),
+    onTurnReset: resetTurn,
   });
 }
 
@@ -2303,6 +2350,7 @@ export const useStore = create<State>((set, get) => ({
     set((s) => ({
       chat: [...s.chat, { id: cid(), role: "user", text: t }],
       chatBusy: true,
+      chatAwaiting: false,
     }));
     session.send(t, {
       mode: get().placementMode === "step" ? "step" : "auto",

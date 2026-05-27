@@ -724,10 +724,34 @@ export const CONCERN_IMPROVEMENT_PROMPT =
   "Based on synthetic cohort concerns, what should we change in this proposal?";
 
 const CONCERN_INTENT_RE =
-  /based on (?:resident )?concern|address (?:the )?(?:uploaded )?(?:feedback|concern)|resident concern|uploaded feedback|reduce opposition|heatwave|improve (?:this )?proposal|use (?:the )?(?:resident )?concern|cohort concern|what should i change|how do we reduce opposition/i;
+  /based on (?:resident )?concern|address (?:the )?(?:uploaded )?(?:feedback|concern)|resident concern|uploaded feedback|reduce opposition|improve (?:this )?proposal|use (?:the )?(?:resident )?concern|cohort concern|what should i change|how do we reduce opposition/i;
 
 export function isConcernImprovementIntent(text: string): boolean {
   return CONCERN_INTENT_RE.test((text || "").trim());
+}
+
+export async function runPlannerChatTurn(opts: {
+  text: string;
+  projectId?: string | null;
+  proposalId?: string | null;
+  budgetCad?: number;
+  intent?: string;
+}): Promise<PlannerEvent[]> {
+  const body = {
+    text: opts.text,
+    intent: opts.intent,
+    budgetCad: opts.budgetCad ?? 80_000_000,
+    projectId: opts.projectId ?? undefined,
+    proposalId: opts.proposalId ?? undefined,
+  };
+  const res = await fetch(`${API_URL}/api/planner/turn`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`planner/turn failed (${res.status})`);
+  const data = (await res.json()) as { events?: PlannerEvent[] };
+  return data.events ?? [];
 }
 
 export async function runPlannerConcern(opts: {
@@ -737,21 +761,13 @@ export async function runPlannerConcern(opts: {
   budgetCad?: number;
   mode?: "auto" | "step";
 }): Promise<PlannerEvent[]> {
-  const body = {
-    goal: opts.goal,
-    mode: opts.mode ?? "auto",
-    budgetCad: opts.budgetCad ?? 80_000_000,
-    projectId: opts.projectId ?? undefined,
-    proposalId: opts.proposalId ?? undefined,
-  };
-  const res = await fetch(`${API_URL}/api/planner/run`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+  return runPlannerChatTurn({
+    text: opts.goal,
+    projectId: opts.projectId,
+    proposalId: opts.proposalId,
+    budgetCad: opts.budgetCad,
+    intent: "concern_recommendation",
   });
-  if (!res.ok) throw new Error(`planner/run failed (${res.status})`);
-  const data = (await res.json()) as { events?: PlannerEvent[] };
-  return data.events ?? [];
 }
 
 /**
@@ -911,25 +927,52 @@ export function createPlannerSession(opts: {
   onEvent: (e: PlannerEvent) => void;
   onStatus?: (open: boolean) => void;
   onBusy?: (busy: boolean) => void;
+  onTurnReset?: () => void;
 }): PlannerSession {
   const {
-    infraProvider,
-    facilitiesProvider,
     projectIdProvider,
     proposalIdProvider,
     onEvent,
     onStatus,
     onBusy,
+    onTurnReset,
   } = opts;
   let ws: WebSocket | null = null;
   let live = false;
+  let wsReady = false;
   let closed = false;
+  let wsTurnCompleted = false;
+  let pendingWsTurn = false;
+  const wsWaiters: Array<(ready: boolean) => void> = [];
+
+  const notifyWsReady = (ready: boolean) => {
+    wsReady = ready;
+    live = ready;
+    while (wsWaiters.length) wsWaiters.shift()?.(ready);
+  };
+
+  const waitForWsOpen = (timeoutMs = 4000): Promise<boolean> =>
+    new Promise((resolve) => {
+      if (wsReady && ws?.readyState === WebSocket.OPEN) {
+        resolve(true);
+        return;
+      }
+      if (!ws || closed) {
+        resolve(false);
+        return;
+      }
+      const timer = setTimeout(() => resolve(false), timeoutMs);
+      wsWaiters.push((ready) => {
+        clearTimeout(timer);
+        resolve(ready && ws?.readyState === WebSocket.OPEN);
+      });
+    });
 
   try {
     const url = API_URL.replace(/^http/, "ws") + "/ws/planner";
     ws = new WebSocket(url);
     ws.onopen = () => {
-      live = true;
+      notifyWsReady(true);
       onStatus?.(true);
       const projectId = projectIdProvider?.() ?? undefined;
       const proposalId = proposalIdProvider?.() ?? undefined;
@@ -944,18 +987,26 @@ export function createPlannerSession(opts: {
     ws.onmessage = (ev) => {
       try {
         const e = JSON.parse(ev.data) as PlannerEvent;
+        if (e.type === "turn_start") {
+          wsTurnCompleted = false;
+          pendingWsTurn = true;
+        }
         onEvent(e);
-        if (e.type === "done") onBusy?.(false);
+        if (e.type === "done" || e.type === "error") {
+          wsTurnCompleted = true;
+          pendingWsTurn = false;
+          onBusy?.(false);
+        }
       } catch {
         /* ignore */
       }
     };
     ws.onerror = () => {
-      live = false;
+      notifyWsReady(false);
       onStatus?.(false);
     };
     ws.onclose = () => {
-      live = false;
+      notifyWsReady(false);
       if (!closed) onStatus?.(false);
     };
   } catch {
@@ -1011,91 +1062,112 @@ export function createPlannerSession(opts: {
     timer = setTimeout(advance, delayFor(value));
   };
 
-  const parseGoal = (text: string) => {
-    const t = text.toLowerCase();
-    let n = 5;
-    const m = t.match(/(\d+)\s*(sites?|installations?|units?|solar|wind|batter|microgrid)/);
-    if (m) n = Math.min(8, Math.max(1, parseInt(m[1], 10)));
-    return { n };
+  const runTurnViaRest = (
+    text: string,
+    sopts?: {
+      mode?: "auto" | "step";
+      budgetCad?: number;
+      intent?: string;
+    }
+  ) => {
+    if (pendingWsTurn || wsTurnCompleted) return;
+    if (timer) clearTimeout(timer);
+    gen = null;
+    restEvents = null;
+    restIdx = 0;
+    const projectId = projectIdProvider?.() ?? undefined;
+    const proposalId = proposalIdProvider?.() ?? undefined;
+    void runPlannerChatTurn({
+      text,
+      projectId,
+      proposalId,
+      budgetCad: sopts?.budgetCad ?? 8_000_000,
+      intent: sopts?.intent,
+    })
+      .then((events) => {
+        if (pendingWsTurn || wsTurnCompleted) return;
+        restEvents = events;
+        restIdx = 0;
+        advance();
+      })
+      .catch(() => {
+        if (pendingWsTurn || wsTurnCompleted) return;
+        onBusy?.(false);
+        onEvent({
+          type: "error",
+          message:
+            "Could not reach the planning operator. Check that the backend is running.",
+        });
+        onEvent({ type: "done", summary: "" });
+      });
+  };
+
+  const sendViaWs = (
+    text: string,
+    sopts?: {
+      mode?: "auto" | "step";
+      budgetCad?: number;
+      intent?: string;
+    }
+  ) => {
+    pendingWsTurn = true;
+    ws?.send(
+      JSON.stringify({
+        type: "user_message",
+        text,
+        mode: sopts?.mode ?? "auto",
+        budgetCad: sopts?.budgetCad ?? 8_000_000,
+        ...(sopts?.intent ? { intent: sopts.intent } : {}),
+        ...(projectIdProvider?.() ? { projectId: projectIdProvider() } : {}),
+        ...(proposalIdProvider?.() ? { proposalId: proposalIdProvider() } : {}),
+      })
+    );
   };
 
   return {
     send: (text, sopts) => {
       stepMode = sopts?.mode === "step";
+      onTurnReset?.();
+      wsTurnCompleted = false;
+      pendingWsTurn = false;
       onBusy?.(true);
-      const projectId = projectIdProvider?.() ?? undefined;
-      const proposalId = proposalIdProvider?.() ?? undefined;
       const concernMode =
         sopts?.intent === "concern_recommendation" ||
         isConcernImprovementIntent(text);
 
-      const runConcernViaRest = () => {
-        if (timer) clearTimeout(timer);
-        gen = null;
-        restEvents = null;
-        restIdx = 0;
-        void runPlannerConcern({
-          goal: text,
-          projectId,
-          proposalId,
-          budgetCad: sopts?.budgetCad ?? 8_000_000,
-          mode: sopts?.mode ?? "auto",
-        })
-          .then((events) => {
-            restEvents = events;
-            restIdx = 0;
-            advance();
-          })
-          .catch(() => {
-            onBusy?.(false);
-            onEvent({
-              type: "done",
-              summary:
-                "Could not reach the concern-aware operator. Check backend connection and generate cohort concerns first.",
-            });
+      const dispatch = () => {
+        if (wsReady && ws && ws.readyState === WebSocket.OPEN) {
+          sendViaWs(text, {
+            ...sopts,
+            intent: concernMode ? "concern_recommendation" : sopts?.intent,
           });
-      };
-
-      if (concernMode) {
-        if (live && ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(
-            JSON.stringify({
-              type: "user_message",
-              text,
-              intent: "concern_recommendation",
-              mode: sopts?.mode ?? "auto",
-              budgetCad: sopts?.budgetCad ?? 8_000_000,
-              ...(projectId ? { projectId } : {}),
-              ...(proposalId ? { proposalId } : {}),
-            })
-          );
           return;
         }
-        runConcernViaRest();
+        runTurnViaRest(text, {
+          ...sopts,
+          intent: concernMode ? "concern_recommendation" : sopts?.intent,
+        });
+      };
+
+      if (ws && !wsReady && ws.readyState === WebSocket.CONNECTING) {
+        void waitForWsOpen().then((open) => {
+          if (wsTurnCompleted || pendingWsTurn) return;
+          if (open) {
+            sendViaWs(text, {
+              ...sopts,
+              intent: concernMode ? "concern_recommendation" : sopts?.intent,
+            });
+          } else {
+            runTurnViaRest(text, {
+              ...sopts,
+              intent: concernMode ? "concern_recommendation" : sopts?.intent,
+            });
+          }
+        });
         return;
       }
 
-      if (live && ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            type: "user_message",
-            text,
-            mode: sopts?.mode ?? "auto",
-            budgetCad: sopts?.budgetCad ?? 8_000_000,
-            ...(projectId ? { projectId } : {}),
-            ...(proposalId ? { proposalId } : {}),
-          })
-        );
-        return;
-      }
-      // mock: stream a fresh plan for this instruction (honors kind + facility target)
-      if (timer) clearTimeout(timer);
-      const { n } = parseGoal(text);
-      gen = mockPlannerEvents(n, infraProvider(), sopts?.budgetCad ?? 8_000_000, {
-        text,
-        facilities: facilitiesProvider?.(),
-      });
-      advance();
+      dispatch();
     },
     approve: () => {
       if (live && ws?.readyState === WebSocket.OPEN) {
@@ -1146,7 +1218,7 @@ export function createPlannerSession(opts: {
         onBusy?.(true); // agent will stream a reaction
       }
     },
-    isLive: () => live,
+    isLive: () => wsReady,
     close: () => {
       closed = true;
       if (timer) clearTimeout(timer);

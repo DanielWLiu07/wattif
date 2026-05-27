@@ -96,6 +96,52 @@ def summarize_uploaded_existing_infra(assets: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def format_uploaded_assets_detailed(
+    assets: list[dict[str, Any]],
+    *,
+    asset_kind: str | None = None,
+    limit: int = 50,
+) -> str:
+    """Formatted list of uploaded infrastructure rows for operator answers."""
+    rows = assets
+    if asset_kind:
+        rows = [a for a in rows if (a.get("asset_kind") or "") == asset_kind]
+    if not rows:
+        if asset_kind == "ev_charger":
+            return "No uploaded EV charger points found for this project/proposal."
+        return "No uploaded existing infrastructure points found for this project/proposal."
+
+    kind_label = (asset_kind or rows[0].get("asset_kind") or "infrastructure").replace(
+        "_", " "
+    )
+    lines = [
+        f"I found {len(rows)} uploaded existing {kind_label} point(s) "
+        "(read-only context from your upload — not proposed infrastructure):"
+    ]
+    for i, a in enumerate(rows[:limit], start=1):
+        name = a.get("name") or f"Point {i}"
+        addr = a.get("address") or "—"
+        lat = a.get("latitude")
+        lng = a.get("longitude")
+        coord = f"{lat:.4f}, {lng:.4f}" if lat is not None and lng is not None else "—"
+        ctype = a.get("charger_type") or "—"
+        power = a.get("power_kw") or a.get("capacity_kw")
+        power_s = f"{power:.0f} kW" if power is not None else "—"
+        status = a.get("status") or "—"
+        operator = a.get("operator")
+        op_s = f" · {operator}" if operator else ""
+        lines.append(
+            f"{i}. {name} — {addr} — {coord} — {ctype} — {power_s} — {status}{op_s}"
+        )
+    if len(rows) > limit:
+        lines.append(f"… and {len(rows) - limit} more (truncated).")
+    lines.append(
+        "These are uploaded inventory overlays only; they do not regenerate simulation "
+        "or count as proposal placements."
+    )
+    return "\n".join(lines)
+
+
 def format_uploaded_existing_infra_for_prompt(
     *,
     project_id: str | None = None,

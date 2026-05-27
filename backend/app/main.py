@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
@@ -21,6 +22,7 @@ from .models import (
     InfraCreate,
     OptimizeRequest,
     PlannerRunRequest,
+    PlannerTurnRequest,
     Recommendation,
     Scenario,
     ScenarioRequest,
@@ -701,6 +703,41 @@ async def planner_run(body: PlannerRunRequest | None = None) -> dict:
     }
 
 
+@app.post("/api/planner/turn")
+async def planner_turn(body: PlannerTurnRequest) -> dict:
+    """Intent-gated single chat turn (REST fallback for WS planner)."""
+    from .cohort_context import build_planner_context
+    from .planner import DEFAULT_BUDGET_CAD, PlannerChat
+    from .planner_dispatch import collect_planner_turn
+
+    world = get_world()
+    turn_id = body.turn_id or str(uuid.uuid4())
+    budget = body.budget_cad or DEFAULT_BUDGET_CAD
+    dataset_context = build_planner_context(
+        project_id=body.project_id, proposal_id=body.proposal_id
+    )
+    chat = PlannerChat(
+        world,
+        budget,
+        dataset_context=dataset_context,
+        project_id=body.project_id,
+        proposal_id=body.proposal_id,
+    )
+    events = await collect_planner_turn(
+        chat,
+        body.text,
+        intent=body.intent,
+        turn_id=turn_id,
+    )
+    return {
+        "events": [
+            {"type": "turn_start", "turnId": turn_id, "message": body.text},
+            *events,
+        ],
+        "turnId": turn_id,
+    }
+
+
 @app.websocket("/ws/planner")
 async def ws_planner(ws: WebSocket) -> None:
     """Real-time, multi-turn planner chat.
@@ -827,10 +864,24 @@ async def ws_planner(ws: WebSocket) -> None:
             if isinstance(user_msg, dict):
                 turn_text = user_msg.get("text") or user_msg.get("message")
                 turn_intent = user_msg.get("intent")
-            await ws.send_json({"type": "turn_start", "message": turn_text})
-            async for ev in chat.turn(turn_text, cfn, intent=turn_intent):
-                await ws.send_json(ev)
-            running["v"] = False
+            turn_id = str(uuid.uuid4())
+            await ws.send_json(
+                {"type": "turn_start", "turnId": turn_id, "message": turn_text}
+            )
+            try:
+                async for ev in chat.turn(
+                    turn_text, cfn, intent=turn_intent, turn_id=turn_id
+                ):
+                    ev.setdefault("turnId", turn_id)
+                    await ws.send_json(ev)
+            except Exception as exc:  # noqa: BLE001 — guarantee terminal events for UI
+                log.exception("planner WS turn failed")
+                await ws.send_json(
+                    {"type": "error", "turnId": turn_id, "message": str(exc)}
+                )
+                await ws.send_json({"type": "done", "turnId": turn_id})
+            finally:
+                running["v"] = False
     except (WebSocketDisconnect, RuntimeError):
         pass
     finally:

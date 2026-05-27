@@ -75,3 +75,39 @@ def format_summaries_for_prompt(summaries: list[dict[str, Any]]) -> str:
         "Use these as planning context only. They do not auto-regenerate zones, agents, or demand."
     )
     return "\n".join(lines)
+
+
+def format_summaries_detailed(summaries: list[dict[str, Any]]) -> str:
+    """Expanded dataset summary for operator read-only answers."""
+    if not summaries:
+        return (
+            "No uploaded datasets found for this project/proposal. "
+            "Upload CSV/JSON/GeoJSON in the Saved tab to add planner context."
+        )
+    lines = [
+        f"Uploaded datasets ({len(summaries)} total) — context only, simulation unchanged:"
+    ]
+    for i, s in enumerate(summaries, start=1):
+        name = s.get("name") or "dataset"
+        dtype = s.get("datasetType") or s.get("dataset_type") or "generic"
+        parts = [f"{i}. {name}", f"type={dtype}"]
+        if s.get("rowCount") is not None:
+            parts.append(f"rows={s['rowCount']}")
+        if s.get("featureCount") is not None:
+            parts.append(f"features={s['featureCount']}")
+        cols = s.get("columns") or []
+        if cols:
+            parts.append(f"columns={', '.join(str(c) for c in cols[:10])}")
+        ext = s.get("extractedExistingInfrastructureCount")
+        if ext is None:
+            meta = s.get("metadata") or {}
+            ext = meta.get("infraExtraction", {}).get(
+                "extracted_existing_infrastructure_count"
+            )
+        if ext:
+            parts.append(f"extracted_infra_points={ext}")
+        lines.append(" — ".join(parts))
+    lines.append(
+        "Dataset previews inform the operator; they do not rebuild Toronto zones/agents/simulation."
+    )
+    return "\n".join(lines)

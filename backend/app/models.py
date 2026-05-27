@@ -290,6 +290,13 @@ class PlannerRunRequest(CamelModel):
     proposal_id: str | None = None
 
 
+class PlannerTurnRequest(CamelModel):
+    text: str
+    intent: str | None = None
+    budget_cad: float | None = None
+    project_id: str | None = None
+    proposal_id: str | None = None
+    turn_id: str | None = None
 # ---------------------------------------------------------------------------
 # Forecast (forward simulation): project metrics over a horizon, with an
 # optional "what-if I build here" overlay.
