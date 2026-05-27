@@ -249,3 +249,35 @@ class ProposalReport(BaseModel):
     html: str | None = None
     sections: list[ProposalReportSection] = Field(default_factory=list)
     has_operator_recommendation: bool = False
+
+
+class SyntheticResidentReaction(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    id: str
+    project_id: str
+    proposal_id: str | None = None
+    cohort_id: str | None = None
+    concern_id: str | None = None
+    reaction_type: str = "llm_synthetic_reaction"
+    persona_label: str | None = None
+    stance: str
+    summary: str
+    key_concern: str | None = None
+    suggested_change: str | None = None
+    evidence: str | None = None
+    confidence: float | None = None
+    caveat: str
+    source_context: dict[str, Any] = Field(default_factory=dict)
+    provider: str | None = None
+    model: str | None = None
+    created_at: str | None = None
+
+
+class SyntheticResidentReactionGenerateResponse(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    reactions: list[SyntheticResidentReaction]
+    provider: str
+    model: str
+    count: int
