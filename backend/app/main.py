@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
@@ -724,22 +725,20 @@ async def ws_planner(ws: WebSocket) -> None:
             if isinstance(user_msg, dict):
                 turn_text = user_msg.get("text") or user_msg.get("message")
                 turn_intent = user_msg.get("intent")
-            await ws.send_json({"type": "turn_start", "message": turn_text})
+            turn_id = str(uuid.uuid4())
+            await ws.send_json(
+                {"type": "turn_start", "turnId": turn_id, "message": turn_text}
+            )
             try:
                 async for ev in chat.turn(turn_text, cfn, intent=turn_intent):
+                    ev["turnId"] = turn_id
                     await ws.send_json(ev)
             except Exception as exc:  # noqa: BLE001 — guarantee terminal events for UI
                 log.exception("planner WS turn failed")
-                await ws.send_json({"type": "error", "message": str(exc)})
                 await ws.send_json(
-                    {
-                        "type": "done",
-                        "summary": (
-                            "Something went wrong while processing that request. "
-                            "Please retry or rephrase."
-                        ),
-                    }
+                    {"type": "error", "turnId": turn_id, "message": str(exc)}
                 )
+                await ws.send_json({"type": "done", "turnId": turn_id})
             finally:
                 running["v"] = False
     except (WebSocketDisconnect, RuntimeError):

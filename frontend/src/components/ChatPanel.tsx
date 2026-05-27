@@ -123,12 +123,14 @@ function EventBubble({ e }: { e: PlannerEvent }) {
         <span>{e.message}</span>
       </div>
     );
-  return (
-    <div className="flex gap-2 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-xs">
-      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-      <span>{e.summary}</span>
-    </div>
-  );
+  if (e.type === "done")
+    return (
+      <div className="flex gap-2 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-xs whitespace-pre-wrap">
+        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+        <span>{e.summary}</span>
+      </div>
+    );
+  return null;
 }
 
 function Item({ item }: { item: ChatItem }) {

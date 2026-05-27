@@ -871,6 +871,7 @@ export function createPlannerSession(opts: {
   onEvent: (e: PlannerEvent) => void;
   onStatus?: (open: boolean) => void;
   onBusy?: (busy: boolean) => void;
+  onTurnReset?: () => void;
 }): PlannerSession {
   const {
     infraProvider,
@@ -880,10 +881,13 @@ export function createPlannerSession(opts: {
     onEvent,
     onStatus,
     onBusy,
+    onTurnReset,
   } = opts;
   let ws: WebSocket | null = null;
   let live = false;
   let closed = false;
+  let wsTurnCompleted = false;
+  let pendingWsTurn = false;
 
   try {
     const url = API_URL.replace(/^http/, "ws") + "/ws/planner";
@@ -904,8 +908,16 @@ export function createPlannerSession(opts: {
     ws.onmessage = (ev) => {
       try {
         const e = JSON.parse(ev.data) as PlannerEvent;
+        if (e.type === "turn_start") {
+          wsTurnCompleted = false;
+          pendingWsTurn = true;
+        }
         onEvent(e);
-        if (e.type === "done" || e.type === "error") onBusy?.(false);
+        if (e.type === "done" || e.type === "error") {
+          wsTurnCompleted = true;
+          pendingWsTurn = false;
+          onBusy?.(false);
+        }
       } catch {
         /* ignore */
       }
@@ -982,6 +994,9 @@ export function createPlannerSession(opts: {
   return {
     send: (text, sopts) => {
       stepMode = sopts?.mode === "step";
+      onTurnReset?.();
+      wsTurnCompleted = false;
+      pendingWsTurn = false;
       onBusy?.(true);
       const projectId = projectIdProvider?.() ?? undefined;
       const proposalId = proposalIdProvider?.() ?? undefined;
@@ -990,6 +1005,7 @@ export function createPlannerSession(opts: {
         isConcernImprovementIntent(text);
 
       const runConcernViaRest = () => {
+        if (pendingWsTurn || wsTurnCompleted) return;
         if (timer) clearTimeout(timer);
         gen = null;
         restEvents = null;
@@ -1002,11 +1018,13 @@ export function createPlannerSession(opts: {
           mode: sopts?.mode ?? "auto",
         })
           .then((events) => {
+            if (pendingWsTurn || wsTurnCompleted) return;
             restEvents = events;
             restIdx = 0;
             advance();
           })
           .catch(() => {
+            if (pendingWsTurn || wsTurnCompleted) return;
             onBusy?.(false);
             onEvent({
               type: "done",
@@ -1018,6 +1036,7 @@ export function createPlannerSession(opts: {
 
       if (concernMode) {
         if (live && ws && ws.readyState === WebSocket.OPEN) {
+          pendingWsTurn = true;
           ws.send(
             JSON.stringify({
               type: "user_message",
@@ -1036,6 +1055,7 @@ export function createPlannerSession(opts: {
       }
 
       if (live && ws && ws.readyState === WebSocket.OPEN) {
+        pendingWsTurn = true;
         ws.send(
           JSON.stringify({
             type: "user_message",
@@ -1049,6 +1069,7 @@ export function createPlannerSession(opts: {
         return;
       }
       // mock: stream a fresh plan for this instruction (honors kind + facility target)
+      if (pendingWsTurn || wsTurnCompleted) return;
       if (timer) clearTimeout(timer);
       const { n } = parseGoal(text);
       gen = mockPlannerEvents(n, infraProvider(), sopts?.budgetCad ?? 8_000_000, {

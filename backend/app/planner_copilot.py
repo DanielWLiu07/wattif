@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, AsyncIterator
+from typing import TYPE_CHECKING, AsyncIterator
 
 from .planner_intent import PlannerIntent, intent_label
 
@@ -65,6 +65,7 @@ async def _read_uploaded_infra(chat: PlannerChat, user_message: str) -> AsyncIte
         fetch_uploaded_infrastructure,
         format_uploaded_assets_detailed,
     )
+    from .planner_events import yield_copilot_answer
 
     assets = fetch_uploaded_infrastructure(
         project_id=chat.project_id, proposal_id=chat.proposal_id
@@ -72,33 +73,25 @@ async def _read_uploaded_infra(chat: PlannerChat, user_message: str) -> AsyncIte
     t = (user_message or "").lower()
     kind = "ev_charger" if re.search(r"\b(charger|chargers|ev)\b", t) else None
     body = format_uploaded_assets_detailed(assets, asset_kind=kind)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev
 
 
 async def _summarize_datasets(chat: PlannerChat) -> AsyncIterator[dict]:
     from .dataset_context import fetch_dataset_summaries, format_summaries_detailed
+    from .planner_events import yield_copilot_answer
 
     summaries = fetch_dataset_summaries(
         project_id=chat.project_id, proposal_id=chat.proposal_id
     )
     body = format_summaries_detailed(summaries)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev
 
 
 async def _explain_concerns(chat: PlannerChat) -> AsyncIterator[dict]:
     from .cohort_context import fetch_concern_summaries, format_concerns_for_prompt
+    from .planner_events import yield_copilot_answer
 
     concerns = fetch_concern_summaries(
         project_id=chat.project_id, proposal_id=chat.proposal_id
@@ -129,18 +122,14 @@ async def _explain_concerns(chat: PlannerChat) -> AsyncIterator[dict]:
             )
             lines.append(f"\nMost severe topics: {topics}.")
         body = "\n".join(lines)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev
 
 
 async def _critique_design(chat: PlannerChat) -> AsyncIterator[dict]:
     from .cohort_context import fetch_concern_summaries, fetch_proposal_infra_summary
     from .existing_infra_context import fetch_uploaded_infrastructure
+    from .planner_events import yield_copilot_answer
 
     concerns = fetch_concern_summaries(
         project_id=chat.project_id, proposal_id=chat.proposal_id
@@ -212,13 +201,8 @@ async def _critique_design(chat: PlannerChat) -> AsyncIterator[dict]:
         "\nAsk me to recommend changes or explicitly request placement when ready to mutate the proposal."
     )
     body = "\n".join(lines)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev
 
 
 async def _resilience_scenario(
@@ -227,6 +211,7 @@ async def _resilience_scenario(
     """Stress-test / resilience planning without requiring cohort concerns or mutations."""
     from .cohort_context import fetch_concern_summaries
     from .existing_infra_context import fetch_uploaded_infrastructure
+    from .planner_events import yield_copilot_answer
 
     t = (user_message or "").lower()
     if "blackout" in t:
@@ -306,17 +291,14 @@ async def _resilience_scenario(
         "\nAsk me to place batteries/microgrids explicitly when you are ready to mutate the proposal."
     )
     body = "\n".join(lines)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev
 
 
 async def _general_answer(chat: PlannerChat, user_message: str) -> AsyncIterator[dict]:
     """Best-effort context answer without tools that mutate or optimize."""
+    from .planner_events import yield_copilot_answer
+
     parts: list[str] = [
         "WattIf planning copilot — I can summarize datasets, list uploaded infrastructure, "
         "explain synthetic cohort concerns, critique your proposal, or recommend changes. "
@@ -329,13 +311,8 @@ async def _general_answer(chat: PlannerChat, user_message: str) -> AsyncIterator
             "\nSelect a project/proposal and upload datasets in the Saved tab for richer answers."
         )
     body = "\n".join(parts)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev
 
 
 async def run_recommendation_turn(
@@ -370,6 +347,7 @@ async def _recommendation_without_concerns(
         fetch_uploaded_infrastructure,
         summarize_uploaded_existing_infra,
     )
+    from .planner_events import yield_copilot_answer
 
     yield {
         "type": "thought",
@@ -415,10 +393,5 @@ async def _recommendation_without_concerns(
         "Ask explicitly to place/build when ready to mutate the proposal."
     )
     body = "\n".join(lines)
-    yield {"type": "answer", "text": body}
-    yield {
-        "type": "done",
-        "summary": body,
-        "placements": chat.tools.placements,
-        "spentCad": round(chat.tools.spent, 2),
-    }
+    async for ev in yield_copilot_answer(chat, body):
+        yield ev

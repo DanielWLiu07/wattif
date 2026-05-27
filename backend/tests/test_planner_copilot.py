@@ -56,8 +56,30 @@ def _assert_no_raw_tool_leak(events: list[dict]) -> None:
     assert "<tool_call|>" not in blob
 
 
-def _assert_terminal(events: list[dict]) -> None:
-    assert any(e["type"] == "done" for e in events)
+def _final_text(events: list[dict]) -> str:
+    for e in events:
+        if e.get("type") == "answer":
+            return e.get("text", "")
+        if e.get("type") == "recommendation":
+            return (e.get("recommendation") or {}).get("summary", "")
+    for e in events:
+        if e.get("type") == "done" and e.get("summary"):
+            return e.get("summary", "")
+    return ""
+
+
+def _assert_single_final(events: list[dict]) -> None:
+    finals = [
+        e
+        for e in events
+        if e.get("type") in ("answer", "recommendation")
+        or (e.get("type") == "done" and e.get("summary"))
+    ]
+    assert len(finals) == 1, f"expected one final message, got {len(finals)}: {finals}"
+    dones = [e for e in events if e.get("type") == "done"]
+    assert dones, "missing terminal done"
+    if any(e.get("type") == "answer" for e in events):
+        assert "summary" not in dones[0]
 
 
 @pytest.fixture
@@ -169,10 +191,11 @@ def test_read_uploaded_infra_no_mutation(demo_llm, mock_context):
     assert "optimize" not in tools
     assert "place_infrastructure" not in tools
     done = next(e for e in events if e["type"] == "done")
-    assert "Islington Charger A" in done["summary"]
-    assert "43.6452" in done["summary"]
+    final = _final_text(events)
+    assert "Islington Charger A" in final
+    assert "43.6452" in final
     assert len(w.engine.infra) == 0
-    _assert_terminal(events)
+    _assert_single_final(events)
     _assert_no_raw_tool_leak(events)
 
 
@@ -187,9 +210,9 @@ def test_read_uploaded_infra_quoted(demo_llm, mock_context):
         "read_uploaded_infrastructure"
     )
     assert "place_infrastructure" not in _tool_names(events)
-    done = next(e for e in events if e["type"] == "done")
-    assert "Islington Charger A" in done["summary"]
-    _assert_terminal(events)
+    final = _final_text(events)
+    assert "Islington Charger A" in final
+    _assert_single_final(events)
 
 
 def test_read_uploaded_infra_typo(demo_llm, mock_context):
@@ -197,9 +220,9 @@ def test_read_uploaded_infra_typo(demo_llm, mock_context):
     w.session_reset()
     chat = PlannerChat(w, 80_000_000, project_id="p1", proposal_id="prop1")
     events = _collect_turn(chat, "Where are the infra points in the uploaded datase?")
-    done = next(e for e in events if e["type"] == "done")
-    assert "Islington Charger A" in done["summary"]
-    _assert_terminal(events)
+    final = _final_text(events)
+    assert "Islington Charger A" in final
+    _assert_single_final(events)
 
 
 def test_uploaded_chargers_question(demo_llm, mock_context):
@@ -208,8 +231,8 @@ def test_uploaded_chargers_question(demo_llm, mock_context):
     chat = PlannerChat(w, 80_000_000, project_id="p1", proposal_id="prop1")
     events = _collect_turn(chat, "what chargers did I upload?")
     assert "place_infrastructure" not in _tool_names(events)
-    done = next(e for e in events if e["type"] == "done")
-    assert "Bloor Hub" in done["summary"]
+    final = _final_text(events)
+    assert "Bloor Hub" in final
 
 
 def test_summarize_datasets_no_mutation(demo_llm, mock_context):
@@ -220,9 +243,9 @@ def test_summarize_datasets_no_mutation(demo_llm, mock_context):
     tools = _tool_names(events)
     assert "optimize" not in tools
     assert "place_infrastructure" not in tools
-    done = next(e for e in events if e["type"] == "done")
-    assert "ev_chargers.csv" in done["summary"]
-    _assert_terminal(events)
+    final = _final_text(events)
+    assert "ev_chargers.csv" in final
+    _assert_single_final(events)
 
 
 def test_explain_concerns_no_mutation(demo_llm, mock_context):
@@ -233,10 +256,10 @@ def test_explain_concerns_no_mutation(demo_llm, mock_context):
     tools = _tool_names(events)
     assert "optimize" not in tools
     assert "place_infrastructure" not in tools
-    done = next(e for e in events if e["type"] == "done")
-    assert "synthetic" in done["summary"].lower()
-    assert "parking" in done["summary"].lower()
-    _assert_terminal(events)
+    final = _final_text(events)
+    assert "synthetic" in final.lower()
+    assert "parking" in final.lower()
+    _assert_single_final(events)
 
 
 def test_critique_design_no_mutation(demo_llm, mock_context):
@@ -247,10 +270,10 @@ def test_critique_design_no_mutation(demo_llm, mock_context):
     events = _collect_turn(chat, "what is wrong with my design?")
     assert "place_infrastructure" not in _tool_names(events)
     assert "optimize" not in _tool_names(events)
-    done = next(e for e in events if e["type"] == "done")
-    assert "critique" in done["summary"].lower() or "Proposal critique" in done["summary"]
+    final = _final_text(events)
+    assert "critique" in final.lower() or "Proposal critique" in final
     assert len(w.engine.infra) == n_before
-    _assert_terminal(events)
+    _assert_single_final(events)
 
 
 def test_heatwave_resilience_no_concern_block(demo_llm, monkeypatch):
@@ -264,11 +287,11 @@ def test_heatwave_resilience_no_concern_block(demo_llm, monkeypatch):
     events = _collect_turn(chat, "Prepare the grid for a heatwave")
     assert classify_planner_intent("Prepare the grid for a heatwave") == "resilience_scenario"
     assert "place_infrastructure" not in _tool_names(events)
-    done = next(e for e in events if e["type"] == "done")
-    assert "heatwave" in done["summary"].lower() or "resilience" in done["summary"].lower()
-    assert "generate concerns" not in done["summary"].lower()
-    assert "not concern-grounded" in done["summary"].lower()
-    _assert_terminal(events)
+    final = _final_text(events)
+    assert "heatwave" in final.lower() or "resilience" in final.lower()
+    assert "generate concerns" not in final.lower()
+    assert "not concern-grounded" in final.lower()
+    _assert_single_final(events)
 
 
 def test_recommendation_ev_capacity_no_auto_place(demo_llm, mock_context, monkeypatch):
@@ -295,7 +318,7 @@ def test_recommendation_ev_capacity_no_auto_place(demo_llm, mock_context, monkey
     )
     assert "place_infrastructure" not in _tool_names(events)
     assert len(w.engine.infra) == 0
-    _assert_terminal(events)
+    assert any(e["type"] == "done" for e in events)
 
 
 def test_explicit_placement_allows_tools(demo_llm):
@@ -311,7 +334,7 @@ def test_explicit_placement_allows_tools(demo_llm):
     assert "place_infrastructure" in tools
     assert any(e["type"] == "placement" for e in events)
     _assert_no_raw_tool_leak(events)
-    _assert_terminal(events)
+    assert any(e["type"] == "done" for e in events)
 
 
 def test_malformed_raw_tool_call_suppressed():
@@ -400,7 +423,7 @@ def test_feather_raw_tool_call_executes_without_leak(demo_llm, monkeypatch):
     events = _collect_turn(chat, "Add solar to the highest-burden neighbourhoods")
     _assert_no_raw_tool_leak(events)
     assert any(e.get("type") == "tool_call" and e.get("name") == "optimize" for e in events)
-    _assert_terminal(events)
+    assert any(e["type"] == "done" for e in events)
 
 
 def test_mutation_guard_blocks_place_on_read_intent(demo_llm):

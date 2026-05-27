@@ -465,14 +465,20 @@ export type OperatorRecommendation = {
 };
 
 export type PlannerEvent =
-  | { type: "thought"; text: string }
-  | { type: "answer"; text: string }
-  | { type: "error"; message: string }
-  | { type: "tool_call"; name: string; args: Record<string, unknown> }
-  | { type: "tool_result"; name: string; result: unknown }
-  | { type: "placement"; infra: Infra }
-  | { type: "recommendation"; recommendation: OperatorRecommendation }
-  | { type: "done"; summary: string; recommendation?: OperatorRecommendation };
+  | { type: "turn_start"; turnId?: string; message?: string }
+  | { type: "thought"; text: string; turnId?: string }
+  | { type: "answer"; text: string; turnId?: string }
+  | { type: "error"; message: string; turnId?: string }
+  | { type: "tool_call"; name: string; args: Record<string, unknown>; turnId?: string }
+  | { type: "tool_result"; name: string; result: unknown; turnId?: string }
+  | { type: "placement"; infra: Infra; turnId?: string }
+  | { type: "recommendation"; recommendation: OperatorRecommendation; turnId?: string }
+  | {
+      type: "done";
+      summary?: string;
+      recommendation?: OperatorRecommendation;
+      turnId?: string;
+    };
 
 export type PlacementMode = "manual" | "auto" | "step";
 

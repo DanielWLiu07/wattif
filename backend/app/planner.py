@@ -929,10 +929,6 @@ class PlannerChat:
             }
             yield {
                 "type": "done",
-                "summary": (
-                    "Something went wrong while processing that request. "
-                    "Please retry or rephrase."
-                ),
                 "placements": self.tools.placements,
                 "spentCad": round(self.tools.spent, 2),
             }
@@ -1046,13 +1042,13 @@ class PlannerChat:
 
         self._maybe_persist_recommendation(rec, user_message)
 
-        yield {
-            "type": "done",
-            "summary": rec.get("summary", "Concern-aware recommendations ready."),
-            "recommendation": rec,
-            "placements": self.tools.placements,
-            "spentCad": round(self.tools.spent, 2),
-        }
+        from .planner_events import terminal_done
+
+        yield terminal_done(
+            self,
+            recommendation=rec,
+            final_message_sent=True,
+        )
 
     def _maybe_persist_recommendation(self, rec: dict, user_message: str) -> None:
         if not self.proposal_id:
