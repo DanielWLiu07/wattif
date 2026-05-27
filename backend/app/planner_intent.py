@@ -10,6 +10,7 @@ PlannerIntent = Literal[
     "summarize_datasets",
     "explain_concerns",
     "critique_design",
+    "resilience_scenario",
     "recommendation",
     "explicit_placement",
     "general_wattif_question",
@@ -30,7 +31,7 @@ _READ_UPLOADED_PATTERNS = (
     r"where are the existing chargers?",
     r"what existing infrastructure",
     r"uploaded (?:ev )?charger points?",
-    r"infra points in (?:the )?uploaded dataset",
+    r"infra points in (?:the )?uploaded datase?t",
     r"points in (?:my|the) uploaded",
 )
 
@@ -57,6 +58,21 @@ _CRITIQUE_PATTERNS = (
     r"what would a planner object to",
     r"equity risks?",
     r"critique (?:my )?(?:design|proposal)",
+)
+
+_RESILIENCE_PATTERNS = (
+    r"prepare (?:the )?grid for a heatwave",
+    r"prepare (?:the )?grid for heatwave",
+    r"how do we handle a heatwave",
+    r"stress test heatwave",
+    r"stress[- ]test.*heatwave",
+    r"prepare for a blackout",
+    r"prepare for blackout",
+    r"prepare for ev surge",
+    r"prepare for an ev surge",
+    r"make the grid more resilient",
+    r"grid resilience",
+    r"resilien(?:ce|t) (?:plan|scenario|planning)",
 )
 
 _RECOMMENDATION_PATTERNS = (
@@ -100,8 +116,22 @@ _EXPLICIT_INTENT_MAP: dict[str, PlannerIntent] = {
     "summarize_datasets": "summarize_datasets",
     "explain_concerns": "explain_concerns",
     "critique_design": "critique_design",
+    "resilience_scenario": "resilience_scenario",
     "recommendation": "recommendation",
 }
+
+
+def normalize_planner_input(text: str) -> str:
+    """Normalize user text before intent classification."""
+    t = (text or "").strip()
+    if len(t) >= 2 and t[0] == t[-1] and t[0] in "\"'":
+        t = t[1:-1].strip()
+    t = re.sub(r"\s+", " ", t)
+    t = t.lower()
+    t = re.sub(r"[?.!;,]+$", "", t).strip()
+    if re.search(r"\bdatase\b", t) and re.search(r"upload|infra", t):
+        t = t.replace("datase", "dataset")
+    return t
 
 
 def _matches(text: str, patterns: tuple[str, ...]) -> bool:
@@ -118,7 +148,7 @@ def classify_planner_intent(
         if mapped:
             return mapped
 
-    t = (text or "").lower().strip()
+    t = normalize_planner_input(text)
     if not t:
         return "general_wattif_question"
 
@@ -128,16 +158,18 @@ def classify_planner_intent(
     if _matches(t, _SUMMARIZE_DATASETS_PATTERNS):
         return "summarize_datasets"
 
-    if _matches(t, _RECOMMENDATION_PATTERNS):
-        return "recommendation"
-
     if _matches(t, _EXPLAIN_CONCERNS_PATTERNS):
         return "explain_concerns"
 
     if _matches(t, _CRITIQUE_PATTERNS):
         return "critique_design"
 
-    # Explicit placement wins when user clearly asks to mutate the world.
+    if _matches(t, _RESILIENCE_PATTERNS):
+        return "resilience_scenario"
+
+    if _matches(t, _RECOMMENDATION_PATTERNS):
+        return "recommendation"
+
     if _matches(t, _EXPLICIT_PLACEMENT_PATTERNS):
         return "explicit_placement"
 

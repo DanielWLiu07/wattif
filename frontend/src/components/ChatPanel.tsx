@@ -110,6 +110,19 @@ function EventBubble({ e }: { e: PlannerEvent }) {
     );
   if (e.type === "recommendation")
     return <RecommendationBubble rec={e.recommendation} />;
+  if (e.type === "answer")
+    return (
+      <div className="flex gap-2 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-xs whitespace-pre-wrap">
+        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+        <span>{e.text}</span>
+      </div>
+    );
+  if (e.type === "error")
+    return (
+      <div className="flex gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1.5 text-xs text-destructive">
+        <span>{e.message}</span>
+      </div>
+    );
   return (
     <div className="flex gap-2 rounded-md border border-primary/30 bg-primary/10 px-2 py-1.5 text-xs">
       <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />

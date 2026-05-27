@@ -725,9 +725,23 @@ async def ws_planner(ws: WebSocket) -> None:
                 turn_text = user_msg.get("text") or user_msg.get("message")
                 turn_intent = user_msg.get("intent")
             await ws.send_json({"type": "turn_start", "message": turn_text})
-            async for ev in chat.turn(turn_text, cfn, intent=turn_intent):
-                await ws.send_json(ev)
-            running["v"] = False
+            try:
+                async for ev in chat.turn(turn_text, cfn, intent=turn_intent):
+                    await ws.send_json(ev)
+            except Exception as exc:  # noqa: BLE001 — guarantee terminal events for UI
+                log.exception("planner WS turn failed")
+                await ws.send_json({"type": "error", "message": str(exc)})
+                await ws.send_json(
+                    {
+                        "type": "done",
+                        "summary": (
+                            "Something went wrong while processing that request. "
+                            "Please retry or rephrase."
+                        ),
+                    }
+                )
+            finally:
+                running["v"] = False
     except (WebSocketDisconnect, RuntimeError):
         pass
     finally:

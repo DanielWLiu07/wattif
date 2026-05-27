@@ -886,38 +886,56 @@ class PlannerChat:
         bucket = classify_planner_intent(user_message, intent)
         self.tools.guard_intent = bucket
 
-        if is_copilot_intent(bucket):
-            async for ev in run_copilot_turn(bucket, self, user_message):
-                yield ev
-            return
-
-        if bucket == "recommendation":
-            async for ev in run_recommendation_turn(self, user_message, confirm):
-                yield ev
-            return
-
-        if bucket == "explicit_placement":
-            self.tools.guard_intent = "explicit_placement"
-            parsed = parse_intent(user_message)
-            if parsed.get("program"):
-                async for ev in self._demo_program_turn(parsed, confirm):
+        try:
+            if is_copilot_intent(bucket):
+                async for ev in run_copilot_turn(bucket, self, user_message):
                     yield ev
                 return
-            if self.provider in (None, "demo") or self.provider is None:
-                async for ev in self._demo_turn(user_message, confirm):
+
+            if bucket == "recommendation":
+                async for ev in run_recommendation_turn(self, user_message, confirm):
                     yield ev
-            else:
-                try:
-                    async for ev in self._llm_turn(user_message, confirm):
+                return
+
+            if bucket == "explicit_placement":
+                self.tools.guard_intent = "explicit_placement"
+                parsed = parse_intent(user_message)
+                if parsed.get("program"):
+                    async for ev in self._demo_program_turn(parsed, confirm):
                         yield ev
-                except Exception as exc:  # noqa: BLE001
-                    log.warning("LLM chat turn failed (%s); using demo turn", exc)
+                    return
+                if self.provider in (None, "demo") or self.provider is None:
                     async for ev in self._demo_turn(user_message, confirm):
                         yield ev
-            return
+                else:
+                    try:
+                        async for ev in self._llm_turn(user_message, confirm):
+                            yield ev
+                    except Exception as exc:  # noqa: BLE001
+                        log.warning("LLM chat turn failed (%s); using demo turn", exc)
+                        async for ev in self._demo_turn(user_message, confirm):
+                            yield ev
+                return
 
-        async for ev in run_copilot_turn("general_wattif_question", self, user_message):
-            yield ev
+            async for ev in run_copilot_turn(
+                "general_wattif_question", self, user_message
+            ):
+                yield ev
+        except Exception as exc:  # noqa: BLE001 — always terminate cleanly for UI
+            log.exception("planner turn failed")
+            yield {
+                "type": "error",
+                "message": str(exc),
+            }
+            yield {
+                "type": "done",
+                "summary": (
+                    "Something went wrong while processing that request. "
+                    "Please retry or rephrase."
+                ),
+                "placements": self.tools.placements,
+                "spentCad": round(self.tools.spent, 2),
+            }
 
     async def _concern_recommendation_turn(
         self, user_message: str, confirm: ConfirmFn | None, auto_place: bool = True
@@ -1388,6 +1406,11 @@ class PlannerChat:
     async def _llm_turn_feather(self, user_message: str, confirm: ConfirmFn | None):
         from openai import OpenAI
 
+        from .planner_tool_parse import (
+            contains_raw_tool_call,
+            merge_tool_calls,
+        )
+
         client = OpenAI(
             api_key=config.FEATHER_API_KEY, base_url=config.FEATHER_BASE_URL
         )
@@ -1413,10 +1436,27 @@ class PlannerChat:
                 tools=oai_tools,
             )
             msg = resp.choices[0].message
-            if msg.content and msg.content.strip():
-                yield {"type": "thought", "text": msg.content.strip()}
-            tool_calls = msg.tool_calls or []
-            if not tool_calls:
+            merged_calls, clean_content = merge_tool_calls(
+                msg.tool_calls, msg.content
+            )
+            raw_in_content = contains_raw_tool_call(msg.content or "")
+
+            if clean_content:
+                yield {"type": "thought", "text": clean_content}
+
+            if not merged_calls:
+                if raw_in_content:
+                    summary = (
+                        "I tried to call the optimizer, but the model returned malformed "
+                        "tool syntax. Please retry or ask me to recommend without placing."
+                    )
+                    yield {
+                        "type": "done",
+                        "summary": summary,
+                        "placements": self.tools.placements,
+                        "spentCad": round(self.tools.spent, 2),
+                    }
+                    return
                 yield {
                     "type": "done",
                     "summary": msg.content or "Done. What next?",
@@ -1424,13 +1464,26 @@ class PlannerChat:
                     "spentCad": round(self.tools.spent, 2),
                 }
                 return
-            self.messages.append(msg.model_dump())
-            for tc in tool_calls:
-                name = tc.function.name
-                try:
-                    args = json.loads(tc.function.arguments or "{}")
-                except json.JSONDecodeError:
-                    args = {}
+
+            assistant_msg = msg.model_dump()
+            if merged_calls and not msg.tool_calls:
+                assistant_msg["tool_calls"] = [
+                    {
+                        "id": f"parsed_{c['name']}_{i}",
+                        "type": "function",
+                        "function": {
+                            "name": c["name"],
+                            "arguments": json.dumps(c["args"]),
+                        },
+                    }
+                    for i, c in enumerate(merged_calls)
+                ]
+            self.messages.append(assistant_msg)
+
+            for i, call in enumerate(merged_calls):
+                name = call["name"]
+                args = call.get("args") or {}
+                tool_id = f"parsed_{name}_{i}"
                 yield {"type": "tool_call", "name": name, "args": args}
                 if name in MUTATING_TOOLS and not await _maybe_confirm(
                     {"name": name, "args": args}, confirm
@@ -1444,10 +1497,11 @@ class PlannerChat:
                 self.messages.append(
                     {
                         "role": "tool",
-                        "tool_call_id": tc.id,
+                        "tool_call_id": tool_id,
                         "content": json.dumps(result),
                     }
                 )
+
         yield {
             "type": "done",
             "summary": "Reached the iteration limit for this turn.",

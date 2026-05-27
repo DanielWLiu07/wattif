@@ -466,6 +466,8 @@ export type OperatorRecommendation = {
 
 export type PlannerEvent =
   | { type: "thought"; text: string }
+  | { type: "answer"; text: string }
+  | { type: "error"; message: string }
   | { type: "tool_call"; name: string; args: Record<string, unknown> }
   | { type: "tool_result"; name: string; result: unknown }
   | { type: "placement"; infra: Infra }

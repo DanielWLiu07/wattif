@@ -684,7 +684,7 @@ export const CONCERN_IMPROVEMENT_PROMPT =
   "Based on synthetic cohort concerns, what should we change in this proposal?";
 
 const CONCERN_INTENT_RE =
-  /based on (?:resident )?concern|address (?:the )?(?:uploaded )?(?:feedback|concern)|resident concern|uploaded feedback|reduce opposition|heatwave|improve (?:this )?proposal|use (?:the )?(?:resident )?concern|cohort concern|what should i change|how do we reduce opposition/i;
+  /based on (?:resident )?concern|address (?:the )?(?:uploaded )?(?:feedback|concern)|resident concern|uploaded feedback|reduce opposition|improve (?:this )?proposal|use (?:the )?(?:resident )?concern|cohort concern|what should i change|how do we reduce opposition/i;
 
 export function isConcernImprovementIntent(text: string): boolean {
   return CONCERN_INTENT_RE.test((text || "").trim());
@@ -905,7 +905,7 @@ export function createPlannerSession(opts: {
       try {
         const e = JSON.parse(ev.data) as PlannerEvent;
         onEvent(e);
-        if (e.type === "done") onBusy?.(false);
+        if (e.type === "done" || e.type === "error") onBusy?.(false);
       } catch {
         /* ignore */
       }

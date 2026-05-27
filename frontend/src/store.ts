@@ -591,6 +591,10 @@ function attachSession(
         set({ operatorRecommendationReady: true });
       }
     }
+    if (e.type === "error") {
+      set({ chatBusy: false, chatAwaiting: false });
+      get().pushToast(e.message || "Planner error", "warn");
+    }
     if (e.type === "done") {
       set({ chatBusy: false, chatAwaiting: false });
       if (e.recommendation?.summary?.trim()) {
