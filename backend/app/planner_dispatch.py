@@ -70,22 +70,44 @@ async def dispatch_planner_turn(
 
         if bucket == "explicit_placement":
             chat.tools.guard_intent = "explicit_placement"
+            from .planner_simple_placement import (
+                LLM_PLACEMENT_UNAVAILABLE,
+                parse_simple_explicit_placement,
+                run_simple_explicit_placement,
+            )
+
             parsed = parse_intent(user_message)
             if parsed.get("program"):
                 async for ev in chat._demo_program_turn(parsed, confirm):
                     yield _stamp(ev)
                 return
+
+            simple = parse_simple_explicit_placement(user_message)
+            if simple is not None:
+                log.info(
+                    "planner turn %s intent=explicit_placement deterministic=True provider=backend",
+                    tid,
+                )
+                async for ev in run_simple_explicit_placement(
+                    chat, simple, confirm, user_message
+                ):
+                    yield _stamp(ev)
+                return
+
             if chat.provider in (None, "demo"):
                 async for ev in chat._demo_turn(user_message, confirm):
                     yield _stamp(ev)
-            else:
-                try:
-                    async for ev in chat._llm_turn(user_message, confirm):
-                        yield _stamp(ev)
-                except Exception as exc:  # noqa: BLE001
-                    log.warning("LLM chat turn failed (%s); using demo turn", exc)
-                    async for ev in chat._demo_turn(user_message, confirm):
-                        yield _stamp(ev)
+                return
+
+            try:
+                async for ev in chat._llm_turn(user_message, confirm):
+                    yield _stamp(ev)
+            except Exception as exc:  # noqa: BLE001
+                log.warning("LLM explicit placement failed (%s)", exc)
+                from .planner_events import terminal_done
+
+                yield _stamp({"type": "answer", "text": LLM_PLACEMENT_UNAVAILABLE})
+                yield _stamp(terminal_done(chat, final_message_sent=True))
             return
 
         async for ev in run_copilot_turn(
