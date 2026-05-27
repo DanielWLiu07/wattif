@@ -182,4 +182,20 @@ def build_planner_context(
     rr = format_reactions_for_prompt(reactions)
     if rr:
         parts.append(rr)
+    from .evidence_retrieval import format_evidence_for_prompt, search_evidence
+    from .db.repositories.base import PersistenceDisabledError
+
+    try:
+        evidence = search_evidence(
+            project_id=project_id,
+            proposal_id=proposal_id,
+            query="feedback concern parking charger demand heatwave grid",
+            limit=3,
+        )
+        if evidence:
+            ev = format_evidence_for_prompt(evidence, max_snippets=3)
+            if ev:
+                parts.append(ev)
+    except PersistenceDisabledError:
+        pass
     return "\n\n".join(parts) if parts else None

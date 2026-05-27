@@ -33,6 +33,7 @@ from .models import (
 from . import ml_bridge
 from .routes.cohorts import router as cohorts_router
 from .routes.datasets import router as datasets_router
+from .routes.evidence import router as evidence_router
 from .routes.persistence import router as persistence_router
 from .routes.resident_reactions import router as resident_reactions_router
 from .sim.llm import generate_rationales
@@ -70,6 +71,7 @@ app.add_middleware(
 
 app.include_router(persistence_router)
 app.include_router(datasets_router)
+app.include_router(evidence_router)
 app.include_router(cohorts_router)
 app.include_router(resident_reactions_router)
 

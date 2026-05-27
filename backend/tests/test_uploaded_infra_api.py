@@ -51,6 +51,10 @@ def test_delete_dataset_removes_uploaded_assets(monkeypatch):
         lambda did: deleted.append(did) or 2,
     )
     monkeypatch.setattr(
+        "app.routes.datasets.evidence_repo.delete_by_dataset",
+        lambda did: 0,
+    )
+    monkeypatch.setattr(
         "app.routes.datasets.datasets_repo.delete_dataset",
         lambda did: did == "d1",
     )

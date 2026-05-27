@@ -152,6 +152,37 @@ export type UploadedDataset = {
   extractedExistingInfrastructureCount?: number;
   invalidExistingInfrastructureRows?: number;
   detectedExistingInfrastructureKind?: string | null;
+  extractedEvidenceChunkCount?: number;
+};
+
+export type DatasetEvidenceChunk = {
+  id: string;
+  projectId: string;
+  proposalId?: string | null;
+  datasetId: string;
+  sourceType: string;
+  chunkText: string;
+  chunkSummary?: string | null;
+  datasetType?: string | null;
+  sourceRowIndex?: number | null;
+  sourceField?: string | null;
+  topicTags: string[];
+  metadata: Record<string, unknown>;
+  createdAt?: string | null;
+};
+
+export type EvidenceSearchResult = {
+  id: string;
+  datasetId: string;
+  datasetName?: string | null;
+  datasetType?: string | null;
+  chunkText: string;
+  chunkSummary?: string | null;
+  sourceRowIndex?: number | null;
+  sourceField?: string | null;
+  topicTags: string[];
+  score: number;
+  metadata: Record<string, unknown>;
 };
 
 export type UploadedInfrastructureAsset = {

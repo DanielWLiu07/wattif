@@ -91,10 +91,18 @@ async def _summarize_datasets(chat: PlannerChat) -> AsyncIterator[dict]:
 
 async def _explain_concerns(chat: PlannerChat) -> AsyncIterator[dict]:
     from .cohort_context import fetch_concern_summaries, format_concerns_for_prompt
+    from .evidence_retrieval import format_evidence_for_prompt, retrieve_evidence_for_context
     from .planner_events import yield_copilot_answer
 
     concerns = fetch_concern_summaries(
         project_id=chat.project_id, proposal_id=chat.proposal_id
+    )
+    evidence = retrieve_evidence_for_context(
+        project_id=chat.project_id,
+        proposal_id=chat.proposal_id,
+        user_message="why are agents concerned resident feedback",
+        intent="explain_concerns",
+        limit=5,
     )
     if not concerns:
         body = (
@@ -121,6 +129,8 @@ async def _explain_concerns(chat: PlannerChat) -> AsyncIterator[dict]:
                 )
             )
             lines.append(f"\nMost severe topics: {topics}.")
+        if evidence:
+            lines.append("\n" + format_evidence_for_prompt(evidence, max_snippets=5))
         body = "\n".join(lines)
     async for ev in yield_copilot_answer(chat, body):
         yield ev
@@ -129,10 +139,18 @@ async def _explain_concerns(chat: PlannerChat) -> AsyncIterator[dict]:
 async def _critique_design(chat: PlannerChat) -> AsyncIterator[dict]:
     from .cohort_context import fetch_concern_summaries, fetch_proposal_infra_summary
     from .existing_infra_context import fetch_uploaded_infrastructure
+    from .evidence_retrieval import format_evidence_for_prompt, retrieve_evidence_for_context
     from .planner_events import yield_copilot_answer
 
     concerns = fetch_concern_summaries(
         project_id=chat.project_id, proposal_id=chat.proposal_id
+    )
+    evidence = retrieve_evidence_for_context(
+        project_id=chat.project_id,
+        proposal_id=chat.proposal_id,
+        user_message="what is wrong with my design uploaded evidence feedback",
+        intent="critique_design",
+        limit=5,
     )
     proposal_infra = fetch_proposal_infra_summary(proposal_id=chat.proposal_id)
     uploaded = fetch_uploaded_infrastructure(
@@ -181,6 +199,13 @@ async def _critique_design(chat: PlannerChat) -> AsyncIterator[dict]:
             )
     else:
         lines.append("- No synthetic cohort concerns loaded — critique is metrics-only.")
+
+    if evidence:
+        lines.append("\nUploaded evidence signals:")
+        for s in evidence[:5]:
+            text = (s.get("chunkText") or "")[:180]
+            dtype = s.get("datasetType") or "dataset"
+            lines.append(f"- [{dtype}] {text}")
 
     weak: list[str] = []
     if metrics.get("equityScore", 1) < 0.45:

@@ -57,6 +57,9 @@ def test_persistence_endpoints_503_when_unconfigured(monkeypatch):
         ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/resident-reactions", None),
         ("post", "/api/proposals/00000000-0000-0000-0000-000000000002/resident-reactions/generate", None),
         ("delete", "/api/resident-reactions/00000000-0000-0000-0000-000000000005", None),
+        ("get", "/api/projects/00000000-0000-0000-0000-000000000001/evidence-chunks", None),
+        ("get", "/api/proposals/00000000-0000-0000-0000-000000000002/evidence-chunks", None),
+        ("post", "/api/projects/00000000-0000-0000-0000-000000000001/evidence-search", {"query": "parking"}),
     ):
         if method == "get":
             r = client.get(path)

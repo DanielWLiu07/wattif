@@ -30,6 +30,8 @@ import type {
   CohortProfile,
   ProposalReport,
   SyntheticResidentReaction,
+  DatasetEvidenceChunk,
+  EvidenceSearchResult,
   UploadedDataset,
   UploadedInfrastructureAsset,
   UploadedDatasetSummary,
@@ -234,6 +236,10 @@ type State = {
   syntheticResidentReactions: SyntheticResidentReaction[];
   residentReactionsGenerating: boolean;
   residentReactionsError: string | null;
+  evidenceChunks: DatasetEvidenceChunk[];
+  evidenceSearchResults: EvidenceSearchResult[];
+  evidenceLoading: boolean;
+  evidenceError: string | null;
   decisionMemo: ProposalReport | null;
   decisionMemoLoading: boolean;
   decisionMemoError: string | null;
@@ -250,6 +256,8 @@ type State = {
   loadSyntheticResidentReactions: () => Promise<void>;
   generateSyntheticResidentReactions: () => Promise<void>;
   deleteResidentReaction: (reactionId: string) => Promise<void>;
+  loadEvidenceChunks: () => Promise<void>;
+  searchEvidence: (query: string) => Promise<void>;
   generateDecisionMemo: () => Promise<void>;
   clearDecisionMemo: () => void;
   createProject: (name: string) => Promise<void>;
@@ -848,6 +856,10 @@ export const useStore = create<State>((set, get) => ({
   syntheticResidentReactions: [],
   residentReactionsGenerating: false,
   residentReactionsError: null,
+  evidenceChunks: [],
+  evidenceSearchResults: [],
+  evidenceLoading: false,
+  evidenceError: null,
   decisionMemo: null,
   decisionMemoLoading: false,
   decisionMemoError: null,
@@ -1034,6 +1046,58 @@ export const useStore = create<State>((set, get) => ({
     }));
   },
 
+  loadEvidenceChunks: async () => {
+    const { selectedProjectId, selectedProposalId, backendHealth } = get();
+    if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
+      set({ evidenceChunks: [], evidenceSearchResults: [], evidenceError: null });
+      return;
+    }
+    set({ evidenceLoading: true, evidenceError: null });
+    const res = selectedProposalId
+      ? await api.fetchProposalEvidenceChunks(selectedProposalId)
+      : await api.fetchProjectEvidenceChunks(selectedProjectId);
+    if (!res.ok) {
+      set({
+        evidenceLoading: false,
+        evidenceError: res.unavailable
+          ? "Supabase persistence is not configured"
+          : res.error ?? "Could not load evidence snippets",
+      });
+      return;
+    }
+    set({
+      evidenceChunks: res.data,
+      evidenceLoading: false,
+      evidenceError: null,
+    });
+  },
+
+  searchEvidence: async (query) => {
+    const { selectedProjectId, selectedProposalId, backendHealth } = get();
+    const q = query.trim();
+    if (!q || backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
+      set({ evidenceSearchResults: [] });
+      return;
+    }
+    set({ evidenceLoading: true, evidenceError: null });
+    const res = selectedProposalId
+      ? await api.searchProposalEvidence(selectedProposalId, q)
+      : await api.searchProjectEvidence(selectedProjectId, q);
+    if (!res.ok) {
+      set({
+        evidenceLoading: false,
+        evidenceError: res.error ?? "Evidence search failed",
+        evidenceSearchResults: [],
+      });
+      return;
+    }
+    set({
+      evidenceSearchResults: res.data,
+      evidenceLoading: false,
+      evidenceError: null,
+    });
+  },
+
   loadDatasets: async () => {
     const { selectedProjectId, selectedProposalId, backendHealth } = get();
     if (backendHealth?.persistenceProvider !== "supabase" || !selectedProjectId) {
@@ -1124,13 +1188,17 @@ export const useStore = create<State>((set, get) => ({
     }));
     await get().loadDatasets();
     void get().loadExistingInfrastructure();
+    void get().loadEvidenceChunks();
     const extracted = res.data.extractedExistingInfrastructureCount ?? 0;
-    get().pushToast(
-      extracted > 0
-        ? `Uploaded ${res.data.name} — extracted ${extracted} existing infrastructure point(s)`
-        : `Uploaded ${res.data.name} (${res.data.datasetType})`,
-      "good"
-    );
+    const evidenceCount = res.data.extractedEvidenceChunkCount ?? 0;
+    let msg = `Uploaded ${res.data.name} (${res.data.datasetType})`;
+    if (extracted > 0) {
+      msg = `Uploaded ${res.data.name} — extracted ${extracted} existing infrastructure point(s)`;
+    }
+    if (evidenceCount > 0) {
+      msg += extracted > 0 ? ` and ${evidenceCount} evidence snippet(s)` : ` — extracted ${evidenceCount} evidence snippet(s)`;
+    }
+    get().pushToast(msg, "good");
   },
 
   selectDataset: (datasetId) => set({ selectedDatasetId: datasetId }),
@@ -1232,6 +1300,9 @@ export const useStore = create<State>((set, get) => ({
       datasetError: null,
       cohortError: null,
       residentReactionsError: null,
+      evidenceChunks: [],
+      evidenceSearchResults: [],
+      evidenceError: null,
       existingInfrastructureAssets: [],
       existingInfrastructureError: null,
     });
@@ -1247,6 +1318,7 @@ export const useStore = create<State>((set, get) => ({
     void get().loadExistingInfrastructure();
     void get().loadCohortConcerns();
     void get().loadSyntheticResidentReactions();
+    void get().loadEvidenceChunks();
   },
 
   createProposal: async (name) => {
@@ -1337,6 +1409,7 @@ export const useStore = create<State>((set, get) => ({
     void get().loadExistingInfrastructure();
     void get().loadCohortConcerns();
     void get().loadSyntheticResidentReactions();
+    void get().loadEvidenceChunks();
 
     const statusRes = await api.getOperatorRecommendationStatus(proposalId);
     if (statusRes.ok && statusRes.data.hasOperatorRecommendation) {

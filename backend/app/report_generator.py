@@ -13,6 +13,7 @@ from .cohort_context import fetch_concern_summaries
 from .dataset_context import fetch_dataset_summaries
 from .db.repositories import (
     agents as agents_repo,
+    dataset_evidence_chunks as evidence_repo,
     planner_runs,
     projects,
     proposal_infrastructure,
@@ -21,6 +22,7 @@ from .db.repositories import (
     synthetic_resident_reactions as reactions_repo,
 )
 from .db.repositories.base import PersistenceDisabledError
+from .evidence_retrieval import EVIDENCE_CAVEAT
 
 REPORT_TITLE = "Proposal Impact Report / Decision Memo (Draft)"
 
@@ -177,6 +179,15 @@ def _recommendation_section(rec: dict[str, Any] | None) -> tuple[list[str], list
     return lines, tradeoffs
 
 
+def _evidence_line(row: dict[str, Any]) -> str:
+    dtype = row.get("dataset_type") or "dataset"
+    field = row.get("source_field") or "row"
+    row_idx = row.get("source_row_index")
+    loc = f"row {row_idx}" if row_idx is not None else "upload"
+    text = (row.get("chunk_text") or row.get("chunk_summary") or "")[:220]
+    return f"- **[{dtype}/{field} {loc}]** {text}"
+
+
 def _reaction_line(row: dict[str, Any]) -> str:
     persona = row.get("persona_label") or row.get("personaLabel") or "Synthetic cohort"
     stance = row.get("stance") or "neutral"
@@ -194,6 +205,7 @@ def _executive_summary(
     datasets: list[dict[str, Any]],
     concerns: list[dict[str, Any]],
     reactions: list[dict[str, Any]],
+    evidence_count: int,
     has_recommendation: bool,
     snapshot: dict[str, Any] | None,
 ) -> list[str]:
@@ -227,6 +239,7 @@ def _executive_summary(
         f"- **Uploaded datasets:** {len(datasets)} file(s) on record (metadata/preview only)",
         f"- **Synthetic cohort concerns:** {len(concerns)} generated concern(s)",
         f"- **Synthetic resident reactions:** {len(reactions)} on-demand reaction(s)",
+        f"- **Uploaded evidence snippets:** {evidence_count} extracted chunk(s)",
         f"- **Snapshot:** {snap_note}",
         f"- **Operator guidance:** {rec_note}",
         "",
@@ -246,6 +259,8 @@ def _caveats_section() -> list[str]:
         "public feedback.",
         "- **Synthetic resident reactions are decision-support only:** On-demand LLM or fallback "
         f"persona reactions are not real residents or public consultation ({REACTION_CAVEAT}).",
+        "- **Uploaded evidence is incomplete context:** Snippets are extracted from uploads "
+        f"via lightweight lexical retrieval — not validated public consultation ({EVIDENCE_CAVEAT}).",
         "- **Not engineering-grade grid validation:** Headroom, feeder constraints, and outage "
         "impacts are illustrative.",
         "- **Not final municipal approval evidence:** This report must not be used as official "
@@ -335,6 +350,11 @@ def collect_report_data(proposal_id: str) -> dict[str, Any]:
     except Exception:
         reactions = []
 
+    try:
+        evidence = evidence_repo.list_by_proposal(proposal_id, limit=20)
+    except Exception:
+        evidence = []
+
     return {
         "project": project,
         "proposal": proposal,
@@ -344,6 +364,7 @@ def collect_report_data(proposal_id: str) -> dict[str, Any]:
         "cohorts": profiles,
         "concerns": concerns,
         "reactions": reactions,
+        "evidence": evidence,
         "recommendation": recommendation,
     }
 
@@ -358,6 +379,7 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
     cohorts = data["cohorts"]
     concerns = data["concerns"]
     reactions = data.get("reactions") or []
+    evidence = data.get("evidence") or []
     recommendation = data["recommendation"]
 
     rec_lines, rec_tradeoffs = _recommendation_section(recommendation)
@@ -370,6 +392,7 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
             datasets=datasets,
             concerns=concerns,
             reactions=reactions,
+            evidence_count=len(evidence),
             has_recommendation=recommendation is not None,
             snapshot=snapshot,
         ),
@@ -389,6 +412,7 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
         ),
         "simulation_metrics": [],
         "synthetic_concerns": [],
+        "uploaded_evidence_signals": [],
         "operator_recommendations": rec_lines,
         "key_tradeoffs": [],
         "resilience_notes": [],
@@ -447,6 +471,20 @@ def build_report_sections(data: dict[str, Any]) -> dict[str, list[str]]:
         )
         sections["synthetic_concerns"].extend(_reaction_line(r) for r in reactions[:12])
 
+    if evidence:
+        sections["uploaded_evidence_signals"] = [
+            f"> {EVIDENCE_CAVEAT}",
+            "",
+            f"**{len(evidence)} snippet(s) extracted from uploaded datasets (showing up to 12):**",
+        ]
+        sections["uploaded_evidence_signals"].extend(_evidence_line(e) for e in evidence[:12])
+    else:
+        sections["uploaded_evidence_signals"] = [
+            "No uploaded evidence snippets on record yet.",
+            "",
+            "Upload CSV/GeoJSON with text fields (comments, feedback, status notes) to extract evidence.",
+        ]
+
     tradeoffs = list(rec_tradeoffs)
     if not tradeoffs and recommendation:
         tradeoffs = [
@@ -474,6 +512,7 @@ SECTION_TITLES = {
     "uploaded_data_sources": "Uploaded Data Sources",
     "simulation_metrics": "Simulation Metrics / Snapshot",
     "synthetic_concerns": "Synthetic Resident & Cohort Concerns",
+    "uploaded_evidence_signals": "Uploaded Evidence Signals",
     "operator_recommendations": "Operator Recommendations",
     "key_tradeoffs": "Key Tradeoffs",
     "resilience_notes": "Resilience / Stress-Test Notes",

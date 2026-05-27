@@ -6,9 +6,11 @@ import logging
 
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
 
+from ..data.evidence_extract import extract_evidence_chunks
 from ..data.infra_extract import extract_infrastructure_assets
 from ..data.dataset_parse import DatasetParseError, parse_upload
 from ..dataset_context import fetch_dataset_summaries
+from ..db.repositories import dataset_evidence_chunks as evidence_repo
 from ..db.repositories import datasets as datasets_repo
 from ..db.repositories import proposals as proposals_repo
 from ..db.repositories import uploaded_infrastructure as uploaded_infra_repo
@@ -44,6 +46,7 @@ def _row_to_dataset(row: dict, extraction: dict | None = None) -> UploadedDatase
         preview = []
     meta = row.get("metadata") or {}
     ext = extraction or meta.get("infraExtraction") or {}
+    ev_ext = meta.get("evidenceExtraction") or {}
     return UploadedDataset(
         id=row["id"],
         project_id=row.get("project_id"),
@@ -66,6 +69,9 @@ def _row_to_dataset(row: dict, extraction: dict | None = None) -> UploadedDatase
             ext.get("invalid_existing_infrastructure_rows", 0)
         ),
         detected_existing_infrastructure_kind=ext.get("detected_existing_infrastructure_kind"),
+        extracted_evidence_chunk_count=int(
+            ev_ext.get("extracted_evidence_chunk_count", 0)
+        ),
     )
 
 
@@ -147,10 +153,16 @@ async def upload_dataset(
             rows=parsed.get("rows") or [],
             dataset_type=parsed["dataset_type"],
         )
+        evidence_chunks, evidence_summary = extract_evidence_chunks(
+            rows=parsed.get("rows") or [],
+            dataset_type=parsed["dataset_type"],
+            columns=parsed.get("columns"),
+        )
         resolved_project_id = _resolve_project_id(project_id, proposal_id)
         meta = {
             **(parsed.get("metadata") or {}),
             "infraExtraction": extraction,
+            "evidenceExtraction": evidence_summary,
         }
         row = datasets_repo.create_dataset(
             name=parsed["name"],
@@ -171,6 +183,20 @@ async def upload_dataset(
                 proposal_id=proposal_id,
                 dataset_id=row["id"],
             )
+        pid = resolved_project_id or project_id
+        if evidence_chunks and pid:
+            try:
+                evidence_repo.create_chunks_batch(
+                    evidence_chunks,
+                    project_id=pid,
+                    proposal_id=proposal_id,
+                    dataset_id=row["id"],
+                    dataset_type=parsed["dataset_type"],
+                )
+            except Exception as ev_exc:
+                log.warning(
+                    "Evidence chunk persistence failed (upload continues): %s", ev_exc
+                )
         return _row_to_dataset(row, extraction=extraction)
     except PersistenceDisabledError:
         raise _unavailable() from None
@@ -295,6 +321,7 @@ def list_proposal_existing_infrastructure(
 def delete_dataset(dataset_id: str) -> dict:
     try:
         uploaded_infra_repo.delete_by_dataset(dataset_id)
+        evidence_repo.delete_by_dataset(dataset_id)
         ok = datasets_repo.delete_dataset(dataset_id)
         if not ok:
             raise HTTPException(status_code=404, detail=f"dataset {dataset_id} not found")
